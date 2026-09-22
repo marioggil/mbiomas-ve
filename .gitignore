@@ -1,0 +1,21 @@
+# Local Pi runtime state
+.atl/
+
+# Rasters are never versioned: raw, normalized and tiled all live outside Git.
+# 40 annual GeoTIFFs = 2.9 GB raw; COG outputs add ~3.8 GB.
+data/raw/
+data/cog/
+data/tiles/
+*.tif
+*.tiff
+*.aux.xml
+*.mbtiles
+*.pmtiles
+*.ovr
+
+# Python and Node local state
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+viewer/dist/
