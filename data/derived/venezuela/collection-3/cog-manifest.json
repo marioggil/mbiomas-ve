@@ -1,0 +1,5827 @@
+{
+  "country": "venezuela",
+  "collection": "3",
+  "kind": "cog-normalization",
+  "generated_utc": "2026-09-22T17:32:44+00:00",
+  "creation_options": [
+    "BLOCKSIZE=512",
+    "COMPRESS=ZSTD",
+    "LEVEL=9",
+    "PREDICTOR=2",
+    "NUM_THREADS=ALL_CPUS",
+    "BIGTIFF=IF_SAFER",
+    "OVERVIEW_RESAMPLING=NEAREST",
+    "OVERVIEWS=IGNORE_EXISTING"
+  ],
+  "source_dir": "data/raw/venezuela/collection-3",
+  "output_dir": "data/cog/venezuela/collection-3",
+  "years": [
+    1985,
+    1986,
+    1987,
+    1988,
+    1989,
+    1990,
+    1991,
+    1992,
+    1993,
+    1994,
+    1995,
+    1996,
+    1997,
+    1998,
+    1999,
+    2000,
+    2001,
+    2002,
+    2003,
+    2004,
+    2005,
+    2006,
+    2007,
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "totals": {
+    "inputs": 40,
+    "converted": 40,
+    "failed": 0,
+    "output_bytes": 4437541960
+  },
+  "failures": [],
+  "entries": [
+    {
+      "year": 1985,
+      "input_name": "coverage-venezuela_classification_1985.tif",
+      "output_name": "coverage-venezuela_classification_1985.tif",
+      "input_bytes": 77777237,
+      "output_bytes": 112452044,
+      "input_sha256": "0f66c62262bde7e0ba102ad0293d980af5b54129a80111a66ac5f19351bbd847",
+      "output_sha256": "cd3ab8462b5c90db1931ec6460af3b14fad1c6055d2caace2e3f10c8ee1d850c",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1986,
+      "input_name": "coverage-venezuela_classification_1986.tif",
+      "output_name": "coverage-venezuela_classification_1986.tif",
+      "input_bytes": 77447827,
+      "output_bytes": 111961060,
+      "input_sha256": "fe1eb8c39d70260cb3c9e22681cca28d913809382b352c67e1253f6e2662bb18",
+      "output_sha256": "b06695edc841e0c4030f1557390d1b48cd9b776fdb55d7b740f5b897399be282",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1987,
+      "input_name": "coverage-venezuela_classification_1987.tif",
+      "output_name": "coverage-venezuela_classification_1987.tif",
+      "input_bytes": 76871755,
+      "output_bytes": 111115934,
+      "input_sha256": "c6e982bd9239101376b2f542d2d46db2551c7202628bc626fe2d748e73f74f07",
+      "output_sha256": "9260b730ba94291432e6ff35fb8020fcbf1e795c178ecb5390e4bb43764ca611",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1988,
+      "input_name": "coverage-venezuela_classification_1988.tif",
+      "output_name": "coverage-venezuela_classification_1988.tif",
+      "input_bytes": 76857399,
+      "output_bytes": 111108034,
+      "input_sha256": "e781f0ead9bb1878060bab332e143046e60e5c9d9235cee98906aabf856c7051",
+      "output_sha256": "e4da0da15b698731c30a1207546beeeb4601098db0684352f9e5cb09c07b8bd0",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1989,
+      "input_name": "coverage-venezuela_classification_1989.tif",
+      "output_name": "coverage-venezuela_classification_1989.tif",
+      "input_bytes": 77250529,
+      "output_bytes": 111656056,
+      "input_sha256": "0118aecb0e6e93cd5414703308ad44ea36c793185e9ba115191fec7e5c867dc3",
+      "output_sha256": "707a662a3333aeccfec35b526023dcf2ad35bbfbe3e35f6fe8700c747c4f1e28",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1990,
+      "input_name": "coverage-venezuela_classification_1990.tif",
+      "output_name": "coverage-venezuela_classification_1990.tif",
+      "input_bytes": 76891942,
+      "output_bytes": 111143212,
+      "input_sha256": "d560d0ea22ba9b4e5d1432de3c6ba3be16474ce71f748432da05f707b052bac3",
+      "output_sha256": "eb17e5cbe5cc8e04782810997506e2bdb5ea5b1a858531315de35efaa33d8093",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1991,
+      "input_name": "coverage-venezuela_classification_1991.tif",
+      "output_name": "coverage-venezuela_classification_1991.tif",
+      "input_bytes": 77725698,
+      "output_bytes": 112513502,
+      "input_sha256": "36be1b61395508edd94644e87f7ad0a94be85e0df96e6e7350229bef8dd16067",
+      "output_sha256": "69d091eaa3ffc0fe80a6e57168ca25fd29cdfc58ea96e5d311357f1ba4591360",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1992,
+      "input_name": "coverage-venezuela_classification_1992.tif",
+      "output_name": "coverage-venezuela_classification_1992.tif",
+      "input_bytes": 78478232,
+      "output_bytes": 113588757,
+      "input_sha256": "309cb4b8365206a978252502c145a4dd4a8f218327eb022869be4d6900faca1d",
+      "output_sha256": "fa40371e02b638f6a97830679704b934cdc306941bdbc63e8b9e5619f5841b11",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1993,
+      "input_name": "coverage-venezuela_classification_1993.tif",
+      "output_name": "coverage-venezuela_classification_1993.tif",
+      "input_bytes": 78475438,
+      "output_bytes": 113584374,
+      "input_sha256": "ca5eb59d28dc867c84b0260c17329e47727c909500dc5760d60660610bb8ce2d",
+      "output_sha256": "21c76bbbea5eafa578d4d39227c273b8d99a6f9abf26f8eb988d511d32dc33df",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1994,
+      "input_name": "coverage-venezuela_classification_1994.tif",
+      "output_name": "coverage-venezuela_classification_1994.tif",
+      "input_bytes": 78321039,
+      "output_bytes": 113360654,
+      "input_sha256": "7d90c8e8ae1c3b46f7ea066c8a9208d38d3c685aaf0bb89be9617eb653886b52",
+      "output_sha256": "80034f6456500beb3b8453d531a75e7a985f32c378d0ccafa740a3a29063c1b8",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1995,
+      "input_name": "coverage-venezuela_classification_1995.tif",
+      "output_name": "coverage-venezuela_classification_1995.tif",
+      "input_bytes": 78367770,
+      "output_bytes": 113434980,
+      "input_sha256": "0aa6db9742434ebaf97a696ecf2a9f6a7ce5e6f1f0f78a98e2977ca983ad8e7a",
+      "output_sha256": "fbb9a97350d352bbfc80d2b55c8aa25941644a3f829d99cffe2a4a1b4d62058b",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1996,
+      "input_name": "coverage-venezuela_classification_1996.tif",
+      "output_name": "coverage-venezuela_classification_1996.tif",
+      "input_bytes": 76722043,
+      "output_bytes": 110950129,
+      "input_sha256": "cb347ec4645438c5f0f736a93024468717bb4eb5957c4435f4a59ef68f825fa0",
+      "output_sha256": "d6ac96ba86349fd51d1014c4ba359cb40e9b3154c6ebfb99da7dd92d155ea949",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1997,
+      "input_name": "coverage-venezuela_classification_1997.tif",
+      "output_name": "coverage-venezuela_classification_1997.tif",
+      "input_bytes": 76063088,
+      "output_bytes": 110024002,
+      "input_sha256": "ac0f7b5a7add6f0a1f6067c73f0752dd8aacd43ef91bac51a58cc1d4c72451de",
+      "output_sha256": "50dc601e1fef0e6c265271791dc22244aa182e7d5462270fbdd0eeec15be2527",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1998,
+      "input_name": "coverage-venezuela_classification_1998.tif",
+      "output_name": "coverage-venezuela_classification_1998.tif",
+      "input_bytes": 75678016,
+      "output_bytes": 109540683,
+      "input_sha256": "39ef9c65a4e9044e4536cd3093320288827ab34decf56946898c2ec8ad25ae8c",
+      "output_sha256": "a7f2fbdb8607f5709fa76cd724bca293cd04ba77232d30daaa3ed151302d3059",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 1999,
+      "input_name": "coverage-venezuela_classification_1999.tif",
+      "output_name": "coverage-venezuela_classification_1999.tif",
+      "input_bytes": 75420719,
+      "output_bytes": 109243140,
+      "input_sha256": "476eaa34fb546dbcaed99c26aa53e83248b55ca58463072c95ef44c2606a472c",
+      "output_sha256": "91a92785481646a187872b81d97164900377890bb9c08916cfaca10da07f3eb9",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2000,
+      "input_name": "coverage-venezuela_classification_2000.tif",
+      "output_name": "coverage-venezuela_classification_2000.tif",
+      "input_bytes": 75409268,
+      "output_bytes": 109259750,
+      "input_sha256": "750215b9708aeea62efad2c088486240a549d1cf32bff8a5b5f87b35e432070c",
+      "output_sha256": "63104d856a3c42851ab8daea0b3008c6b8b16d55fdd642b03e4e9fd46da53295",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2001,
+      "input_name": "coverage-venezuela_classification_2001.tif",
+      "output_name": "coverage-venezuela_classification_2001.tif",
+      "input_bytes": 75293772,
+      "output_bytes": 109122698,
+      "input_sha256": "103daf2247eab44848492c380e4c812fda264d063461ca871ec4e77a8768060d",
+      "output_sha256": "8d86d3be4f82b534c6edc2a1f966f82a9a04fa4abc68c2ae8368c16508aa98ef",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2002,
+      "input_name": "coverage-venezuela_classification_2002.tif",
+      "output_name": "coverage-venezuela_classification_2002.tif",
+      "input_bytes": 75451510,
+      "output_bytes": 109358473,
+      "input_sha256": "0a316fff92168fadf2b9ff06c2fe00bbc455827dec0b7e9dcf41a276fc315b83",
+      "output_sha256": "a2fcb38e4a55e61542abcef280291de535ab865ff99ad148ec39def4db5c594a",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2003,
+      "input_name": "coverage-venezuela_classification_2003.tif",
+      "output_name": "coverage-venezuela_classification_2003.tif",
+      "input_bytes": 75421510,
+      "output_bytes": 109302065,
+      "input_sha256": "4bfe0bad8f629c1f3be0866d9861a10d56bed9f72cf0697c55ca3b8e35341a67",
+      "output_sha256": "b6a6e57632ba7286343b9eff29c41c982163ba122c0af0e49ee187b12dcb2344",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2004,
+      "input_name": "coverage-venezuela_classification_2004.tif",
+      "output_name": "coverage-venezuela_classification_2004.tif",
+      "input_bytes": 75567157,
+      "output_bytes": 109526908,
+      "input_sha256": "5262b5d5975a1d90b5c7f73db96724231cc838e510f6ab5d0993d0e9c2ed939c",
+      "output_sha256": "f5de0a7f2e8a42af7818fbcc2ccf4a78274fb46267a60f9f31b10dbedc125bb4",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2005,
+      "input_name": "coverage-venezuela_classification_2005.tif",
+      "output_name": "coverage-venezuela_classification_2005.tif",
+      "input_bytes": 75601392,
+      "output_bytes": 109622944,
+      "input_sha256": "ca0d5a801727a5bffa0946f3c032fb66b5d273f418c84e41baf6f5462c29c781",
+      "output_sha256": "f5cca611d4e3230df21d429768fd2cd858da90c2200940642841e7ea9fd48322",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2006,
+      "input_name": "coverage-venezuela_classification_2006.tif",
+      "output_name": "coverage-venezuela_classification_2006.tif",
+      "input_bytes": 75737632,
+      "output_bytes": 109826270,
+      "input_sha256": "03fac1a71c633f707de0b65822de0e1e53b56dbcdcde2b080f65d8ea0a31d397",
+      "output_sha256": "4fd40ab275f3db2e6a6c565e1ea76b8181e1d02a2223355b2ad28d6cff4abbe8",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2007,
+      "input_name": "coverage-venezuela_classification_2007.tif",
+      "output_name": "coverage-venezuela_classification_2007.tif",
+      "input_bytes": 75567910,
+      "output_bytes": 109604144,
+      "input_sha256": "663ecc51a55c4e3c15aa6549d2487d9d7ca303f6a43a3f15fedd551ffdab86a8",
+      "output_sha256": "83c496e3c4728e65628f9a49db7ac7a350bac146f876cc7b703b654a7c56fc4b",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2008,
+      "input_name": "coverage-venezuela_classification_2008.tif",
+      "output_name": "coverage-venezuela_classification_2008.tif",
+      "input_bytes": 75485963,
+      "output_bytes": 109512571,
+      "input_sha256": "c2f01fe9b32502e3a3ac4470a661a1136691b6ca6626e3f26d48752475c3a570",
+      "output_sha256": "4d244d5cf51b3ade723b4c668e9e5e1c065f20ef81d3c28c2d07399f9c19162b",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2009,
+      "input_name": "coverage-venezuela_classification_2009.tif",
+      "output_name": "coverage-venezuela_classification_2009.tif",
+      "input_bytes": 75470020,
+      "output_bytes": 109494031,
+      "input_sha256": "e37127fc19c8b5946a6c1c6a3e70f4a3ba420b1cc3a0d64c4de7d560f2913468",
+      "output_sha256": "bdc4ef18bc4bcde1fb326154733d15b00565cac79ddea4b8cfa747c405655988",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2010,
+      "input_name": "coverage-venezuela_classification_2010.tif",
+      "output_name": "coverage-venezuela_classification_2010.tif",
+      "input_bytes": 75531472,
+      "output_bytes": 109590483,
+      "input_sha256": "6009f1d28a9ca5e7c83fd4f9f21efc2d9af26784ccacb88003dc1a684ff07f26",
+      "output_sha256": "6b0a8c59b8fc1c76cb92b6dc93a86a2c7187ddc9044586928eaac335209bad42",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2011,
+      "input_name": "coverage-venezuela_classification_2011.tif",
+      "output_name": "coverage-venezuela_classification_2011.tif",
+      "input_bytes": 75742195,
+      "output_bytes": 109888900,
+      "input_sha256": "704971fb88da707e74e5c2f62f85a96859114a1c7314c007013165f299d9195a",
+      "output_sha256": "914956f392c496e8b9591844c09020543f9e59279808ceec5d23a44387be0474",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2012,
+      "input_name": "coverage-venezuela_classification_2012.tif",
+      "output_name": "coverage-venezuela_classification_2012.tif",
+      "input_bytes": 76002594,
+      "output_bytes": 110304524,
+      "input_sha256": "50215174ea582400d948c7acc4124be32d2537d320d9561b83726d48d5a70ccd",
+      "output_sha256": "04fba9f697357bef0da9179cf98ee0041024ab7d9130252c4c37acaea7bbcb54",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2013,
+      "input_name": "coverage-venezuela_classification_2013.tif",
+      "output_name": "coverage-venezuela_classification_2013.tif",
+      "input_bytes": 76142963,
+      "output_bytes": 110536275,
+      "input_sha256": "ff66688dc20000502dbf3acefd0a085fdd24ae458043646979c83085e702befc",
+      "output_sha256": "03df97a5180686cc116930e429e20caa8f80fb72ef194904c509ba5aa2a5939a",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2014,
+      "input_name": "coverage-venezuela_classification_2014.tif",
+      "output_name": "coverage-venezuela_classification_2014.tif",
+      "input_bytes": 75883319,
+      "output_bytes": 110188604,
+      "input_sha256": "c43c8ccc20d58a5cffcca650629ce9252248b1b507e355326ca102f06849d3f9",
+      "output_sha256": "77f4d773946297c263e67a97992d8f076fa2823b06ef1e8bac1c251c66b7db8a",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2015,
+      "input_name": "coverage-venezuela_classification_2015.tif",
+      "output_name": "coverage-venezuela_classification_2015.tif",
+      "input_bytes": 75792328,
+      "output_bytes": 110064800,
+      "input_sha256": "1327588ec006598c598a59af51ded389b2d5cdc49a7671ba0bf0142ff3cbb760",
+      "output_sha256": "f917d7562297fd98914e33b6e3f1516b2c5b6da987d407a7c359e8b6277046b1",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2016,
+      "input_name": "coverage-venezuela_classification_2016.tif",
+      "output_name": "coverage-venezuela_classification_2016.tif",
+      "input_bytes": 76071415,
+      "output_bytes": 110489582,
+      "input_sha256": "c669e54efbd76e267c48c9bc9d79ac50121e30a28b17862fea3d57fcabed0c70",
+      "output_sha256": "8915e94c087cdcc3b30567186ecea6343d354ab1bd9e80936fade53520fe5767",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2017,
+      "input_name": "coverage-venezuela_classification_2017.tif",
+      "output_name": "coverage-venezuela_classification_2017.tif",
+      "input_bytes": 76344696,
+      "output_bytes": 110906012,
+      "input_sha256": "2ee805494c4178990e120aa7fe0c7833b3075c2b23d8694e47dbde39b7c61643",
+      "output_sha256": "dd911fed04d97ae551c0e73bcafa7db22b13d24e6c24178fc7e9ff2755fde1d9",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2018,
+      "input_name": "coverage-venezuela_classification_2018.tif",
+      "output_name": "coverage-venezuela_classification_2018.tif",
+      "input_bytes": 76483486,
+      "output_bytes": 111131475,
+      "input_sha256": "03b01c048760afb70f5da32c40ff724c386d6cd9d14d8483dd03bbd60ffb986f",
+      "output_sha256": "739624127d7f862bd4832b24966771feeaf6a7394d79216a412da16e7aede240",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2019,
+      "input_name": "coverage-venezuela_classification_2019.tif",
+      "output_name": "coverage-venezuela_classification_2019.tif",
+      "input_bytes": 76597066,
+      "output_bytes": 111317249,
+      "input_sha256": "9abc76cb2fac872f7185743205f7254d1ac8131fc63746b293312c7901a93e1f",
+      "output_sha256": "20069357e6cb4ce84367e3ea8c4ebec0e17da491cac56d330e7af0ab00da8825",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2020,
+      "input_name": "coverage-venezuela_classification_2020.tif",
+      "output_name": "coverage-venezuela_classification_2020.tif",
+      "input_bytes": 76733050,
+      "output_bytes": 111522654,
+      "input_sha256": "d70c98cc10975cf948a006aff06cd1fa74dc2c24072af44bcb9c1d2abfd52d7e",
+      "output_sha256": "702095223c4324382a262030899457eeb633c45dd659fee9f412e3208483f871",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2021,
+      "input_name": "coverage-venezuela_classification_2021.tif",
+      "output_name": "coverage-venezuela_classification_2021.tif",
+      "input_bytes": 76925836,
+      "output_bytes": 111809628,
+      "input_sha256": "b979c31152890b354518b40400af3a3d5f1d16929e3af6430482f94e972f377e",
+      "output_sha256": "4d17670fd3d7da954f94c44cc7e9ace787d3107acb82519d0547dae473392514",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2022,
+      "input_name": "coverage-venezuela_classification_2022.tif",
+      "output_name": "coverage-venezuela_classification_2022.tif",
+      "input_bytes": 77203530,
+      "output_bytes": 112306374,
+      "input_sha256": "dc3a5d27491592417382365205b6249872049aca1f64757234275bf9322bd869",
+      "output_sha256": "4e14e1e5096186b419116157fd92f87b2dc6e57c8a286be9bcbece9e9a06fb10",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2023,
+      "input_name": "coverage-venezuela_classification_2023.tif",
+      "output_name": "coverage-venezuela_classification_2023.tif",
+      "input_bytes": 77442363,
+      "output_bytes": 112744189,
+      "input_sha256": "a524d944a8814371020661609c4c0451f24af6deac4f562690af69c639299416",
+      "output_sha256": "ead1ed1b3af59c2b355d85384105d790fa52204b5c1537d0076d1a283127998b",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    },
+    {
+      "year": 2024,
+      "input_name": "coverage-venezuela_classification_2024.tif",
+      "output_name": "coverage-venezuela_classification_2024.tif",
+      "input_bytes": 78543750,
+      "output_bytes": 114434796,
+      "input_sha256": "28687ce41a12cb1dd262096be4b15efe1f52a8ca05a020f94c1b271eeec0e8c6",
+      "output_sha256": "cdcf2483479bfe01d6e760501b2db7312d56c1b47cf26952a32b677d3a6cdfc2",
+      "output_overviews": [
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "output_compression": "ZSTD",
+      "output_block_size": [
+        512,
+        512
+      ],
+      "nodata": 0.0,
+      "class_set_sampled": [
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13,
+        15,
+        18,
+        21,
+        23,
+        24,
+        25,
+        29,
+        30,
+        31,
+        32,
+        33,
+        50,
+        66,
+        68,
+        81,
+        82
+      ],
+      "integrity_ok": true,
+      "integrity_windows_checked": 8,
+      "integrity_differences": [
+        {
+          "offset": [
+            0,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            0
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            0,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            2048,
+            2048
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            14336,
+            10240
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            26624,
+            18432
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            47104,
+            34816
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        },
+        {
+          "offset": [
+            55557,
+            42952
+          ],
+          "window": [
+            2048,
+            2048
+          ],
+          "diff_pixels": 0
+        }
+      ],
+      "error": null
+    }
+  ]
+}
