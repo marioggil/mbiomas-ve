@@ -1,0 +1,27 @@
+pixel_id,code,level1_code,level1_pixel_id,name_es,name_en,color
+3,1.1,1,1,Bosque,Forest,#1f8d49
+4,1.2,1,1,Sabana arbolada,Wooded savanna,#7dc975
+5,1.3,1,1,Manglar,Mangrove,#04381d
+6,1.4,1,1,Bosque inundable,Flooded forest,#026975
+9,3.4,3,14,Plantación forestal,Forest plantation,#7a6c00
+11,2.1,2,10,Herbazal/Arbustal inundable,Flooded grassland/shrubland,#519799
+12,2.2,2,10,Sabana/Herbazal,Grassland,#d6bc74
+13,2.7,2,10,Otras formaciones naturales no forestales,Other non-forest natural formations,#d89f5c
+15,3.1,3,14,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,#edde8e
+18,3.2,3,14,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,#e974ed
+21,3.3,3,14,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,#ffefc3
+23,4.1,4,22,Playa o duna,Beach or dune,#ffa07a
+24,4.2,4,22,Uso urbano,Urban,#d4271e
+25,4.5,4,22,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,#db4d4f
+27,6,6,27,No observado,Not observed,#ffffff
+29,2.3,2,10,Afloramiento rocoso,Rocky outcrop,#ffaa5f
+30,4.3,4,22,Uso Minero,Mining,#9c0027
+31,5.3,5,26,Acuicultura,Aquaculture,#091077
+32,2.4,2,10,Planicie de marea hipersalina,Hypersaline tidal flat,#fc8114
+33,5.1,5,26,"Río, lago u océano","River, lake or ocean",#2532e4
+34,5.2,5,26,Glaciar,Glacier,#93dfe6
+50,2.6,2,10,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,#ad5100
+66,2.5,2,10,Arbustal,Shrubland,#a89358
+68,4.4,4,22,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,#e97a7a
+81,2.8,2,10,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,#dfeb62
+82,2.9,2,10,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,#6fc179

@@ -1,0 +1,375 @@
+{
+  "country": "venezuela",
+  "collection": "3",
+  "legend_name": "MapBiomas Venezuela Colección 3",
+  "source_of_truth": {
+    "file": "MB-Venezuela-Col-3-Legend-Code.pdf",
+    "kind": "official PDF codebook",
+    "note": "Names, hierarchy and colors come from the PDF. The QGIS style is a cross-check only."
+  },
+  "cross_check": {
+    "file": "QGIS_Leyenda_col3.qml",
+    "kind": "QGIS paletted style",
+    "discrepancies": [
+      {
+        "pixel_id": 9,
+        "name_es": "Plantación forestal",
+        "field": "color",
+        "pdf": "#7a6c00",
+        "qml": "#7a5900"
+      },
+      {
+        "pixel_id": 12,
+        "name_es": "Sabana/Herbazal",
+        "field": "color",
+        "pdf": "#d6bc74",
+        "qml": "#b8af4f"
+      },
+      {
+        "pixel_id": 12,
+        "name_es": "Sabana/Herbazal",
+        "field": "name_es",
+        "pdf": "Sabana/Herbazal",
+        "qml": "Sabanas/Herbazal"
+      },
+      {
+        "pixel_id": 25,
+        "name_es": "Otras áreas antrópicas sin vegetación",
+        "field": "name_es",
+        "pdf": "Otras áreas antrópicas sin vegetación",
+        "qml": "Otras áreas antrópica sin vegetación"
+      },
+      {
+        "pixel_id": 27,
+        "name_es": "No observado",
+        "field": "color",
+        "pdf": "#ffffff",
+        "qml": "#d5d5e5"
+      },
+      {
+        "pixel_id": 29,
+        "name_es": "Afloramiento rocoso",
+        "field": "name_es",
+        "pdf": "Afloramiento rocoso",
+        "qml": "Afloramiento rocosos"
+      },
+      {
+        "pixel_id": 68,
+        "name_es": "Otras áreas naturales sin vegetación",
+        "field": "name_es",
+        "pdf": "Otras áreas naturales sin vegetación",
+        "qml": "Otras áreas natural sin vegetación"
+      },
+      {
+        "pixel_id": 81,
+        "name_es": "Herbazal/Arbustal andino",
+        "field": "name_es",
+        "pdf": "Herbazal/Arbustal andino",
+        "qml": "Vegetación herbácea y arbustiva andina"
+      },
+      {
+        "pixel_id": 82,
+        "name_es": "Herbazal/Arbustal andino inundable",
+        "field": "name_es",
+        "pdf": "Herbazal/Arbustal andino inundable",
+        "qml": "Vegetación herbácea y arbustiva andina inundable"
+      }
+    ]
+  },
+  "level1": [
+    {
+      "pixel_id": 1,
+      "code": "1",
+      "name_es": "Formaciones boscosas",
+      "name_en": "Forest formations",
+      "color": "#1f8d49",
+      "has_children": true
+    },
+    {
+      "pixel_id": 10,
+      "code": "2",
+      "name_es": "Herbazales y arbustales",
+      "name_en": "Grasslands and shrublands",
+      "color": "#d6bc74",
+      "has_children": true
+    },
+    {
+      "pixel_id": 14,
+      "code": "3",
+      "name_es": "Áreas agrícolas",
+      "name_en": "Agricultural areas",
+      "color": "#ffefc3",
+      "has_children": true
+    },
+    {
+      "pixel_id": 22,
+      "code": "4",
+      "name_es": "Áreas sin vegetación",
+      "name_en": "Non-vegetated areas",
+      "color": "#d4271e",
+      "has_children": true
+    },
+    {
+      "pixel_id": 26,
+      "code": "5",
+      "name_es": "Cuerpos de agua",
+      "name_en": "Water bodies",
+      "color": "#2532e4",
+      "has_children": true
+    },
+    {
+      "pixel_id": 27,
+      "code": "6",
+      "name_es": "No observado",
+      "name_en": "Not observed",
+      "color": "#ffffff",
+      "has_children": false
+    }
+  ],
+  "classes": [
+    {
+      "pixel_id": 3,
+      "code": "1.1",
+      "level1_pixel_id": 1,
+      "level1_code": "1",
+      "name_es": "Bosque",
+      "name_en": "Forest",
+      "color": "#1f8d49"
+    },
+    {
+      "pixel_id": 4,
+      "code": "1.2",
+      "level1_pixel_id": 1,
+      "level1_code": "1",
+      "name_es": "Sabana arbolada",
+      "name_en": "Wooded savanna",
+      "color": "#7dc975"
+    },
+    {
+      "pixel_id": 5,
+      "code": "1.3",
+      "level1_pixel_id": 1,
+      "level1_code": "1",
+      "name_es": "Manglar",
+      "name_en": "Mangrove",
+      "color": "#04381d"
+    },
+    {
+      "pixel_id": 6,
+      "code": "1.4",
+      "level1_pixel_id": 1,
+      "level1_code": "1",
+      "name_es": "Bosque inundable",
+      "name_en": "Flooded forest",
+      "color": "#026975"
+    },
+    {
+      "pixel_id": 9,
+      "code": "3.4",
+      "level1_pixel_id": 14,
+      "level1_code": "3",
+      "name_es": "Plantación forestal",
+      "name_en": "Forest plantation",
+      "color": "#7a6c00"
+    },
+    {
+      "pixel_id": 11,
+      "code": "2.1",
+      "level1_pixel_id": 10,
+      "level1_code": "2",
+      "name_es": "Herbazal/Arbustal inundable",
+      "name_en": "Flooded grassland/shrubland",
+      "color": "#519799"
+    },
+    {
+      "pixel_id": 12,
+      "code": "2.2",
+      "level1_pixel_id": 10,
+      "level1_code": "2",
+      "name_es": "Sabana/Herbazal",
+      "name_en": "Grassland",
+      "color": "#d6bc74"
+    },
+    {
+      "pixel_id": 13,
+      "code": "2.7",
+      "level1_pixel_id": 10,
+      "level1_code": "2",
+      "name_es": "Otras formaciones naturales no forestales",
+      "name_en": "Other non-forest natural formations",
+      "color": "#d89f5c"
+    },
+    {
+      "pixel_id": 15,
+      "code": "3.1",
+      "level1_pixel_id": 14,
+      "level1_code": "3",
+      "name_es": "Uso pecuario/Tierras en descanso",
+      "name_en": "Pasture/Fallow lands",
+      "color": "#edde8e"
+    },
+    {
+      "pixel_id": 18,
+      "code": "3.2",
+      "level1_pixel_id": 14,
+      "level1_code": "3",
+      "name_es": "Uso agrícola/Tierras en descanso",
+      "name_en": "Agriculture/Fallow lands",
+      "color": "#e974ed"
+    },
+    {
+      "pixel_id": 21,
+      "code": "3.3",
+      "level1_pixel_id": 14,
+      "level1_code": "3",
+      "name_es": "Uso agropecuario/Tierras en descanso",
+      "name_en": "Cropland/Pasture/Fallow lands",
+      "color": "#ffefc3"
+    },
+    {
+      "pixel_id": 23,
+      "code": "4.1",
+      "level1_pixel_id": 22,
+      "level1_code": "4",
+      "name_es": "Playa o duna",
+      "name_en": "Beach or dune",
+      "color": "#ffa07a"
+    },
+    {
+      "pixel_id": 24,
+      "code": "4.2",
+      "level1_pixel_id": 22,
+      "level1_code": "4",
+      "name_es": "Uso urbano",
+      "name_en": "Urban",
+      "color": "#d4271e"
+    },
+    {
+      "pixel_id": 25,
+      "code": "4.5",
+      "level1_pixel_id": 22,
+      "level1_code": "4",
+      "name_es": "Otras áreas antrópicas sin vegetación",
+      "name_en": "Other non-vegetated anthropic areas",
+      "color": "#db4d4f"
+    },
+    {
+      "pixel_id": 27,
+      "code": "6",
+      "level1_pixel_id": 27,
+      "level1_code": "6",
+      "name_es": "No observado",
+      "name_en": "Not observed",
+      "color": "#ffffff"
+    },
+    {
+      "pixel_id": 29,
+      "code": "2.3",
+      "level1_pixel_id": 10,
+      "level1_code": "2",
+      "name_es": "Afloramiento rocoso",
+      "name_en": "Rocky outcrop",
+      "color": "#ffaa5f"
+    },
+    {
+      "pixel_id": 30,
+      "code": "4.3",
+      "level1_pixel_id": 22,
+      "level1_code": "4",
+      "name_es": "Uso Minero",
+      "name_en": "Mining",
+      "color": "#9c0027"
+    },
+    {
+      "pixel_id": 31,
+      "code": "5.3",
+      "level1_pixel_id": 26,
+      "level1_code": "5",
+      "name_es": "Acuicultura",
+      "name_en": "Aquaculture",
+      "color": "#091077"
+    },
+    {
+      "pixel_id": 32,
+      "code": "2.4",
+      "level1_pixel_id": 10,
+      "level1_code": "2",
+      "name_es": "Planicie de marea hipersalina",
+      "name_en": "Hypersaline tidal flat",
+      "color": "#fc8114"
+    },
+    {
+      "pixel_id": 33,
+      "code": "5.1",
+      "level1_pixel_id": 26,
+      "level1_code": "5",
+      "name_es": "Río, lago u océano",
+      "name_en": "River, lake or ocean",
+      "color": "#2532e4"
+    },
+    {
+      "pixel_id": 34,
+      "code": "5.2",
+      "level1_pixel_id": 26,
+      "level1_code": "5",
+      "name_es": "Glaciar",
+      "name_en": "Glacier",
+      "color": "#93dfe6"
+    },
+    {
+      "pixel_id": 50,
+      "code": "2.6",
+      "level1_pixel_id": 10,
+      "level1_code": "2",
+      "name_es": "Herbazal/Arbustal xerófilo",
+      "name_en": "Xerophytic grassland/shrubland",
+      "color": "#ad5100"
+    },
+    {
+      "pixel_id": 66,
+      "code": "2.5",
+      "level1_pixel_id": 10,
+      "level1_code": "2",
+      "name_es": "Arbustal",
+      "name_en": "Shrubland",
+      "color": "#a89358"
+    },
+    {
+      "pixel_id": 68,
+      "code": "4.4",
+      "level1_pixel_id": 22,
+      "level1_code": "4",
+      "name_es": "Otras áreas naturales sin vegetación",
+      "name_en": "Other non-vegetated natural areas",
+      "color": "#e97a7a"
+    },
+    {
+      "pixel_id": 81,
+      "code": "2.8",
+      "level1_pixel_id": 10,
+      "level1_code": "2",
+      "name_es": "Herbazal/Arbustal andino",
+      "name_en": "Andean herbaceous/shrubby vegetation",
+      "color": "#dfeb62"
+    },
+    {
+      "pixel_id": 82,
+      "code": "2.9",
+      "level1_pixel_id": 10,
+      "level1_code": "2",
+      "name_es": "Herbazal/Arbustal andino inundable",
+      "name_en": "Flooded andean herbaceous/shrubby vegetation",
+      "color": "#6fc179"
+    }
+  ],
+  "invariants": {
+    "aggregator_pixel_ids_must_not_appear_in_rasters": [
+      1,
+      10,
+      14,
+      22,
+      26
+    ],
+    "nodata_value": 0
+  }
+}
