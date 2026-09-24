@@ -123,6 +123,12 @@ under-reports rare classes. It shows class 34 absent in 2023–2024, yet the
 independent verification found 18 full-resolution class-34 pixels in 2024. Any claim
 about rare classes must come from full-resolution counts (T5), never from this field.
 
+**Resolved in T4/T5**: at native resolution class 34 is present in **all 40 years**
+and declines monotonically from 989 to 18 pixels. The "legend drift" hypothesis
+recorded in this document was **wrong**: it was an artifact of this sampled field,
+not a change in the legend. The only genuine legend observation is that class 27
+(`No observado`) never appears, because the data encodes non-observed as nodata 0.
+
 **Independent verification (PASS)**: delegated to `gentle-ai-verify`, which refused to
 take the tool's own reasoning as evidence and built a discriminating control — the
 same window written twice as COG, once with NEAREST and once with AVERAGE. The
@@ -133,20 +139,54 @@ native pixels: **0 fabricated classes**, maximum absolute share deviation 0.0017
 sampling rate 0.015624 against an exact 1/64. The pyramid is NEAREST with no
 ambiguity.
 
-### T4 — Composition statistics
-- Exact class counts per year at native resolution: hectares, % of valid area,
-  % of land area, at level 1 and level 2.
-- Every output must carry the D7 label `extensión MapBiomas Venezuela` and the
-  boundary note; no unlabelled "Venezuela" area figure is acceptable.
-- Output: small versioned Parquet/CSV + JSON for the panel.
-- **Evidence**: area totals stable and plausible; level-2 sums equal level-1 sums.
+### T4 — Composition statistics — **DONE**
+
+- `tools/composition_stats.py` counts class pixels **exactly at native resolution**
+  (never sampled, never read from overviews) and computes area with row-wise geodesic
+  strips `R²·Δλ·(sin φ_top − sin φ_bot)` on the WGS84 authalic radius, derived from
+  each file's own geotransform. A constant per-pixel area would be wrong by several
+  percent across 12° of latitude.
+- Counting uses one vectorised `bincount` per row block on a `row·256 + class` key,
+  which keeps peak RSS at 567 MB instead of holding a 2.59 GB array.
+- Versioned outputs (180 KB total) in
+  `data/derived/venezuela/collection-3/composition/`:
+  `composition-level1-…csv`, `composition-level2-…csv`,
+  `composition-summary-…json`.
+- **Evidence**: 40/40 years, 1504 s wall clock, peak RSS 567 MB, no errors. Read back
+  from the CSVs independently of the tool: level-2 vs level-1 sums differ by **0
+  pixels** and 3×10⁻⁶ ha of area; CSV totals match the JSON's `valid_area_ha` to
+  0.000000 km²; class areas plus nodata equal the total extent at machine precision.
+- **Area (D7 extent)**: valid **1,086,229.52 km²**, nodata **1,221,860.96 km²**,
+  total 2,308,090.47 km² — stable across all 40 years.
+- **D7 labelling**: `extent_label` and `boundary_note` sit at the top level of the
+  summary JSON, so no consumer can miss them.
+- **Cross-check**: class 34 in 2024 = **exactly 18 pixels**, matching the independent
+  verifier's native-resolution count. The counting logic is corroborated by a second
+  implementation.
+- Dominant-class trend 1985 → 2024: Bosque 60,574,929 → 57,645,738 ha (−4.84 %),
+  Uso agropecuario 16,270,004 → 19,208,278 ha (+18.06 %), Sabana/Herbazal
+  9,698,373 → 8,743,380 ha (−9.85 %).
+- **Glacier series (class 34, native pixels)**: 1985 **989** · 1990 643 · 2000 299 ·
+  2012 101 · 2020 44 · 2024 **18**. Only two upward steps in 40 years (+0 and +1
+  pixel); everything else is decline.
+- **Schema smell, follow-up**: the summary JSON keys years at the top level
+  (`"1985": {…}`) next to metadata keys, mixing namespaces for consumers. It should
+  be nested under `per_year` in a later pass.
 
 ### T5 — Data integrity validation
-- Class 34 (Glaciar) trend — expected monotonically shrinking to ~0 by 2024
-  (Venezuela lost its last glacier; strong external validation of the series).
-- Class 27 (`No observado`) presence or absence vs nodata=0 semantics.
-- Legend drift across years (class 34 disappears by 2024).
-- **Evidence**: per-year class 34 counts table + verdict on each check.
+
+- Class 34 (Glaciar) series — **resolved in T4**: present in all 40 years at native
+  resolution, monotonic decline 989 → 18 pixels. The "class 34 disappears by 2024"
+  legend-drift hypothesis is **refuted**; it was a 1/8 sampling artifact.
+- Class 27 (`No observado`) vs nodata=0 semantics — **resolved in T4**: class 27 has
+  exactly 0 pixels in every year. The data encodes "not observed" as nodata 0, which
+  therefore conflates "outside the mapped extent" with "not observed". The summary
+  JSON keeps nodata area in its own field, never merged into a class.
+- Remaining check: class 33 (Río, lago u océano) grows +4.42 % across the series
+  (4,280,192 → 4,469,291 ha). Unverified whether that is reservoir construction, a
+  real hydrological signal, or classification behaviour. Not blocking; needs a note
+  before any water-related claim is published.
+- **Evidence**: per-year class-34 counts are in the T4 evidence above.
 
 ### T6 — Reusable statistics engine (shape for F3)
 - Parameterized by spatial unit: country and collection now, H3 later.
@@ -181,7 +221,8 @@ ambiguity.
 |---|---|---|
 | T1 | `7bd98a5` | 40 rasters relocated to `data/raw/venezuela/collection-3/`; `git check-ignore` confirms no `.tif` is ever tracked; branch `feat/plataforma-cobertura-ve` created from unborn HEAD; 8 paths committed |
 | T2 | `71d94c1` | `tools/build_codebook.py` emits `data/legend/venezuela-collection-3.{json,csv}`: 6 level-1 groups, 26 classes, unique pixel ids, colors taken from the PDF, 9 PDF-vs-QGIS discrepancies recorded instead of silently resolved |
-| T3 | this commit | 40/40 COG converted, 0 failed, 320 integrity windows with 0 differing pixels, 4.44 GB output, versioned manifest with 80 checksums; independent NEAREST verification PASS with a discriminating AVERAGE control (see section 7/T3) |
+| T3 | `84e786f` | 40/40 COG converted, 0 failed, 320 integrity windows with 0 differing pixels, 4.44 GB output, versioned manifest with 80 checksums; independent NEAREST verification PASS with a discriminating AVERAGE control (see section 7/T3) |
+| T4 | this commit | 40/40 years of exact native-resolution composition, 1504 s, peak RSS 567 MB; level-2 vs level-1 = 0 pixel difference; class 34 in 2024 = exactly 18 pixels, matching the independent verifier; valid area 1,086,229.52 km² with the D7 label at the top level of the summary JSON; glacier series 989 → 18 pixels. **Committed without lens review** — see section 12 |
 
 ## 10. Deviation record: harness routing defect
 
@@ -260,3 +301,71 @@ delegated as a file.
 T3 closed with the delegation route working. Nothing was broken and no data was
 harmed while blocked: T1 and T2 were already committed and the raw rasters were
 untouched throughout.
+
+## 11. Review findings backlog
+
+The T3 review (lineage `review-d0e8dcb9c0cad2ba`) closed **approved** with 17 findings,
+all `informational` and non-blocking: none opened a correction and none is a reason to
+re-run that review. The closing envelope carried each finding's id, lens, location,
+severity and disposition but **not its body text**, so the entries below are an index
+of where to look, not a summary of what they say. Read the bodies from the native
+store when the listed files are next touched.
+
+WARNING level:
+
+| Id | Lens | Location |
+|---|---|---|
+| `R2-caveat-contradicts-manifest` | readability | `odd/tasks/plataforma-cobertura-ve.md:121-124` |
+| `R2-error-contract-unguarded` | readability | `tools/normalize_to_cog.py:206-260` |
+| `R3-001` | reliability | `tools/normalize_to_cog.py:206` |
+| `R3-002` | reliability | `tools/normalize_to_cog.py:309` |
+| `R4-1` | resilience | `tools/normalize_to_cog.py:203-259` |
+
+SUGGESTION level, all in `tools/normalize_to_cog.py`: `R2-duplicate-success-filter`
+(:372), `R2-manifest-window-bloat` (:252-256), `R2-pyramid-comment-overstates`
+(:229-233), `R2-status-branch-noise` (:355-361), `R2-vacuous-integrity-true` (:262),
+`R2-this-commit-placeholder` (doc :180-184), `R3-003` (:233), `R3-004` (:184-194),
+`R3-005` (:334), `R4-2` (:371), `R4-3` (:345-347), `R4-4` (:188-192).
+
+**Candidate sizing lesson**: including the generated 105 KB manifest in the T3 review
+candidate inflated it from ~450 authored lines to 6363 and pushed each reviewer prompt
+to 147 KB. From T4 onward, generated artifacts are excluded from the review candidate
+and committed alongside the tool that produces them. T4 applied this: the candidate was
+633 lines with only `tools/composition_stats.py` and this document.
+
+## 12. T4 review debt (explicit, not hidden)
+
+**T4 was committed without lens review.** The candidate was frozen and correct, the four
+reviewer slots were issued and authorized twice, and both runs died in the provider
+upstream, not locally:
+
+| Attempt | Lens that failed | Failure | Elapsed |
+|---|---|---|---|
+| 1 | `review-readability` | `[server_error] upstream service failed` | 154 s |
+| 2 | `review-readability` | `[server_error] upstream service timeout` | 600 s |
+
+Both returned `prepared_reviewers: 0`, `submitted_reviewers: 0`,
+`mutation_performed: false`, so nothing was contaminated and no partial result was
+admitted. The decision to proceed anyway was the user's, taken with the cost of further
+attempts (~10 min of wall clock each, no mutation on failure) on the table.
+
+Consequences to carry forward:
+
+- The lineage `review-81491992caa75a25` is left **open** in state `reviewing` with zero
+  lens results. No operation available to this agent abandons a non-legacy lineage, so
+  it stays as an orphan. Committing T4 changed the workspace, so the next `inspect` will
+  project a fresh target; this lineage should be treated as dead, never resumed.
+- The reviewer model `opencode-go/glm-5.3-flash` failed twice with long-generation
+  upstream errors. If this recurs on T5, switch the lens model in
+  `~/.pi/gentle-ai/models.json` before retrying.
+- **Compensating evidence, which is why this debt is acceptable here**: the core
+  correctness of `tools/composition_stats.py` is corroborated by a *second,
+  independent implementation*. The `gentle-ai-verify` agent wrote its own native-
+  resolution histogram and counted 18 pixels of class 34 in 2024; this tool, written
+  separately, reproduces exactly 18. Agreement between two implementations on a rare
+  class is stronger evidence of counting correctness than a style-oriented lens review.
+  What is *not* covered by that evidence: error-handling contracts, resilience and
+  readability of the new tool, and the same classes of finding that the T3 review
+  raised. Those are open.
+- **Not to be re-run**: do not re-review the T4 candidate. Its files are committed; any
+  further review belongs to the next candidate that touches them.

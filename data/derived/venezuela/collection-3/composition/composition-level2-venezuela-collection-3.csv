@@ -1,0 +1,1041 @@
+country,collection,year,pixel_id,code,level1_pixel_id,level1_code,name_es,name_en,pixels,area_ha,share_of_extent_pct
+venezuela,3,1985,3,1.1,1,1,Bosque,Forest,679001691,60574929.183514,55.766230
+venezuela,3,1985,4,1.2,1,1,Sabana arbolada,Wooded savanna,10949239,974286.873755,0.896944
+venezuela,3,1985,5,1.3,1,1,Manglar,Mangrove,3117995,275684.368256,0.253799
+venezuela,3,1985,6,1.4,1,1,Bosque inundable,Flooded forest,75062873,6690479.229098,6.159360
+venezuela,3,1985,9,3.4,14,3,Plantación forestal,Forest plantation,1559867,138462.413333,0.127471
+venezuela,3,1985,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53622305,4773637.737827,4.394686
+venezuela,3,1985,12,2.2,10,2,Sabana/Herbazal,Grassland,108917462,9698372.720689,8.928474
+venezuela,3,1985,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1203877,107752.885130,0.099199
+venezuela,3,1985,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,9099691,809900.934190,0.745608
+venezuela,3,1985,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1425704,127019.762368,0.116936
+venezuela,3,1985,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,183375612,16270004.021906,14.978421
+venezuela,3,1985,23,4.1,22,4,Playa o duna,Beach or dune,7526706,667409.617857,0.614428
+venezuela,3,1985,24,4.2,22,4,Uso urbano,Urban,2527554,223601.754570,0.205851
+venezuela,3,1985,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1257148,111416.838904,0.102572
+venezuela,3,1985,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1985,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2667225,238426.548223,0.219499
+venezuela,3,1985,30,4.3,22,4,Uso Minero,Mining,190457,16948.113091,0.015603
+venezuela,3,1985,31,5.3,26,5,Acuicultura,Aquaculture,1567,138.394249,0.000127
+venezuela,3,1985,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,713230,62796.269913,0.057811
+venezuela,3,1985,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48300757,4280191.732776,3.940412
+venezuela,3,1985,34,5.2,26,5,Glaciar,Glacier,989,87.824807,0.000081
+venezuela,3,1985,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3389586,298842.597788,0.275119
+venezuela,3,1985,66,2.5,10,2,Arbustal,Shrubland,22609545,1996851.612946,1.838333
+venezuela,3,1985,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,48587,4309.885312,0.003968
+venezuela,3,1985,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3131130,277852.337345,0.255795
+venezuela,3,1985,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40055,3554.650542,0.003272
+venezuela,3,1986,3,1.1,1,1,Bosque,Forest,678846445,60561100.793597,55.753500
+venezuela,3,1986,4,1.2,1,1,Sabana arbolada,Wooded savanna,10966939,975868.577897,0.898400
+venezuela,3,1986,5,1.3,1,1,Manglar,Mangrove,3093290,273500.855882,0.251789
+venezuela,3,1986,6,1.4,1,1,Bosque inundable,Flooded forest,75069024,6691025.440428,6.159863
+venezuela,3,1986,9,3.4,14,3,Plantación forestal,Forest plantation,1559839,138459.928648,0.127468
+venezuela,3,1986,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53552279,4767443.724201,4.388984
+venezuela,3,1986,12,2.2,10,2,Sabana/Herbazal,Grassland,108923923,9698881.613857,8.928943
+venezuela,3,1986,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1203880,107753.154496,0.099199
+venezuela,3,1986,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,9099789,809909.665599,0.745616
+venezuela,3,1986,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1427390,127170.572819,0.117075
+venezuela,3,1986,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,184538955,16373432.297532,15.073639
+venezuela,3,1986,23,4.1,22,4,Playa o duna,Beach or dune,7165982,635108.693794,0.584691
+venezuela,3,1986,24,4.2,22,4,Uso urbano,Urban,2574483,227752.225050,0.209672
+venezuela,3,1986,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1257818,111475.829873,0.102626
+venezuela,3,1986,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1986,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2663771,238117.260596,0.219214
+venezuela,3,1986,30,4.3,22,4,Uso Minero,Mining,200906,17875.757525,0.016457
+venezuela,3,1986,31,5.3,26,5,Acuicultura,Aquaculture,3621,319.480844,0.000294
+venezuela,3,1986,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,678488,59733.298795,0.054991
+venezuela,3,1986,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48384339,4287614.579350,3.947245
+venezuela,3,1986,34,5.2,26,5,Glaciar,Glacier,964,85.604757,0.000079
+venezuela,3,1986,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3355324,295832.378328,0.272348
+venezuela,3,1986,66,2.5,10,2,Arbustal,Shrubland,22007898,1943600.100915,1.789309
+venezuela,3,1986,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,54702,4851.020687,0.004466
+venezuela,3,1986,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3071053,272517.882197,0.250884
+venezuela,3,1986,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39746,3527.215776,0.003247
+venezuela,3,1987,3,1.1,1,1,Bosque,Forest,678603794,60539300.051229,55.733430
+venezuela,3,1987,4,1.2,1,1,Sabana arbolada,Wooded savanna,10882269,968384.960168,0.891510
+venezuela,3,1987,5,1.3,1,1,Manglar,Mangrove,3098803,273989.514015,0.252239
+venezuela,3,1987,6,1.4,1,1,Bosque inundable,Flooded forest,75180821,6700975.492215,6.169023
+venezuela,3,1987,9,3.4,14,3,Plantación forestal,Forest plantation,1545415,137178.865912,0.126289
+venezuela,3,1987,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53367672,4751150.231469,4.373983
+venezuela,3,1987,12,2.2,10,2,Sabana/Herbazal,Grassland,106732092,9504364.853950,8.749867
+venezuela,3,1987,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1198130,107238.284278,0.098725
+venezuela,3,1987,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,9345526,831770.505131,0.765741
+venezuela,3,1987,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1528908,136194.582566,0.125383
+venezuela,3,1987,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,186612078,16557455.707087,15.243054
+venezuela,3,1987,23,4.1,22,4,Playa o duna,Beach or dune,6742594,597476.184963,0.550046
+venezuela,3,1987,24,4.2,22,4,Uso urbano,Urban,2709292,239679.526963,0.220653
+venezuela,3,1987,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1247507,110565.846211,0.101789
+venezuela,3,1987,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1987,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2661895,237948.691830,0.219059
+venezuela,3,1987,30,4.3,22,4,Uso Minero,Mining,205725,18307.063981,0.016854
+venezuela,3,1987,31,5.3,26,5,Acuicultura,Aquaculture,19460,1713.509804,0.001577
+venezuela,3,1987,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,631541,55598.766241,0.051185
+venezuela,3,1987,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48898862,4333346.629538,3.989347
+venezuela,3,1987,34,5.2,26,5,Glaciar,Glacier,916,81.342296,0.000075
+venezuela,3,1987,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3379685,297960.705721,0.274307
+venezuela,3,1987,66,2.5,10,2,Arbustal,Shrubland,21990766,1942124.994587,1.787951
+venezuela,3,1987,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,59191,5249.795278,0.004833
+venezuela,3,1987,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3057899,271351.465172,0.249810
+venezuela,3,1987,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40002,3549.938069,0.003268
+venezuela,3,1988,3,1.1,1,1,Bosque,Forest,677543006,60445247.019321,55.646844
+venezuela,3,1988,4,1.2,1,1,Sabana arbolada,Wooded savanna,10777076,959041.103909,0.882908
+venezuela,3,1988,5,1.3,1,1,Manglar,Mangrove,3104911,274530.165785,0.252737
+venezuela,3,1988,6,1.4,1,1,Bosque inundable,Flooded forest,75185889,6701394.014670,6.169409
+venezuela,3,1988,9,3.4,14,3,Plantación forestal,Forest plantation,1609580,142874.099589,0.131532
+venezuela,3,1988,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53379460,4752145.607113,4.374900
+venezuela,3,1988,12,2.2,10,2,Sabana/Herbazal,Grassland,106652273,9497235.083524,8.743304
+venezuela,3,1988,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1199975,107403.412547,0.098877
+venezuela,3,1988,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,9437019,839913.108171,0.773237
+venezuela,3,1988,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1602626,142764.659799,0.131431
+venezuela,3,1988,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,187804282,16663280.187752,15.340478
+venezuela,3,1988,23,4.1,22,4,Playa o duna,Beach or dune,6808013,603295.299229,0.555403
+venezuela,3,1988,24,4.2,22,4,Uso urbano,Urban,2805485,248187.531975,0.228485
+venezuela,3,1988,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1244912,110335.404719,0.101577
+venezuela,3,1988,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1988,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2656211,237440.310907,0.218591
+venezuela,3,1988,30,4.3,22,4,Uso Minero,Mining,222887,19837.947647,0.018263
+venezuela,3,1988,31,5.3,26,5,Acuicultura,Aquaculture,19737,1737.980473,0.001600
+venezuela,3,1988,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,641708,56492.275123,0.052008
+venezuela,3,1988,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48623456,4308829.723350,3.966776
+venezuela,3,1988,34,5.2,26,5,Glaciar,Glacier,672,59.674550,0.000055
+venezuela,3,1988,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3399915,299744.522268,0.275950
+venezuela,3,1988,66,2.5,10,2,Arbustal,Shrubland,21861212,1930712.578453,1.777444
+venezuela,3,1988,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,61065,5415.381410,0.004985
+venezuela,3,1988,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3059458,271489.323842,0.249937
+venezuela,3,1988,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40001,3549.849329,0.003268
+venezuela,3,1989,3,1.1,1,1,Bosque,Forest,676640621,60365309.245667,55.573252
+venezuela,3,1989,4,1.2,1,1,Sabana arbolada,Wooded savanna,10978405,976936.109236,0.899383
+venezuela,3,1989,5,1.3,1,1,Manglar,Mangrove,3090783,273281.182039,0.251587
+venezuela,3,1989,6,1.4,1,1,Bosque inundable,Flooded forest,75165765,6699626.117343,6.167781
+venezuela,3,1989,9,3.4,14,3,Plantación forestal,Forest plantation,1837913,163143.955748,0.150193
+venezuela,3,1989,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53555682,4767882.352768,4.389387
+venezuela,3,1989,12,2.2,10,2,Sabana/Herbazal,Grassland,105092187,9358582.558561,8.615658
+venezuela,3,1989,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1200902,107486.477073,0.098954
+venezuela,3,1989,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,9553609,850283.707411,0.782785
+venezuela,3,1989,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1624578,144716.498454,0.133228
+venezuela,3,1989,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,189447083,16808923.733175,15.474559
+venezuela,3,1989,23,4.1,22,4,Playa o duna,Beach or dune,6824505,604862.407910,0.556846
+venezuela,3,1989,24,4.2,22,4,Uso urbano,Urban,2877619,254573.979190,0.234365
+venezuela,3,1989,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1244327,110284.856716,0.101530
+venezuela,3,1989,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1989,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2646404,236564.077338,0.217785
+venezuela,3,1989,30,4.3,22,4,Uso Minero,Mining,241102,21460.346862,0.019757
+venezuela,3,1989,31,5.3,26,5,Acuicultura,Aquaculture,19946,1756.449983,0.001617
+venezuela,3,1989,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,679666,59835.391188,0.055085
+venezuela,3,1989,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48628224,4309350.837962,3.967256
+venezuela,3,1989,34,5.2,26,5,Glaciar,Glacier,660,58.608938,0.000054
+venezuela,3,1989,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3443335,303550.259594,0.279453
+venezuela,3,1989,66,2.5,10,2,Arbustal,Shrubland,21845738,1929244.690385,1.776093
+venezuela,3,1989,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,51741,4590.183239,0.004226
+venezuela,3,1989,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3010301,267126.166566,0.245921
+venezuela,3,1989,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39729,3525.717321,0.003246
+venezuela,3,1990,3,1.1,1,1,Bosque,Forest,674596097,60184107.321766,55.406435
+venezuela,3,1990,4,1.2,1,1,Sabana arbolada,Wooded savanna,11278114,1003552.650021,0.923886
+venezuela,3,1990,5,1.3,1,1,Manglar,Mangrove,3074675,271858.170443,0.250277
+venezuela,3,1990,6,1.4,1,1,Bosque inundable,Flooded forest,75100828,6693828.123533,6.162443
+venezuela,3,1990,9,3.4,14,3,Plantación forestal,Forest plantation,1965851,174501.023687,0.160648
+venezuela,3,1990,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53020541,4720177.291068,4.345469
+venezuela,3,1990,12,2.2,10,2,Sabana/Herbazal,Grassland,103391436,9207497.571764,8.476567
+venezuela,3,1990,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1200463,107447.110470,0.098917
+venezuela,3,1990,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,9624363,856575.351016,0.788577
+venezuela,3,1990,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1653281,147274.933367,0.135584
+venezuela,3,1990,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,193210750,17142929.512410,15.782050
+venezuela,3,1990,23,4.1,22,4,Playa o duna,Beach or dune,6788891,601980.630596,0.554193
+venezuela,3,1990,24,4.2,22,4,Uso urbano,Urban,2976556,263320.463679,0.242417
+venezuela,3,1990,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1243737,110233.122920,0.101482
+venezuela,3,1990,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1990,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2640096,235999.794348,0.217265
+venezuela,3,1990,30,4.3,22,4,Uso Minero,Mining,248689,22139.291131,0.020382
+venezuela,3,1990,31,5.3,26,5,Acuicultura,Aquaculture,27715,2443.395350,0.002249
+venezuela,3,1990,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,678646,59747.189939,0.055004
+venezuela,3,1990,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48638641,4310256.245451,3.968090
+venezuela,3,1990,34,5.2,26,5,Glaciar,Glacier,643,57.099323,0.000053
+venezuela,3,1990,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3428083,302214.239149,0.278223
+venezuela,3,1990,66,2.5,10,2,Arbustal,Shrubland,21837957,1928419.049305,1.775333
+venezuela,3,1990,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,49768,4415.069626,0.004065
+venezuela,3,1990,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3025160,268445.352185,0.247135
+venezuela,3,1990,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39846,3536.085639,0.003255
+venezuela,3,1991,3,1.1,1,1,Bosque,Forest,671805094,59937359.148370,55.179275
+venezuela,3,1991,4,1.2,1,1,Sabana arbolada,Wooded savanna,11886018,1057495.423623,0.973547
+venezuela,3,1991,5,1.3,1,1,Manglar,Mangrove,3110180,274995.924269,0.253166
+venezuela,3,1991,6,1.4,1,1,Bosque inundable,Flooded forest,75109918,6694624.444045,6.163176
+venezuela,3,1991,9,3.4,14,3,Plantación forestal,Forest plantation,1995831,177159.114630,0.163095
+venezuela,3,1991,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53629506,4774334.987971,4.395328
+venezuela,3,1991,12,2.2,10,2,Sabana/Herbazal,Grassland,102481711,9126599.122709,8.402091
+venezuela,3,1991,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1200276,107430.083045,0.098902
+venezuela,3,1991,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,9744879,867300.415355,0.798450
+venezuela,3,1991,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1663034,148138.112011,0.136378
+venezuela,3,1991,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,193635899,17180240.798222,15.816400
+venezuela,3,1991,23,4.1,22,4,Playa o duna,Beach or dune,7419760,657688.982451,0.605479
+venezuela,3,1991,24,4.2,22,4,Uso urbano,Urban,3085684,272974.126605,0.251304
+venezuela,3,1991,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1245903,110424.722453,0.101659
+venezuela,3,1991,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1991,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2636336,235663.085344,0.216955
+venezuela,3,1991,30,4.3,22,4,Uso Minero,Mining,264220,23522.955480,0.021656
+venezuela,3,1991,31,5.3,26,5,Acuicultura,Aquaculture,33736,2975.659102,0.002739
+venezuela,3,1991,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,741417,65278.595173,0.060097
+venezuela,3,1991,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48564109,4303640.103290,3.961999
+venezuela,3,1991,34,5.2,26,5,Glaciar,Glacier,595,52.836836,0.000049
+venezuela,3,1991,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3429953,302420.546088,0.278413
+venezuela,3,1991,66,2.5,10,2,Arbustal,Shrubland,22911939,2023573.565598,1.862934
+venezuela,3,1991,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43420,3847.471981,0.003542
+venezuela,3,1991,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3061558,271679.334442,0.250112
+venezuela,3,1991,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39845,3535.996959,0.003255
+venezuela,3,1992,3,1.1,1,1,Bosque,Forest,671187366,59882316.578296,55.128602
+venezuela,3,1992,4,1.2,1,1,Sabana arbolada,Wooded savanna,12054717,1072485.638785,0.987347
+venezuela,3,1992,5,1.3,1,1,Manglar,Mangrove,3131168,276851.749415,0.254874
+venezuela,3,1992,6,1.4,1,1,Bosque inundable,Flooded forest,75067029,6690824.000725,6.159678
+venezuela,3,1992,9,3.4,14,3,Plantación forestal,Forest plantation,2170710,192680.209101,0.177384
+venezuela,3,1992,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53877673,4796497.555422,4.415731
+venezuela,3,1992,12,2.2,10,2,Sabana/Herbazal,Grassland,101933688,9077849.322794,8.357211
+venezuela,3,1992,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1201438,107534.022092,0.098998
+venezuela,3,1992,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,9790650,871373.975533,0.802201
+venezuela,3,1992,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1689479,150495.518905,0.138549
+venezuela,3,1992,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,193595614,17176978.191372,15.813396
+venezuela,3,1992,23,4.1,22,4,Playa o duna,Beach or dune,7205710,638841.077419,0.588127
+venezuela,3,1992,24,4.2,22,4,Uso urbano,Urban,3126707,276603.340559,0.254645
+venezuela,3,1992,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1252002,110966.962281,0.102158
+venezuela,3,1992,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1992,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2641872,236157.166772,0.217410
+venezuela,3,1992,30,4.3,22,4,Uso Minero,Mining,276124,24585.478279,0.022634
+venezuela,3,1992,31,5.3,26,5,Acuicultura,Aquaculture,46041,4060.551053,0.003738
+venezuela,3,1992,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,789050,69472.024203,0.063957
+venezuela,3,1992,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48785717,4323307.816791,3.980105
+venezuela,3,1992,34,5.2,26,5,Glaciar,Glacier,544,48.307917,0.000044
+venezuela,3,1992,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3633272,320305.104370,0.294878
+venezuela,3,1992,66,2.5,10,2,Arbustal,Shrubland,23140579,2043760.029749,1.881518
+venezuela,3,1992,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43464,3851.346277,0.003546
+venezuela,3,1992,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3060362,271573.590980,0.250015
+venezuela,3,1992,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39845,3535.996959,0.003255
+venezuela,3,1993,3,1.1,1,1,Bosque,Forest,670955842,59861712.406535,55.109633
+venezuela,3,1993,4,1.2,1,1,Sabana arbolada,Wooded savanna,12018669,1069284.099249,0.984400
+venezuela,3,1993,5,1.3,1,1,Manglar,Mangrove,3131867,276913.359515,0.254931
+venezuela,3,1993,6,1.4,1,1,Bosque inundable,Flooded forest,75078551,6691842.925397,6.160616
+venezuela,3,1993,9,3.4,14,3,Plantación forestal,Forest plantation,2369233,210301.852311,0.193607
+venezuela,3,1993,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53868874,4795688.985131,4.414987
+venezuela,3,1993,12,2.2,10,2,Sabana/Herbazal,Grassland,102007237,9084399.407191,8.363241
+venezuela,3,1993,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1202219,107603.949760,0.099062
+venezuela,3,1993,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,9900314,881131.608497,0.811184
+venezuela,3,1993,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1721483,153345.934672,0.141173
+venezuela,3,1993,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,193484532,17167144.265767,15.804343
+venezuela,3,1993,23,4.1,22,4,Playa o duna,Beach or dune,7194684,637868.352533,0.587232
+venezuela,3,1993,24,4.2,22,4,Uso urbano,Urban,3141103,277882.629171,0.255823
+venezuela,3,1993,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1261090,111776.206237,0.102903
+venezuela,3,1993,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1993,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2640934,236072.879654,0.217332
+venezuela,3,1993,30,4.3,22,4,Uso Minero,Mining,281549,25071.330921,0.023081
+venezuela,3,1993,31,5.3,26,5,Acuicultura,Aquaculture,46043,4060.727368,0.003738
+venezuela,3,1993,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,789525,69513.882110,0.063996
+venezuela,3,1993,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48686815,4314531.640501,3.972026
+venezuela,3,1993,34,5.2,26,5,Glaciar,Glacier,502,44.578243,0.000041
+venezuela,3,1993,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3642649,321131.558764,0.295639
+venezuela,3,1993,66,2.5,10,2,Arbustal,Shrubland,23173585,2046685.305457,1.884211
+venezuela,3,1993,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43465,3851.434430,0.003546
+venezuela,3,1993,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3060211,271560.239678,0.250003
+venezuela,3,1993,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39845,3535.996959,0.003255
+venezuela,3,1994,3,1.1,1,1,Bosque,Forest,670278038,59801544.612689,55.054242
+venezuela,3,1994,4,1.2,1,1,Sabana arbolada,Wooded savanna,11967651,1064762.138722,0.980237
+venezuela,3,1994,5,1.3,1,1,Manglar,Mangrove,3131918,276917.843800,0.254935
+venezuela,3,1994,6,1.4,1,1,Bosque inundable,Flooded forest,75095534,6693349.754176,6.162003
+venezuela,3,1994,9,3.4,14,3,Plantación forestal,Forest plantation,2370690,210431.210876,0.193726
+venezuela,3,1994,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53865826,4795416.790382,4.414736
+venezuela,3,1994,12,2.2,10,2,Sabana/Herbazal,Grassland,101585957,9047155.095760,8.328953
+venezuela,3,1994,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1204214,107782.423484,0.099226
+venezuela,3,1994,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10016848,891508.875959,0.820737
+venezuela,3,1994,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1742409,155214.936490,0.142893
+venezuela,3,1994,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,194584335,17264578.741593,15.894043
+venezuela,3,1994,23,4.1,22,4,Playa o duna,Beach or dune,7186828,637170.205802,0.586589
+venezuela,3,1994,24,4.2,22,4,Uso urbano,Urban,3146188,278334.715074,0.256239
+venezuela,3,1994,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1260813,111751.591197,0.102880
+venezuela,3,1994,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1994,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2636869,235710.003522,0.216998
+venezuela,3,1994,30,4.3,22,4,Uso Minero,Mining,301073,26814.021539,0.024685
+venezuela,3,1994,31,5.3,26,5,Acuicultura,Aquaculture,46042,4060.638720,0.003738
+venezuela,3,1994,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,789938,69550.278076,0.064029
+venezuela,3,1994,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48612186,4307889.216175,3.965911
+venezuela,3,1994,34,5.2,26,5,Glaciar,Glacier,502,44.578243,0.000041
+venezuela,3,1994,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3644737,321315.602565,0.295808
+venezuela,3,1994,66,2.5,10,2,Arbustal,Shrubland,23130978,2042905.679861,1.880731
+venezuela,3,1994,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43469,3851.787041,0.003546
+venezuela,3,1994,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3057933,271358.817345,0.249817
+venezuela,3,1994,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39845,3535.996959,0.003255
+venezuela,3,1995,3,1.1,1,1,Bosque,Forest,670078978,59783816.988945,55.037921
+venezuela,3,1995,4,1.2,1,1,Sabana arbolada,Wooded savanna,11983274,1066159.472033,0.981523
+venezuela,3,1995,5,1.3,1,1,Manglar,Mangrove,3126324,276421.210851,0.254478
+venezuela,3,1995,6,1.4,1,1,Bosque inundable,Flooded forest,75088506,6692725.522338,6.161428
+venezuela,3,1995,9,3.4,14,3,Plantación forestal,Forest plantation,2370885,210448.527719,0.193742
+venezuela,3,1995,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53875194,4796256.650005,4.415509
+venezuela,3,1995,12,2.2,10,2,Sabana/Herbazal,Grassland,101714892,9058655.200566,8.339540
+venezuela,3,1995,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1205023,107854.738678,0.099293
+venezuela,3,1995,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10089624,897985.069130,0.826699
+venezuela,3,1995,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1777166,158318.738484,0.145751
+venezuela,3,1995,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,194639756,17269488.733909,15.898563
+venezuela,3,1995,23,4.1,22,4,Playa o duna,Beach or dune,7206611,638929.581909,0.588209
+venezuela,3,1995,24,4.2,22,4,Uso urbano,Urban,3147953,278492.112800,0.256384
+venezuela,3,1995,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1260906,111759.760756,0.102888
+venezuela,3,1995,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1995,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2631377,235219.667907,0.216547
+venezuela,3,1995,30,4.3,22,4,Uso Minero,Mining,321887,28673.777512,0.026398
+venezuela,3,1995,31,5.3,26,5,Acuicultura,Aquaculture,46042,4060.638720,0.003738
+venezuela,3,1995,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,789933,69549.836457,0.064029
+venezuela,3,1995,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48459787,4294309.109532,3.953408
+venezuela,3,1995,34,5.2,26,5,Glaciar,Glacier,502,44.578243,0.000041
+venezuela,3,1995,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3644737,321315.602565,0.295808
+venezuela,3,1995,66,2.5,10,2,Arbustal,Shrubland,23143081,2043976.668249,1.881717
+venezuela,3,1995,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43469,3851.787041,0.003546
+venezuela,3,1995,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3055069,271105.584743,0.249584
+venezuela,3,1995,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39845,3535.996959,0.003255
+venezuela,3,1996,3,1.1,1,1,Bosque,Forest,667759812,59577956.174553,54.848403
+venezuela,3,1996,4,1.2,1,1,Sabana arbolada,Wooded savanna,11489480,1022351.638884,0.941193
+venezuela,3,1996,5,1.3,1,1,Manglar,Mangrove,3135081,277205.752124,0.255200
+venezuela,3,1996,6,1.4,1,1,Bosque inundable,Flooded forest,75124510,6695952.112682,6.164399
+venezuela,3,1996,9,3.4,14,3,Plantación forestal,Forest plantation,3728587,330962.071544,0.304689
+venezuela,3,1996,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53776557,4787589.005597,4.407530
+venezuela,3,1996,12,2.2,10,2,Sabana/Herbazal,Grassland,98250001,8751355.442556,8.056635
+venezuela,3,1996,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1205593,107905.729991,0.099340
+venezuela,3,1996,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10257621,912933.818873,0.840461
+venezuela,3,1996,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1788001,159279.460977,0.146635
+venezuela,3,1996,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,200129284,17756140.726160,16.346582
+venezuela,3,1996,23,4.1,22,4,Playa o duna,Beach or dune,6703464,593948.209518,0.546798
+venezuela,3,1996,24,4.2,22,4,Uso urbano,Urban,3295603,291558.951685,0.268414
+venezuela,3,1996,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1251184,110900.848544,0.102097
+venezuela,3,1996,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1996,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2622549,234431.749576,0.215822
+venezuela,3,1996,30,4.3,22,4,Uso Minero,Mining,334793,29818.718634,0.027452
+venezuela,3,1996,31,5.3,26,5,Acuicultura,Aquaculture,46530,4103.776384,0.003778
+venezuela,3,1996,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,717659,63185.762723,0.058170
+venezuela,3,1996,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49119786,4353109.511248,4.007541
+venezuela,3,1996,34,5.2,26,5,Glaciar,Glacier,442,39.250148,0.000036
+venezuela,3,1996,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3373010,297389.660252,0.273782
+venezuela,3,1996,66,2.5,10,2,Arbustal,Shrubland,22551786,1991571.072391,1.833472
+venezuela,3,1996,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,48254,4279.040351,0.003939
+venezuela,3,1996,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,2991349,265447.518552,0.244375
+venezuela,3,1996,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39888,3539.817139,0.003259
+venezuela,3,1997,3,1.1,1,1,Bosque,Forest,666279933,59446702.424327,54.727569
+venezuela,3,1997,4,1.2,1,1,Sabana arbolada,Wooded savanna,11387281,1013290.893020,0.932852
+venezuela,3,1997,5,1.3,1,1,Manglar,Mangrove,3128278,276608.692226,0.254650
+venezuela,3,1997,6,1.4,1,1,Bosque inundable,Flooded forest,75094084,6693227.081785,6.161890
+venezuela,3,1997,9,3.4,14,3,Plantación forestal,Forest plantation,3823545,339387.845526,0.312446
+venezuela,3,1997,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53237152,4739569.324498,4.363322
+venezuela,3,1997,12,2.2,10,2,Sabana/Herbazal,Grassland,96841228,8626298.817100,7.941506
+venezuela,3,1997,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1205691,107914.509655,0.099348
+venezuela,3,1997,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10357829,921853.712610,0.848673
+venezuela,3,1997,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1826799,162738.774822,0.149820
+venezuela,3,1997,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,203827902,18084562.054220,16.648932
+venezuela,3,1997,23,4.1,22,4,Playa o duna,Beach or dune,6605351,585081.449344,0.538635
+venezuela,3,1997,24,4.2,22,4,Uso urbano,Urban,3372418,298356.661250,0.274672
+venezuela,3,1997,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1251807,110956.530238,0.102148
+venezuela,3,1997,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1997,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2622510,234428.571361,0.215819
+venezuela,3,1997,30,4.3,22,4,Uso Minero,Mining,357522,31841.464270,0.029314
+venezuela,3,1997,31,5.3,26,5,Acuicultura,Aquaculture,77497,6833.684072,0.006291
+venezuela,3,1997,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,726698,63982.031880,0.058903
+venezuela,3,1997,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48931817,4336443.286902,3.992198
+venezuela,3,1997,34,5.2,26,5,Glaciar,Glacier,366,32.501266,0.000030
+venezuela,3,1997,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3243875,286028.940030,0.263323
+venezuela,3,1997,66,2.5,10,2,Arbustal,Shrubland,22481288,1985281.715068,1.827682
+venezuela,3,1997,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,42343,3755.292629,0.003457
+venezuela,3,1997,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,2977723,264239.847168,0.243263
+venezuela,3,1997,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39876,3538.740088,0.003258
+venezuela,3,1998,3,1.1,1,1,Bosque,Forest,665298403,59359670.429186,54.647447
+venezuela,3,1998,4,1.2,1,1,Sabana arbolada,Wooded savanna,11424632,1016616.547746,0.935913
+venezuela,3,1998,5,1.3,1,1,Manglar,Mangrove,3134749,277179.186069,0.255176
+venezuela,3,1998,6,1.4,1,1,Bosque inundable,Flooded forest,75129531,6696402.103707,6.164813
+venezuela,3,1998,9,3.4,14,3,Plantación forestal,Forest plantation,4011231,356047.035127,0.327783
+venezuela,3,1998,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53887196,4797517.921974,4.416670
+venezuela,3,1998,12,2.2,10,2,Sabana/Herbazal,Grassland,96581019,8603187.477736,7.920230
+venezuela,3,1998,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1205858,107929.429919,0.099362
+venezuela,3,1998,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10396351,925280.340229,0.851828
+venezuela,3,1998,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1846243,164481.740851,0.151424
+venezuela,3,1998,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,204236385,18120479.564176,16.681999
+venezuela,3,1998,23,4.1,22,4,Playa o duna,Beach or dune,6633795,587538.281374,0.540897
+venezuela,3,1998,24,4.2,22,4,Uso urbano,Urban,3432043,303635.518857,0.279532
+venezuela,3,1998,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1243652,110226.287586,0.101476
+venezuela,3,1998,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1998,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2627121,234840.922420,0.216198
+venezuela,3,1998,30,4.3,22,4,Uso Minero,Mining,375296,33424.735271,0.030771
+venezuela,3,1998,31,5.3,26,5,Acuicultura,Aquaculture,89559,7897.324960,0.007270
+venezuela,3,1998,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,702961,61890.846790,0.056978
+venezuela,3,1998,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48856667,4329699.212408,3.985989
+venezuela,3,1998,34,5.2,26,5,Glaciar,Glacier,342,30.370034,0.000028
+venezuela,3,1998,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3219113,283853.571506,0.261320
+venezuela,3,1998,66,2.5,10,2,Arbustal,Shrubland,22313671,1970485.484180,1.814060
+venezuela,3,1998,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43779,3882.730955,0.003575
+venezuela,3,1998,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3011268,267212.653267,0.246000
+venezuela,3,1998,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39931,3543.619431,0.003262
+venezuela,3,1999,3,1.1,1,1,Bosque,Forest,665095059,59341499.680179,54.630718
+venezuela,3,1999,4,1.2,1,1,Sabana arbolada,Wooded savanna,11525535,1025579.571612,0.944165
+venezuela,3,1999,5,1.3,1,1,Manglar,Mangrove,3140525,277686.678508,0.255643
+venezuela,3,1999,6,1.4,1,1,Bosque inundable,Flooded forest,75150879,6698307.431820,6.166567
+venezuela,3,1999,9,3.4,14,3,Plantación forestal,Forest plantation,4066492,360953.033619,0.332299
+venezuela,3,1999,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54006534,4808121.342598,4.426432
+venezuela,3,1999,12,2.2,10,2,Sabana/Herbazal,Grassland,96630139,8607506.316221,7.924206
+venezuela,3,1999,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1206115,107952.395745,0.099383
+venezuela,3,1999,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10496604,934204.212539,0.860043
+venezuela,3,1999,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1850236,164842.316767,0.151756
+venezuela,3,1999,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,203714768,18074273.679655,16.639461
+venezuela,3,1999,23,4.1,22,4,Playa o duna,Beach or dune,6693769,592931.706391,0.545862
+venezuela,3,1999,24,4.2,22,4,Uso urbano,Urban,3495111,309220.195281,0.284673
+venezuela,3,1999,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1244878,110332.753755,0.101574
+venezuela,3,1999,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1999,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2625796,234722.190332,0.216089
+venezuela,3,1999,30,4.3,22,4,Uso Minero,Mining,388543,34608.230740,0.031861
+venezuela,3,1999,31,5.3,26,5,Acuicultura,Aquaculture,104864,9248.533254,0.008514
+venezuela,3,1999,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,680356,59897.959003,0.055143
+venezuela,3,1999,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48989392,4341470.066749,3.996826
+venezuela,3,1999,34,5.2,26,5,Glaciar,Glacier,312,27.705986,0.000026
+venezuela,3,1999,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3222185,284115.836726,0.261562
+venezuela,3,1999,66,2.5,10,2,Arbustal,Shrubland,22273612,1966899.971550,1.810759
+venezuela,3,1999,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,49619,4402.458180,0.004053
+venezuela,3,1999,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3049263,270580.685168,0.249101
+venezuela,3,1999,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40207,3568.117247,0.003285
+venezuela,3,2000,3,1.1,1,1,Bosque,Forest,664308621,59271745.088044,54.566501
+venezuela,3,2000,4,1.2,1,1,Sabana arbolada,Wooded savanna,11445954,1018522.361238,0.937668
+venezuela,3,2000,5,1.3,1,1,Manglar,Mangrove,3137021,277375.396339,0.255356
+venezuela,3,2000,6,1.4,1,1,Bosque inundable,Flooded forest,75116546,6695257.870337,6.163760
+venezuela,3,2000,9,3.4,14,3,Plantación forestal,Forest plantation,4109407,364762.814040,0.335806
+venezuela,3,2000,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53980533,4805818.165792,4.424312
+venezuela,3,2000,12,2.2,10,2,Sabana/Herbazal,Grassland,96075232,8558104.910957,7.878726
+venezuela,3,2000,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1205752,107919.882088,0.099353
+venezuela,3,2000,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10611164,944399.305187,0.869429
+venezuela,3,2000,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1876207,167156.469626,0.153887
+venezuela,3,2000,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,204605983,18153340.570354,16.712251
+venezuela,3,2000,23,4.1,22,4,Playa o duna,Beach or dune,6579508,582907.606819,0.536634
+venezuela,3,2000,24,4.2,22,4,Uso urbano,Urban,3549787,314059.479091,0.289128
+venezuela,3,2000,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1246748,110497.775917,0.101726
+venezuela,3,2000,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2000,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2628066,234924.819027,0.216275
+venezuela,3,2000,30,4.3,22,4,Uso Minero,Mining,396696,35332.691546,0.032528
+venezuela,3,2000,31,5.3,26,5,Acuicultura,Aquaculture,106816,9421.490833,0.008674
+venezuela,3,2000,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,729868,64255.982616,0.059155
+venezuela,3,2000,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49233433,4363278.521675,4.016903
+venezuela,3,2000,34,5.2,26,5,Glaciar,Glacier,299,26.551573,0.000024
+venezuela,3,2000,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3303501,291256.794913,0.268136
+venezuela,3,2000,66,2.5,10,2,Arbustal,Shrubland,22362578,1974751.233476,1.817987
+venezuela,3,2000,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,49027,4348.008131,0.004003
+venezuela,3,2000,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3041902,269926.746395,0.248499
+venezuela,3,2000,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40143,3562.444523,0.003280
+venezuela,3,2001,3,1.1,1,1,Bosque,Forest,662598174,59119874.369177,54.426687
+venezuela,3,2001,4,1.2,1,1,Sabana arbolada,Wooded savanna,11256381,1001708.942622,0.922189
+venezuela,3,2001,5,1.3,1,1,Manglar,Mangrove,3124143,276236.456555,0.254308
+venezuela,3,2001,6,1.4,1,1,Bosque inundable,Flooded forest,75218681,6704325.909425,6.172108
+venezuela,3,2001,9,3.4,14,3,Plantación forestal,Forest plantation,4404713,390974.925000,0.359938
+venezuela,3,2001,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54159581,4821817.202675,4.439041
+venezuela,3,2001,12,2.2,10,2,Sabana/Herbazal,Grassland,96060142,8556884.267273,7.877602
+venezuela,3,2001,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1205523,107899.330672,0.099334
+venezuela,3,2001,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10780987,959522.195972,0.883351
+venezuela,3,2001,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,1965223,175090.288799,0.161191
+venezuela,3,2001,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,206042013,18280603.273650,16.829411
+venezuela,3,2001,23,4.1,22,4,Playa o duna,Beach or dune,6795780,602051.284116,0.554258
+venezuela,3,2001,24,4.2,22,4,Uso urbano,Urban,3588846,317516.928798,0.292311
+venezuela,3,2001,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1248061,110614.980242,0.101834
+venezuela,3,2001,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2001,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2631254,235210.235607,0.216538
+venezuela,3,2001,30,4.3,22,4,Uso Minero,Mining,403570,35946.381992,0.033093
+venezuela,3,2001,31,5.3,26,5,Acuicultura,Aquaculture,108244,9547.859556,0.008790
+venezuela,3,2001,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,749220,65960.330168,0.060724
+venezuela,3,2001,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48617707,4308498.964954,3.966472
+venezuela,3,2001,34,5.2,26,5,Glaciar,Glacier,284,25.219557,0.000023
+venezuela,3,2001,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3230117,284809.173102,0.262200
+venezuela,3,2001,66,2.5,10,2,Arbustal,Shrubland,22448205,1982405.544206,1.825034
+venezuela,3,2001,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,46590,4130.134876,0.003802
+venezuela,3,2001,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3017180,267733.672547,0.246480
+venezuela,3,2001,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40169,3564.753244,0.003282
+venezuela,3,2002,3,1.1,1,1,Bosque,Forest,661712231,59041185.884251,54.354245
+venezuela,3,2002,4,1.2,1,1,Sabana arbolada,Wooded savanna,11172566,994261.886125,0.915333
+venezuela,3,2002,5,1.3,1,1,Manglar,Mangrove,3114623,275397.368164,0.253535
+venezuela,3,2002,6,1.4,1,1,Bosque inundable,Flooded forest,75268654,6708765.983816,6.176196
+venezuela,3,2002,9,3.4,14,3,Plantación forestal,Forest plantation,4111611,364948.435440,0.335977
+venezuela,3,2002,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54277671,4832313.643017,4.448704
+venezuela,3,2002,12,2.2,10,2,Sabana/Herbazal,Grassland,96553455,8600852.510915,7.918080
+venezuela,3,2002,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1205469,107894.493454,0.099329
+venezuela,3,2002,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10859524,966513.844695,0.889788
+venezuela,3,2002,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2014994,179523.058100,0.165272
+venezuela,3,2002,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,206717330,18340299.676247,16.884369
+venezuela,3,2002,23,4.1,22,4,Playa o duna,Beach or dune,6911062,612227.161950,0.563626
+venezuela,3,2002,24,4.2,22,4,Uso urbano,Urban,3631888,321326.688359,0.295818
+venezuela,3,2002,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1247765,110589.676144,0.101811
+venezuela,3,2002,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2002,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2630525,235144.959358,0.216478
+venezuela,3,2002,30,4.3,22,4,Uso Minero,Mining,415403,37002.280290,0.034065
+venezuela,3,2002,31,5.3,26,5,Acuicultura,Aquaculture,114965,10143.221903,0.009338
+venezuela,3,2002,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,737955,64968.549013,0.059811
+venezuela,3,2002,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48545938,4302103.207175,3.960584
+venezuela,3,2002,34,5.2,26,5,Glaciar,Glacier,260,23.088315,0.000021
+venezuela,3,2002,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3239649,285650.034287,0.262974
+venezuela,3,2002,66,2.5,10,2,Arbustal,Shrubland,22179537,1958716.033335,1.803225
+venezuela,3,2002,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,42366,3755.519849,0.003457
+venezuela,3,2002,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,2995532,265812.097677,0.244711
+venezuela,3,2002,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39813,3533.145589,0.003253
+venezuela,3,2003,3,1.1,1,1,Bosque,Forest,660820904,58961946.893365,54.281297
+venezuela,3,2003,4,1.2,1,1,Sabana arbolada,Wooded savanna,11183470,995249.753881,0.916243
+venezuela,3,2003,5,1.3,1,1,Manglar,Mangrove,3141528,277773.528359,0.255723
+venezuela,3,2003,6,1.4,1,1,Bosque inundable,Flooded forest,75285156,6710237.213251,6.177550
+venezuela,3,2003,9,3.4,14,3,Plantación forestal,Forest plantation,3874521,343887.630258,0.316588
+venezuela,3,2003,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54221928,4827316.687235,4.444104
+venezuela,3,2003,12,2.2,10,2,Sabana/Herbazal,Grassland,96772805,8620399.826878,7.936076
+venezuela,3,2003,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1205695,107914.686092,0.099348
+venezuela,3,2003,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10920027,971898.438366,0.894745
+venezuela,3,2003,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2032151,181056.834169,0.166684
+venezuela,3,2003,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,208133318,18465964.969962,17.000058
+venezuela,3,2003,23,4.1,22,4,Playa o duna,Beach or dune,6763170,599043.615899,0.551489
+venezuela,3,2003,24,4.2,22,4,Uso urbano,Urban,3661432,323942.355710,0.298226
+venezuela,3,2003,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1252085,110971.481516,0.102162
+venezuela,3,2003,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2003,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2631937,235271.366387,0.216595
+venezuela,3,2003,30,4.3,22,4,Uso Minero,Mining,438313,39047.445079,0.035948
+venezuela,3,2003,31,5.3,26,5,Acuicultura,Aquaculture,128465,11337.712204,0.010438
+venezuela,3,2003,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,756333,66588.346645,0.061302
+venezuela,3,2003,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48394966,4288693.883253,3.948239
+venezuela,3,2003,34,5.2,26,5,Glaciar,Glacier,201,17.849032,0.000016
+venezuela,3,2003,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3243117,285952.259074,0.263252
+venezuela,3,2003,66,2.5,10,2,Arbustal,Shrubland,21784958,1923863.960999,1.771139
+venezuela,3,2003,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,52297,4637.434111,0.004269
+venezuela,3,2003,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3001961,266384.260609,0.245238
+venezuela,3,2003,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40042,3553.482046,0.003271
+venezuela,3,2004,3,1.1,1,1,Bosque,Forest,660058759,58893867.092771,54.218621
+venezuela,3,2004,4,1.2,1,1,Sabana arbolada,Wooded savanna,11418673,1016150.384221,0.935484
+venezuela,3,2004,5,1.3,1,1,Manglar,Mangrove,3133649,277078.738239,0.255083
+venezuela,3,2004,6,1.4,1,1,Bosque inundable,Flooded forest,75313013,6712706.369187,6.179823
+venezuela,3,2004,9,3.4,14,3,Plantación forestal,Forest plantation,3665909,325361.648428,0.299533
+venezuela,3,2004,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54116550,4817983.068762,4.435511
+venezuela,3,2004,12,2.2,10,2,Sabana/Herbazal,Grassland,96525431,8598378.772400,7.915803
+venezuela,3,2004,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1207741,108097.377997,0.099516
+venezuela,3,2004,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,10981518,977372.188599,0.899784
+venezuela,3,2004,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2059831,183527.323759,0.168958
+venezuela,3,2004,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,208904524,18534691.378285,17.063329
+venezuela,3,2004,23,4.1,22,4,Playa o duna,Beach or dune,6547834,579997.711795,0.533955
+venezuela,3,2004,24,4.2,22,4,Uso urbano,Urban,3700368,327388.745734,0.301399
+venezuela,3,2004,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1243210,110187.357899,0.101440
+venezuela,3,2004,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2004,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2631294,235214.054981,0.216542
+venezuela,3,2004,30,4.3,22,4,Uso Minero,Mining,481691,42918.512626,0.039511
+venezuela,3,2004,31,5.3,26,5,Acuicultura,Aquaculture,155195,13701.681289,0.012614
+venezuela,3,2004,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,731992,64443.979112,0.059328
+venezuela,3,2004,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",48949473,4337967.532736,3.993601
+venezuela,3,2004,34,5.2,26,5,Glaciar,Glacier,180,15.984210,0.000015
+venezuela,3,2004,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3249493,286503.158051,0.263759
+venezuela,3,2004,66,2.5,10,2,Arbustal,Shrubland,21571105,1904909.861003,1.753690
+venezuela,3,2004,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,48272,4279.774492,0.003940
+venezuela,3,2004,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3004938,266647.306094,0.245480
+venezuela,3,2004,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40137,3561.911996,0.003279
+venezuela,3,2005,3,1.1,1,1,Bosque,Forest,660824821,58961438.735076,54.280829
+venezuela,3,2005,4,1.2,1,1,Sabana arbolada,Wooded savanna,11388255,1013442.821274,0.932991
+venezuela,3,2005,5,1.3,1,1,Manglar,Mangrove,3141560,277779.355864,0.255728
+venezuela,3,2005,6,1.4,1,1,Bosque inundable,Flooded forest,75299037,6711464.470664,6.178680
+venezuela,3,2005,9,3.4,14,3,Plantación forestal,Forest plantation,3884003,344725.399367,0.317360
+venezuela,3,2005,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54337734,4837672.344079,4.453637
+venezuela,3,2005,12,2.2,10,2,Sabana/Herbazal,Grassland,96117197,8562056.707719,7.882364
+venezuela,3,2005,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1207753,108098.369816,0.099517
+venezuela,3,2005,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11038737,982467.121818,0.904475
+venezuela,3,2005,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2074854,184862.295524,0.170187
+venezuela,3,2005,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,207738171,18431409.522413,16.968246
+venezuela,3,2005,23,4.1,22,4,Playa o duna,Beach or dune,6396470,566736.412842,0.521746
+venezuela,3,2005,24,4.2,22,4,Uso urbano,Urban,3740990,330983.531475,0.304709
+venezuela,3,2005,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1242032,110083.728357,0.101345
+venezuela,3,2005,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2005,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2629052,235013.356709,0.216357
+venezuela,3,2005,30,4.3,22,4,Uso Minero,Mining,506983,45176.401242,0.041590
+venezuela,3,2005,31,5.3,26,5,Acuicultura,Aquaculture,173275,15300.253121,0.014086
+venezuela,3,2005,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,720595,63440.375356,0.058404
+venezuela,3,2005,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49391616,4377270.036911,4.029784
+venezuela,3,2005,34,5.2,26,5,Glaciar,Glacier,163,14.474579,0.000013
+venezuela,3,2005,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3285353,289654.599292,0.266661
+venezuela,3,2005,66,2.5,10,2,Arbustal,Shrubland,21488882,1897607.547522,1.746967
+venezuela,3,2005,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,45150,4002.295416,0.003685
+venezuela,3,2005,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3028126,268704.607544,0.247374
+venezuela,3,2005,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39970,3547.062219,0.003265
+venezuela,3,2006,3,1.1,1,1,Bosque,Forest,660794235,58958697.502341,54.278305
+venezuela,3,2006,4,1.2,1,1,Sabana arbolada,Wooded savanna,11305869,1006116.571730,0.926247
+venezuela,3,2006,5,1.3,1,1,Manglar,Mangrove,3138427,277503.170559,0.255474
+venezuela,3,2006,6,1.4,1,1,Bosque inundable,Flooded forest,75317555,6713103.041926,6.180188
+venezuela,3,2006,9,3.4,14,3,Plantación forestal,Forest plantation,3771027,334697.053505,0.308127
+venezuela,3,2006,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54314418,4835579.253371,4.451710
+venezuela,3,2006,12,2.2,10,2,Sabana/Herbazal,Grassland,95800268,8533866.743903,7.856412
+venezuela,3,2006,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1207649,108088.966388,0.099508
+venezuela,3,2006,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11107550,988591.360625,0.910113
+venezuela,3,2006,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2109514,187950.165716,0.173030
+venezuela,3,2006,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,207865089,18442605.900019,16.978553
+venezuela,3,2006,23,4.1,22,4,Playa o duna,Beach or dune,6319831,560041.213110,0.515583
+venezuela,3,2006,24,4.2,22,4,Uso urbano,Urban,3783174,334717.036270,0.308146
+venezuela,3,2006,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1242883,110159.220702,0.101414
+venezuela,3,2006,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2006,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2629340,235039.290653,0.216381
+venezuela,3,2006,30,4.3,22,4,Uso Minero,Mining,525859,46857.817364,0.043138
+venezuela,3,2006,31,5.3,26,5,Acuicultura,Aquaculture,180831,15968.220561,0.014701
+venezuela,3,2006,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,714129,62871.066980,0.057880
+venezuela,3,2006,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49672861,4402314.083036,4.052840
+venezuela,3,2006,34,5.2,26,5,Glaciar,Glacier,140,12.432143,0.000011
+venezuela,3,2006,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3332659,293810.999413,0.270487
+venezuela,3,2006,66,2.5,10,2,Arbustal,Shrubland,21503870,1898963.016260,1.748215
+venezuela,3,2006,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43738,3877.037885,0.003569
+venezuela,3,2006,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3020012,267984.147320,0.246710
+venezuela,3,2006,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39851,3536.514419,0.003256
+venezuela,3,2007,3,1.1,1,1,Bosque,Forest,659600286,58852805.961822,54.180820
+venezuela,3,2007,4,1.2,1,1,Sabana arbolada,Wooded savanna,11364350,1011311.817371,0.931030
+venezuela,3,2007,5,1.3,1,1,Manglar,Mangrove,3144285,278021.201596,0.255951
+venezuela,3,2007,6,1.4,1,1,Bosque inundable,Flooded forest,75318260,6713167.291204,6.180248
+venezuela,3,2007,9,3.4,14,3,Plantación forestal,Forest plantation,3739561,331904.511419,0.305557
+venezuela,3,2007,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54653119,4865736.020116,4.479473
+venezuela,3,2007,12,2.2,10,2,Sabana/Herbazal,Grassland,95567552,8513157.324307,7.837347
+venezuela,3,2007,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1207902,108111.599855,0.099529
+venezuela,3,2007,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11210735,997776.418695,0.918569
+venezuela,3,2007,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2169204,193271.837892,0.177929
+venezuela,3,2007,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,208879054,18532487.621295,17.061300
+venezuela,3,2007,23,4.1,22,4,Playa o duna,Beach or dune,6430309,569800.253771,0.524567
+venezuela,3,2007,24,4.2,22,4,Uso urbano,Urban,3824782,338399.900340,0.311536
+venezuela,3,2007,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1246918,110515.764789,0.101743
+venezuela,3,2007,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2007,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2625334,234682.550436,0.216052
+venezuela,3,2007,30,4.3,22,4,Uso Minero,Mining,552895,49268.811779,0.045358
+venezuela,3,2007,31,5.3,26,5,Acuicultura,Aquaculture,187038,16516.878283,0.015206
+venezuela,3,2007,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,730389,64303.666619,0.059199
+venezuela,3,2007,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49347422,4373378.164449,4.026201
+venezuela,3,2007,34,5.2,26,5,Glaciar,Glacier,134,11.899333,0.000011
+venezuela,3,2007,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3276173,288850.078693,0.265920
+venezuela,3,2007,66,2.5,10,2,Arbustal,Shrubland,21549545,1903014.333223,1.751945
+venezuela,3,2007,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43510,3856.898132,0.003551
+venezuela,3,2007,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3031939,269043.909203,0.247686
+venezuela,3,2007,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40083,3557.111575,0.003275
+venezuela,3,2008,3,1.1,1,1,Bosque,Forest,659356040,58830901.587219,54.160654
+venezuela,3,2008,4,1.2,1,1,Sabana arbolada,Wooded savanna,11419072,1016176.739083,0.935508
+venezuela,3,2008,5,1.3,1,1,Manglar,Mangrove,3163758,279740.281006,0.257533
+venezuela,3,2008,6,1.4,1,1,Bosque inundable,Flooded forest,75308852,6712331.285974,6.179478
+venezuela,3,2008,9,3.4,14,3,Plantación forestal,Forest plantation,3708452,329152.428652,0.303023
+venezuela,3,2008,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54706469,4870511.507845,4.483870
+venezuela,3,2008,12,2.2,10,2,Sabana/Herbazal,Grassland,95266167,8486307.379446,7.812628
+venezuela,3,2008,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1207669,108090.628192,0.099510
+venezuela,3,2008,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11272527,1003277.165221,0.923633
+venezuela,3,2008,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2202259,196220.833556,0.180644
+venezuela,3,2008,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,209306557,18570642.241708,17.096426
+venezuela,3,2008,23,4.1,22,4,Playa o duna,Beach or dune,6319157,559916.710606,0.515468
+venezuela,3,2008,24,4.2,22,4,Uso urbano,Urban,3869840,342389.067891,0.315209
+venezuela,3,2008,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1246971,110521.539468,0.101748
+venezuela,3,2008,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2008,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2626051,234746.545888,0.216111
+venezuela,3,2008,30,4.3,22,4,Uso Minero,Mining,598556,53345.349272,0.049111
+venezuela,3,2008,31,5.3,26,5,Acuicultura,Aquaculture,190184,16794.195800,0.015461
+venezuela,3,2008,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,738625,65027.809567,0.059866
+venezuela,3,2008,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49361874,4374688.986558,4.027408
+venezuela,3,2008,34,5.2,26,5,Glaciar,Glacier,126,11.188925,0.000010
+venezuela,3,2008,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3258975,287335.889650,0.264526
+venezuela,3,2008,66,2.5,10,2,Arbustal,Shrubland,21513329,1899808.099854,1.748993
+venezuela,3,2008,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,47507,4211.456952,0.003877
+venezuela,3,2008,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3011643,267242.602203,0.246028
+venezuela,3,2008,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40118,3560.216862,0.003278
+venezuela,3,2009,3,1.1,1,1,Bosque,Forest,659000969,58799277.702204,54.131541
+venezuela,3,2009,4,1.2,1,1,Sabana arbolada,Wooded savanna,11275884,1003467.241451,0.923808
+venezuela,3,2009,5,1.3,1,1,Manglar,Mangrove,3153729,278851.453862,0.256715
+venezuela,3,2009,6,1.4,1,1,Bosque inundable,Flooded forest,75356614,6716563.068749,6.183374
+venezuela,3,2009,9,3.4,14,3,Plantación forestal,Forest plantation,3661937,325030.307279,0.299228
+venezuela,3,2009,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54455064,4848071.027207,4.463211
+venezuela,3,2009,12,2.2,10,2,Sabana/Herbazal,Grassland,95173876,8478244.685880,7.805206
+venezuela,3,2009,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1208247,108142.438520,0.099558
+venezuela,3,2009,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11327762,1008192.388659,0.928158
+venezuela,3,2009,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2242674,199825.189620,0.183962
+venezuela,3,2009,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,210097662,18640866.600047,17.161075
+venezuela,3,2009,23,4.1,22,4,Playa o duna,Beach or dune,6266481,555360.391144,0.511274
+venezuela,3,2009,24,4.2,22,4,Uso urbano,Urban,3915319,346414.330971,0.318914
+venezuela,3,2009,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1246425,110473.793600,0.101704
+venezuela,3,2009,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2009,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2623044,234477.275594,0.215863
+venezuela,3,2009,30,4.3,22,4,Uso Minero,Mining,644383,57433.174023,0.052874
+venezuela,3,2009,31,5.3,26,5,Acuicultura,Aquaculture,190172,16793.138003,0.015460
+venezuela,3,2009,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,719004,63299.600585,0.058275
+venezuela,3,2009,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49290144,4368319.936014,4.021544
+venezuela,3,2009,34,5.2,26,5,Glaciar,Glacier,122,10.833722,0.000010
+venezuela,3,2009,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3324978,293135.560427,0.269865
+venezuela,3,2009,66,2.5,10,2,Arbustal,Shrubland,21486025,1897374.170799,1.746753
+venezuela,3,2009,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43789,3880.819622,0.003573
+venezuela,3,2009,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,2996528,265901.666773,0.244793
+venezuela,3,2009,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39948,3545.119576,0.003264
+venezuela,3,2010,3,1.1,1,1,Bosque,Forest,658289170,58735981.703361,54.073270
+venezuela,3,2010,4,1.2,1,1,Sabana arbolada,Wooded savanna,11112690,988986.165118,0.910476
+venezuela,3,2010,5,1.3,1,1,Manglar,Mangrove,3166732,280005.038647,0.257777
+venezuela,3,2010,6,1.4,1,1,Bosque inundable,Flooded forest,75301036,6711631.691886,6.178834
+venezuela,3,2010,9,3.4,14,3,Plantación forestal,Forest plantation,3512625,311792.277848,0.287041
+venezuela,3,2010,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54336529,4837457.724246,4.453440
+venezuela,3,2010,12,2.2,10,2,Sabana/Herbazal,Grassland,95208761,8481482.771293,7.808187
+venezuela,3,2010,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1207963,108116.930707,0.099534
+venezuela,3,2010,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11455231,1019529.433724,0.938595
+venezuela,3,2010,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2310582,205883.076549,0.189539
+venezuela,3,2010,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,211106564,18730373.280785,17.243477
+venezuela,3,2010,23,4.1,22,4,Playa o duna,Beach or dune,6237059,552733.297234,0.508855
+venezuela,3,2010,24,4.2,22,4,Uso urbano,Urban,3951240,349593.617933,0.321841
+venezuela,3,2010,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1255585,111283.536588,0.102449
+venezuela,3,2010,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2010,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2622327,234413.125633,0.215804
+venezuela,3,2010,30,4.3,22,4,Uso Minero,Mining,692460,61725.314630,0.056825
+venezuela,3,2010,31,5.3,26,5,Acuicultura,Aquaculture,191420,16903.441435,0.015562
+venezuela,3,2010,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,708490,62371.946018,0.057421
+venezuela,3,2010,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49186567,4359089.439399,4.013046
+venezuela,3,2010,34,5.2,26,5,Glaciar,Glacier,111,9.856908,0.000009
+venezuela,3,2010,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3316239,292356.560195,0.269148
+venezuela,3,2010,66,2.5,10,2,Arbustal,Shrubland,21475463,1896512.191606,1.745959
+venezuela,3,2010,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,40732,3609.962235,0.003323
+venezuela,3,2010,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3015057,267546.734332,0.246308
+venezuela,3,2010,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40145,3562.619086,0.003280
+venezuela,3,2011,3,1.1,1,1,Bosque,Forest,659547820,58847234.432925,54.175691
+venezuela,3,2011,4,1.2,1,1,Sabana arbolada,Wooded savanna,11273809,1003295.535920,0.923650
+venezuela,3,2011,5,1.3,1,1,Manglar,Mangrove,3185344,281647.657216,0.259289
+venezuela,3,2011,6,1.4,1,1,Bosque inundable,Flooded forest,75213255,6703837.639527,6.171658
+venezuela,3,2011,9,3.4,14,3,Plantación forestal,Forest plantation,3696690,328191.743171,0.302138
+venezuela,3,2011,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54581384,4859242.711917,4.473495
+venezuela,3,2011,12,2.2,10,2,Sabana/Herbazal,Grassland,95108658,8472523.828757,7.799939
+venezuela,3,2011,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1207933,108114.199360,0.099532
+venezuela,3,2011,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11292189,1005024.040271,0.925241
+venezuela,3,2011,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2298722,204828.547419,0.188568
+venezuela,3,2011,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,209701309,18605952.917997,17.128933
+venezuela,3,2011,23,4.1,22,4,Playa o duna,Beach or dune,6008092,532543.719976,0.490268
+venezuela,3,2011,24,4.2,22,4,Uso urbano,Urban,3993319,353318.389957,0.325270
+venezuela,3,2011,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1241963,110080.659333,0.101342
+venezuela,3,2011,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2011,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2618289,234051.949116,0.215472
+venezuela,3,2011,30,4.3,22,4,Uso Minero,Mining,738949,65871.825532,0.060643
+venezuela,3,2011,31,5.3,26,5,Acuicultura,Aquaculture,192345,16985.201764,0.015637
+venezuela,3,2011,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,684770,60282.516348,0.055497
+venezuela,3,2011,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49550948,4391445.350087,4.042834
+venezuela,3,2011,34,5.2,26,5,Glaciar,Glacier,106,9.412903,0.000009
+venezuela,3,2011,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3455790,304634.228954,0.280451
+venezuela,3,2011,66,2.5,10,2,Arbustal,Shrubland,21079192,1861425.991159,1.713658
+venezuela,3,2011,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43584,3863.172051,0.003556
+venezuela,3,2011,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,2986214,264987.085103,0.243951
+venezuela,3,2011,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40107,3559.246703,0.003277
+venezuela,3,2012,3,1.1,1,1,Bosque,Forest,659609809,58852714.076943,54.180735
+venezuela,3,2012,4,1.2,1,1,Sabana arbolada,Wooded savanna,11314903,1006950.625942,0.927015
+venezuela,3,2012,5,1.3,1,1,Manglar,Mangrove,3203569,283257.723101,0.260772
+venezuela,3,2012,6,1.4,1,1,Bosque inundable,Flooded forest,75111848,6694839.144799,6.163374
+venezuela,3,2012,9,3.4,14,3,Plantación forestal,Forest plantation,3700668,328552.670424,0.302471
+venezuela,3,2012,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,54147285,4820550.172206,4.437874
+venezuela,3,2012,12,2.2,10,2,Sabana/Herbazal,Grassland,94942710,8457808.714864,7.786392
+venezuela,3,2012,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1208261,108143.546300,0.099559
+venezuela,3,2012,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11259188,1002083.216191,0.922534
+venezuela,3,2012,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2605261,232120.179564,0.213693
+venezuela,3,2012,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,209161793,18558084.601732,17.084865
+venezuela,3,2012,23,4.1,22,4,Playa o duna,Beach or dune,5968202,529071.268126,0.487071
+venezuela,3,2012,24,4.2,22,4,Uso urbano,Urban,4033073,356837.139578,0.328510
+venezuela,3,2012,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1240286,109932.440133,0.101206
+venezuela,3,2012,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2012,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2618999,234115.503249,0.215530
+venezuela,3,2012,30,4.3,22,4,Uso Minero,Mining,794148,70794.956131,0.065175
+venezuela,3,2012,31,5.3,26,5,Acuicultura,Aquaculture,195780,17288.016983,0.015916
+venezuela,3,2012,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,678036,59690.285533,0.054952
+venezuela,3,2012,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",50086252,4439086.745453,4.086693
+venezuela,3,2012,34,5.2,26,5,Glaciar,Glacier,101,8.968899,0.000008
+venezuela,3,2012,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3562391,314013.210074,0.289086
+venezuela,3,2012,66,2.5,10,2,Arbustal,Shrubland,21196532,1871779.043987,1.723189
+venezuela,3,2012,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,43695,3872.005966,0.003565
+venezuela,3,2012,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3017913,267801.072337,0.246542
+venezuela,3,2012,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40076,3556.497683,0.003274
+venezuela,3,2013,3,1.1,1,1,Bosque,Forest,658444995,58749565.990406,54.085776
+venezuela,3,2013,4,1.2,1,1,Sabana arbolada,Wooded savanna,11402201,1014703.503153,0.934152
+venezuela,3,2013,5,1.3,1,1,Manglar,Mangrove,3190208,282075.489600,0.259683
+venezuela,3,2013,6,1.4,1,1,Bosque inundable,Flooded forest,75019396,6686617.671694,6.155806
+venezuela,3,2013,9,3.4,14,3,Plantación forestal,Forest plantation,3588055,318561.452707,0.293273
+venezuela,3,2013,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53598951,4771584.773003,4.392796
+venezuela,3,2013,12,2.2,10,2,Sabana/Herbazal,Grassland,94711369,8437244.933970,7.767461
+venezuela,3,2013,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1208424,108158.177137,0.099572
+venezuela,3,2013,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11340512,1009324.483121,0.929200
+venezuela,3,2013,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2652320,236313.847232,0.217554
+venezuela,3,2013,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,210450187,18672715.712956,17.190396
+venezuela,3,2013,23,4.1,22,4,Playa o duna,Beach or dune,6218514,551264.233542,0.507503
+venezuela,3,2013,24,4.2,22,4,Uso urbano,Urban,4076548,360684.171126,0.332052
+venezuela,3,2013,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1244903,110340.769658,0.101581
+venezuela,3,2013,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2013,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2614968,233754.627597,0.215198
+venezuela,3,2013,30,4.3,22,4,Uso Minero,Mining,853950,76130.850284,0.070087
+venezuela,3,2013,31,5.3,26,5,Acuicultura,Aquaculture,198730,17548.789321,0.016156
+venezuela,3,2013,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,698938,61530.783611,0.056646
+venezuela,3,2013,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49849026,4418015.941343,4.067295
+venezuela,3,2013,34,5.2,26,5,Glaciar,Glacier,96,8.524893,0.000008
+venezuela,3,2013,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3602237,317519.253996,0.292313
+venezuela,3,2013,66,2.5,10,2,Arbustal,Shrubland,21676316,1914212.297787,1.762254
+venezuela,3,2013,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,42033,3724.970019,0.003429
+venezuela,3,2013,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3017837,267795.064320,0.246536
+venezuela,3,2013,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40064,3555.425111,0.003273
+venezuela,3,2014,3,1.1,1,1,Bosque,Forest,656365451,58565391.579751,53.916222
+venezuela,3,2014,4,1.2,1,1,Sabana arbolada,Wooded savanna,11493857,1022842.024919,0.941644
+venezuela,3,2014,5,1.3,1,1,Manglar,Mangrove,3193295,282350.720107,0.259937
+venezuela,3,2014,6,1.4,1,1,Bosque inundable,Flooded forest,74920969,6677854.899344,6.147738
+venezuela,3,2014,9,3.4,14,3,Plantación forestal,Forest plantation,3638831,323068.682619,0.297422
+venezuela,3,2014,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53536232,4765975.800660,4.387632
+venezuela,3,2014,12,2.2,10,2,Sabana/Herbazal,Grassland,95319571,8491528.638707,7.817435
+venezuela,3,2014,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1207791,108101.511272,0.099520
+venezuela,3,2014,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11403450,1014929.724982,0.934360
+venezuela,3,2014,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2709158,241382.547015,0.222221
+venezuela,3,2014,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,211748278,18787400.765811,17.295977
+venezuela,3,2014,23,4.1,22,4,Playa o duna,Beach or dune,6506738,576712.947820,0.530931
+venezuela,3,2014,24,4.2,22,4,Uso urbano,Urban,4104936,363196.628829,0.334365
+venezuela,3,2014,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1251560,110929.189660,0.102123
+venezuela,3,2014,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2014,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2616019,233848.608020,0.215285
+venezuela,3,2014,30,4.3,22,4,Uso Minero,Mining,906660,80834.529869,0.074418
+venezuela,3,2014,31,5.3,26,5,Acuicultura,Aquaculture,200409,17697.350552,0.016292
+venezuela,3,2014,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,715678,63005.757256,0.058004
+venezuela,3,2014,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49347357,4373406.489562,4.026227
+venezuela,3,2014,34,5.2,26,5,Glaciar,Glacier,97,8.613694,0.000008
+venezuela,3,2014,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3478476,306639.557379,0.282297
+venezuela,3,2014,66,2.5,10,2,Arbustal,Shrubland,21995680,1942513.476134,1.788309
+venezuela,3,2014,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,37530,3325.716079,0.003062
+venezuela,3,2014,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3002636,266445.667061,0.245294
+venezuela,3,2014,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40117,3560.133677,0.003278
+venezuela,3,2015,3,1.1,1,1,Bosque,Forest,654885682,58434349.704128,53.795583
+venezuela,3,2015,4,1.2,1,1,Sabana arbolada,Wooded savanna,11486804,1022224.356777,0.941076
+venezuela,3,2015,5,1.3,1,1,Manglar,Mangrove,3173949,280643.836769,0.258365
+venezuela,3,2015,6,1.4,1,1,Bosque inundable,Flooded forest,74819230,6668813.347169,6.139415
+venezuela,3,2015,9,3.4,14,3,Plantación forestal,Forest plantation,3625300,321869.125230,0.296318
+venezuela,3,2015,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53602829,4771956.088466,4.393138
+venezuela,3,2015,12,2.2,10,2,Sabana/Herbazal,Grassland,95149896,8476462.000274,7.803564
+venezuela,3,2015,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1208611,108175.110756,0.099588
+venezuela,3,2015,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11477028,1021478.437145,0.940389
+venezuela,3,2015,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2746051,244673.394868,0.225250
+venezuela,3,2015,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,213275707,18922588.847769,17.420433
+venezuela,3,2015,23,4.1,22,4,Playa o duna,Beach or dune,6611314,585900.887379,0.539390
+venezuela,3,2015,24,4.2,22,4,Uso urbano,Urban,4127390,365184.763820,0.336195
+venezuela,3,2015,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1251822,110952.394855,0.102145
+venezuela,3,2015,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2015,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2616252,233869.130626,0.215304
+venezuela,3,2015,30,4.3,22,4,Uso Minero,Mining,953624,85025.606297,0.078276
+venezuela,3,2015,31,5.3,26,5,Acuicultura,Aquaculture,219170,19352.267669,0.017816
+venezuela,3,2015,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,715650,63002.774229,0.058001
+venezuela,3,2015,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49236264,4363528.242478,4.017133
+venezuela,3,2015,34,5.2,26,5,Glaciar,Glacier,94,8.347290,0.000008
+venezuela,3,2015,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3388893,298767.125712,0.275050
+venezuela,3,2015,66,2.5,10,2,Arbustal,Shrubland,22076295,1949672.475215,1.794899
+venezuela,3,2015,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,37232,3299.329002,0.003037
+venezuela,3,2015,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3015717,267606.694180,0.246363
+venezuela,3,2015,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39975,3547.537762,0.003266
+venezuela,3,2016,3,1.1,1,1,Bosque,Forest,654489447,58399083.318658,53.763116
+venezuela,3,2016,4,1.2,1,1,Sabana arbolada,Wooded savanna,11565880,1029263.026909,0.947556
+venezuela,3,2016,5,1.3,1,1,Manglar,Mangrove,3176329,280856.546541,0.258561
+venezuela,3,2016,6,1.4,1,1,Bosque inundable,Flooded forest,74674135,6655930.470412,6.127554
+venezuela,3,2016,9,3.4,14,3,Plantación forestal,Forest plantation,3471572,308238.168452,0.283769
+venezuela,3,2016,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53695925,4780247.782683,4.400771
+venezuela,3,2016,12,2.2,10,2,Sabana/Herbazal,Grassland,95579798,8514859.934322,7.838914
+venezuela,3,2016,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1209363,108242.479500,0.099650
+venezuela,3,2016,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11550389,1028008.079506,0.946400
+venezuela,3,2016,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2800570,249542.868054,0.229733
+venezuela,3,2016,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,213280701,18922849.366697,17.420673
+venezuela,3,2016,23,4.1,22,4,Playa o duna,Beach or dune,6580363,583168.405103,0.536874
+venezuela,3,2016,24,4.2,22,4,Uso urbano,Urban,4146804,366903.908960,0.337778
+venezuela,3,2016,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1246294,110462.256420,0.101693
+venezuela,3,2016,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2016,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2616214,233865.788514,0.215301
+venezuela,3,2016,30,4.3,22,4,Uso Minero,Mining,1014302,90443.841622,0.083264
+venezuela,3,2016,31,5.3,26,5,Acuicultura,Aquaculture,230010,20308.536253,0.018696
+venezuela,3,2016,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,695436,61221.052752,0.056361
+venezuela,3,2016,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49046761,4346608.572300,4.001556
+venezuela,3,2016,34,5.2,26,5,Glaciar,Glacier,74,6.571272,0.000006
+venezuela,3,2016,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3405660,300237.113686,0.276403
+venezuela,3,2016,66,2.5,10,2,Arbustal,Shrubland,22202005,1960828.334372,1.805169
+venezuela,3,2016,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,35475,3143.343984,0.002894
+venezuela,3,2016,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,2987392,265092.960998,0.244049
+venezuela,3,2016,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39878,3538.920627,0.003258
+venezuela,3,2017,3,1.1,1,1,Bosque,Forest,655143225,58456522.231168,53.815995
+venezuela,3,2017,4,1.2,1,1,Sabana arbolada,Wooded savanna,11489519,1022473.566986,0.941305
+venezuela,3,2017,5,1.3,1,1,Manglar,Mangrove,3214157,284192.774606,0.261632
+venezuela,3,2017,6,1.4,1,1,Bosque inundable,Flooded forest,74638924,6652803.068780,6.124675
+venezuela,3,2017,9,3.4,14,3,Plantación forestal,Forest plantation,3218165,285738.649270,0.263056
+venezuela,3,2017,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53663659,4777339.861317,4.398094
+venezuela,3,2017,12,2.2,10,2,Sabana/Herbazal,Grassland,95502411,8507880.448569,7.832489
+venezuela,3,2017,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1209807,108282.183501,0.099686
+venezuela,3,2017,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11590939,1031622.229828,0.949728
+venezuela,3,2017,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2875583,256233.842957,0.235893
+venezuela,3,2017,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,212282471,18834710.175193,17.339531
+venezuela,3,2017,23,4.1,22,4,Playa o duna,Beach or dune,6448333,571594.416577,0.526219
+venezuela,3,2017,24,4.2,22,4,Uso urbano,Urban,4164886,368505.502765,0.339252
+venezuela,3,2017,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1239562,109867.256177,0.101146
+venezuela,3,2017,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2017,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2614731,233733.033583,0.215178
+venezuela,3,2017,30,4.3,22,4,Uso Minero,Mining,1058697,94408.618117,0.086914
+venezuela,3,2017,31,5.3,26,5,Acuicultura,Aquaculture,256066,22606.106042,0.020812
+venezuela,3,2017,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,687868,60554.178003,0.055747
+venezuela,3,2017,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49720510,4406603.904923,4.056789
+venezuela,3,2017,34,5.2,26,5,Glaciar,Glacier,65,5.772062,0.000005
+venezuela,3,2017,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3488917,307549.009489,0.283134
+venezuela,3,2017,66,2.5,10,2,Arbustal,Shrubland,22156348,1956782.905973,1.801445
+venezuela,3,2017,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,38535,3414.177977,0.003143
+venezuela,3,2017,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,2997595,265995.383575,0.244880
+venezuela,3,2017,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39804,3532.351161,0.003252
+venezuela,3,2018,3,1.1,1,1,Bosque,Forest,654993596,58442966.162648,53.803515
+venezuela,3,2018,4,1.2,1,1,Sabana arbolada,Wooded savanna,11463053,1020125.235377,0.939143
+venezuela,3,2018,5,1.3,1,1,Manglar,Mangrove,3197622,282732.868915,0.260288
+venezuela,3,2018,6,1.4,1,1,Bosque inundable,Flooded forest,74568232,6646521.087449,6.118892
+venezuela,3,2018,9,3.4,14,3,Plantación forestal,Forest plantation,3163310,280871.964628,0.258575
+venezuela,3,2018,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53458352,4759058.642974,4.381264
+venezuela,3,2018,12,2.2,10,2,Sabana/Herbazal,Grassland,95240401,8484455.923301,7.810924
+venezuela,3,2018,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1209332,108239.648196,0.099647
+venezuela,3,2018,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11639154,1035915.624503,0.953680
+venezuela,3,2018,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,2939647,261951.388359,0.241157
+venezuela,3,2018,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,212850045,18885468.649504,17.386260
+venezuela,3,2018,23,4.1,22,4,Playa o duna,Beach or dune,6244568,553479.768926,0.509542
+venezuela,3,2018,24,4.2,22,4,Uso urbano,Urban,4180521,369890.464594,0.340527
+venezuela,3,2018,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1237169,109655.128422,0.100950
+venezuela,3,2018,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2018,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2616984,233934.472905,0.215364
+venezuela,3,2018,30,4.3,22,4,Uso Minero,Mining,1110930,99072.785300,0.091208
+venezuela,3,2018,31,5.3,26,5,Acuicultura,Aquaculture,283759,25052.048056,0.023063
+venezuela,3,2018,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,702609,61852.873646,0.056943
+venezuela,3,2018,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",50052470,4436147.541284,4.083987
+venezuela,3,2018,34,5.2,26,5,Glaciar,Glacier,63,5.594460,0.000005
+venezuela,3,2018,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3493185,307917.017104,0.283473
+venezuela,3,2018,66,2.5,10,2,Arbustal,Shrubland,22004720,1943352.032996,1.789080
+venezuela,3,2018,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,44948,3982.261556,0.003666
+venezuela,3,2018,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3006251,266765.493185,0.245589
+venezuela,3,2018,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39857,3537.058925,0.003256
+venezuela,3,2019,3,1.1,1,1,Bosque,Forest,653482522,58308959.236070,53.680146
+venezuela,3,2019,4,1.2,1,1,Sabana arbolada,Wooded savanna,11495998,1023048.232679,0.941834
+venezuela,3,2019,5,1.3,1,1,Manglar,Mangrove,3194038,282417.366553,0.259998
+venezuela,3,2019,6,1.4,1,1,Bosque inundable,Flooded forest,74545504,6644508.209686,6.117039
+venezuela,3,2019,9,3.4,14,3,Plantación forestal,Forest plantation,2812445,249739.513456,0.229914
+venezuela,3,2019,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53309297,4745797.856297,4.369056
+venezuela,3,2019,12,2.2,10,2,Sabana/Herbazal,Grassland,95697800,8525212.670575,7.848445
+venezuela,3,2019,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1208409,108156.596461,0.099571
+venezuela,3,2019,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11707728,1042019.958006,0.959300
+venezuela,3,2019,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,3024718,269543.633326,0.248146
+venezuela,3,2019,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,213966580,18984273.323550,17.477221
+venezuela,3,2019,23,4.1,22,4,Playa o duna,Beach or dune,6265190,555307.906565,0.511225
+venezuela,3,2019,24,4.2,22,4,Uso urbano,Urban,4193261,371018.818091,0.341566
+venezuela,3,2019,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1240989,109993.504574,0.101262
+venezuela,3,2019,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2019,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2617653,233994.732180,0.215419
+venezuela,3,2019,30,4.3,22,4,Uso Minero,Mining,1164951,103892.661356,0.095645
+venezuela,3,2019,31,5.3,26,5,Acuicultura,Aquaculture,288091,25434.315919,0.023415
+venezuela,3,2019,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,697228,61377.954060,0.056506
+venezuela,3,2019,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",50061667,4436977.164635,4.084751
+venezuela,3,2019,34,5.2,26,5,Glaciar,Glacier,56,4.972851,0.000005
+venezuela,3,2019,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3509507,309356.494558,0.284798
+venezuela,3,2019,66,2.5,10,2,Arbustal,Shrubland,22173893,1958323.812831,1.802864
+venezuela,3,2019,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,45047,3990.908401,0.003674
+venezuela,3,2019,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,2998344,266064.391437,0.244943
+venezuela,3,2019,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39862,3537.502948,0.003257
+venezuela,3,2020,3,1.1,1,1,Bosque,Forest,652346540,58208274.052614,53.587454
+venezuela,3,2020,4,1.2,1,1,Sabana arbolada,Wooded savanna,11504771,1023828.566298,0.942553
+venezuela,3,2020,5,1.3,1,1,Manglar,Mangrove,3217085,284453.516108,0.261872
+venezuela,3,2020,6,1.4,1,1,Bosque inundable,Flooded forest,74578480,6647443.357834,6.119741
+venezuela,3,2020,9,3.4,14,3,Plantación forestal,Forest plantation,2811936,249698.831145,0.229877
+venezuela,3,2020,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53061095,4723667.853151,4.348683
+venezuela,3,2020,12,2.2,10,2,Sabana/Herbazal,Grassland,96067835,8558216.059224,7.878828
+venezuela,3,2020,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1209379,108243.568291,0.099651
+venezuela,3,2020,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11761242,1046782.219174,0.963684
+venezuela,3,2020,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,3086037,275017.409711,0.253185
+venezuela,3,2020,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,214738267,19052543.099291,17.540071
+venezuela,3,2020,23,4.1,22,4,Playa o duna,Beach or dune,6265978,555391.578244,0.511302
+venezuela,3,2020,24,4.2,22,4,Uso urbano,Urban,4208493,372367.998951,0.342808
+venezuela,3,2020,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1238685,109790.284616,0.101075
+venezuela,3,2020,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2020,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2619115,234125.785689,0.215540
+venezuela,3,2020,30,4.3,22,4,Uso Minero,Mining,1213314,108209.343938,0.099619
+venezuela,3,2020,31,5.3,26,5,Acuicultura,Aquaculture,291638,25748.038542,0.023704
+venezuela,3,2020,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,701588,61763.926141,0.056861
+venezuela,3,2020,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49903552,4422935.769536,4.071824
+venezuela,3,2020,34,5.2,26,5,Glaciar,Glacier,44,3.907239,0.000004
+venezuela,3,2020,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3509904,309387.872967,0.284827
+venezuela,3,2020,66,2.5,10,2,Arbustal,Shrubland,22294807,1969004.025587,1.812696
+venezuela,3,2020,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,38720,3429.478802,0.003157
+venezuela,3,2020,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3032329,269080.413823,0.247720
+venezuela,3,2020,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,39942,3544.603365,0.003263
+venezuela,3,2021,3,1.1,1,1,Bosque,Forest,652548659,58225757.982747,53.603550
+venezuela,3,2021,4,1.2,1,1,Sabana arbolada,Wooded savanna,11439694,1018050.314840,0.937233
+venezuela,3,2021,5,1.3,1,1,Manglar,Mangrove,3205069,283389.181445,0.260893
+venezuela,3,2021,6,1.4,1,1,Bosque inundable,Flooded forest,74493508,6639888.884125,6.112786
+venezuela,3,2021,9,3.4,14,3,Plantación forestal,Forest plantation,2584481,229503.108106,0.211284
+venezuela,3,2021,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53186761,4734759.268836,4.358894
+venezuela,3,2021,12,2.2,10,2,Sabana/Herbazal,Grassland,95973876,8549723.609112,7.871010
+venezuela,3,2021,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1208079,108126.924039,0.099543
+venezuela,3,2021,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11785173,1048911.347733,0.965644
+venezuela,3,2021,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,3103794,276600.491110,0.254643
+venezuela,3,2021,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,214561754,19037541.236290,17.526260
+venezuela,3,2021,23,4.1,22,4,Playa o duna,Beach or dune,6299686,558524.797904,0.514187
+venezuela,3,2021,24,4.2,22,4,Uso urbano,Urban,4231170,374376.267555,0.344657
+venezuela,3,2021,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1236393,109587.258945,0.100888
+venezuela,3,2021,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2021,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2616408,233883.627568,0.215317
+venezuela,3,2021,30,4.3,22,4,Uso Minero,Mining,1228907,109601.467795,0.100901
+venezuela,3,2021,31,5.3,26,5,Acuicultura,Aquaculture,366106,32333.742790,0.029767
+venezuela,3,2021,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,703446,61927.650833,0.057012
+venezuela,3,2021,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",49986819,4430334.345497,4.078636
+venezuela,3,2021,34,5.2,26,5,Glaciar,Glacier,42,3.729638,0.000003
+venezuela,3,2021,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3668247,323328.661249,0.297661
+venezuela,3,2021,66,2.5,10,2,Arbustal,Shrubland,22195930,1960232.469052,1.804621
+venezuela,3,2021,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,42052,3724.737773,0.003429
+venezuela,3,2021,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3034662,269285.367820,0.247908
+venezuela,3,2021,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40063,3555.352880,0.003273
+venezuela,3,2022,3,1.1,1,1,Bosque,Forest,651628175,58143901.001888,53.528191
+venezuela,3,2022,4,1.2,1,1,Sabana arbolada,Wooded savanna,11547863,1027676.813167,0.946095
+venezuela,3,2022,5,1.3,1,1,Manglar,Mangrove,3233681,285919.350866,0.263222
+venezuela,3,2022,6,1.4,1,1,Bosque inundable,Flooded forest,74418627,6633230.380844,6.106656
+venezuela,3,2022,9,3.4,14,3,Plantación forestal,Forest plantation,2848661,252959.839372,0.232879
+venezuela,3,2022,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53463344,4759307.396424,4.381493
+venezuela,3,2022,12,2.2,10,2,Sabana/Herbazal,Grassland,96214349,8570998.111415,7.890596
+venezuela,3,2022,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1207608,108084.406470,0.099504
+venezuela,3,2022,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11845350,1054268.754999,0.970576
+venezuela,3,2022,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,3156925,281347.351268,0.259013
+venezuela,3,2022,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,213492901,18942800.466039,17.439040
+venezuela,3,2022,23,4.1,22,4,Playa o duna,Beach or dune,6483633,574922.641648,0.529283
+venezuela,3,2022,24,4.2,22,4,Uso urbano,Urban,4258366,376785.335633,0.346875
+venezuela,3,2022,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1232212,109218.414457,0.100548
+venezuela,3,2022,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2022,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2620219,234225.593743,0.215632
+venezuela,3,2022,30,4.3,22,4,Uso Minero,Mining,1262971,112642.949720,0.103701
+venezuela,3,2022,31,5.3,26,5,Acuicultura,Aquaculture,407140,35961.927404,0.033107
+venezuela,3,2022,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,687741,60542.902639,0.055737
+venezuela,3,2022,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",50381994,4465500.064938,4.111010
+venezuela,3,2022,34,5.2,26,5,Glaciar,Glacier,38,3.374434,0.000003
+venezuela,3,2022,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3716158,327546.874434,0.301545
+venezuela,3,2022,66,2.5,10,2,Arbustal,Shrubland,22513457,1988312.812242,1.830472
+venezuela,3,2022,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,41780,3699.654544,0.003406
+venezuela,3,2022,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3037518,269539.616286,0.248142
+venezuela,3,2022,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40067,3555.702341,0.003273
+venezuela,3,2023,3,1.1,1,1,Bosque,Forest,649887874,57989347.348345,53.385906
+venezuela,3,2023,4,1.2,1,1,Sabana arbolada,Wooded savanna,11510245,1024347.796387,0.943031
+venezuela,3,2023,5,1.3,1,1,Manglar,Mangrove,3228077,285421.989968,0.262764
+venezuela,3,2023,6,1.4,1,1,Bosque inundable,Flooded forest,74301116,6622781.142054,6.097037
+venezuela,3,2023,9,3.4,14,3,Plantación forestal,Forest plantation,3137159,278572.018502,0.256458
+venezuela,3,2023,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53195432,4735378.635005,4.359464
+venezuela,3,2023,12,2.2,10,2,Sabana/Herbazal,Grassland,96808121,8624003.908607,7.939394
+venezuela,3,2023,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1210003,108298.464073,0.099701
+venezuela,3,2023,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11910969,1060110.085281,0.975954
+venezuela,3,2023,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,3245504,289256.844308,0.266294
+venezuela,3,2023,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,213743842,18964782.420803,17.459277
+venezuela,3,2023,23,4.1,22,4,Playa o duna,Beach or dune,6599555,585353.774524,0.538886
+venezuela,3,2023,24,4.2,22,4,Uso urbano,Urban,4284120,379064.967866,0.348973
+venezuela,3,2023,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1231590,109164.575635,0.100499
+venezuela,3,2023,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2023,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2629480,235053.625165,0.216394
+venezuela,3,2023,30,4.3,22,4,Uso Minero,Mining,1345666,120025.508884,0.110497
+venezuela,3,2023,31,5.3,26,5,Acuicultura,Aquaculture,423350,37395.405254,0.034427
+venezuela,3,2023,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,706799,62221.648856,0.057282
+venezuela,3,2023,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",50506035,4476531.654578,4.121166
+venezuela,3,2023,34,5.2,26,5,Glaciar,Glacier,25,2.220023,0.000002
+venezuela,3,2023,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3788595,333922.214392,0.307414
+venezuela,3,2023,66,2.5,10,2,Arbustal,Shrubland,22901836,2022811.295574,1.862232
+venezuela,3,2023,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,41334,3658.398018,0.003368
+venezuela,3,2023,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3063915,271883.973091,0.250301
+venezuela,3,2023,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40134,3561.645086,0.003279
+venezuela,3,2024,3,1.1,1,1,Bosque,Forest,646016111,57645737.503857,53.069574
+venezuela,3,2024,4,1.2,1,1,Sabana arbolada,Wooded savanna,10953517,974906.003699,0.897514
+venezuela,3,2024,5,1.3,1,1,Manglar,Mangrove,3242402,286693.519586,0.263935
+venezuela,3,2024,6,1.4,1,1,Bosque inundable,Flooded forest,74097311,6604660.326423,6.080354
+venezuela,3,2024,9,3.4,14,3,Plantación forestal,Forest plantation,3001343,266510.265177,0.245354
+venezuela,3,2024,11,2.1,10,2,Herbazal/Arbustal inundable,Flooded grassland/shrubland,53137084,4730191.153067,4.354688
+venezuela,3,2024,12,2.2,10,2,Sabana/Herbazal,Grassland,98149485,8743379.762927,8.049293
+venezuela,3,2024,13,2.7,10,2,Otras formaciones naturales no forestales,Other non-forest natural formations,1213057,108572.442304,0.099954
+venezuela,3,2024,15,3.1,14,3,Uso pecuario/Tierras en descanso,Pasture/Fallow lands,11976095,1065911.813246,0.981295
+venezuela,3,2024,18,3.2,14,3,Uso agrícola/Tierras en descanso,Agriculture/Fallow lands,3471893,309486.218863,0.284918
+venezuela,3,2024,21,3.3,14,3,Uso agropecuario/Tierras en descanso,Cropland/Pasture/Fallow lands,216493077,19208277.976335,17.683443
+venezuela,3,2024,23,4.1,22,4,Playa o duna,Beach or dune,6687466,593190.401311,0.546100
+venezuela,3,2024,24,4.2,22,4,Uso urbano,Urban,4344259,384390.852141,0.353876
+venezuela,3,2024,25,4.5,22,4,Otras áreas antrópicas sin vegetación,Other non-vegetated anthropic areas,1232191,109218.927371,0.100549
+venezuela,3,2024,27,6,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2024,29,2.3,10,2,Afloramiento rocoso,Rocky outcrop,2677037,239305.825312,0.220309
+venezuela,3,2024,30,4.3,22,4,Uso Minero,Mining,1353791,120752.932630,0.111167
+venezuela,3,2024,31,5.3,26,5,Acuicultura,Aquaculture,423871,37441.514401,0.034469
+venezuela,3,2024,32,2.4,10,2,Planicie de marea hipersalina,Hypersaline tidal flat,710554,62553.049293,0.057587
+venezuela,3,2024,33,5.1,26,5,"Río, lago u océano","River, lake or ocean",50423904,4469290.847866,4.114500
+venezuela,3,2024,34,5.2,26,5,Glaciar,Glacier,18,1.598417,0.000001
+venezuela,3,2024,50,2.6,10,2,Herbazal/Arbustal xerófilo,Xerophytic grassland/shrubland,3755232,330974.061489,0.304700
+venezuela,3,2024,66,2.5,10,2,Arbustal,Shrubland,23137235,2043664.308409,1.881430
+venezuela,3,2024,68,4.4,22,4,Otras áreas naturales sin vegetación,Other non-vegetated natural areas,121659,10784.510924,0.009928
+venezuela,3,2024,81,2.8,10,2,Herbazal/Arbustal andino,Andean herbaceous/shrubby vegetation,3082032,273492.502830,0.251782
+venezuela,3,2024,82,2.9,10,2,Herbazal/Arbustal andino inundable,Flooded andean herbaceous/shrubby vegetation,40153,3563.330870,0.003280

@@ -1,0 +1,241 @@
+country,collection,year,level1_pixel_id,level1_code,name_es,name_en,pixels,area_ha,share_of_extent_pct
+venezuela,3,1985,1,1,Formaciones boscosas,Forest formations,768131798,68515379.654622,63.076334
+venezuela,3,1985,10,2,Herbazales y arbustales,Grasslands and shrublands,196294415,17458087.360402,16.072189
+venezuela,3,1985,14,3,Áreas agrícolas,Agricultural areas,195460874,17345387.131797,15.968436
+venezuela,3,1985,22,4,Áreas sin vegetación,Non-vegetated areas,11550452,1023686.209734,0.942422
+venezuela,3,1985,26,5,Cuerpos de agua,Water bodies,48303313,4280417.951833,3.940620
+venezuela,3,1985,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1986,1,1,Formaciones boscosas,Forest formations,767975698,68501495.667803,63.063552
+venezuela,3,1986,10,2,Herbazales y arbustales,Grasslands and shrublands,195496362,17387406.629163,16.007119
+venezuela,3,1986,14,3,Áreas agrícolas,Agricultural areas,196625973,17448972.464598,16.063798
+venezuela,3,1986,22,4,Áreas sin vegetación,Non-vegetated areas,11253891,997063.526929,0.917912
+venezuela,3,1986,26,5,Cuerpos de agua,Water bodies,48388924,4288019.664951,3.947618
+venezuela,3,1986,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1987,1,1,Formaciones boscosas,Forest formations,767765687,68482650.017628,63.046203
+venezuela,3,1987,10,2,Herbazales y arbustales,Grasslands and shrublands,193059682,17171287.931319,15.808157
+venezuela,3,1987,14,3,Áreas agrícolas,Agricultural areas,199031927,17662599.660696,16.260467
+venezuela,3,1987,22,4,Áreas sin vegetación,Non-vegetated areas,10964309,971278.417396,0.894174
+venezuela,3,1987,26,5,Cuerpos de agua,Water bodies,48919238,4335141.481638,3.990999
+venezuela,3,1987,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1988,1,1,Formaciones boscosas,Forest formations,766610882,68380212.303685,62.951898
+venezuela,3,1988,10,2,Herbazales y arbustales,Grasslands and shrublands,192890213,17156212.963107,15.794279
+venezuela,3,1988,14,3,Áreas agrícolas,Agricultural areas,200453507,17788832.055310,16.376678
+venezuela,3,1988,22,4,Áreas sin vegetación,Non-vegetated areas,11142362,987071.564980,0.908714
+venezuela,3,1988,26,5,Cuerpos de agua,Water bodies,48643865,4310627.378373,3.968431
+venezuela,3,1988,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1989,1,1,Formaciones boscosas,Forest formations,765875574,68315152.654286,62.892003
+venezuela,3,1989,10,2,Herbazales y arbustales,Grasslands and shrublands,191513944,17033797.690795,15.681582
+venezuela,3,1989,14,3,Áreas agrícolas,Agricultural areas,202463183,17967067.894787,16.540765
+venezuela,3,1989,22,4,Áreas sin vegetación,Non-vegetated areas,11239294,995771.773916,0.916723
+venezuela,3,1989,26,5,Cuerpos de agua,Water bodies,48648830,4311165.896883,3.968927
+venezuela,3,1989,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1990,1,1,Formaciones boscosas,Forest formations,764049714,68153346.265763,62.743041
+venezuela,3,1990,10,2,Herbazales y arbustales,Grasslands and shrublands,189262228,16833483.683868,15.497170
+venezuela,3,1990,14,3,Áreas agrícolas,Agricultural areas,206454245,18321280.820480,16.866859
+venezuela,3,1990,22,4,Áreas sin vegetación,Non-vegetated areas,11307641,1002088.577953,0.922538
+venezuela,3,1990,26,5,Cuerpos de agua,Water bodies,48666999,4312756.740123,3.970392
+venezuela,3,1990,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1991,1,1,Formaciones boscosas,Forest formations,761911210,67964474.940307,62.569164
+venezuela,3,1991,10,2,Herbazales y arbustales,Grasslands and shrublands,190132541,16910515.317328,15.568086
+venezuela,3,1991,14,3,Áreas agrícolas,Agricultural areas,207039643,18372838.440218,16.914324
+venezuela,3,1991,22,4,Áreas sin vegetación,Non-vegetated areas,12058987,1068458.258971,0.983639
+venezuela,3,1991,26,5,Cuerpos de agua,Water bodies,48598440,4306668.599228,3.964787
+venezuela,3,1991,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1992,1,1,Formaciones boscosas,Forest formations,761440280,67922477.967220,62.530501
+venezuela,3,1992,10,2,Herbazales y arbustales,Grasslands and shrublands,190317779,16926684.813343,15.582972
+venezuela,3,1992,14,3,Áreas agrícolas,Agricultural areas,207246453,18391527.894911,16.931530
+venezuela,3,1992,22,4,Áreas sin vegetación,Non-vegetated areas,11904007,1054848.204816,0.971110
+venezuela,3,1992,26,5,Cuerpos de agua,Water bodies,48832302,4327416.675761,3.983888
+venezuela,3,1992,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1993,1,1,Formaciones boscosas,Forest formations,761184929,67899752.790697,62.509580
+venezuela,3,1993,10,2,Herbazales y arbustales,Grasslands and shrublands,190425079,16936192.204704,15.591725
+venezuela,3,1993,14,3,Áreas agrícolas,Agricultural areas,207475562,18411923.661247,16.950306
+venezuela,3,1993,22,4,Áreas sin vegetación,Non-vegetated areas,11921891,1056449.953292,0.972584
+venezuela,3,1993,26,5,Cuerpos de agua,Water bodies,48733360,4318636.946112,3.975805
+venezuela,3,1993,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1994,1,1,Formaciones boscosas,Forest formations,760473141,67836574.349387,62.451416
+venezuela,3,1994,10,2,Herbazales y arbustales,Grasslands and shrublands,189956297,16894730.687954,15.553555
+venezuela,3,1994,14,3,Áreas agrícolas,Agricultural areas,208714282,18521733.764918,17.051399
+venezuela,3,1994,22,4,Áreas sin vegetación,Non-vegetated areas,11938371,1057922.320654,0.973940
+venezuela,3,1994,26,5,Cuerpos de agua,Water bodies,48658730,4311994.433138,3.969690
+venezuela,3,1994,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1995,1,1,Formaciones boscosas,Forest formations,760277082,67819123.194167,62.435351
+venezuela,3,1995,10,2,Herbazales y arbustales,Grasslands and shrublands,190099151,16907469.946128,15.565283
+venezuela,3,1995,14,3,Áreas agrícolas,Agricultural areas,208877431,18536241.069242,17.064755
+venezuela,3,1995,22,4,Áreas sin vegetación,Non-vegetated areas,11980826,1061707.020019,0.977424
+venezuela,3,1995,26,5,Cuerpos de agua,Water bodies,48506331,4298414.326494,3.957188
+venezuela,3,1995,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1996,1,1,Formaciones boscosas,Forest formations,757508883,67573465.678243,62.209194
+venezuela,3,1996,10,2,Herbazales y arbustales,Grasslands and shrublands,185528392,16502415.758776,15.192383
+venezuela,3,1996,14,3,Áreas agrícolas,Agricultural areas,215903493,19159316.077554,17.638367
+venezuela,3,1996,22,4,Áreas sin vegetación,Non-vegetated areas,11633298,1030505.768732,0.948700
+venezuela,3,1996,26,5,Cuerpos de agua,Water bodies,49166758,4357252.537780,4.011355
+venezuela,3,1996,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1997,1,1,Formaciones boscosas,Forest formations,755889576,67429829.091358,62.076961
+venezuela,3,1997,10,2,Herbazales y arbustales,Grasslands and shrublands,183376041,16311282.496848,15.016423
+venezuela,3,1997,14,3,Áreas agrícolas,Agricultural areas,219836075,19508542.387179,17.959871
+venezuela,3,1997,22,4,Áreas sin vegetación,Non-vegetated areas,11629441,1029991.397730,0.948226
+venezuela,3,1997,26,5,Cuerpos de agua,Water bodies,49009680,4343309.472240,3.998519
+venezuela,3,1997,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1998,1,1,Formaciones boscosas,Forest formations,754987315,67349868.266708,62.003348
+venezuela,3,1998,10,2,Herbazales y arbustales,Grasslands and shrublands,183588138,16330461.927223,15.034080
+venezuela,3,1998,14,3,Áreas agrícolas,Agricultural areas,220490210,19566288.680382,18.013033
+venezuela,3,1998,22,4,Áreas sin vegetación,Non-vegetated areas,11728565,1038707.554042,0.956251
+venezuela,3,1998,26,5,Cuerpos de agua,Water bodies,48946568,4337626.907403,3.993288
+venezuela,3,1998,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,1999,1,1,Formaciones boscosas,Forest formations,754911998,67343073.362119,61.997093
+venezuela,3,1999,10,2,Herbazales y arbustales,Grasslands and shrublands,183734207,16343364.814591,15.045959
+venezuela,3,1999,14,3,Áreas agrícolas,Agricultural areas,220128100,19534273.242580,17.983559
+venezuela,3,1999,22,4,Áreas sin vegetación,Non-vegetated areas,11871920,1051495.344346,0.968023
+venezuela,3,1999,26,5,Cuerpos de agua,Water bodies,49094568,4350746.305988,4.005366
+venezuela,3,1999,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2000,1,1,Formaciones boscosas,Forest formations,754008142,67262900.715957,61.923285
+venezuela,3,2000,10,2,Herbazales y arbustales,Grasslands and shrublands,183367575,16310520.979786,15.015722
+venezuela,3,2000,14,3,Áreas agrícolas,Agricultural areas,221202761,19629659.159208,18.071373
+venezuela,3,2000,22,4,Áreas sin vegetación,Non-vegetated areas,11821766,1047145.561506,0.964019
+venezuela,3,2000,26,5,Cuerpos de agua,Water bodies,49340548,4372726.564081,4.025601
+venezuela,3,2000,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2001,1,1,Formaciones boscosas,Forest formations,752197379,67102145.677778,61.775292
+venezuela,3,2001,10,2,Herbazales y arbustales,Grasslands and shrublands,183541391,16326284.509494,15.030235
+venezuela,3,2001,14,3,Áreas agrícolas,Agricultural areas,223192936,19806190.683420,18.233891
+venezuela,3,2001,22,4,Áreas sin vegetación,Non-vegetated areas,12082847,1070259.710024,0.985298
+venezuela,3,2001,26,5,Cuerpos de agua,Water bodies,48726235,4318072.044068,3.975285
+venezuela,3,2001,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2002,1,1,Formaciones boscosas,Forest formations,751268074,67019611.122355,61.699309
+venezuela,3,2002,10,2,Herbazales y arbustales,Grasslands and shrublands,183859606,16354885.466646,15.056565
+venezuela,3,2002,14,3,Áreas agrícolas,Agricultural areas,223703459,19851285.014482,18.275405
+venezuela,3,2002,22,4,Áreas sin vegetación,Non-vegetated areas,12248484,1084901.326592,0.998777
+venezuela,3,2002,26,5,Cuerpos de agua,Water bodies,48661163,4312269.517393,3.969943
+venezuela,3,2002,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2003,1,1,Formaciones boscosas,Forest formations,750431058,66945207.388856,61.630812
+venezuela,3,2003,10,2,Herbazales y arbustales,Grasslands and shrublands,183658776,16337244.875965,15.040325
+venezuela,3,2003,14,3,Áreas agrícolas,Agricultural areas,224960017,19962807.872755,18.378075
+venezuela,3,2003,22,4,Áreas sin vegetación,Non-vegetated areas,12167297,1077642.332314,0.992095
+venezuela,3,2003,26,5,Cuerpos de agua,Water bodies,48523632,4300049.444488,3.958693
+venezuela,3,2003,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2004,1,1,Formaciones boscosas,Forest formations,749924094,66899802.584418,61.589012
+venezuela,3,2004,10,2,Herbazales y arbustales,Grasslands and shrublands,183078681,16285739.490397,14.992908
+venezuela,3,2004,14,3,Áreas agrícolas,Agricultural areas,225611782,20020952.539070,18.431604
+venezuela,3,2004,22,4,Áreas sin vegetación,Non-vegetated areas,12021375,1064772.102546,0.980246
+venezuela,3,2004,26,5,Cuerpos de agua,Water bodies,49104848,4351685.198234,4.006230
+venezuela,3,2004,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2005,1,1,Formaciones boscosas,Forest formations,750653673,66964125.382877,61.648228
+venezuela,3,2005,10,2,Herbazales y arbustales,Grasslands and shrublands,182854662,16265794.970257,14.974547
+venezuela,3,2005,14,3,Áreas agrícolas,Agricultural areas,224735765,19943464.339122,18.360267
+venezuela,3,2005,22,4,Áreas sin vegetación,Non-vegetated areas,11931625,1056982.369332,0.973075
+venezuela,3,2005,26,5,Cuerpos de agua,Water bodies,49565054,4392584.764611,4.043883
+venezuela,3,2005,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2006,1,1,Formaciones boscosas,Forest formations,750556086,66955420.286556,61.640214
+venezuela,3,2006,10,2,Herbazales y arbustales,Grasslands and shrublands,182562196,16239739.998706,14.950560
+venezuela,3,2006,14,3,Áreas agrícolas,Agricultural areas,224853180,19953844.479865,18.369823
+venezuela,3,2006,22,4,Áreas sin vegetación,Non-vegetated areas,11915485,1055652.325331,0.971850
+venezuela,3,2006,26,5,Cuerpos de agua,Water bodies,49853832,4418294.735739,4.067552
+venezuela,3,2006,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2007,1,1,Formaciones boscosas,Forest formations,749427181,66855306.271994,61.548048
+venezuela,3,2007,10,2,Herbazales y arbustales,Grasslands and shrublands,182682036,16250456.594027,14.960426
+venezuela,3,2007,14,3,Áreas agrícolas,Agricultural areas,225998554,20055440.389301,18.463354
+venezuela,3,2007,22,4,Áreas sin vegetación,Non-vegetated areas,12098414,1071841.628812,0.986754
+venezuela,3,2007,26,5,Cuerpos de agua,Water bodies,49534594,4389906.942065,4.041417
+venezuela,3,2007,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2008,1,1,Formaciones boscosas,Forest formations,749247722,66839149.893282,61.533174
+venezuela,3,2008,10,2,Herbazales y arbustales,Grasslands and shrublands,182369046,16222630.679506,14.934809
+venezuela,3,2008,14,3,Áreas agrícolas,Agricultural areas,226489795,20099292.669136,18.503725
+venezuela,3,2008,22,4,Áreas sin vegetación,Non-vegetated areas,12082031,1070384.124189,0.985412
+venezuela,3,2008,26,5,Cuerpos de agua,Water bodies,49552184,4391494.371284,4.042879
+venezuela,3,2008,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2009,1,1,Formaciones boscosas,Forest formations,748787196,66798159.466265,61.495437
+venezuela,3,2009,10,2,Herbazales y arbustales,Grasslands and shrublands,182026714,16192191.545362,14.906787
+venezuela,3,2009,14,3,Áreas agrícolas,Agricultural areas,227330035,20173914.485605,18.572423
+venezuela,3,2009,22,4,Áreas sin vegetación,Non-vegetated areas,12116397,1073562.509360,0.988339
+venezuela,3,2009,26,5,Cuerpos de agua,Water bodies,49480438,4385123.907739,4.037014
+venezuela,3,2009,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2010,1,1,Formaciones boscosas,Forest formations,747869628,66716604.599013,61.420357
+venezuela,3,2010,10,2,Herbazales y arbustales,Grasslands and shrublands,181930974,16183820.603117,14.899080
+venezuela,3,2010,14,3,Áreas agrícolas,Agricultural areas,228385002,20267578.068907,18.658652
+venezuela,3,2010,22,4,Áreas sin vegetación,Non-vegetated areas,12177076,1078945.728619,0.993294
+venezuela,3,2010,26,5,Cuerpos de agua,Water bodies,49378098,4376002.737742,4.028617
+venezuela,3,2010,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2011,1,1,Formaciones boscosas,Forest formations,749220228,66836015.265589,61.530288
+venezuela,3,2011,10,2,Herbazales y arbustales,Grasslands and shrublands,181762337,16168821.757415,14.885272
+venezuela,3,2011,14,3,Áreas agrícolas,Agricultural areas,226988910,20143997.248858,18.544881
+venezuela,3,2011,22,4,Áreas sin vegetación,Non-vegetated areas,12025907,1065677.766850,0.981080
+venezuela,3,2011,26,5,Cuerpos de agua,Water bodies,49743399,4408439.964755,4.058479
+venezuela,3,2011,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2012,1,1,Formaciones boscosas,Forest formations,749240129,66837761.570785,61.531896
+venezuela,3,2012,10,2,Herbazales y arbustales,Grasslands and shrublands,181412203,16137458.046234,14.856398
+venezuela,3,2012,14,3,Áreas agrícolas,Agricultural areas,226726910,20120840.667909,18.523563
+venezuela,3,2012,22,4,Áreas sin vegetación,Non-vegetated areas,12079404,1070507.809934,0.985526
+venezuela,3,2012,26,5,Cuerpos de agua,Water bodies,50282133,4456383.731336,4.102617
+venezuela,3,2012,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2013,1,1,Formaciones boscosas,Forest formations,748056800,66732962.654854,61.435416
+venezuela,3,2013,10,2,Herbazales y arbustales,Grasslands and shrublands,181169104,16115355.336531,14.836050
+venezuela,3,2013,14,3,Áreas agrícolas,Agricultural areas,228031074,20236915.496017,18.630423
+venezuela,3,2013,22,4,Áreas sin vegetación,Non-vegetated areas,12435948,1102144.994630,1.014652
+venezuela,3,2013,26,5,Cuerpos de agua,Water bodies,50047852,4435573.255556,4.083459
+venezuela,3,2013,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2014,1,1,Formaciones boscosas,Forest formations,745973572,66548439.224121,61.265541
+venezuela,3,2014,10,2,Herbazales y arbustales,Grasslands and shrublands,181912200,16181619.150165,14.897053
+venezuela,3,2014,14,3,Áreas agrícolas,Agricultural areas,229499717,20366781.720427,18.749980
+venezuela,3,2014,22,4,Áreas sin vegetación,Non-vegetated areas,12807424,1134999.012258,1.044898
+venezuela,3,2014,26,5,Cuerpos de agua,Water bodies,49547863,4391112.453808,4.042527
+venezuela,3,2014,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2015,1,1,Formaciones boscosas,Forest formations,744365665,66406031.244842,61.134438
+venezuela,3,2015,10,2,Herbazales y arbustales,Grasslands and shrublands,181814118,16173058.937220,14.889173
+venezuela,3,2015,14,3,Áreas agrícolas,Agricultural areas,231124086,20510609.805013,18.882390
+venezuela,3,2015,22,4,Áreas sin vegetación,Non-vegetated areas,12981382,1150362.981352,1.059042
+venezuela,3,2015,26,5,Cuerpos de agua,Water bodies,49455528,4382888.857438,4.034957
+venezuela,3,2015,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2016,1,1,Formaciones boscosas,Forest formations,743905791,66365133.362521,61.096787
+venezuela,3,2016,10,2,Herbazales y arbustales,Grasslands and shrublands,182431671,16228134.367454,14.939876
+venezuela,3,2016,14,3,Áreas agrícolas,Agricultural areas,231103232,20508638.482709,18.880576
+venezuela,3,2016,22,4,Áreas sin vegetación,Non-vegetated areas,13023238,1154121.756089,1.062503
+venezuela,3,2016,26,5,Cuerpos de agua,Water bodies,49276845,4366923.679824,4.020259
+venezuela,3,2016,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2017,1,1,Formaciones boscosas,Forest formations,744485825,66415991.641539,61.143608
+venezuela,3,2017,10,2,Herbazales y arbustales,Grasslands and shrublands,182361140,16221649.355170,14.933906
+venezuela,3,2017,14,3,Áreas agrícolas,Agricultural areas,229967158,20408304.897247,18.788207
+venezuela,3,2017,22,4,Áreas sin vegetación,Non-vegetated areas,12950013,1147789.971613,1.056674
+venezuela,3,2017,26,5,Cuerpos de agua,Water bodies,49976641,4429215.783027,4.077606
+venezuela,3,2017,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2018,1,1,Formaciones boscosas,Forest formations,744222503,66392345.354389,61.121839
+venezuela,3,2018,10,2,Herbazales y arbustales,Grasslands and shrublands,181771691,16169113.163232,14.885540
+venezuela,3,2018,14,3,Áreas agrícolas,Agricultural areas,230592156,20464207.626994,18.839672
+venezuela,3,2018,22,4,Áreas sin vegetación,Non-vegetated areas,12818136,1136080.408799,1.045894
+venezuela,3,2018,26,5,Cuerpos de agua,Water bodies,50336292,4461205.183800,4.107056
+venezuela,3,2018,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2019,1,1,Formaciones boscosas,Forest formations,742718062,66258933.044987,60.999017
+venezuela,3,2019,10,2,Herbazales y arbustales,Grasslands and shrublands,182251993,16211822.011347,14.924859
+venezuela,3,2019,14,3,Áreas agrícolas,Agricultural areas,231511471,20545576.428337,18.914581
+venezuela,3,2019,22,4,Áreas sin vegetación,Non-vegetated areas,12909438,1144203.798987,1.053372
+venezuela,3,2019,26,5,Cuerpos de agua,Water bodies,50349814,4462416.453405,4.108171
+venezuela,3,2019,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2020,1,1,Formaciones boscosas,Forest formations,741646876,66163999.492854,60.911620
+venezuela,3,2020,10,2,Herbazales y arbustales,Grasslands and shrublands,182535994,16237034.108237,14.948069
+venezuela,3,2020,14,3,Áreas agrícolas,Agricultural areas,232397482,20624041.559322,18.986817
+venezuela,3,2020,22,4,Áreas sin vegetación,Non-vegetated areas,12965190,1149188.684551,1.057961
+venezuela,3,2020,26,5,Cuerpos de agua,Water bodies,50195234,4448687.715316,4.095532
+venezuela,3,2020,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2021,1,1,Formaciones boscosas,Forest formations,741686930,66167086.363157,60.914462
+venezuela,3,2021,10,2,Herbazales y arbustales,Grasslands and shrublands,182627472,16244822.931390,14.955240
+venezuela,3,2021,14,3,Áreas agrícolas,Agricultural areas,232035202,20592556.183239,18.957832
+venezuela,3,2021,22,4,Áreas sin vegetación,Non-vegetated areas,13038208,1155814.529973,1.064061
+venezuela,3,2021,26,5,Cuerpos de agua,Water bodies,50352967,4462671.817924,4.108406
+venezuela,3,2021,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2022,1,1,Formaciones boscosas,Forest formations,740828346,66090727.546765,60.844165
+venezuela,3,2022,10,2,Herbazales y arbustales,Grasslands and shrublands,183500461,16322113.415993,15.026395
+venezuela,3,2022,14,3,Áreas agrícolas,Agricultural areas,231343837,20531376.411678,18.901508
+venezuela,3,2022,22,4,Áreas sin vegetación,Non-vegetated areas,13278962,1177268.996004,1.083812
+venezuela,3,2022,26,5,Cuerpos de agua,Water bodies,50789172,4501465.366776,4.144120
+venezuela,3,2022,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2023,1,1,Formaciones boscosas,Forest formations,738927312,65921898.276754,60.688738
+venezuela,3,2023,10,2,Herbazales y arbustales,Grasslands and shrublands,184344315,16397135.409849,15.095461
+venezuela,3,2023,14,3,Áreas agrícolas,Agricultural areas,232037474,20592721.368895,18.957984
+venezuela,3,2023,22,4,Áreas sin vegetación,Non-vegetated areas,13502265,1197267.224927,1.102223
+venezuela,3,2023,26,5,Cuerpos de agua,Water bodies,50929410,4513929.279855,4.155594
+venezuela,3,2023,27,6,No observado,Not observed,0,0.000000,0.000000
+venezuela,3,2024,1,1,Formaciones boscosas,Forest formations,734309341,65511997.353565,60.311377
+venezuela,3,2024,10,2,Herbazales y arbustales,Grasslands and shrublands,185901869,16535696.436500,15.223023
+venezuela,3,2024,14,3,Áreas agrícolas,Agricultural areas,234942408,20850186.273622,19.195010
+venezuela,3,2024,22,4,Áreas sin vegetación,Non-vegetated areas,13739366,1218337.624377,1.121621
+venezuela,3,2024,26,5,Cuerpos de agua,Water bodies,50847793,4506733.960684,4.148970
+venezuela,3,2024,27,6,No observado,Not observed,0,0.000000,0.000000
