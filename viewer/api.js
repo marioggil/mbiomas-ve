@@ -27,6 +27,32 @@
   }
 
   /**
+   * Fetch the 40-year level-1 composition series for the composition panel.
+   *
+   * The backend reads the committed composition CSVs once at import and
+   * returns them verbatim; the panel never recomputes a figure.
+   *
+   * @returns {Promise<object>}
+   */
+  function fetchCompositionSeries() {
+    return fetchJson("/api/composition/series");
+  }
+
+  /**
+   * Fetch the level-2 breakdown for one year.
+   *
+   * Unknown years return 404; the promise rejects in that case and the
+   * caller is expected to surface a user-facing message instead of trying
+   * to render an empty bar list.
+   *
+   * @param {number} year
+   * @returns {Promise<object>}
+   */
+  function fetchCompositionYear(year) {
+    return fetchJson("/api/composition/year/" + encodeURIComponent(String(year)));
+  }
+
+  /**
    * Build the XYZ tile URL for a given year.
    *
    * The backend publishes the exact template via /api/meta, so we use
@@ -70,6 +96,8 @@
 
   global.MapBiomasAPI = {
     fetchMeta: fetchMeta,
+    fetchCompositionSeries: fetchCompositionSeries,
+    fetchCompositionYear: fetchCompositionYear,
     tileUrl: tileUrl,
   };
 })(window);

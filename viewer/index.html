@@ -26,6 +26,32 @@
     </ul>
   </aside>
 
+  <aside class="panel-panel" aria-label="Panel de composición por año">
+    <h2 class="panel-title">Composición por año</h2>
+    <p class="panel-help">
+      Porcentaje de la extensión válida por grupo (nivel 1) y clases del año seleccionado (nivel 2). Pulse el gráfico para cambiar de año.
+    </p>
+    <div class="panel-chart" id="panel-chart">
+      <!-- populated by panel.js from /api/composition/series -->
+    </div>
+    <ul class="panel-legend" id="panel-legend" aria-label="Leyenda del gráfico apilado">
+      <!-- populated by panel.js -->
+    </ul>
+    <h3 class="panel-breakdown-title" id="panel-breakdown-title">
+      Clases (nivel 2)
+    </h3>
+    <p class="panel-breakdown-empty" id="panel-breakdown-empty" style="display: none;">
+      Cargando&hellip;
+    </p>
+    <ul class="panel-breakdown-list" id="panel-breakdown-list">
+      <!-- populated by panel.js from /api/composition/year/{year} -->
+    </ul>
+    <div class="panel-labelling" aria-live="polite">
+      <strong class="panel-extent-label" id="panel-extent-label">&hellip;</strong>
+      <span class="panel-boundary-note" id="panel-boundary-note">&hellip;</span>
+    </div>
+  </aside>
+
   <section class="map-panel" aria-label="Mapa de cobertura anual">
     <div id="map" class="map" role="application" aria-label="Mapa interactivo"></div>
     <div class="labelling" id="d7-labelling" aria-live="polite">
@@ -59,6 +85,7 @@
 
   <script src="/static/vendor/maplibre-gl.js"></script>
   <script src="/static/api.js"></script>
+  <script src="/static/panel.js"></script>
   <script src="/static/app.js"></script>
 </body>
 </html>

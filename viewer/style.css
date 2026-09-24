@@ -41,12 +41,22 @@ body {
 
 body {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  grid-template-rows: auto 1fr auto;
+  /* Two explicit columns. ``minmax(0, 1fr)`` keeps the map column from
+   * claiming a min-content width that would otherwise push the layout
+   * into a horizontal overflow at narrow viewports. Every row sizes
+   * to its own content: the map row gets an explicit viewport-
+   * derived height (see .map-panel below) so it never collapses
+   * regardless of panel size, and the panel grows to fit its own
+   * content — the document scrolls past the panel when its content
+   * exceeds the viewport. The panel can therefore never steal
+   * space from the map by construction. */
+  grid-template-columns: 320px minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto;
   grid-template-areas:
     "header header"
     "legend map"
-    "time time";
+    "panel  panel"
+    "time   time";
   min-height: 100vh;
 }
 
@@ -197,6 +207,13 @@ body {
   position: relative;
   background: #dde3eb;
   overflow: hidden;
+  /* Deterministic viewport-derived height. The map row no longer
+   * competes with the panel via ``1fr`` (see the body grid), so its
+   * size is independent of how tall the panel grows. Floor 260px
+   * keeps the map usable at very short viewports; ceiling 720px
+   * stops the map from pushing the panel offscreen on tall
+   * displays. At 1280x800 → 400px (50vh); at 1042x569 → ~284px. */
+  height: clamp(260px, 50vh, 720px);
 }
 
 .map {
@@ -286,14 +303,20 @@ body {
   font-size: 13px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 960px) {
+  /* Below 960px wide, the legend and the panel would crowd the map in a
+   * two-column layout, so we stack everything vertically. The map keeps
+   * its viewport-derived height set on .map-panel, so it stays usable
+   * regardless of how tall the panel grows; the panel itself has no
+   * max-height cap — the document scrolls past it. */
   body {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto auto auto auto;
     grid-template-areas:
       "header"
       "legend"
       "map"
+      "panel"
       "time";
   }
   .legend-panel {
@@ -301,4 +324,287 @@ body {
     border-right: 0;
     border-bottom: 1px solid var(--border);
   }
+}
+
+@media (max-width: 720px) {
+  /* Same stacking as the 960px case. The map's viewport-derived height
+   * stays in effect from the base rules, and the panel still has no
+   * max-height cap (the document scrolls past it). */
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas:
+      "header"
+      "legend"
+      "map"
+      "panel"
+      "time";
+  }
+  .legend-panel {
+    max-height: 220px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+/* ------- Composition panel (slice T8b) ------- */
+.panel-panel {
+  grid-area: panel;
+  background: var(--bg-panel);
+  /* The panel spans the full width of the body, so the old right-border
+   * (which separated it from the map column in a 3-column draft) is
+   * wrong here. We separate from the map row above with border-top. */
+  border-top: 1px solid var(--border);
+  padding: 14px 14px 18px;
+  /* No max-height and no overflow here: the panel grows with its
+   * content and the document scrolls when the panel is taller than
+   * the viewport. The map row has its own viewport-derived height
+   * (see .map-panel above), so freeing the panel never shrinks the
+   * map. The internal flex layout still pushes the D7 labelling
+   * toward the bottom of the panel via margin-top: auto on
+   * .panel-labelling — without a fixed height, that auto margin
+   * collapses once the panel is taller than the sum of its content,
+   * which is the intended behaviour (no inner scrollbar to chase). */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.panel-help {
+  margin: 0 0 4px;
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.panel-chart {
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 6px;
+}
+
+.panel-chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.panel-chart-title {
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--fg-strong);
+  font-family: var(--font-stack);
+}
+
+.panel-chart-subtitle {
+  font-size: 11px;
+  fill: var(--fg-muted);
+  font-family: var(--font-stack);
+}
+
+.panel-chart-axis-grid {
+  stroke: rgba(15, 23, 42, 0.08);
+  stroke-width: 1;
+}
+
+.panel-chart-axis-baseline {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.panel-chart-tick {
+  font-size: 10px;
+  fill: var(--fg-muted);
+  font-family: var(--font-stack);
+}
+
+.panel-chart-axis-label {
+  font-size: 10px;
+  fill: var(--fg-muted);
+  font-family: var(--font-stack);
+}
+
+.panel-chart-cursor {
+  stroke: #111827;
+  stroke-width: 1.5;
+}
+
+.panel-chart-area {
+  stroke: rgba(255, 255, 255, 0.6);
+  stroke-width: 0.5;
+}
+
+.panel-chart-hit {
+  cursor: pointer;
+}
+
+.panel-legend {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.panel-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--fg-text);
+}
+
+.panel-legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid var(--border-strong);
+  flex-shrink: 0;
+}
+
+.panel-legend-label {
+  flex: 1;
+}
+
+.panel-legend-value {
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-breakdown-title {
+  margin: 12px 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.panel-breakdown-empty {
+  margin: 0;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+
+.panel-breakdown-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.panel-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-panel-alt);
+  padding: 6px 8px;
+}
+
+.panel-bar-swatch {
+  width: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.panel-bar-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.panel-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.panel-bar-name {
+  font-weight: 600;
+  color: var(--fg-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-bar-code {
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.panel-bar-track {
+  position: relative;
+  height: 6px;
+  background: rgba(15, 23, 42, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.panel-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.panel-bar-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-bar-area {
+  color: var(--fg-text);
+}
+
+.panel-bar-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 4px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.panel-bar-total-label {
+  color: var(--fg-muted);
+  font-weight: 400;
+}
+
+.panel-labelling {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.panel-extent-label {
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.panel-boundary-note {
+  color: var(--fg-muted);
 }

@@ -10,6 +10,7 @@
   "use strict";
 
   var api = window.MapBiomasAPI;
+  var panel = window.MapBiomasPanel;
   if (!api) {
     showFatal("Módulo de datos no disponible.");
     return;
@@ -64,6 +65,26 @@
     renderLegend(m.legend || []);
     initYearSlider(m.years || []);
     initMap(m);
+    // Composition panel (slice T8b): receives the initial year from the
+    // slider so the panel and the map agree on the active year from the
+    // first paint. The panel is given a callback so a click on the chart
+    // moves the slider back, keeping the two controls synchronised.
+    if (panel && typeof panel.init === "function") {
+      panel.init(m, currentYear, onYearChangedFromPanel);
+    }
+  }
+
+  // Year changed from the panel (click on the chart). Push it through the
+  // slider so the host's onYearChanged also runs and the map reloads.
+  function onYearChangedFromPanel(year) {
+    if (!yearSlider || !Number.isFinite(year)) {
+      return;
+    }
+    yearSlider.value = String(year);
+    yearSlider.setAttribute("aria-valuenow", String(year));
+    yearValue.textContent = String(year);
+    currentYear = year;
+    onYearChanged(year);
   }
 
   function formatSubtitle(m) {
@@ -258,7 +279,39 @@
       "bottom-right"
     );
 
+    // Watch the map container: MapLibre captures the canvas size once
+    // at construction and only re-measures when map.resize() is called.
+    // Without this observer, any later layout change (window resize,
+    // fonts loading, the panel growing because its data arrived) leaves
+    // the canvas at the wrong size and the map is clipped or blank.
+    // We only call resize() once the map is loaded; ResizeObserver fires
+    // on the initial observe too, so an early callback is harmless.
+    var mapContainerEl = document.getElementById("map");
+    if (typeof ResizeObserver !== "undefined" && mapContainerEl) {
+      var resizeObs = new ResizeObserver(function () {
+        if (
+          map &&
+          typeof map.resize === "function" &&
+          typeof map.loaded === "function" &&
+          map.loaded()
+        ) {
+          map.resize();
+        }
+      });
+      resizeObs.observe(mapContainerEl);
+    }
+
     map.on("load", function () {
+      // Defensive: if the container had zero size at construction (the
+      // T8b regression collapsed the map track to 0px) or grew while
+      // the map was initialising, ask MapLibre to recompute its canvas
+      // before adding the source and fitting the bounds. fitBounds
+      // computes zoom from the current canvas size, so doing this here
+      // makes the first paint match the final layout instead of a
+      // stale measurement.
+      if (typeof map.resize === "function") {
+        map.resize();
+      }
       map.addSource("mbtiles-coverage", {
         type: "raster",
         tiles: [api.tileUrl(tileUrl, currentYear, 0, 0, 0).replace("/0/0/0.png", "/{z}/{x}/{y}.png")],
@@ -349,6 +402,10 @@
     if (!src) {
       // Map not loaded yet; the load handler will apply the initial year.
       return;
+    }
+    // Mirror the year on the panel (chart cursor and bar breakdown).
+    if (panel && typeof panel.setYear === "function") {
+      panel.setYear(year);
     }
     // Record the latest requested year and schedule a single rAF if none
     // is already pending. Re-entrancy is safe because subsequent calls in

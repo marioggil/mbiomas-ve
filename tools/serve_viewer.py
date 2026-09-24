@@ -53,6 +53,7 @@ which it does.
 
 from __future__ import annotations
 
+import csv
 import json
 import os
 import re
@@ -89,6 +90,28 @@ COG_ROOT: Final[Path] = DATA_ROOT / "cog" / COUNTRY / f"collection-{COLLECTION}"
 MANIFEST_PATH: Final[Path] = DERIVED_ROOT / "tiles-manifest.json"
 CODEBOOK_PATH: Final[Path] = LEGEND_ROOT / f"{COUNTRY}-collection-{COLLECTION}.json"
 VIEWER_DIR: Final[Path] = REPO_ROOT / "viewer"
+
+# Composition outputs committed by T4 of the feature. The panel slice (T8b)
+# reads them verbatim: the values on screen are the values the statistics tool
+# wrote, never recomputed. They live next to the tile manifest so every
+# derived artefact the service trusts travels together.
+COMPOSITION_LEVEL1_PATH: Final[Path] = (
+    DERIVED_ROOT / "composition" / f"composition-level1-{COUNTRY}-collection-{COLLECTION}.csv"
+)
+COMPOSITION_LEVEL2_PATH: Final[Path] = (
+    DERIVED_ROOT / "composition" / f"composition-level2-{COUNTRY}-collection-{COLLECTION}.csv"
+)
+
+# Schema version of the composition endpoints. Bumped on any breaking change
+# to the JSON contract the frontend consumes.
+COMPOSITION_SCHEMA_VERSION: Final[str] = "viewer-composition.v1"
+
+# Consistency check tolerances for the import-time validator. The level-1
+# and level-2 CSVs are produced by the same engine, so per-year sums of the
+# level-2 areas that roll up under each level-1 group must agree with the
+# level-1 row within the geodesic area's float64 accumulation noise. 1e-3 ha
+# is 0.01 m^2 and matches the noise budget observed in T6.
+COMPOSITION_AREA_TOLERANCE_HA: Final[float] = 1e-3
 
 TILE_URL_TEMPLATE: Final[str] = "/tiles/{year}/{z}/{x}/{y}.png"
 
@@ -172,6 +195,357 @@ try:
     _CODEBOOK_DATA: dict[str, Any] = _load_codebook()
 except ManifestError as exc:
     raise SystemExit(f"viewer: required assets missing or malformed: {exc}") from exc
+
+
+# ---------------------------------------------------------------------------
+# Composition CSVs (slice T8b)
+# ---------------------------------------------------------------------------
+# The composition panel reads the same CSVs the statistics tool committed in
+# T4 and must not recompute anything. The previous review finding
+# (R3-SERVE-VIEWER-NO-CACHE-RELOAD, raised against the tile route for
+# re-parsing the manifest on every request) is the reason the loaders below
+# run exactly once at import and the routes read the pre-parsed dicts.
+#
+# Two counters are kept in module scope and exposed through
+# ``/api/composition/_load_counters`` for the verification harness; the
+# expectation is zero calls during serving, which proves no per-request CSV
+# re-parsing.
+
+class CompositionError(RuntimeError):
+    """Raised when the composition CSVs are missing, malformed or inconsistent."""
+
+
+class _LoadCounter:
+    """Tiny monotonic counter used by the verification harness.
+
+    The whole point of these counters is to prove that the CSV loaders do not
+    run on the request path. Incrementing a counter is two attribute writes;
+    a counter object is cheaper than ``logging`` and survives the round-trip
+    of an in-process test client that runs in the same interpreter.
+    """
+
+    __slots__ = ("calls",)
+
+    def __init__(self) -> None:
+        self.calls: int = 0
+
+    def bump(self) -> None:
+        self.calls += 1
+
+
+_COMPOSITION_L1_LOAD_COUNTER: _LoadCounter = _LoadCounter()
+_COMPOSITION_L2_LOAD_COUNTER: _LoadCounter = _LoadCounter()
+
+
+def _load_composition_level1(path: Path) -> "dict[int, dict[int, dict[str, Any]]]":
+    """Load the level-1 composition CSV into ``{year: {pixel_id: row}}``.
+
+    Counts the load so the verification harness can assert no per-request
+    re-parsing. Raises ``CompositionError`` with a row reference on any
+    structural problem so the operator can open the file at the same line
+    number the engine reports.
+    """
+    _COMPOSITION_L1_LOAD_COUNTER.bump()
+    if not path.is_file():
+        raise CompositionError(f"composition level-1 CSV not found: {path}")
+    out: dict[int, dict[int, dict[str, Any]]] = {}
+    try:
+        with path.open("r", encoding="utf-8", newline="") as fh:
+            reader = csv.DictReader(fh)
+            for row_index, raw in enumerate(reader, start=2):  # header is line 1
+                try:
+                    year = int(raw["year"])
+                    pixel_id = int(raw["level1_pixel_id"])
+                except (KeyError, TypeError, ValueError) as exc:
+                    raise CompositionError(
+                        f"composition level-1 CSV row {row_index}: bad year/level1_pixel_id: {raw!r}"
+                    ) from exc
+                out.setdefault(year, {})[pixel_id] = {
+                    "year": year,
+                    "pixel_id": pixel_id,
+                    "code": raw.get("level1_code", ""),
+                    "name_es": raw.get("name_es", ""),
+                    "name_en": raw.get("name_en", ""),
+                    "pixels": int(raw["pixels"]),
+                    "area_ha": float(raw["area_ha"]),
+                    "share_pct": float(raw["share_of_extent_pct"]),
+                }
+    except OSError as exc:
+        raise CompositionError(f"composition level-1 CSV is not readable: {path}: {exc}") from exc
+    if not out:
+        raise CompositionError(f"composition level-1 CSV has no usable rows: {path}")
+    return out
+
+
+def _load_composition_level2(path: Path) -> "dict[int, dict[int, dict[str, Any]]]":
+    """Load the level-2 composition CSV into ``{year: {pixel_id: row}}``.
+
+    Counts the load for the same reason as level-1. Level-2 carries the
+    level-1 relationship (``level1_pixel_id``) so the breakdown endpoint can
+    group classes under their group without a second pass over the codebook.
+    """
+    _COMPOSITION_L2_LOAD_COUNTER.bump()
+    if not path.is_file():
+        raise CompositionError(f"composition level-2 CSV not found: {path}")
+    out: dict[int, dict[int, dict[str, Any]]] = {}
+    try:
+        with path.open("r", encoding="utf-8", newline="") as fh:
+            reader = csv.DictReader(fh)
+            for row_index, raw in enumerate(reader, start=2):
+                try:
+                    year = int(raw["year"])
+                    pixel_id = int(raw["pixel_id"])
+                    level1_pixel_id = int(raw["level1_pixel_id"])
+                except (KeyError, TypeError, ValueError) as exc:
+                    raise CompositionError(
+                        f"composition level-2 CSV row {row_index}: bad year/pixel_id: {raw!r}"
+                    ) from exc
+                out.setdefault(year, {})[pixel_id] = {
+                    "year": year,
+                    "pixel_id": pixel_id,
+                    "code": raw.get("code", ""),
+                    "name_es": raw.get("name_es", ""),
+                    "name_en": raw.get("name_en", ""),
+                    "level1_pixel_id": level1_pixel_id,
+                    "level1_code": raw.get("level1_code", ""),
+                    "pixels": int(raw["pixels"]),
+                    "area_ha": float(raw["area_ha"]),
+                    "share_pct": float(raw["share_of_extent_pct"]),
+                }
+    except OSError as exc:
+        raise CompositionError(f"composition level-2 CSV is not readable: {path}: {exc}") from exc
+    if not out:
+        raise CompositionError(f"composition level-2 CSV has no usable rows: {path}")
+    return out
+
+
+def _validate_composition_consistency(
+    level1: "dict[int, dict[int, dict[str, Any]]]",
+    level2: "dict[int, dict[int, dict[str, Any]]]",
+    codebook: dict[str, Any],
+) -> None:
+    """Cross-check the two CSVs and the codebook at import time.
+
+    The check fires once, at import, and the service refuses to start if any
+    of the invariants are broken. The rules:
+
+      1. The two CSVs cover the same set of years.
+      2. For every year, the sum of the level-2 areas under each level-1
+         group agrees with that level-1 row within
+         ``COMPOSITION_AREA_TOLERANCE_HA`` (1e-3 ha = 0.01 m^2).
+      3. Every level-1 ``pixel_id`` in the CSV exists in the codebook.
+      4. Every level-2 ``pixel_id`` in the CSV exists in the codebook.
+
+    A row that fails any rule stops the service. We do not silently drop
+    rows: a value the panel does not show would be a lie.
+    """
+    years_l1 = set(level1.keys())
+    years_l2 = set(level2.keys())
+    if years_l1 != years_l2:
+        only_l1 = sorted(years_l1 - years_l2)
+        only_l2 = sorted(years_l2 - years_l1)
+        raise CompositionError(
+            "composition CSVs cover different years: "
+            f"only in level-1: {only_l1[:5]}{'...' if len(only_l1) > 5 else ''}, "
+            f"only in level-2: {only_l2[:5]}{'...' if len(only_l2) > 5 else ''}"
+        )
+
+    codebook_level1_ids: set[int] = {
+        g["pixel_id"] for g in codebook.get("level1", []) if isinstance(g, dict)
+    }
+    codebook_class_ids: set[int] = {
+        c["pixel_id"] for c in codebook.get("classes", []) if isinstance(c, dict)
+    }
+
+    for year in sorted(years_l1):
+        l1_by_pixel = level1[year]
+        l2_by_pixel = level2.get(year, {})
+
+        # Group level-2 rows by their level-1 pixel_id and sum.
+        sums_by_l1: dict[int, float] = {}
+        for row in l2_by_pixel.values():
+            sums_by_l1[row["level1_pixel_id"]] = (
+                sums_by_l1.get(row["level1_pixel_id"], 0.0) + row["area_ha"]
+            )
+
+        for pixel_id, row in l1_by_pixel.items():
+            expected = row["area_ha"]
+            actual = sums_by_l1.get(pixel_id, 0.0)
+            if abs(expected - actual) > COMPOSITION_AREA_TOLERANCE_HA:
+                raise CompositionError(
+                    f"composition sum mismatch for year={year} level1_pixel_id={pixel_id}: "
+                    f"level-1 says {expected!r} ha, level-2 sum says {actual!r} ha "
+                    f"(tolerance {COMPOSITION_AREA_TOLERANCE_HA} ha)"
+                )
+            if pixel_id not in codebook_level1_ids:
+                raise CompositionError(
+                    f"composition level-1 CSV references pixel_id={pixel_id} "
+                    f"(year={year}) which is not in the codebook"
+                )
+
+        for pixel_id in l2_by_pixel:
+            if pixel_id not in codebook_class_ids:
+                raise CompositionError(
+                    f"composition level-2 CSV references pixel_id={pixel_id} "
+                    f"(year={year}) which is not in the codebook"
+                )
+
+
+# Composition pre-parsed state. Same fail-loudly-at-import discipline as the
+# manifest and the codebook: if the CSVs are missing, malformed, or
+# inconsistent, the service stops with a clear message instead of degrading
+# per request.
+try:
+    _COMPOSITION_L1_DATA: "dict[int, dict[int, dict[str, Any]]]" = _load_composition_level1(
+        COMPOSITION_LEVEL1_PATH
+    )
+    _COMPOSITION_L2_DATA: "dict[int, dict[int, dict[str, Any]]]" = _load_composition_level2(
+        COMPOSITION_LEVEL2_PATH
+    )
+    _validate_composition_consistency(
+        _COMPOSITION_L1_DATA, _COMPOSITION_L2_DATA, _CODEBOOK_DATA
+    )
+except CompositionError as exc:
+    raise SystemExit(f"viewer: composition assets missing or malformed: {exc}") from exc
+
+
+def _composition_years() -> list[int]:
+    """Sorted year list shared by both composition endpoints.
+
+    Derived from the already-parsed level-1 dict; the consistency check has
+    already proved level-1 and level-2 cover the same years.
+    """
+    return sorted(_COMPOSITION_L1_DATA.keys())
+
+
+def _composition_series_payload() -> dict[str, Any]:
+    """Build the ``/api/composition/series`` document from the pre-parsed data.
+
+    No CSV I/O happens here; every value is taken verbatim from
+    ``_COMPOSITION_L1_DATA`` and the codebook. The D7 labelling is taken
+    verbatim from the manifest, which is the same source the map labelling
+    uses, so the map and the panel cannot disagree on the extent wording.
+    """
+    manifest = _MANIFEST_DATA
+    codebook = _CODEBOOK_DATA
+    years = _composition_years()
+
+    codebook_groups_by_id: dict[int, dict[str, Any]] = {
+        g["pixel_id"]: g
+        for g in codebook.get("level1", [])
+        if isinstance(g, dict) and isinstance(g.get("pixel_id"), int)
+    }
+
+    series_groups: list[dict[str, Any]] = []
+    total_area_per_year: list[float] = []
+    # Pre-collect one entry per level-1 group, in codebook order (the same
+    # order the legend renders) so the panel chart and the legend agree.
+    for group in codebook.get("level1", []):
+        pixel_id = group.get("pixel_id")
+        if not isinstance(pixel_id, int):
+            continue
+        area_ha: list[float] = []
+        share_pct: list[float] = []
+        for year in years:
+            row = _COMPOSITION_L1_DATA.get(year, {}).get(pixel_id)
+            if row is None:
+                # A level-1 group absent for one year would break the chart's
+                # stack alignment. The consistency check forbids it; we still
+                # defend with a clear error so a future schema drift doesn't
+                # silently produce an empty chart.
+                raise CompositionError(
+                    f"composition level-1 missing year={year} pixel_id={pixel_id}"
+                )
+            area_ha.append(row["area_ha"])
+            share_pct.append(row["share_pct"])
+        series_groups.append(
+            {
+                "pixel_id": pixel_id,
+                "code": group.get("code", ""),
+                "name_es": group.get("name_es", ""),
+                "name_en": group.get("name_en", ""),
+                "color": group.get("color", ""),
+                "area_ha": area_ha,
+                "share_pct": share_pct,
+            }
+        )
+
+    # Per-year totals: sum of the level-1 areas for that year, so a consumer
+    # can verify the stack totals without recomputing. The consistency check
+    # has already proved this matches the level-2 sum within 1e-3 ha.
+    for year in years:
+        total = 0.0
+        for group in series_groups:
+            idx = years.index(year)
+            total += group["area_ha"][idx]
+        total_area_per_year.append(total)
+
+    return {
+        "schema_version": COMPOSITION_SCHEMA_VERSION,
+        "country": manifest.get("country", COUNTRY),
+        "collection": manifest.get("collection", COLLECTION),
+        "unit": "ha",
+        "years": years,
+        "extent_label": manifest.get("extent_label"),
+        "boundary_note": manifest.get("extent_boundary_note"),
+        "groups": series_groups,
+        "total_area_ha_per_year": total_area_per_year,
+    }
+
+
+def _composition_year_payload(year: int) -> dict[str, Any]:
+    """Build the ``/api/composition/year/{year}`` document.
+
+    Level-2 rows are sorted by ``area_ha`` descending so the bar breakdown
+    can render top-down without a sort in the browser. Colours and names
+    come from the codebook; the CSV supplies the area and share figures
+    unchanged.
+    """
+    codebook_classes_by_id: dict[int, dict[str, Any]] = {
+        c["pixel_id"]: c
+        for c in _CODEBOOK_DATA.get("classes", [])
+        if isinstance(c, dict) and isinstance(c.get("pixel_id"), int)
+    }
+    codebook_groups_by_id: dict[int, dict[str, Any]] = {
+        g["pixel_id"]: g
+        for g in _CODEBOOK_DATA.get("level1", [])
+        if isinstance(g, dict) and isinstance(g.get("pixel_id"), int)
+    }
+    l2_rows = list(_COMPOSITION_L2_DATA.get(year, {}).values())
+    classes: list[dict[str, Any]] = []
+    for row in l2_rows:
+        cls = codebook_classes_by_id.get(row["pixel_id"], {})
+        grp = codebook_groups_by_id.get(row["level1_pixel_id"], {})
+        classes.append(
+            {
+                "pixel_id": row["pixel_id"],
+                "code": row["code"] or cls.get("code", ""),
+                "name_es": row["name_es"] or cls.get("name_es", ""),
+                "name_en": row["name_en"] or cls.get("name_en", ""),
+                "color": cls.get("color", ""),
+                "level1_pixel_id": row["level1_pixel_id"],
+                "level1_code": row["level1_code"] or grp.get("code", ""),
+                "level1_name_es": grp.get("name_es", ""),
+                "level1_name_en": grp.get("name_en", ""),
+                "level1_color": grp.get("color", ""),
+                "area_ha": row["area_ha"],
+                "share_pct": row["share_pct"],
+                "pixels": row["pixels"],
+            }
+        )
+    classes.sort(key=lambda r: r["area_ha"], reverse=True)
+    total = sum(r["area_ha"] for r in classes)
+    return {
+        "schema_version": COMPOSITION_SCHEMA_VERSION,
+        "country": _MANIFEST_DATA.get("country", COUNTRY),
+        "collection": _MANIFEST_DATA.get("collection", COLLECTION),
+        "year": year,
+        "unit": "ha",
+        "extent_label": _MANIFEST_DATA.get("extent_label"),
+        "boundary_note": _MANIFEST_DATA.get("extent_boundary_note"),
+        "total_area_ha": total,
+        "classes": classes,
+    }
 
 
 def _manifest_years(manifest: dict[str, Any]) -> list[int]:
@@ -573,6 +947,65 @@ def api_meta() -> JSONResponse:
         payload,
         headers={"Cache-Control": "no-cache"},
     )
+
+
+# ---------------------------------------------------------------------------
+# Composition endpoints (slice T8b)
+# ---------------------------------------------------------------------------
+# Both endpoints read the pre-parsed composition data structures populated at
+# import time. They take no I/O on the request path: the CSVs were parsed
+# once when the module loaded, and the consistency check has already proved
+# they agree with the codebook and with each other. The D7 labelling is
+# taken verbatim from the tiles manifest, the same source the map's
+# labelling uses, so the panel and the map cannot disagree on the extent
+# wording.
+
+@app.get("/api/composition/series")
+def api_composition_series() -> JSONResponse:
+    """Return the 40-year level-1 series for the composition panel.
+
+    The payload carries the D7 extent labelling at the top level, the sorted
+    year list, one entry per level-1 group with parallel ``area_ha`` and
+    ``share_pct`` arrays aligned to ``years``, and a per-year total so the
+    consumer can verify the stack sums without recomputing.
+
+    Cache-Control mirrors ``/api/meta``: the dataset is regenerable, so we
+    hold a short window but no long-lived immutable marker.
+    """
+    return JSONResponse(
+        _composition_series_payload(),
+        headers={"Cache-Control": "no-cache"},
+    )
+
+
+@app.get("/api/composition/year/{year}")
+def api_composition_year(year: int = PathParam(..., ge=0)) -> JSONResponse:
+    """Return the level-2 breakdown for one year, sorted by area descending.
+
+    An unknown year returns 404; the route is integer-typed and rejects
+    non-integers at the FastAPI layer (422).
+    """
+    if year not in _COMPOSITION_L2_DATA:
+        raise HTTPException(status_code=404, detail=f"composition year not found: {year}")
+    return JSONResponse(
+        _composition_year_payload(year),
+        headers={"Cache-Control": "no-cache"},
+    )
+
+
+@app.get("/api/composition/_load_counters")
+def api_composition_load_counters() -> dict[str, Any]:
+    """Diagnostic: how many times the CSV loaders have run.
+
+    Used by the verification harness to prove no per-request CSV re-parsing
+    happens (the previous review finding, R3-SERVE-VIEWER-NO-CACHE-RELOAD,
+    was about re-parsing on every tile request). This endpoint is intentionally
+    cheap: it returns two integers from module-scope counters.
+    """
+    return {
+        "level1_calls": _COMPOSITION_L1_LOAD_COUNTER.calls,
+        "level2_calls": _COMPOSITION_L2_LOAD_COUNTER.calls,
+    }
 
 
 # ---------------------------------------------------------------------------

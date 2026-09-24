@@ -353,11 +353,89 @@ gone and the behaviour is intact, but it is not the provider's independent confi
 the correction addresses exactly the frozen finding. The lineage
 `review-59e2128a5b76f2a7` is left in `correction_required` and must not be resumed.
 
-#### T8b — Composition panel (pending)
+#### T8b — Composition panel — **DONE**
 
-The 40-year level-1 series with the year cursor following the slider, plus the level-2 breakdown
-for the year, both read from the composition outputs so the panel cannot disagree with T4. Every
-area figure on screen carries the D7 label.
+- `tools/serve_viewer.py` gained `GET /api/composition/series` (the 40-year series per level-1
+group, with parallel `area_ha` and `share_pct` arrays aligned to the year list, plus the per-year
+total) and `GET /api/composition/year/{year}` (the level-2 breakdown sorted by area descending,
+404 for an unknown year). A diagnostic `GET /api/composition/_load_counters` was added and kept:
+it is what makes the cache invariant measurable.
+- The panel **serves the committed CSV values verbatim and recomputes nothing**, which is the only
+way to guarantee the acceptance requirement that the panel cannot disagree with T4. The CSVs are
+parsed **once at import**, applying the lesson of the CRITICAL finding from T8a before it could
+repeat: instrumented counters read 1/1 before and after 50 requests, so zero parsing happens while
+serving.
+- The import-time consistency check fails loudly on a missing, malformed or mutually inconsistent
+CSV pair: it verifies both CSVs cover the same years, that the level-1 and level-2 area sums agree
+per year within 1e-3 ha, and that every class exists in the codebook. Verified by firing it with
+malformed fixtures under /tmp, each stopping the service with a specific message.
+- `viewer/panel.js` renders the **stacked area chart by hand as SVG** — 6 groups, y axis in share
+of the valid extent, a cursor line that follows the slider, and click-to-select-year — plus the
+level-2 bar breakdown for the selected year. No charting dependency was added and no second
+library was vendored, so the frontend still has exactly one external dependency.
+
+**The panel's figures match T4 exactly**, checked against the committed CSVs rather than against
+the API alone. Four independent figures, all identical:
+
+| Figure | Panel / API | Committed CSV |
+|---|---|---|
+| Formaciones boscosas 2024 | 65,511,997.353565 ha, 60.311377 % | identical |
+| Formaciones boscosas 2000 (checked live after moving the slider) | 67,262,900.715957 ha, 61.923285 % | identical |
+| Total level-1 1985 | 108,622,958.308388 ha | identical |
+| Top class 2024 | Bosque 57,645,737.503857 ha, 53.069574 % | identical |
+
+The 26 level-2 classes sum to the year total shown in the panel's "Suma del año" row
+(108,622,951.648748 ha for 2024), which is itself the T4 total.
+
+**Two layout defects were found in the browser and fixed, both by measurement rather than by
+sight.** Neither could have been caught by the agent's stubbed-DOM smoke test, because a stubbed
+DOM performs no layout:
+
+1. **The map collapsed to zero width.** The body grid computed four tracks
+   (`320px 0px 0px 722px`) and `section.map-panel` landed in a `0px` track, so the map rendered at
+   0 x 32 px: the primary element of the application was invisible. Fixed by a named-area grid of
+   2 columns by 4 rows with the composition panel in its own full-width row below the map, so the
+   map cannot share a row with a fixed-width sibling.
+2. **The panel then trapped its own content.** The first fix capped the panel with
+   `max-height: min(45vh, 360px)` to protect the map row, which left a 360 px box holding
+   **2692 px** of content: only **43 %** of the 652 px chart was visible and the level-2 breakdown
+   was entirely below an inner scrollbar. Fixed by removing the cap and giving the map its own
+   deterministic `height: clamp(260px, 50vh, 720px)`, so the **document scrolls instead of the
+   panel**.
+
+**Verified in a real browser at both viewports after the fixes**: map 400 px tall at 1280x800 and
+285 px at 1042x569, matching the CSS prediction exactly; the MapLibre canvas matches its container
+in both cases, so the resize hook works; the panel clips nothing internally; the page scrolls; and
+scrolling reveals the whole chart and the breakdown.
+
+**Known cosmetic noise, already recorded in section 14.3**: the larger map requests more tiles and
+legitimately 404s on the transparent ones, so the browser console collects those 404s. That is
+correct behaviour and must not become a 200, because the map client relies on 404 meaning "no
+tile". The count grows with map size, which is why it is only visible now.
+
+**Review outcome: one CRITICAL finding, corrected.** The provider classified this candidate as
+**medium risk with a single lens** (`review-reliability`) rather than the four-lens treatment the
+previous viewer candidate received, and that lens found `R3-PANEL-DOM-ID-MISMATCH`
+(`viewer/panel.js:76`, `severity: CRITICAL`, `causal_disposition: introduced`,
+`evidence_class: deterministic`): the panel selected its breakdown container by the id
+`panel-breakdown`, which the HTML does not define — the real ids are `panel-breakdown-title`,
+`panel-breakdown-empty` and `panel-breakdown-list`. The variable was therefore permanently null.
+
+Worth stating plainly: the reviewer itself noted that rendering still worked, because the render
+path uses `breakdownList`, which is selected correctly. So this was **not a functional defect** —
+verified by hand: `breakdownRoot` was declared once and assigned once and **never read anywhere**,
+pure dead code with a wrong selector. The correction removes it, 2 diff lines, exactly the size
+declared to the review against its bound of 200. The severity classification is stronger than the
+impact; what justified acting on it is that an unguarded null DOM reference is a trap for the next
+edit, and the review only permits correcting findings it classifies as severe.
+
+**The provider's targeted validation did not run, again.** After the correction plan was accepted
+(`correction_lines: 2`), the review offered a fresh `provider_targeted_validator` slot and that
+submission was refused as "unknown, expired, or belongs to a different session route" — the same
+refusal T8a hit, now reproduced on a second lineage with a fresh binding. That rules out timing
+and makes it a route the capture facade does not accept. T8b is therefore committed with the
+correction verified by direct inspection and without the validator's verdict. The lineage
+`review-45224636976d13ae` stays in `correction_required` and must not be resumed.
 
 #### T8c — Clip statistics (pending)
 
@@ -391,7 +469,8 @@ engine's counting and geodesic areas rather than reimplementing them.
 | T5 | `ba6b55f` | `tools/class_change_probe.py` plus the class-33 probe: 2,123,147 pixels (189,001.33 ha) of net water gain, of which the top two clusters are step changes externally corroborated as Caruachi (2003) and Boconó–Tucupido (1990); only 19.4 % of the gain sits in the top 10 cells, so the majority is unexplained. See section 13 |
 | T6 | `9b243b0` | `tools/spatial_units.py` (single source of truth for units and geodesic area), `tools/priority_schema.py` (D2 and D3 as mechanical invariants, study_gap disabled at weight 0.0), and `composition_stats.py` parameterized by `--unit`. Full 40-year regression: level-1 CSV byte-identical, JSON numerics identical across all 40 years, level-2 CSV differs on 1 of 1040 rows by 1e-6 ha (float64 accumulation noise, relative 3.8e-15) |
 | T7 | `9672341` | `tools/build_tiles.py` plus the 40-year pyramid: 662,600 tiles, 4,987 MB of PNG content, ~110 min. Every year 16,565 tiles, identical path set and identical per-zoom counts across all 40 years; all 662,600 PNGs integrity-verified with 0 zero-byte and 0 malformed; palette spot-check found 0 colours outside the official table. The mid-build reboot exposed two tool gaps (run-scoped manifest, unverified tiles) and both were fixed |
-| T8a | this commit | `tools/serve_viewer.py` plus `viewer/` with vendored MapLibre GL 5.6.2. Verified in a real browser: zero console errors, map paints, legend 6 groups and 26 classes, D7 label always visible, slider switches years with 200s and a visibly different pattern between 2024 and 1985, and a burst of rapid slider moves coalesces with zero wasted tile requests. One real `AbortError` found in the browser and fixed before commit. The native review then found a CRITICAL, deterministic, candidate-caused defect — the manifest re-read twice per tile — verified at exactly 400 calls per 200 tiles, corrected in 23 lines, and measured after the fix at 0 calls and ~440-460 tiles/s. Committed **without the provider's targeted validation**, which could not be submitted; see the T8a section |
+| T8a | `5d42cff` | `tools/serve_viewer.py` plus `viewer/` with vendored MapLibre GL 5.6.2. Verified in a real browser: zero console errors, map paints, legend 6 groups and 26 classes, D7 label always visible, slider switches years with 200s and a visibly different pattern between 2024 and 1985, and a burst of rapid slider moves coalesces with zero wasted tile requests. One real `AbortError` found in the browser and fixed before commit. The native review then found a CRITICAL, deterministic, candidate-caused defect — the manifest re-read twice per tile — verified at exactly 400 calls per 200 tiles, corrected in 23 lines, and measured after the fix at 0 calls and ~440-460 tiles/s. Committed **without the provider's targeted validation**, which could not be submitted |
+| T8b | this commit | `GET /api/composition/series` and `/api/composition/year/{year}` serving the committed CSV values verbatim, parsed once at import (counters 1/1 after 50 requests), with an import-time consistency check proven to fire on malformed fixtures; `viewer/panel.js` with a hand-rolled SVG stacked area chart and the level-2 year breakdown, no new dependency. Figures verified identical to the committed CSVs on four independent values including a live check after moving the slider. Two layout defects found in the browser and fixed by measurement: the map collapsed to 0 x 32 px, then the panel trapped 2692 px of content in a 360 px box. Both viewports re-measured after the fixes: map 400 px at 1280x800 and 285 px at 1042x569, canvas matching its container, page scrolls. Reviewed at medium risk with one lens, which found a CRITICAL dead-code DOM id mismatch, corrected in 2 lines. Committed **without the provider's targeted validation**, refused twice on two lineages |
 
 ## 10. Deviation record: harness routing defect
 
