@@ -173,7 +173,7 @@ ambiguity.
   (`"1985": {…}`) next to metadata keys, mixing namespaces for consumers. It should
   be nested under `per_year` in a later pass.
 
-### T5 — Data integrity validation
+### T5 — Data integrity validation — **DONE**
 
 - Class 34 (Glaciar) series — **resolved in T4**: present in all 40 years at native
   resolution, monotonic decline 989 → 18 pixels. The "class 34 disappears by 2024"
@@ -182,11 +182,11 @@ ambiguity.
   exactly 0 pixels in every year. The data encodes "not observed" as nodata 0, which
   therefore conflates "outside the mapped extent" with "not observed". The summary
   JSON keeps nodata area in its own field, never merged into a class.
-- Remaining check: class 33 (Río, lago u océano) grows +4.42 % across the series
-  (4,280,192 → 4,469,291 ha). Unverified whether that is reservoir construction, a
-  real hydrological signal, or classification behaviour. Not blocking; needs a note
-  before any water-related claim is published.
-- **Evidence**: per-year class-34 counts are in the T4 evidence above.
+- Class 33 (Río, lago u océano) growth — **investigated in T5, see section 13**.
+  Verdict: the largest individual gains are real infrastructure, externally
+  corroborated; the remaining majority of the gain is unexplained and must not be
+  attributed to a cause yet.
+- **Evidence**: section 13 below.
 
 ### T6 — Reusable statistics engine (shape for F3)
 - Parameterized by spatial unit: country and collection now, H3 later.
@@ -222,7 +222,8 @@ ambiguity.
 | T1 | `7bd98a5` | 40 rasters relocated to `data/raw/venezuela/collection-3/`; `git check-ignore` confirms no `.tif` is ever tracked; branch `feat/plataforma-cobertura-ve` created from unborn HEAD; 8 paths committed |
 | T2 | `71d94c1` | `tools/build_codebook.py` emits `data/legend/venezuela-collection-3.{json,csv}`: 6 level-1 groups, 26 classes, unique pixel ids, colors taken from the PDF, 9 PDF-vs-QGIS discrepancies recorded instead of silently resolved |
 | T3 | `84e786f` | 40/40 COG converted, 0 failed, 320 integrity windows with 0 differing pixels, 4.44 GB output, versioned manifest with 80 checksums; independent NEAREST verification PASS with a discriminating AVERAGE control (see section 7/T3) |
-| T4 | this commit | 40/40 years of exact native-resolution composition, 1504 s, peak RSS 567 MB; level-2 vs level-1 = 0 pixel difference; class 34 in 2024 = exactly 18 pixels, matching the independent verifier; valid area 1,086,229.52 km² with the D7 label at the top level of the summary JSON; glacier series 989 → 18 pixels. **Committed without lens review** — see section 12 |
+| T4 | `5961577` | 40/40 years of exact native-resolution composition, 1504 s, peak RSS 567 MB; level-2 vs level-1 = 0 pixel difference; class 34 in 2024 = exactly 18 pixels, matching the independent verifier; valid area 1,086,229.52 km² with the D7 label at the top level of the summary JSON; glacier series 989 → 18 pixels. **Committed without lens review** — see section 12 |
+| T5 | this commit | `tools/class_change_probe.py` plus the class-33 probe: 2,123,147 pixels (189,001.33 ha) of net water gain, of which the top two clusters are step changes externally corroborated as Caruachi (2003) and Boconó–Tucupido (1990); only 19.4 % of the gain sits in the top 10 cells, so the majority is unexplained. See section 13 |
 
 ## 10. Deviation record: harness routing defect
 
@@ -369,3 +370,73 @@ Consequences to carry forward:
   raised. Those are open.
 - **Not to be re-run**: do not re-review the T4 candidate. Its files are committed; any
   further review belongs to the next candidate that touches them.
+
+## 13. Class 33 (water) gain: what was verified and what was not
+
+T4 measured class 33 (Río, lago u océano) growing from 4,280,192 ha (1985) to
+4,469,291 ha (2024), +4.42 %. An aggregate number cannot distinguish a real water
+body from a classification artifact, so `tools/class_change_probe.py` was written to
+answer *where* the gain is and *what temporal signature* it has. The two competing
+explanations have different signatures: a reservoir fills as a step change in one
+year and persists; an artifact flickers diffusely across many small cells.
+
+**Measured** (cell grid 0.1°, class 33, 1985 → 2024):
+
+| Metric | Value |
+|---|---|
+| Total net gain | 2,123,147 pixels = **189,001.33 ha** (1,890 km²) |
+| Cells with positive net gain | **4,472** |
+| Share of net gain in the top 10 cells | **19.4 %** |
+| Peak RSS of the probe | 5,189 MB (see the fragility note below) |
+
+**The top clusters are real, and externally corroborated.** A single year explains
+91.5–99.9 % of each top cell's net gain, which is step behaviour, not flicker:
+
+| Rank | Cell centre | Net gain | Jump | Jump year | Jump share | Municipality (Nominatim) | Identification |
+|---|---|---|---|---|---|---|---|
+| 1 | 8.05 N, 62.95 W | 63,075 px | 57,735 px | **2003** | 0.915 | Parroquia Pozo Verde, Mun. Caroní, Bolívar | Caruachi reservoir, upstream reach |
+| 2 | 9.05 N, 69.95 W | 54,016 px | 53,950 px | **1990** | 0.999 | Parroquia Boconoíto, Mun. San Genaro de Boconoíto, Portuguesa | Embalse Boconó–Tucupido (La Coromoto) |
+| 3 | 8.15 N, 62.85 W | 43,848 px | 40,609 px | **2003** | 0.926 | Parroquia Unare, Mun. Caroní, Bolívar | Caruachi reservoir, at the dam |
+| 4 | 8.85 N, 70.15 W | 41,867 px | 41,360 px | **1990** | 0.988 | Parroquia Barrancas, Mun. Cruz Paredes, Barinas | Boconó–Tucupido system, southern reach |
+| 5 | 7.15 N, 63.15 W | 40,968 px | 21,932 px | 2017 | 0.535 | — | not identified |
+
+External corroboration, from secondary sources:
+
+- **Caruachi** (Central Hidroeléctrica Francisco de Miranda): dam at 8.160 N,
+  62.799 W — cells 1 and 3 sit at the dam and immediately upstream along the Caroní.
+  Reservoir surface 238 km², first generating unit in commercial operation **2003**.
+  Sources: Wikidata/Wikipedia (coordinates), Global Energy Monitor (commissioning
+  2003), COVENPRE technical sheet (reservoir surface, first quarter 2003).
+- **Embalse Boconó–Tucupido**, later named Nuestra Señora de La Coromoto: built
+  1975–1988 and **inaugurated in 1988**, surface ~12,465 ha, purpose irrigation,
+  hydroelectric and flood control, located in Municipio San Genaro de Boconoíto —
+  the municipality of cell 2. A 1990 step is consistent with the reservoir reaching
+  operating level after the 1988 inauguration. Sources: Wikimedia Commons file
+  description, an "Embalses de Venezuela" inventory listing construction 1975–1988 and
+  12,465.52 ha, and a ReliefWeb piece giving 12,886 ha of water surface.
+
+**Verdict, stated at its true strength.** Two step changes totalling ~9.6 % of the net
+gain are corroborated real reservoirs, with the step year matching the documented
+commissioning or inauguration year and the coordinates matching the documented
+municipality. That is strong circumstantial agreement, not per-pixel validation.
+
+**What is NOT verified**: the remaining majority of the gain. Only 19.4 % of it sits in
+the top 10 cells, and 4,472 cells gained water. A diffuse long tail across thousands of
+cells is not what a handful of reservoirs predicts, and no cause is claimed for it. It
+could be river and floodplain dynamics, many small impoundments, or classification
+behaviour around shorelines and seasonal water. **No water-related claim should be
+published beyond the two identified reservoirs until the tail is characterised.**
+
+**Fragility found, worth fixing before this probe is reused**: peak RSS was 5,189 MB,
+roughly nine times the composition tool. The cause is the profile phase: it reads the
+*union* bounding box of the top cells, and because the top cells sit 7.3° apart
+(Portuguesa to Bolívar) that window is ~27,088 x 3,710 pixels, about 100 M pixels per
+year. On a 16 GB machine with a browser open this is an OOM risk. The fix is to cluster
+the top cells and profile one cluster window at a time instead of one country-wide
+window.
+
+**Provenance of the external claims**: Nominatim reverse geocoding for the
+municipality names, and secondary sources for the reservoir facts. These are not
+primary engineering documents, and the coordinates were matched to the cells by eye at
+0.1° resolution. Anyone publishing the reservoir attribution should confirm it against
+the operator's or the ministry's own records.
