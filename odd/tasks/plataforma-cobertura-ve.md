@@ -500,10 +500,13 @@ an unknown year, 413 for an oversized window with a message naming the bound.
 
 | # | Item | Blocks |
 |---|---|---|
-| O1 | License and attribution terms for MapBiomas data | Publication only |
+| O1 | License and attribution terms for MapBiomas data | Publication only. Left deliberately undefined for now |
 | O2 | Final hosting target | Nothing yet (D6: local) |
 | O3 | H3 term weights and "interesting zone" thresholds | F3 start |
-| O4 | Host-side subagent launch defect (see section 10) | Every task that needs a delegated writer |
+| ~~O4~~ | ~~Host-side subagent launch defect (see section 10)~~ **RESOLVED** by restarting Pi; kept struck through so the record is not silently renumbered. The underlying finding stays documented in 10.1 in case it recurs | Nothing |
+
+Two tool-surface gaps were found later and are recorded in section 12.2: no facade operation
+exists for the provider's `external.select_base_ref` or `review.capture-validation` selections.
 
 ## 9. Commit log (evidence)
 
@@ -701,6 +704,50 @@ Consequences to carry forward:
   `spatial_units` interface design, and the priority-schema invariants. Those are open.
 - **Not to be re-run**: do not re-review the T6 candidate. Its files are committed; any
   further review belongs to the next candidate that touches them.
+
+### 12.2 Attempt to pay the review debt: the base-ref route is not exposed
+
+The user authorized paying the T4 and T6 review debt. It looked payable: with a clean
+workspace the provider itself asks for a base ref (`empty_candidate_base_ref_required`),
+and a committed range is a supported target type (`base_ref`, and the negotiated feature
+`base_ref_workspace_overlay`). The route was then attempted for real and is **not usable
+with this facade**:
+
+| Step | Result |
+|---|---|
+| `inspect` with a clean workspace at a detached HEAD on T6 | `empty_candidate_base_ref_required`, emitting a collect binding |
+| The emitted binding | `captureOperation: **external.select_base_ref**`, schema `gentle-ai.review-base-ref-selection/v1` |
+| `START` with `{"baseRef":"ba6b55f","committedOnly":true}` | **`Judgment Day graph-v1 START requires lineageId`** |
+| Facade operations available | 25, and **none selects a base ref** |
+
+So the provider renders the base-ref choice as a **host-owned external selection** and the
+facade exposes no operation for it, while passing `baseRef` through `START` diverts into the
+Judgment Day graph-v1 mode and demands a lineage that cannot exist before this very step
+creates one. The raw CLI was deliberately **not** used: the injected contract states that Pi
+never falls back to an agent-less lifecycle route, so stopping is the correct outcome rather
+than driving the lifecycle outside the facade.
+
+**Two facade gaps of the same class** are now confirmed with evidence, both provider-rendered
+external selections with no facade operation:
+
+| Gap | Needed for | Evidence |
+|---|---|---|
+| `external.select_base_ref` | Reviewing a **committed range**, i.e. the T4 and T6 debt | This attempt, with the exact error |
+| `review.capture-validation` | The targeted validation after a correction (T8a, T8b) | Refused twice, on two lineages, with a fresh binding |
+
+That is a tool-surface defect, not a defect of this project, and it is worth filing.
+
+The repository state was restored afterwards and nothing was mutated: HEAD back on
+`feat/plataforma-cobertura-ve` at `9b90445`, working tree clean, no stashes. One local,
+unversioned change was made along the way, to `.git/info/exclude`: `.playwright-mcp/` and
+`data/**/*.log` are now excluded through the local exclude file as well, because a detached
+checkout of an older commit carries an older `.gitignore` that does not yet ignore them. That
+is the documented way to keep tool output out of the review inventory at any revision.
+
+**Consequence:** the T4 and T6 debt stays as recorded in sections 12 and 12.1. It is not
+payable with the available tool surface, and the reason is specific and evidenced rather than
+a matter of effort. The unreviewed authored files remain `tools/spatial_units.py`,
+`tools/priority_schema.py` and `tools/composition_stats.py`.
 
 ## 13. Class 33 (water) gain: what was verified and what was not
 
