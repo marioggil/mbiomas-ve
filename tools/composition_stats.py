@@ -51,6 +51,31 @@ rather than internationally recognized borders, which includes disputed
 territory. The ``extent_label`` and ``boundary_note`` fields are written
 at the top level of the JSON so no downstream consumer can miss them.
 
+SUMMARY JSON SHAPE (schema_version)
+-----------------------------------
+The summary JSON is versioned through a top-level ``schema_version``
+integer. The current value is ``2``; version 1 was the flat shape where
+year keys (``"1985"`` ... ``"2024"``) lived alongside the metadata keys
+at the top level, forcing every consumer to iterate the top level and
+guess which keys were years (40 year keys plus 9 metadata keys for the
+Venezuelan collection-3 file at the time of the bump). Version 2
+nests every per-year record under a single ``per_year`` object keyed by
+the year as a string. The metadata keys (``extent_label``,
+``boundary_note``, ``country``, ``collection``, ``generated_utc``,
+``years``, ``area_method``, ``authalic_radius_m``, ``nodata_value``,
+``spatial_unit``, ``spatial_unit_metadata``, ``schema_version``) are
+the only non-``per_year`` top-level keys; no year key may remain at
+the top level. The ``per_year`` payload for each year is unchanged:
+the same fields (``valid_area_ha``, ``nodata_area_ha``,
+``total_extent_ha``, ``nodata_pixels``, ``total_pixels``,
+``valid_pixels``, ``class_pixels``, ``class_presence``) with the same
+numeric values and the same D7 labelling context above them. The
+version exists so a consumer can detect this shape change rather than
+silently misread an old file; this tool only writes schema version 2,
+and CSVs are unaffected by schema bumps - this is a JSON-only
+contract. Bump ``SCHEMA_VERSION`` and update this section when the
+top-level JSON contract changes again.
+
 SPATIAL UNITS
 -------------
 The counting loop is parameterised by a ``SpatialUnit`` from
@@ -114,6 +139,20 @@ YEAR_RE = re.compile(r"(19|20)\d{2}")
 # derived from the same row-area vector. 1e-6 ha is ~1e-2 m^2, well below
 # any single pixel area.
 HA_EPSILON = 1e-6
+
+# Top-level ``schema_version`` written into the composition-summary JSON.
+# Version 1 mixed metadata keys and per-year records at the top level, so
+# a consumer had to iterate the top level and guess which keys were years
+# (40 year keys plus 9 metadata keys for venezuela-collection-3 at the
+# time of the bump). Version 2 nests every per-year record under a
+# single ``per_year`` object keyed by the year as a string; the metadata
+# keys (plus ``schema_version`` itself) are the only non-``per_year``
+# top-level keys. The per-year payload is byte-identical to v1 apart
+# from its new location, so this constant governs only the JSON shape -
+# the CSVs are unchanged. Bump this when the top-level JSON contract
+# changes again and update the SUMMARY JSON SHAPE section of the
+# docstring to match.
+SCHEMA_VERSION = 2
 
 # Mandatory MapBiomas labelling for every published composition figure.
 # Every area figure covers the MapBiomas mapping extent, NOT internationally
@@ -526,11 +565,18 @@ def write_outputs(
         "nodata_value": codebook.get("invariants", {}).get("nodata_value"),
         "spatial_unit": unit.name,
         "spatial_unit_metadata": unit.describe(),
+        "schema_version": SCHEMA_VERSION,
     }
+    # Schema version 2: per-year records are nested under ``per_year`` so
+    # the top level only carries metadata (plus ``schema_version``). A
+    # consumer no longer has to guess which top-level keys are years.
+    # The per-year payload (field set, field order, numeric values) is
+    # unchanged from schema version 1; only its location moves.
+    per_year: dict[str, dict[str, Any]] = {}
     for t in year_totals:
         valid_area_m2 = t.total_extent_m2 - t.nodata_area_m2
         class_presence = sorted(pid for pid, c in t.class_pixels.items() if c > 0)
-        summary[str(t.year)] = {
+        per_year[str(t.year)] = {
             "valid_area_ha": valid_area_m2 / 10000.0,
             "nodata_area_ha": t.nodata_area_m2 / 10000.0,
             "total_extent_ha": t.total_extent_m2 / 10000.0,
@@ -542,6 +588,7 @@ def write_outputs(
             },
             "class_presence": class_presence,
         }
+    summary["per_year"] = per_year
 
     summary_path.write_text(
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
