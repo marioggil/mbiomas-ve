@@ -19,3 +19,7 @@ __pycache__/
 *.pyc
 node_modules/
 viewer/dist/
+
+# Local tool output: Playwright screenshots and snapshots from viewer verification
+data/**/*.log
+.playwright-mcp/

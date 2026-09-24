@@ -32,6 +32,7 @@ multi-country-ready schema, running locally.
 | D5 | Multi-country from day 1 | Every path, table and manifest carries `country` + `collection` |
 | D6 | Local execution for now | No cloud services, no managed databases |
 | D7 | Statistics and panel cover the **MapBiomas extent** (measured 1,086,079 km²), always labelled as such | No boundary mask and no ADM0 dependency; every area figure carries the label and a boundary note |
+| D8 | **A single FastAPI service serves everything**: tiles, statistics, and the future H3 layer and study catalog | The viewer is no longer a set of static files; it needs the service running. Frontend data access stays behind one module so the API surface can still change cheaply |
 
 ## 4. Domain correction (binding for all artifacts)
 
@@ -279,8 +280,91 @@ machine rebooted mid-build after 13 years, and recovery was run for the remainin
    `integrity=BROKEN(zero=1, malformed=2)`).
 
 ### T8 — Viewer
-- Year slider, hierarchical legend, composition panel, clip/download.
-- **Evidence**: runs locally, slider switches years, panel matches T4 numbers.
+
+Split into three slices so each review candidate stays reviewable. Decision D8 settled the
+architecture: one FastAPI service for everything.
+
+#### T8a — Map, year slider, legend — **DONE**
+
+- `tools/serve_viewer.py`: FastAPI app. `GET /api/health` (diagnosable paths), `GET /api/meta`
+  (built by reading the tiles manifest and the codebook, never duplicating their content in
+  code: 40 years, zoom range, legend, D7 labels verbatim, and the extent bbox derived from the
+  source COG's own geotransform), and `GET /tiles/{year}/{z}/{x}/{y}.png`.
+- The tile route validates the year against the manifest, the zoom against the reported range,
+  and x/y against the grid for that zoom; returns 404 for anything absent (transparent tiles are
+  excluded by `-x` by design, and the client relies on 404), sets an immutable long-lived
+  `Cache-Control`, and builds the path from validated integers so **path traversal is impossible**.
+- `viewer/`: a MapLibre GL raster map fitted to the extent, a year slider over the 40 years, a
+  hierarchical legend from `/api/meta` with the official colours, and the **D7 labelling always
+  on screen** rather than behind a hover or a modal. MapLibre GL 5.6.2 is vendored under
+  `viewer/vendor/` with its version recorded and its BSD-3-Clause licence kept alongside, so the
+  viewer works offline with no CDN. All data access goes through `viewer/api.js`; it is the only
+  file in the frontend with a `fetch` call.
+- **Evidence, from a real browser** (the parent verified this; the writing agent had no browser
+  and said so rather than implying success): the page loads with **zero console errors**, the map
+  paints with the official palette, the legend renders 6 groups and 26 classes, the D7 label and
+  boundary note are visible, and the slider switches years — the year label updates and tiles for
+  the new year load with 200s, with a visibly different classification pattern between 2024 and
+  1985.
+- **One real defect was found in the browser and fixed before commit**: `onYearChanged` called
+  `RasterTileSource.setTiles()` synchronously from inside a MapLibre event fired during `_render`,
+  producing an `AbortError` on the initial load. It is now deferred through a coalesced
+  `requestAnimationFrame`. Verified in the browser after the fix: reload shows zero console
+  errors, and a burst of four rapid slider moves (1990, 2000, 2010, 1995) issued **zero tile
+  requests for the intermediate years** and settled on 1995 — the coalescing holds in a real
+  browser, not just in the agent's stubbed scheduling test.
+- **Measured tile throughput, and the review finding this measurement exposed.** The first
+  measurement — about 81 tiles/s via curl and 267 tiles/s via a Python client — was reported
+  here as "adequate for local single-user use". That was the wrong standard: it reported the
+  number without asking why it was not higher, for 662,600 static files served by Python. The
+  native review did ask, and found the answer.
+- **Review outcome: one CRITICAL finding, candidate-caused and deterministic.**
+  `R3-SERVE-VIEWER-NO-CACHE-RELOAD` (reliability, `tools/serve_viewer.py:587-592`,
+  `causal_disposition: introduced`, `evidence_class: deterministic`): `serve_tile` called
+  `_load_manifest()` twice per request without caching the parsed JSON, so every single tile
+  request re-read and re-parsed the manifest. The claim was verified with a controlled
+  experiment rather than accepted: wrapping `_load_manifest` with a counter and serving 200
+  tiles produced **exactly 400 calls, 2.0 per tile**.
+- **Correction applied and measured**: the manifest and the codebook are now parsed once at
+  module import and the routes read the parsed values. 23 diff lines, the exact size declared
+  to the review against its bound of 200.
+
+| Measurement | Before | After |
+|---|---|---|
+| `_load_manifest` calls while serving 200 tiles | **400** (2.0 per tile) | **0** |
+| Throughput | ~303 tiles/s | **~440-460 tiles/s** |
+
+The improvement is attributed, not merely correlated: it comes from removing those reads.
+Behaviour was verified unchanged after the correction — an existing tile returns 200 with
+`image/png` and an immutable `Cache-Control` and bytes identical to the file on disk; absent
+tiles, out-of-range year and zoom, and path traversal all return 404; a non-integer parameter
+returns 422; and `/api/meta` still reports 40 years, 6 groups, 26 classes and the verbatim D7
+labels. A missing or malformed manifest now stops the service at import with a clear message
+instead of degrading per request.
+
+**Pending, and stated rather than hidden: the provider's targeted validation did not run.**
+After the correction plan was accepted (`correction_lines: 23`), the review offered a
+`provider_targeted_validator` slot, and every submission of that binding was refused as
+"unknown, expired, or belongs to a different session route" — including a binding taken from
+STATUS seconds earlier, so it is not a timing expiry but a route the capture facade does not
+accept. T8a is therefore committed **with the correction verified by direct measurement and
+without the validator's verdict**. That is a real gap: the measurement proves the defect is
+gone and the behaviour is intact, but it is not the provider's independent confirmation that
+the correction addresses exactly the frozen finding. The lineage
+`review-59e2128a5b76f2a7` is left in `correction_required` and must not be resumed.
+
+#### T8b — Composition panel (pending)
+
+The 40-year level-1 series with the year cursor following the slider, plus the level-2 breakdown
+for the year, both read from the composition outputs so the panel cannot disagree with T4. Every
+area figure on screen carries the D7 label.
+
+#### T8c — Clip statistics (pending)
+
+Draw a rectangle and get the exact composition of that area for the visible year. Measured as
+viable: reading only the drawn window at native resolution costs about 2 ms for a 15x15 km area,
+111 ms for 62x62 km and 928 ms for 180x180 km, so it can be interactive, and it reuses the
+engine's counting and geodesic areas rather than reimplementing them.
 
 ### T9 — Local packaging and documentation
 - Reproducible entrypoint (script/container) + README.
@@ -306,7 +390,8 @@ machine rebooted mid-build after 13 years, and recovery was run for the remainin
 | T4 | `5961577` | 40/40 years of exact native-resolution composition, 1504 s, peak RSS 567 MB; level-2 vs level-1 = 0 pixel difference; class 34 in 2024 = exactly 18 pixels, matching the independent verifier; valid area 1,086,229.52 km² with the D7 label at the top level of the summary JSON; glacier series 989 → 18 pixels. **Committed without lens review** — see section 12 |
 | T5 | `ba6b55f` | `tools/class_change_probe.py` plus the class-33 probe: 2,123,147 pixels (189,001.33 ha) of net water gain, of which the top two clusters are step changes externally corroborated as Caruachi (2003) and Boconó–Tucupido (1990); only 19.4 % of the gain sits in the top 10 cells, so the majority is unexplained. See section 13 |
 | T6 | `9b243b0` | `tools/spatial_units.py` (single source of truth for units and geodesic area), `tools/priority_schema.py` (D2 and D3 as mechanical invariants, study_gap disabled at weight 0.0), and `composition_stats.py` parameterized by `--unit`. Full 40-year regression: level-1 CSV byte-identical, JSON numerics identical across all 40 years, level-2 CSV differs on 1 of 1040 rows by 1e-6 ha (float64 accumulation noise, relative 3.8e-15) |
-| T7 | this commit | `tools/build_tiles.py` plus the 40-year pyramid: 662,600 tiles, 4,987 MB of PNG content, ~110 min. Every year 16,565 tiles, identical path set and identical per-zoom counts across all 40 years; all 662,600 PNGs integrity-verified with 0 zero-byte and 0 malformed; palette spot-check found 0 colours outside the official table. The mid-build reboot exposed two tool gaps (run-scoped manifest, unverified tiles) and both were fixed |
+| T7 | `9672341` | `tools/build_tiles.py` plus the 40-year pyramid: 662,600 tiles, 4,987 MB of PNG content, ~110 min. Every year 16,565 tiles, identical path set and identical per-zoom counts across all 40 years; all 662,600 PNGs integrity-verified with 0 zero-byte and 0 malformed; palette spot-check found 0 colours outside the official table. The mid-build reboot exposed two tool gaps (run-scoped manifest, unverified tiles) and both were fixed |
+| T8a | this commit | `tools/serve_viewer.py` plus `viewer/` with vendored MapLibre GL 5.6.2. Verified in a real browser: zero console errors, map paints, legend 6 groups and 26 classes, D7 label always visible, slider switches years with 200s and a visibly different pattern between 2024 and 1985, and a burst of rapid slider moves coalesces with zero wasted tile requests. One real `AbortError` found in the browser and fixed before commit. The native review then found a CRITICAL, deterministic, candidate-caused defect — the manifest re-read twice per tile — verified at exactly 400 calls per 200 tiles, corrected in 23 lines, and measured after the fix at 0 calls and ~440-460 tiles/s. Committed **without the provider's targeted validation**, which could not be submitted; see the T8a section |
 
 ## 10. Deviation record: harness routing defect
 
@@ -604,17 +689,29 @@ row versus configurable cell grid). Converging them is a real refactor, not a re
 
 - `tools/class_change_probe.py` carries mode `100755` while the other tools are `644`.
   Inconsistent, harmless, worth normalising.
-- The composition summary JSON keys years at the top level (`"1985": {…}`) alongside
-  metadata keys, mixing namespaces for consumers. Nest under `per_year`.
-- The composition summary JSON still does not carry per-class **areas**, only per-class
-  pixel counts, so a per-class area regression cannot be detected from the JSON alone.
-  The CSV is currently the only place those numbers live.
-- The tile manifest names its year list `totals.years_requested` even in `--scan-only`
-  mode, where nothing was requested and the years were discovered on disk. Rename or
-  add a mode-aware key.
-- In `--scan-only` mode `source_dir` is `null` and each entry's COG fields are `null`
-  by design, since no COG directory is needed to scan an existing pyramid. Consumers
-  must tolerate nulls there.
-- Unit inconsistency in the tile reporting: the log prints MiB and the manifest stores
-  raw bytes, so the same pyramid reads as 4,756 MB and 4,987 MB depending on the unit
-  convention. Pick one and state it.
+- ~~The composition summary JSON keys years at the top level~~ **RESOLVED before T8**: the
+  summary JSON is now schema version 2 with every per-year record nested under `per_year`, and
+  `schema_version` lets a consumer detect the old shape instead of misreading it. Verified against
+  the committed v1 file: all 40 years match field by field with 0 numeric differences, the level-1
+  CSV is byte-identical, and the level-2 CSV differs on exactly the same single row (2002,
+  pixel_id 81, 1e-6 ha) that T6 already identified as float64 accumulation noise. The committed
+  data now matches what the current code produces.
+- The composition summary JSON still does not carry per-class **areas**: it carries per-class
+  pixel counts and presence, while areas live only in the CSV. A per-class area regression
+  therefore cannot be detected from the JSON alone.
+- The tile manifest names its year list `totals.years_requested` even in `--scan-only` mode, where
+  nothing was requested and the years were discovered on disk. Rename or add a mode-aware key.
+- In `--scan-only` mode `source_dir` is `null` and each entry's COG fields are `null` by design,
+  since no COG directory is needed to scan an existing pyramid. Consumers must tolerate nulls there.
+- Unit inconsistency in the tile reporting: the log prints MiB and the manifest stores raw bytes,
+  so the same pyramid reads as 4,756 MB and 4,987 MB depending on the unit convention. Pick one
+  and state it. A T7 review finding reproduced this independently.
+- The viewer's tile layer produces browser console noise from legitimate 404s for transparent
+  tiles (roughly a third of z6 at a typical view). That is correct behaviour and must not be
+  changed to a 200, because the map client relies on 404 meaning "no tile". Worth a note in the
+  README so it is not mistaken for a bug.
+- `tools/serve_viewer.py` parses the COG extent from the BigTIFF header by hand rather than using
+  GDAL, to avoid a GDAL dependency in the service. It was tested against the real file only, not
+  against a range of malformed or exotic COG layouts. If it ever misparses, `/api/meta` fails
+  loudly rather than silently centring the map in the wrong place, but the parser deserves
+  hardening or replacement with `gdalinfo -json` when T9 packages the service.

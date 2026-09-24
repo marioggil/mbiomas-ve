@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visor MapBiomas Venezuela — Colección 3</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  <link rel="stylesheet" href="/static/vendor/maplibre-gl.css" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="viewer-header" role="banner">
+    <h1 class="viewer-title">Visor de cobertura MapBiomas Venezuela — Colección 3</h1>
+    <p class="viewer-subtitle" id="viewer-subtitle">
+      Cargando metadatos del visor&hellip;
+    </p>
+  </header>
+
+  <aside class="legend-panel" aria-label="Leyenda jerárquica de clases">
+    <h2 class="legend-title">Leyenda</h2>
+    <p class="legend-help">
+      Pulse un grupo para desplegar o replegar sus clases.
+    </p>
+    <ul class="legend-groups" id="legend-groups">
+      <!-- populated by app.js from /api/meta -->
+    </ul>
+  </aside>
+
+  <section class="map-panel" aria-label="Mapa de cobertura anual">
+    <div id="map" class="map" role="application" aria-label="Mapa interactivo"></div>
+    <div class="labelling" id="d7-labelling" aria-live="polite">
+      <strong class="labelling-label" id="d7-extent-label">&hellip;</strong>
+      <span class="labelling-note" id="d7-boundary-note">&hellip;</span>
+    </div>
+  </section>
+
+  <footer class="time-bar" aria-label="Selector de año">
+    <div class="time-bar-row">
+      <label for="year-slider" class="time-bar-label">Año de cobertura</label>
+      <output class="time-bar-value" id="year-value" for="year-slider">&mdash;</output>
+    </div>
+    <input
+      id="year-slider"
+      class="time-bar-slider"
+      type="range"
+      min="0"
+      max="0"
+      step="1"
+      value="0"
+      aria-valuemin="0"
+      aria-valuemax="0"
+      aria-valuenow="0"
+    />
+    <div class="time-bar-range">
+      <span id="year-min">&mdash;</span>
+      <span id="year-max">&mdash;</span>
+    </div>
+  </footer>
+
+  <script src="/static/vendor/maplibre-gl.js"></script>
+  <script src="/static/api.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

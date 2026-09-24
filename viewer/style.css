@@ -1,0 +1,304 @@
+/* Visor MapBiomas — estilos
+ *
+ * Sin dependencias externas aparte de MapLibre GL (cargada desde
+ * /static/vendor/maplibre-gl.css). Sin CDN: el visor debe funcionar
+ * desconectado.
+ */
+
+:root {
+  --bg-page: #f4f4f2;
+  --bg-panel: #ffffff;
+  --bg-panel-alt: #fafafa;
+  --bg-bar: #1f2937;
+  --bg-bar-fg: #f9fafb;
+  --bg-bar-fg-muted: #cbd5e1;
+  --fg-text: #111827;
+  --fg-muted: #4b5563;
+  --fg-strong: #0b1320;
+  --border: #d1d5db;
+  --border-strong: #6b7280;
+  --accent: #2563eb;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.05);
+  --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg-page);
+  color: var(--fg-text);
+  font-family: var(--font-stack);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header header"
+    "legend map"
+    "time time";
+  min-height: 100vh;
+}
+
+/* ------- Header ------- */
+.viewer-header {
+  grid-area: header;
+  padding: 12px 18px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viewer-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.viewer-subtitle {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 13px;
+}
+
+/* ------- Legend ------- */
+.legend-panel {
+  grid-area: legend;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  padding: 14px 14px 18px;
+  overflow-y: auto;
+  max-height: calc(100vh - 56px - 92px);
+}
+
+.legend-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.legend-help {
+  margin: 0 0 10px;
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.legend-groups {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.legend-group {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-panel-alt);
+}
+
+.legend-group-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.legend-group-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.legend-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid var(--border-strong);
+  flex-shrink: 0;
+}
+
+.legend-group-name {
+  font-weight: 600;
+  flex: 1;
+  color: var(--fg-strong);
+}
+
+.legend-group-code {
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.legend-disclosure {
+  width: 14px;
+  text-align: center;
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.legend-classes {
+  list-style: none;
+  margin: 0;
+  padding: 4px 10px 10px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.legend-group.is-open .legend-classes {
+  display: flex;
+}
+
+.legend-class {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--fg-text);
+}
+
+.legend-class-code {
+  width: 38px;
+  flex-shrink: 0;
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.legend-class-name {
+  flex: 1;
+}
+
+/* ------- Map + labelling ------- */
+.map-panel {
+  grid-area: map;
+  position: relative;
+  background: #dde3eb;
+  overflow: hidden;
+}
+
+.map {
+  position: absolute;
+  inset: 0;
+}
+
+.labelling {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 24px);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--fg-strong);
+}
+
+.labelling-label {
+  font-weight: 600;
+}
+
+.labelling-note {
+  color: var(--fg-muted);
+}
+
+/* ------- Time bar ------- */
+.time-bar {
+  grid-area: time;
+  background: var(--bg-bar);
+  color: var(--bg-bar-fg);
+  padding: 12px 18px 14px;
+  border-top: 1px solid #0f172a;
+}
+
+.time-bar-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.time-bar-label {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--bg-bar-fg-muted);
+}
+
+.time-bar-value {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--bg-bar-fg);
+}
+
+.time-bar-slider {
+  width: 100%;
+  margin: 4px 0 4px;
+  accent-color: var(--accent);
+}
+
+.time-bar-range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--bg-bar-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------- Error states ------- */
+.error-banner {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  padding: 10px 14px;
+  margin: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+@media (max-width: 720px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      "header"
+      "legend"
+      "map"
+      "time";
+  }
+  .legend-panel {
+    max-height: 220px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+}

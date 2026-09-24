@@ -1,0 +1,21 @@
+MapLibre GL JS
+=============
+
+Version: 5.6.2
+Released: 2025-08-21
+Source:   https://unpkg.com/maplibre-gl@5.6.2/dist/
+License:  BSD-3-Clause (see maplibre-gl.LICENSE.txt)
+Repository: https://github.com/maplibre/maplibre-gl-js
+Tag:      v5.6.2
+
+Files vendored from the official npm distribution, served verbatim:
+
+  - maplibre-gl.js          UMD browser bundle (dist/maplibre-gl.js)
+  - maplibre-gl.css         Stylesheet (dist/maplibre-gl.css)
+  - maplibre-gl.LICENSE.txt BSD-3-Clause license text
+
+We vendor the library instead of loading it from a CDN so the platform works
+offline and so the JavaScript dependency is committed to the repository under
+a known tag. Bumping the version is a deliberate code change: download the
+same three files for the new tag, replace them, and update the Version line
+above.
