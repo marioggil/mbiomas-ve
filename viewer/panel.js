@@ -470,19 +470,84 @@
   // -------------------------------------------------------------------------
   // Year breakdown (level 2)
   // -------------------------------------------------------------------------
+  // The breakdown renders level-2 rows sorted by area descending, with
+  // the official colour and the level-1 group label. The same renderer
+  // serves two payload shapes:
+  //
+  //   * ``/api/composition/year/{year}`` returns ``classes`` (the level-2
+  //     rows with the colour attached) plus a ``total_area_ha`` field.
+  //   * ``/api/clip-stats`` (slice T8c) returns ``level1`` and ``level2``
+  //     arrays directly, plus ``total_window_area_ha`` / ``valid_area_ha``.
+  //
+  // ``renderBreakdown(doc, opts)`` accepts either shape and normalises it
+  // internally so the bar rendering is identical. ``opts.title`` overrides
+  // the default "Clases (nivel 2) en YEAR" heading so the clip result can
+  // read "Clases en la zona seleccionada (YEAR)".
 
-  function renderBreakdown(doc) {
+  function normaliseBreakdownDoc(doc, opts) {
+    /** Coerce either /api/composition/year or /api/clip-stats into the
+     *  shape the bar renderer expects: ``{ year, total_area_ha, classes }``.
+     *  ``classes`` is the sorted-by-area-descending level-2 array. */
+    var year = doc.year;
+    var classes;
+    var total;
+    if (Array.isArray(doc.classes)) {
+      // /api/composition/year/{year} shape.
+      classes = doc.classes.slice();
+      total = doc.total_area_ha;
+    } else if (Array.isArray(doc.level2)) {
+      // /api/clip-stats shape: rename ``level2`` -> ``classes``, and
+      // promote ``level1_pixel_id`` / ``level1_code`` so the renderer can
+      // show the group label.
+      classes = doc.level2.map(function (r) {
+        return {
+          pixel_id: r.pixel_id,
+          code: r.code,
+          name_es: r.name_es,
+          name_en: r.name_en,
+          color: r.color,
+          level1_pixel_id: r.level1_pixel_id,
+          level1_code: r.level1_code,
+          pixels: r.pixels,
+          area_ha: r.area_ha,
+          share_pct: r.share_pct,
+        };
+      });
+      total = doc.total_window_area_ha;
+    } else {
+      classes = [];
+      total = 0;
+    }
+    classes.sort(function (a, b) { return b.area_ha - a.area_ha; });
+    return {
+      year: year,
+      total_area_ha: total,
+      classes: classes,
+      opts: opts || {},
+      // Pass-through extras for the surrounding header text.
+      valid_area_ha: doc.valid_area_ha,
+      nodata_area_ha: doc.nodata_area_ha,
+      nodata_pixels: doc.nodata_pixels,
+      total_pixels: doc.total_pixels,
+      bbox: doc.bbox,
+      window: doc.window,
+    };
+  }
+
+  function renderBreakdown(doc, opts) {
     if (!breakdownList || !breakdownTitle) {
       return;
     }
+    var view = normaliseBreakdownDoc(doc, opts);
+    var titlePrefix = view.opts.title || "Clases (nivel 2) en " + view.year;
     breakdownTitle.textContent =
-      "Clases (nivel 2) en " + doc.year + " — ordenadas por área";
+      titlePrefix + " — ordenadas por área";
     breakdownList.innerHTML = "";
 
-    var classes = (doc && doc.classes) || [];
+    var classes = view.classes || [];
     if (!classes.length) {
       if (breakdownEmpty) {
-        breakdownEmpty.textContent = "Sin clases para " + doc.year + ".";
+        breakdownEmpty.textContent = "Sin clases para " + view.year + ".";
         breakdownEmpty.style.display = "block";
       }
       return;
@@ -538,7 +603,11 @@
       var areaText = document.createElement("span");
       areaText.className = "panel-bar-area";
       areaText.textContent =
-        formatHa(r.area_ha) + " ha · " + formatShare(r.share_pct) + " de la extensión válida";
+        formatHa(r.area_ha) +
+        " ha · " +
+        formatShare(r.share_pct) +
+        " " +
+        (view.opts.denominatorLabel || "de la extensión válida");
       var shareText = document.createElement("span");
       shareText.className = "panel-bar-share";
       shareText.textContent = "Grupo " + (r.level1_code || r.level1_pixel_id);
@@ -554,7 +623,9 @@
       breakdownList.appendChild(li);
     });
 
-    // Footer line: total area for the year.
+    // Footer line: total area for the year. For the clip payload we also
+    // surface the window area / nodata split, so the reader can tell what
+    // fraction of the rectangle is not observed vs. observed.
     var totalLi = document.createElement("li");
     totalLi.className = "panel-bar-total";
     var totalText = document.createElement("span");
@@ -562,10 +633,31 @@
     totalText.textContent = "Suma del año";
     var totalValue = document.createElement("span");
     totalValue.className = "panel-bar-total-value";
-    totalValue.textContent = formatHa(doc.total_area_ha) + " ha";
+    totalValue.textContent = formatHa(view.total_area_ha) + " ha";
     totalLi.appendChild(totalText);
     totalLi.appendChild(totalValue);
     breakdownList.appendChild(totalLi);
+
+    if (
+      view.opts.showWindowSummary &&
+      Number.isFinite(view.valid_area_ha) &&
+      Number.isFinite(view.total_window_area_ha)
+    ) {
+      var windowLi = document.createElement("li");
+      windowLi.className = "panel-bar-window-summary";
+      var windowText = document.createElement("span");
+      windowText.className = "panel-bar-window-label";
+      windowText.textContent =
+        "Área de la ventana: " +
+        formatHa(view.total_window_area_ha) +
+        " ha · válida: " +
+        formatHa(view.valid_area_ha) +
+        " ha · sin dato: " +
+        formatHa(view.nodata_area_ha) +
+        " ha";
+      windowLi.appendChild(windowText);
+      breakdownList.appendChild(windowLi);
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -610,11 +702,95 @@
   }
 
   // -------------------------------------------------------------------------
+  // Clip result (slice T8c)
+  // -------------------------------------------------------------------------
+  // The clip result is a separate surface from the per-year breakdown
+  // because it answers a different question (composition of a rectangle
+  // the user drew) and it carries different metadata (window area, nodata
+  // split). We render it through the same bar renderer, with the
+  // surrounding text adapted. The chart at the top of the panel keeps
+  // showing the 40-year series, so the reader can switch back to the
+  // per-year view by clearing the rectangle.
+
+  /**
+   * Render the result of ``/api/clip-stats`` for one rectangle + year.
+   *
+   * The payload is normalised into the same shape as
+   * ``/api/composition/year/{year}`` so the bar rendering is identical.
+   * The heading is overridden so the reader can tell the bar list refers
+   * to the rectangle, not the whole year.
+   *
+   * @param {object} doc the response from /api/clip-stats.
+   * @returns {void}
+   */
+  function renderClip(doc) {
+    if (!doc || typeof doc !== "object") {
+      return;
+    }
+    renderBreakdown(doc, {
+      title: "Clases en la zona seleccionada (" + doc.year + ")",
+      showWindowSummary: true,
+      // For a clip the shares are of the drawn area's valid extent, not of
+      // the whole mapped extent. Saying "de la extensión válida" here would
+      // misstate the denominator of every percentage on screen.
+      denominatorLabel: "de la zona seleccionada",
+    });
+  }
+
+  /**
+   * Clear the clip result and restore the per-year breakdown header text.
+   * The chart at the top of the panel is left alone; only the bar list
+   * and its title are reset. The host should also clear the rectangle
+   * on the map and any status banner it owns.
+   *
+   * @returns {void}
+   */
+  function clearClip() {
+    if (!breakdownList || !breakdownTitle) {
+      return;
+    }
+    breakdownTitle.textContent =
+      "Clases (nivel 2) en " + (currentYear || "") + " — ordenadas por área";
+    breakdownList.innerHTML = "";
+    if (breakdownEmpty) {
+      breakdownEmpty.style.display = "none";
+    }
+  }
+
+  /**
+   * Surface a user-facing error from the clip endpoint.
+   *
+   * The host's draw toggle already disabled itself when a request was
+   * fired; this function only renders the failure message inside the
+   * breakdown container so the reader sees it without leaving the
+   * panel. The status code and the server-provided detail are both
+   * shown so a 413 (oversized window) is distinguishable from a 400
+   * (invalid bbox).
+   *
+   * @param {string} message
+   * @returns {void}
+   */
+  function showClipError(message) {
+    if (!breakdownList || !breakdownTitle) {
+      return;
+    }
+    breakdownTitle.textContent = "Zona seleccionada";
+    breakdownList.innerHTML = "";
+    if (breakdownEmpty) {
+      breakdownEmpty.textContent = message;
+      breakdownEmpty.style.display = "block";
+    }
+  }
+
+  // -------------------------------------------------------------------------
   // Expose
   // -------------------------------------------------------------------------
 
   window.MapBiomasPanel = {
     init: init,
     setYear: setYear,
+    renderClip: renderClip,
+    clearClip: clearClip,
+    showClipError: showClipError,
   };
 })();

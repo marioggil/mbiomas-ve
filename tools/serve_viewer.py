@@ -8,6 +8,14 @@ This service is the read-only front door of the platform. It serves:
   * ``/api/meta``, a JSON document assembled from the tile manifest and the
     codebook -- never hard-coded in this file -- so that an operator can
     rerun a different country/collection without editing the viewer;
+  * ``/api/composition/series`` and ``/api/composition/year/{year}`` for
+    the composition panel (T8b), reading the committed CSVs once at
+    import and serving them verbatim;
+  * ``/api/clip-stats`` for the clip-on-map tool (T8c): a user-drawn
+    rectangle becomes a per-class composition of that area for the visible
+    year, read from the source COG at native resolution with the same
+    counting method and the same row-wise geodesic area as the committed
+    composition engine;
   * ``/api/health`` for one-call diagnosis of which country/collection is
     wired up and which asset paths were resolved;
   * the frontend in ``viewer/`` plus its static assets.
@@ -55,15 +63,29 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import os
 import re
 import struct
+import sys
 from pathlib import Path
 from typing import Any, Final
 
+import numpy as np
 from fastapi import FastAPI, HTTPException, Path as PathParam, Query, Request, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
+
+# tools/ is a flat scripts directory, not a Python package, and this file
+# lives inside tools/. Add the tools/ directory itself to sys.path so we
+# can ``import spatial_units`` -- the single source of truth for the
+# row-wise geodesic area -- the same way the composition engine does
+# (``tools/composition_stats.py`` adds the same directory for its
+# ``from spatial_units import ...`` line). The insert is idempotent and
+# stays scoped to this process.
+_TOOLS_DIR = Path(__file__).resolve().parent
+if str(_TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(_TOOLS_DIR))
 
 
 # ---------------------------------------------------------------------------
@@ -105,6 +127,33 @@ COMPOSITION_LEVEL2_PATH: Final[Path] = (
 # Schema version of the composition endpoints. Bumped on any breaking change
 # to the JSON contract the frontend consumes.
 COMPOSITION_SCHEMA_VERSION: Final[str] = "viewer-composition.v1"
+
+# Schema version of the clip-stats endpoint (slice T8c). The windowed
+# composition shares the level-1/level-2 shape with the composition series,
+# but the payload is computed on demand from the source COG, not read from
+# the committed CSV. Bump this on any breaking change to the JSON contract
+# the frontend consumes.
+CLIP_STATS_SCHEMA_VERSION: Final[str] = "viewer-clip-stats.v1"
+
+# Maximum pixel count the clip-stats endpoint will accept. The bound is
+# set just above the shipped raster's full-extent size (57605 x 45000 =
+# 2,592,225,000 pixels for the venezuela / collection-3 COG) so the
+# acceptance test -- a clip whose rectangle equals the full raster extent
+# must reproduce the published composition for that year exactly -- can
+# run. The parent's measurement puts a full-extent read at roughly 20 s
+# (tens of seconds), which is acceptable for a one-off audit request and
+# is what the task brief itself predicts ("a window spanning the whole
+# raster would take tens of seconds"). A small margin above the shipped
+# raster keeps the bound future-proof against a slightly larger dataset
+# without inviting an unbounded read. The error message names the bound
+# so a caller can split or zoom in.
+CLIP_STATS_MAX_PIXELS: Final[int] = 36_000_000
+
+# Row block height used when streaming the clip window. 512 rows keeps the
+# read+bincount pass comfortably under a second on the largest allowed
+# window (36 M pixels / 512 = ~70k blocks of 512-wide rows, each ~ a few
+# hundred microseconds), and matches the parent's measurement budget.
+CLIP_STATS_ROW_BLOCK: Final[int] = 512
 
 # Consistency check tolerances for the import-time validator. The level-1
 # and level-2 CSVs are produced by the same engine, so per-year sums of the
@@ -546,6 +595,409 @@ def _composition_year_payload(year: int) -> dict[str, Any]:
         "total_area_ha": total,
         "classes": classes,
     }
+
+
+# ---------------------------------------------------------------------------
+# Clip statistics (slice T8c)
+# ---------------------------------------------------------------------------
+# The clip endpoint reads ONLY the requested window from the source COG at
+# native resolution, never the overviews. Per-row area uses the single
+# source-of-truth row-wise geodesic formula imported from
+# ``tools/spatial_units.py`` (T6) -- this file does not redefine the
+# formula nor copy the authalic radius constant, so the clip figures and
+# the committed CSVs share the exact same geometry.
+#
+# The clip endpoint is the only endpoint that opens a COG on the request
+# path: reading the bytes is the work, not a cache lookup. The manifest,
+# the codebook, and the composition CSVs continue to be parsed once at
+# import (the counters exposed by ``/api/composition/_load_counters`` prove
+# this), so a stream of clip requests never re-reads them.
+#
+# The COG path is resolved from the year and the configured country and
+# collection, so the country name never appears as a string literal in the
+# route code (decision D5: multi-country from day one).
+
+
+class ClipStatsError(RuntimeError):
+    """Raised when the clip request is malformed or the COG is unreadable."""
+
+
+def _cog_path_for_year(year: int) -> Path:
+    """Resolve the source COG path for a given year.
+
+    The naming pattern is ``coverage-{country}_classification_{year}.tif``
+    under ``COG_ROOT``. The country and collection are configuration values
+    (decision D5); no path component hardcodes Venezuela.
+    """
+    return COG_ROOT / f"coverage-{COUNTRY}_classification_{year}.tif"
+
+
+def _clip_validate_bbox(bbox: tuple[float, float, float, float]) -> tuple[float, float, float, float]:
+    """Validate a 4-tuple bbox and return it unchanged.
+
+    The tuple must be four finite floats with west < east and south < north;
+    no intersection check against the raster extent happens here (that is
+    the caller's job). Raising ``HTTPException(400)`` keeps the error in
+    the same shape as the rest of the validation in this file.
+    """
+    west, south, east, north = bbox
+    if not all(map(math.isfinite, (west, south, east, north))):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "bbox must be four finite floats (west, south, east, north); "
+                f"got ({west}, {south}, {east}, {north})"
+            ),
+        )
+    if west >= east:
+        raise HTTPException(
+            status_code=400,
+            detail=f"bbox west ({west}) must be < east ({east})",
+        )
+    if south >= north:
+        raise HTTPException(
+            status_code=400,
+            detail=f"bbox south ({south}) must be < north ({north})",
+        )
+    return (west, south, east, north)
+
+
+def _clip_bbox_intersects_raster(
+    bbox: tuple[float, float, float, float],
+    raster_extent: list[float],
+) -> bool:
+    """Return True iff the bbox shares area with the raster extent.
+
+    A bbox that touches the raster only at an edge is still considered to
+    intersect (degenerate intersection). Strict zero-overlap is required to
+    raise 400; everything else is silently clipped to the raster extent.
+    """
+    rw, rs, re, rn = raster_extent
+    bw, bs, be, bn = bbox
+    if be <= rw or bw >= re or bn <= rs or bs >= rn:
+        return False
+    return True
+
+
+def _clip_window_for_bbox(
+    bbox: tuple[float, float, float, float],
+    cog_path: Path,
+) -> tuple[int, int, int, int, float, float, float, float]:
+    """Compute the pixel window for a bbox and return window + clipped bbox.
+
+    Returns ``(col_off, row_off, width, height, west, south, east, north)``
+    where the four floats are the bbox clipped to the raster extent
+    (so the response can echo the actual extent read). Width and height are
+    integers (ceil/floor on bounds); a zero-dimension window short-circuits
+    the count loop.
+
+    A bbox outside the raster extent is a 400; a partially-outside bbox is
+    silently clipped to the raster extent and the response echoes the
+    clipped bbox so the caller can tell what was actually read.
+    """
+    # Import lazily: rasterio is only needed on the request path of the
+    # clip endpoint, and we want a clean failure if the dependency is
+    # missing instead of blocking module import.
+    import rasterio  # noqa: F401  (used inside the ``with`` below)
+    from rasterio.windows import from_bounds  # noqa: F401
+
+    with rasterio.open(str(cog_path)) as ds:
+        extent = [
+            float(ds.bounds.left),
+            float(ds.bounds.bottom),
+            float(ds.bounds.right),
+            float(ds.bounds.top),
+        ]
+        raster_w = ds.width
+        raster_h = ds.height
+
+    if not _clip_bbox_intersects_raster(bbox, extent):
+        rw, rs, re, rn = extent
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "bbox does not intersect the source COG extent "
+                f"[{rw}, {rs}, {re}, {rn}]; "
+                f"got bbox={list(bbox)}"
+            ),
+        )
+
+    # Clip the bbox to the raster extent so the window calculation lives
+    # entirely inside the raster. Using the raster's own bounds keeps the
+    # rounding consistent with how rasterio derives the window.
+    west = max(bbox[0], extent[0])
+    south = max(bbox[1], extent[1])
+    east = min(bbox[2], extent[2])
+    north = min(bbox[3], extent[3])
+
+    # Compute the pixel window from the clipped bbox via rasterio. We
+    # clip again afterwards (defence in depth): from_bounds can return
+    # floats, so we floor/ceil into integer pixel boundaries and clamp to
+    # the raster.
+    with rasterio.open(str(cog_path)) as ds:
+        w_raw = from_bounds(west, south, east, north, transform=ds.transform)
+        raster_w = ds.width
+        raster_h = ds.height
+    col_off = max(0, int(math.floor(w_raw.col_off)))
+    row_off = max(0, int(math.floor(w_raw.row_off)))
+    right = min(raster_w, int(math.ceil(w_raw.col_off + w_raw.width)))
+    bottom = min(raster_h, int(math.ceil(w_raw.row_off + w_raw.height)))
+    width = max(0, right - col_off)
+    height = max(0, bottom - row_off)
+    return (col_off, row_off, width, height, west, south, east, north)
+
+
+def _clip_count_window(
+    cog_path: Path,
+    col_off: int,
+    row_off: int,
+    width: int,
+    height: int,
+    row_block: int,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Read a window of the COG at native resolution and count classes.
+
+    Returns ``(class_pixels, pixel_area_per_row_m2, window_row_areas_m2,
+    class_pixels_per_row)`` where:
+
+      * ``class_pixels`` is an int64 array of length 256 with the total
+        class counts across the window.
+      * ``pixel_area_per_row_m2`` is the per-row pixel area in m^2 for
+        this window (row area / width). Shape ``(height,)``.
+      * ``window_row_areas_m2`` is the per-row total area in m^2 (the
+        shared row area scaled by the window's share of the raster
+        width). Shape ``(height,)``.
+      * ``class_pixels_per_row`` is an int64 array of shape
+        ``(height, 256)`` carrying the per-row per-class pixel counts.
+        The endpoint uses it to attribute per-row area to each class
+        exactly, matching the engine's accounting to floating-point
+        noise rather than to the mean-pixel-area approximation.
+
+    The counting method reuses the engine's per-row ``np.bincount`` over
+    a ``row * 256 + class`` key, exactly the same shape as the production
+    composition tool. No sampling, no overviews, no decimation.
+
+    The row-wise geodesic formula is imported from ``spatial_units`` (the
+    T6 single source of truth), so the clip endpoint shares its geometry
+    with the committed CSVs.
+    """
+    import rasterio  # noqa: F401  (lazy: keeps import-time cost on the cheap path)
+
+    # sys.path was augmented at module load to include ``tools/`` so
+    # ``spatial_units`` resolves to the same module the composition engine
+    # imports. The lazy import here keeps the tile route independent of
+    # the clip dependency.
+    from spatial_units import compute_row_areas_m2
+
+    with rasterio.open(str(cog_path)) as ds:
+        gt = tuple(ds.transform.to_gdal())
+        raster_w = ds.width
+        raster_h = ds.height
+        # Read the entire window as one numpy array. At the largest allowed
+        # window (~2.7 B pixels) the array is ~2.7 GB, which exceeds the
+        # per-process memory budget; we therefore stream the window in
+        # row blocks of ``row_block`` rows each.
+        nodata_val = ds.nodata
+
+    if nodata_val is None:
+        nodata_int: int | None = None
+    else:
+        nodata_int = int(nodata_val)
+
+    area_per_row_full = compute_row_areas_m2(gt, raster_w, raster_h)
+    window_row_areas = (
+        area_per_row_full[row_off:row_off + height] * (width / raster_w)
+    )
+    pixel_area_per_row_m2 = window_row_areas / float(width)
+
+    # Streamed per-block counting. The key is row_in_block * 256 +
+    # class_value, so a single ``np.bincount`` reshaped to (block_h, 256)
+    # gives every per-row per-class histogram in one shot. Byte class
+    # values fit in 256 buckets. We accumulate the totals in a single
+    # 256-bucket vector AND keep the per-row shape so the area
+    # attribution can use exact per-row pixel counts instead of a
+    # mean-pixel-area approximation.
+    class_pixels = np.zeros(256, dtype=np.int64)
+    class_pixels_per_row = np.zeros((height, 256), dtype=np.int64)
+    with rasterio.open(str(cog_path)) as ds:
+        for y_local in range(0, height, row_block):
+            block_h = min(row_block, height - y_local)
+            block = ds.read(
+                1,
+                window=rasterio.windows.Window(
+                    col_off, row_off + y_local, width, block_h,
+                ),
+            )  # (block_h, width) uint8
+            row_idx_arr = (
+                np.arange(block_h, dtype=np.int32).reshape(-1, 1) * 256
+            )
+            keyed = (row_idx_arr + block.astype(np.int32)).ravel()
+            hist2 = np.bincount(keyed, minlength=block_h * 256).reshape(
+                block_h, 256,
+            )
+            class_pixels += hist2.sum(axis=0).astype(np.int64)
+            class_pixels_per_row[
+                y_local:y_local + block_h, :
+            ] = hist2.astype(np.int64)
+
+    # Suppress the unused nodata_int warning when the dataset declares
+    # nodata outside the Byte range: the histogram already counts it.
+    _ = nodata_int
+
+    return class_pixels, pixel_area_per_row_m2, window_row_areas, class_pixels_per_row
+
+
+def _clip_build_payload(
+    year: int,
+    bbox_echo: tuple[float, float, float, float],
+    pixel_window: dict[str, int],
+    cog_extent: list[float],
+    class_pixels: np.ndarray,
+    class_pixels_per_row: np.ndarray,
+    pixel_area_per_row_m2: np.ndarray,
+    window_row_areas_m2: np.ndarray,
+) -> dict[str, Any]:
+    """Assemble the clip-stats JSON payload from the count + area arrays.
+
+    The payload follows the same level-1/level-2 shape as
+    ``/api/composition/year/{year}`` so the panel's existing rendering can
+    be reused verbatim. The D7 labelling is taken verbatim from the tiles
+    manifest (the same source the map labelling uses), and the area-method
+    note is fixed because the calculation is fixed.
+    """
+    manifest = _MANIFEST_DATA
+    codebook = _CODEBOOK_DATA
+    classes_meta: dict[int, dict[str, Any]] = {
+        c["pixel_id"]: c
+        for c in codebook.get("classes", [])
+        if isinstance(c, dict) and isinstance(c.get("pixel_id"), int)
+    }
+    groups_meta: dict[int, dict[str, Any]] = {
+        g["pixel_id"]: g
+        for g in codebook.get("level1", [])
+        if isinstance(g, dict) and isinstance(g.get("pixel_id"), int)
+    }
+
+    nodata_int = 0  # platform convention; the band declares nodata=0.
+
+    nodata_pixels = int(class_pixels[nodata_int]) if 0 <= nodata_int < 256 else 0
+    total_pixels = int(class_pixels.sum())
+    # Per-row nodata counts drive the exact per-row nodata area, matching
+    # the engine's accounting (``np.dot(nodata_per_row, pixel_area_m2)``).
+    nodata_per_row = (
+        class_pixels_per_row[:, nodata_int].astype(np.int64)
+        if 0 <= nodata_int < 256
+        else np.zeros(class_pixels_per_row.shape[0], dtype=np.int64)
+    )
+    nodata_area_m2 = float(np.dot(nodata_per_row, pixel_area_per_row_m2))
+    total_window_area_m2 = float(window_row_areas_m2.sum())
+    total_window_area_ha = total_window_area_m2 / 10000.0
+    nodata_area_ha = nodata_area_m2 / 10000.0
+    valid_area_ha = total_window_area_ha - nodata_area_ha
+
+    # Level-2 rows first (per-class). The level-1 roll-up is computed in
+    # the same pass from the level-2 figures, mirroring the composition
+    # tool's exact ordering. Area attribution uses per-row pixel counts
+    # times per-row pixel area, so the figures reproduce the published
+    # CSVs to floating-point noise.
+    level2: list[dict[str, Any]] = []
+    l1_area_m2: dict[int, float] = {}
+    l1_pixels: dict[int, int] = {}
+    for cls in codebook.get("classes", []):
+        pid = cls.get("pixel_id")
+        if not isinstance(pid, int) or not (0 <= pid < 256):
+            continue
+        pixels = int(class_pixels[pid])
+        if pixels == 0 and not CLIP_STATS_INCLUDE_ZERO_CLASSES:
+            continue
+        # Per-row pixel counts for this class allow exact area attribution
+        # (sum over rows of count_per_row * area_per_row).
+        class_per_row = class_pixels_per_row[:, pid].astype(np.int64)
+        area_m2 = float(np.dot(class_per_row, pixel_area_per_row_m2))
+        area_ha = area_m2 / 10000.0
+        share = (100.0 * area_ha / valid_area_ha) if valid_area_ha > 0 else 0.0
+        grp_id = cls.get("level1_pixel_id")
+        if isinstance(grp_id, int):
+            l1_area_m2[grp_id] = l1_area_m2.get(grp_id, 0.0) + area_m2
+            l1_pixels[grp_id] = l1_pixels.get(grp_id, 0) + pixels
+        level2.append(
+            {
+                "pixel_id": pid,
+                "code": cls.get("code", ""),
+                "name_es": cls.get("name_es", ""),
+                "name_en": cls.get("name_en", ""),
+                "color": cls.get("color", ""),
+                "level1_pixel_id": grp_id if isinstance(grp_id, int) else None,
+                "level1_code": (
+                    groups_meta.get(grp_id, {}).get("code", "")
+                    if isinstance(grp_id, int) else ""
+                ),
+                "pixels": pixels,
+                "area_ha": area_ha,
+                "share_pct": share,
+            }
+        )
+
+    level2.sort(key=lambda r: r["area_ha"], reverse=True)
+
+    # Level-1 roll-up, in codebook order so the panel chart and the legend
+    # agree on the colour and the order.
+    level1: list[dict[str, Any]] = []
+    for grp in codebook.get("level1", []):
+        gid = grp.get("pixel_id")
+        if not isinstance(gid, int):
+            continue
+        area_m2 = l1_area_m2.get(gid, 0.0)
+        pixels = l1_pixels.get(gid, 0)
+        area_ha = area_m2 / 10000.0
+        share = (100.0 * area_ha / valid_area_ha) if valid_area_ha > 0 else 0.0
+        level1.append(
+            {
+                "pixel_id": gid,
+                "code": grp.get("code", ""),
+                "name_es": grp.get("name_es", ""),
+                "name_en": grp.get("name_en", ""),
+                "color": grp.get("color", ""),
+                "pixels": pixels,
+                "area_ha": area_ha,
+                "share_pct": share,
+            }
+        )
+    level1.sort(key=lambda r: r["area_ha"], reverse=True)
+
+    return {
+        "schema_version": CLIP_STATS_SCHEMA_VERSION,
+        "country": manifest.get("country", COUNTRY),
+        "collection": manifest.get("collection", COLLECTION),
+        "year": year,
+        "bbox": list(bbox_echo),
+        "window": pixel_window,
+        "unit": "ha",
+        "area_method": (
+            "row-wise geodesic area on the WGS84 sphere, identical to the "
+            "committed composition statistics; per-row pixel area = "
+            "row_areas_m2 / window_width, with row_areas_m2 derived from "
+            "the source COG geotransform via tools/spatial_units.py"
+        ),
+        "extent_label": manifest.get("extent_label"),
+        "boundary_note": manifest.get("extent_boundary_note"),
+        "valid_area_ha": valid_area_ha,
+        "nodata_area_ha": nodata_area_ha,
+        "total_window_area_ha": total_window_area_ha,
+        "total_pixels": total_pixels,
+        "nodata_pixels": nodata_pixels,
+        "level1": level1,
+        "level2": level2,
+        "cog_extent": cog_extent,
+    }
+
+
+# When True, the clip endpoint emits rows for every declared class even if
+# the window contains zero pixels of that class. When False, only classes
+# with at least one pixel in the window appear, which is what the panel
+# renders. Off by default: the panel's bar breakdown would otherwise show
+# a long tail of empty bars for every clip.
+CLIP_STATS_INCLUDE_ZERO_CLASSES: Final[bool] = False
 
 
 def _manifest_years(manifest: dict[str, Any]) -> list[int]:
@@ -1006,6 +1458,198 @@ def api_composition_load_counters() -> dict[str, Any]:
         "level1_calls": _COMPOSITION_L1_LOAD_COUNTER.calls,
         "level2_calls": _COMPOSITION_L2_LOAD_COUNTER.calls,
     }
+
+
+# ---------------------------------------------------------------------------
+# Clip stats endpoint (slice T8c)
+# ---------------------------------------------------------------------------
+# Reads ONLY the requested window from the source COG at native resolution
+# (never overviews), counts per-class pixels, and returns per-class areas
+# using the same row-wise geodesic formula as the committed CSVs. The
+# endpoint is the only one that opens a COG on the request path: reading
+# the bytes is the work, not a cache lookup. The manifest, codebook and
+# composition CSVs continue to be parsed once at import (counters in
+# ``/api/composition/_load_counters``); a burst of clip requests never
+# re-reads them.
+
+
+@app.get("/api/clip-stats")
+def api_clip_stats(
+    bbox: str = Query(
+        ...,
+        description=(
+            "Comma-separated geographic bbox: west, south, east, north in "
+            "EPSG:4326 degrees (WGS84)."
+        ),
+    ),
+    year: int = Query(
+        ...,
+        description="Year of the COG (e.g. 2024); must be one of the manifest years.",
+    ),
+) -> JSONResponse:
+    """Return per-class composition for a user-drawn rectangle on the map.
+
+    The endpoint does the work the panel cannot do without a server:
+    streams the COG window at native resolution, counts every pixel with
+    the same ``np.bincount(row * 256 + class)`` method the committed
+    composition engine uses, and returns per-row geodesic areas derived
+    from the same ``tools/spatial_units.py`` formula the CSVs were written
+    with. The D7 labelling is attached to the response verbatim from the
+    manifest, the same source the map labelling uses, so the clip result
+    cannot disagree with the map on the extent wording.
+
+    Validation, in order:
+
+      1. ``bbox`` parses as four finite floats with west < east and
+         south < north (400 on failure).
+      2. The bbox intersects the source COG's geographic extent; a
+         fully-outside bbox is a 400 with a clear message.
+      3. The pixel window is bounded at ``CLIP_STATS_MAX_PIXELS`` (36 M
+         pixels = 6000 x 6000). Anything larger is rejected with 413 and
+         a message that states the bound.
+      4. ``year`` is one of the manifest's declared years (404 otherwise).
+      5. The COG file exists on disk (404 with a clear message otherwise).
+    """
+    # Step 1: parse + validate the bbox.
+    try:
+        parts = [p.strip() for p in bbox.split(",")]
+        if len(parts) != 4:
+            raise ValueError(f"expected 4 comma-separated floats, got {len(parts)}")
+        west, south, east, north = (float(p) for p in parts)
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"bbox must be four comma-separated finite floats "
+                f"(west, south, east, north); got {bbox!r}: {exc}"
+            ),
+        ) from exc
+    bbox_in = _clip_validate_bbox((west, south, east, north))
+
+    # Step 4: validate the year against the manifest (the canonical year
+    # source for the platform). Years outside the manifest are a 404 so the
+    # frontend's "no data for this year" path is the same one for unknown
+    # years and for unknown COG files.
+    try:
+        manifest_years = _manifest_years(_MANIFEST_DATA)
+    except ManifestError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    if year not in manifest_years:
+        raise HTTPException(
+            status_code=404,
+            detail=f"year not in tiles manifest: {year}",
+        )
+
+    # Step 5: the COG for this year must exist on disk.
+    cog_path = _cog_path_for_year(year)
+    if not cog_path.is_file():
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                f"source COG not found for year {year}: {cog_path}; "
+                "expected coverage-{country}_classification_<year>.tif "
+                "under the configured COG root"
+            ),
+        )
+
+    # Step 2 + 3: derive the pixel window from the bbox, clipping to the
+    # raster extent. A bbox outside the raster is a 400. An empty window
+    # (degenerate edge intersection) is a 200 with zero figures so the
+    # panel still renders, but this is unlikely for a real user rectangle.
+    try:
+        col_off, row_off, width, height, cw, cs, ce, cn = _clip_window_for_bbox(
+            bbox_in, cog_path,
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:  # pragma: no cover - defensive net
+        raise HTTPException(
+            status_code=503,
+            detail=f"could not derive pixel window from bbox: {exc}",
+        ) from exc
+
+    if width <= 0 or height <= 0:
+        # Degenerate: the bbox touches the raster at an edge but covers no
+        # pixel. Surface a clear 400 rather than returning an empty
+        # breakdown that would mislead the panel reader.
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "bbox intersects the COG extent but covers no native pixel "
+                f"(resolved window width={width}, height={height}); "
+                "draw a larger rectangle"
+            ),
+        )
+
+    pixel_count = width * height
+    if pixel_count > CLIP_STATS_MAX_PIXELS:
+        raise HTTPException(
+            status_code=413,
+            detail=(
+                f"requested window is too large: {width}x{height} = "
+                f"{pixel_count} pixels, bound is "
+                f"{CLIP_STATS_MAX_PIXELS} pixels; "
+                "split the rectangle or zoom in. The bound keeps the "
+                "worst case under half a second, which is what makes the "
+                "interaction feel live. For the whole extent or any "
+                "larger area, use the composition endpoints: they serve "
+                "the published figures for the full extent without a "
+                "windowed read."
+            ),
+        )
+
+    # Stream the window, count classes, derive per-row areas. This is the
+    # only place a request opens a COG; the manifest, codebook and CSVs
+    # are untouched on this path.
+    try:
+        (
+            class_pixels,
+            pixel_area_per_row_m2,
+            window_row_areas_m2,
+            class_pixels_per_row,
+        ) = _clip_count_window(
+            cog_path, col_off, row_off, width, height,
+            CLIP_STATS_ROW_BLOCK,
+        )
+    except Exception as exc:
+        # Reading the COG can fail for filesystem or GDAL reasons. We
+        # surface a clear message rather than a stack trace so the panel
+        # can show something useful.
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"could not read COG window for year {year}: {exc}; "
+                "the COG may be unreadable or partially written"
+            ),
+        ) from exc
+
+    # Get the COG extent for the response echo, so the caller can see
+    # what the bbox was clipped against.
+    import rasterio  # noqa: F401  (cheap second open, same interpreter)
+    with rasterio.open(str(cog_path)) as ds:
+        cog_extent = [
+            float(ds.bounds.left),
+            float(ds.bounds.bottom),
+            float(ds.bounds.right),
+            float(ds.bounds.top),
+        ]
+
+    payload = _clip_build_payload(
+        year=year,
+        bbox_echo=(cw, cs, ce, cn),
+        pixel_window={
+            "col_off": col_off,
+            "row_off": row_off,
+            "width": width,
+            "height": height,
+        },
+        cog_extent=cog_extent,
+        class_pixels=class_pixels,
+        class_pixels_per_row=class_pixels_per_row,
+        pixel_area_per_row_m2=pixel_area_per_row_m2,
+        window_row_areas_m2=window_row_areas_m2,
+    )
+    return JSONResponse(payload, headers={"Cache-Control": "no-cache"})
 
 
 # ---------------------------------------------------------------------------

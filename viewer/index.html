@@ -54,6 +54,29 @@
 
   <section class="map-panel" aria-label="Mapa de cobertura anual">
     <div id="map" class="map" role="application" aria-label="Mapa interactivo"></div>
+    <div class="map-controls" role="toolbar" aria-label="Herramientas del mapa">
+      <button
+        id="clip-draw-toggle"
+        class="map-tool"
+        type="button"
+        aria-pressed="false"
+        aria-describedby="clip-help"
+      >
+        Dibujar zona
+      </button>
+      <button
+        id="clip-clear"
+        class="map-tool map-tool-secondary"
+        type="button"
+        disabled
+      >
+        Limpiar zona
+      </button>
+      <span id="clip-help" class="map-tool-help">
+        Trace un rectángulo sobre el mapa para obtener la composición de esa área en el año seleccionado.
+      </span>
+      <span id="clip-status" class="map-tool-status" aria-live="polite"></span>
+    </div>
     <div class="labelling" id="d7-labelling" aria-live="polite">
       <strong class="labelling-label" id="d7-extent-label">&hellip;</strong>
       <span class="labelling-note" id="d7-boundary-note">&hellip;</span>

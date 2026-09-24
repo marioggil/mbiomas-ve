@@ -53,6 +53,35 @@
   }
 
   /**
+   * Fetch the per-class composition of a user-drawn rectangle on the map
+   * (slice T8c).
+   *
+   * The endpoint reads ONLY the requested window from the source COG at
+   * native resolution and applies the same row-wise geodesic area method
+   * as the committed composition engine, so the figures cannot drift
+   * from the published CSVs. The D7 labelling is attached to the response
+   * verbatim from the manifest.
+   *
+   * The promise rejects with an Error whose message contains the HTTP
+   * status code and a server-provided detail string; the panel reads the
+   * detail so a 413 (oversized window) and a 400 (bad bbox) surface
+   * distinct messages to the user.
+   *
+   * @param {number} year the visible year (the slider position).
+   * @param {[number, number, number, number]} bbox [west, south, east, north] in degrees.
+   * @returns {Promise<object>}
+   */
+  function fetchClipStats(year, bbox) {
+    var bboxStr = bbox
+      .map(function (n) { return String(n); })
+      .join(",");
+    return fetchJson(
+      "/api/clip-stats?year=" + encodeURIComponent(String(year)) +
+      "&bbox=" + encodeURIComponent(bboxStr)
+    );
+  }
+
+  /**
    * Build the XYZ tile URL for a given year.
    *
    * The backend publishes the exact template via /api/meta, so we use
@@ -98,6 +127,7 @@
     fetchMeta: fetchMeta,
     fetchCompositionSeries: fetchCompositionSeries,
     fetchCompositionYear: fetchCompositionYear,
+    fetchClipStats: fetchClipStats,
     tileUrl: tileUrl,
   };
 })(window);

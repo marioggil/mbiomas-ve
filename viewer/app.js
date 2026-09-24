@@ -1,9 +1,29 @@
 /* viewer/app.js
  *
  * Main viewer logic. Reads metadata from /api/meta via api.js, renders the
- * legend and the year slider, and wires a MapLibre GL map to the tile
- * pyramid. No `fetch` call lives in this file: api.js is the single
- * data-access module.
+ * legend and the year slider, wires a MapLibre GL map to the tile pyramid,
+ * and implements the draw-a-rectangle clip tool (slice T8c). No `fetch`
+ * call lives in this file: api.js is the single data-access module.
+ *
+ * The clip tool adds three things to the map:
+ *
+ *   1. A "Dibujar zona" toolbar button that toggles draw mode. The button
+ *      reports its state with ``aria-pressed`` so the affordance is
+ *      visible to assistive readers.
+ *   2. A "Limpiar zona" toolbar button that clears the drawn rectangle,
+ *      the GeoJSON layer, the clip result on the panel, and the clip
+ *      status banner.
+ *   3. A drag-on-map handler that builds the rectangle in lon/lat
+ *      coordinates. The rectangle is rendered as a GeoJSON ``fill`` +
+ *      ``line`` layer pair sourced from a single in-memory GeoJSON
+ *      feature. The rectangle is committed (and the endpoint fired)
+ *      only on mouse-up; in-flight drags update a preview rectangle so
+ *      the user sees what they are drawing.
+ *
+ * The endpoint is called with the CURRENTLY SELECTED YEAR, so moving the
+ * slider while a rectangle is present re-fires the same bbox for the new
+ * year. The panel owns the bar rendering; the host passes the response
+ * through to ``panel.renderClip(doc)`` unchanged.
  */
 
 (function () {
@@ -29,6 +49,9 @@
   var yearValue = document.getElementById("year-value");
   var yearMin = document.getElementById("year-min");
   var yearMax = document.getElementById("year-max");
+  var clipToggleBtn = document.getElementById("clip-draw-toggle");
+  var clipClearBtn = document.getElementById("clip-clear");
+  var clipStatus = document.getElementById("clip-status");
 
   // State.
   /** @type {object|null} */
@@ -37,6 +60,12 @@
   var currentYear = 0;
   /** @type {maplibregl.Map|null} */
   var map = null;
+  /** @type {boolean} */
+  var drawMode = false;
+  /** @type {object|null} committed bbox of the current clip, in lon/lat. */
+  var clipBbox = null;
+  /** @type {number} */
+  var inFlightClipRequest = 0;
 
   api
     .fetchMeta()
@@ -227,6 +256,13 @@
         yearValue.textContent = String(y);
         yearSlider.setAttribute("aria-valuenow", String(y));
         onYearChanged(y);
+        // Slice T8c: when a rectangle is present, re-fire the clip
+        // request for the new year. We don't clear the rectangle: the
+        // user asked for "this area, this year" so we honour both
+        // bindings until they explicitly clear the rectangle.
+        if (clipBbox) {
+          requestClip(clipBbox, currentYear);
+        }
       }
     });
   }
@@ -331,6 +367,33 @@
           "raster-saturation": 0,
         },
       });
+      // Clip rectangle source + layers (slice T8c). One GeoJSON source
+      // feeds two layers: a translucent fill so the user can see the
+      // selection sits on the map, and a 2 px line for the border. The
+      // source starts empty and is rewritten by the draw handler on
+      // mouse-up.
+      map.addSource("clip-rectangle", {
+        type: "geojson",
+        data: emptyPolygonFeature(),
+      });
+      map.addLayer({
+        id: "clip-rectangle-fill",
+        type: "fill",
+        source: "clip-rectangle",
+        paint: {
+          "fill-color": "#2563eb",
+          "fill-opacity": 0.18,
+        },
+      });
+      map.addLayer({
+        id: "clip-rectangle-line",
+        type: "line",
+        source: "clip-rectangle",
+        paint: {
+          "line-color": "#2563eb",
+          "line-width": 2,
+        },
+      });
       // Fit the map to the extent the first time it loads. Subsequent
       // year switches only swap tiles, not the view.
       if (extent && Array.isArray(extent) && extent.length === 4) {
@@ -350,7 +413,432 @@
       }
       // Wire up the year slider once the source exists.
       onYearChanged(currentYear);
+      // Initialise the clip draw handlers now that the map and the
+      // rectangle layer are real.
+      initClipDraw();
     });
+  }
+
+  // -------------------------------------------------------------------------
+  // Clip draw (slice T8c)
+  // -------------------------------------------------------------------------
+  // MapLibre does not ship a draw plugin; we hand-roll a single
+  // rectangle tool. The flow:
+  //
+  //   * The "Dibujar zona" toolbar button toggles ``drawMode``. While on,
+  //     the map canvas captures ``mousedown`` to start a drag, ``mousemove``
+  //     to update a preview rectangle, and ``mouseup`` to commit.
+  //   * ``mousedown`` records the start lon/lat and the in-flight state.
+  //   * ``mousemove`` writes a preview rectangle to the GeoJSON source.
+  //   * ``mouseup`` computes the bbox, normalises it (west<east,
+  //     south<north), writes the committed rectangle to the source, and
+  //     fires the endpoint.
+  //
+  // We use MapLibre's own pointer events (``map.on("mousedown", ...)``)
+  // rather than the raw DOM events so the same flow works on touch
+  // devices that MapLibre unifies into the same handler set.
+  //
+  // The endpoint is fired through ``requestClip`` which routes through
+  // the year slider's input handler indirectly: when the year moves we
+  // re-fire the same bbox; when the user redraws we fire a new bbox for
+  // the current year. The panel's ``renderClip`` does the rendering.
+
+  function initClipDraw() {
+    if (
+      !map ||
+      !clipToggleBtn ||
+      !clipClearBtn ||
+      typeof map.on !== "function"
+    ) {
+      return;
+    }
+    // Draw state. Held in module-level closure so mouse handlers can
+    // share it without prop-drilling.
+    var drawing = false;
+    var startLngLat = null;
+    /** @type {{x:number,y:number}|null} screen-space start point of the in-flight drag, used by the pixel threshold guard in endDraw. */
+    var startPoint = null;
+    /** @type {{dragPan:boolean,boxZoom:boolean,dragRotate:boolean}|null} snapshot of MapLibre handler enable state captured when draw mode was entered; restored verbatim on exit so leaving draw mode never blindly re-enables something the user had off. */
+    var savedInteractionState = null;
+    // Minimum on-screen drag (CSS pixels per axis) we accept as a
+    // deliberate rectangle. Below this we cancel: a click without
+    // movement (0 px), a tap the OS did not translate, or a pan
+    // induced by MapLibre still holding the gesture (0 px because the
+    // map moved under the cursor) all reach endDraw with dx/dy
+    // effectively 0. 5 px is well above trackpad/touch jitter and well
+    // below any rectangle a person would consider meaningful on this
+    // map (5 px at zoom 4 already spans hundreds of COG pixels).
+    var MIN_DRAG_PX = 5;
+
+    function setDrawMode(on) {
+      drawMode = !!on;
+      clipToggleBtn.setAttribute("aria-pressed", drawMode ? "true" : "false");
+      if (drawMode) {
+        clipToggleBtn.classList.add("is-active");
+        // Defect 1: disable MapLibre's drag-pan / box-zoom / drag-rotate
+        // handlers so the same mouse gesture draws a rectangle instead
+        // of panning the map. The previous enable state is captured on
+        // first entry and restored verbatim on exit.
+        disableCompetingHandlers();
+        if (map && map.getCanvas) {
+          map.getCanvas().style.cursor = "crosshair";
+        }
+      } else {
+        clipToggleBtn.classList.remove("is-active");
+        restoreCompetingHandlers();
+        if (map && map.getCanvas) {
+          map.getCanvas().style.cursor = "";
+        }
+      }
+    }
+
+    // MapLibre's drag-pan, box-zoom and drag-rotate handlers all
+    // consume the same mouse-drag gesture we use to draw a rectangle,
+    // so they must be silenced while draw mode is on. We capture the
+    // current enable state of each handler on first entry and restore
+    // that exact snapshot on exit. We do not blindly enable
+    // everything: a handler that was already off when the user
+    // entered draw mode stays off after they leave it.
+    function disableCompetingHandlers() {
+      if (!savedInteractionState && map) {
+        savedInteractionState = {
+          dragPan: !!(map.dragPan && typeof map.dragPan.isEnabled === "function" && map.dragPan.isEnabled()),
+          boxZoom: !!(map.boxZoom && typeof map.boxZoom.isEnabled === "function" && map.boxZoom.isEnabled()),
+          dragRotate: !!(map.dragRotate && typeof map.dragRotate.isEnabled === "function" && map.dragRotate.isEnabled()),
+        };
+      }
+      if (map && map.dragPan && typeof map.dragPan.disable === "function") {
+        map.dragPan.disable();
+      }
+      if (map && map.boxZoom && typeof map.boxZoom.disable === "function") {
+        map.boxZoom.disable();
+      }
+      if (map && map.dragRotate && typeof map.dragRotate.disable === "function") {
+        map.dragRotate.disable();
+      }
+    }
+
+    function restoreCompetingHandlers() {
+      if (!savedInteractionState) {
+        return;
+      }
+      var state = savedInteractionState;
+      // Clear the snapshot first so a re-entry captures the current
+      // (restored) state, not the stale one from a prior session.
+      savedInteractionState = null;
+      if (state.dragPan && map && map.dragPan && typeof map.dragPan.enable === "function") {
+        map.dragPan.enable();
+      }
+      if (state.boxZoom && map && map.boxZoom && typeof map.boxZoom.enable === "function") {
+        map.boxZoom.enable();
+      }
+      if (state.dragRotate && map && map.dragRotate && typeof map.dragRotate.enable === "function") {
+        map.dragRotate.enable();
+      }
+    }
+
+    function updatePreviewRectangle(startLL, endLngLat) {
+      // ``startLL`` is taken as an explicit parameter so the caller does
+      // not depend on the closure state: endDraw clears the closure as
+      // part of its bookkeeping, and a stale null there would throw.
+      if (!startLL || !endLngLat) {
+        return;
+      }
+      var coords = rectangleCoords(startLL, endLngLat);
+      var src = map.getSource("clip-rectangle");
+      if (!src) {
+        return;
+      }
+      src.setData({
+        type: "Feature",
+        properties: {},
+        geometry: { type: "Polygon", coordinates: [coords] },
+      });
+    }
+
+    function clearRectangleLayer() {
+      var src = map.getSource("clip-rectangle");
+      if (!src) {
+        return;
+      }
+      src.setData(emptyPolygonFeature());
+    }
+
+    clipToggleBtn.addEventListener("click", function () {
+      setDrawMode(!drawMode);
+      if (clipStatus) {
+        clipStatus.textContent = drawMode
+          ? "Modo de dibujo activo: trace un rectángulo sobre el mapa."
+          : "";
+      }
+    });
+
+    clipClearBtn.addEventListener("click", function () {
+      clearClip();
+    });
+
+    // MapLibre's mousedown fires for the primary button only on desktop
+    // and for a single touch on mobile; the same event drives the touch
+    // path because MapLibre unifies them.
+    map.on("mousedown", function (e) {
+      if (!drawMode) {
+        return;
+      }
+      // Ignore clicks that hit a UI control (the attribution / nav
+      // controls live in the canvas overlay). MapLibre marks them with
+      // ``originalEvent`` having a non-default target; we check that the
+      // event is over the bare canvas by inspecting the lngLat (which is
+      // only set for canvas clicks).
+      if (!e || !e.lngLat) {
+        return;
+      }
+      drawing = true;
+      startLngLat = [e.lngLat.lng, e.lngLat.lat];
+      // Record the screen-space point alongside the lngLat so endDraw
+      // can decide whether the gesture was a real drag using pixels,
+      // not the lngLat float equality that defect 2 showed is too
+      // permissive (a pan-induced "drag" still produces two distinct
+      // lngLats at the 12th decimal).
+      startPoint = { x: e.point.x, y: e.point.y };
+      updatePreviewRectangle(startLngLat, startLngLat);
+      // Capture so the move/up handlers keep firing even if the pointer
+      // leaves the canvas mid-drag.
+      if (map && typeof map.getCanvas === "function" && e.originalEvent) {
+        try {
+          e.originalEvent.preventDefault();
+        } catch (err) {
+          /* ignore */
+        }
+      }
+    });
+
+    map.on("mousemove", function (e) {
+      if (!drawing || !startLngLat || !e.lngLat) {
+        return;
+      }
+      updatePreviewRectangle(startLngLat, [e.lngLat.lng, e.lngLat.lat]);
+    });
+
+    function endDraw(e) {
+      if (!drawing) {
+        return;
+      }
+      drawing = false;
+      var start = startLngLat;
+      var startPt = startPoint;
+      startLngLat = null;
+      startPoint = null;
+      if (!start || !e || !e.lngLat) {
+        clearRectangleLayer();
+        return;
+      }
+      // Defect 2 guard: compare screen-space pixels, not lngLat
+      // floats. A pan-induced point has dx == dy == 0 (the map moved
+      // under the cursor, the pointer did not) and a click without
+      // movement is also 0/0; the old degree-based check let both
+      // through because east - west was a tiny positive number
+      // (~7e-12 deg). Any drag below MIN_DRAG_PX on either axis is
+      // treated as a cancel: no endpoint is fired and the user
+      // sees the existing "demasiado pequeño" message.
+      if (
+        !startPt ||
+        !e.point ||
+        Math.abs(e.point.x - startPt.x) < MIN_DRAG_PX ||
+        Math.abs(e.point.y - startPt.y) < MIN_DRAG_PX
+      ) {
+        clearRectangleLayer();
+        if (clipStatus) {
+          clipStatus.textContent =
+            "Rectángulo demasiado pequeño; trace un área mayor.";
+        }
+        return;
+      }
+      var end = [e.lngLat.lng, e.lngLat.lat];
+      var bbox = bboxFromCorners(start, end);
+      if (!bbox) {
+        // Defensive guard against degenerate corners (e.g. an
+        // antimeridian wraparound). The pixel check above already
+        // catches the common case from defect 2.
+        clearRectangleLayer();
+        if (clipStatus) {
+          clipStatus.textContent =
+            "Rectángulo demasiado pequeño; trace un área mayor.";
+        }
+        return;
+      }
+      updatePreviewRectangle(start, end);
+      commitClip(bbox);
+    }
+
+    map.on("mouseup", endDraw);
+    // Escape from the drag if the pointer leaves the window mid-drag.
+    map.on("mousecancel", function () {
+      drawing = false;
+      startLngLat = null;
+      startPoint = null;
+    });
+
+    // Keyboard: Escape cancels draw mode without firing a request.
+    if (typeof document !== "undefined") {
+      document.addEventListener("keydown", function (ev) {
+        if (ev && ev.key === "Escape" && drawMode) {
+          setDrawMode(false);
+          if (clipStatus) {
+            clipStatus.textContent = "";
+          }
+        }
+      });
+    }
+  }
+
+  /**
+   * Return a one-element Polygon GeoJSON Feature with no geometry. Used to
+   * reset the rectangle layer between draws without throwing when MapLibre
+   * expects a real Feature object.
+   */
+  function emptyPolygonFeature() {
+    return {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [[]],
+      },
+    };
+  }
+
+  /**
+   * Build the four corner coordinates of the rectangle the user is
+   * dragging, in GeoJSON order (counter-clockwise, lon/lat). The caller
+   * is responsible for normalising the bbox.
+   */
+  function rectangleCoords(a, b) {
+    var west = Math.min(a[0], b[0]);
+    var east = Math.max(a[0], b[0]);
+    var south = Math.min(a[1], b[1]);
+    var north = Math.max(a[1], b[1]);
+    return [
+      [west, south],
+      [east, south],
+      [east, north],
+      [west, north],
+      [west, south],
+    ];
+  }
+
+  /**
+   * Compute the bbox from two corner points, or null if the rectangle is
+   * degenerate (zero width or zero height in degrees). The endpoint
+   * refuses zero-area windows with a clear message; this function
+   * matches that policy at the source so the request never goes out.
+   */
+  function bboxFromCorners(a, b) {
+    var west = Math.min(a[0], b[0]);
+    var east = Math.max(a[0], b[0]);
+    var south = Math.min(a[1], b[1]);
+    var north = Math.max(a[1], b[1]);
+    if (east - west <= 0 || north - south <= 0) {
+      return null;
+    }
+    return [west, south, east, north];
+  }
+
+  /**
+   * Persist the committed bbox, fire the endpoint, and route the response
+   * into the panel. Called on mouse-up.
+   */
+  function commitClip(bbox) {
+    clipBbox = bbox;
+    if (clipClearBtn) {
+      clipClearBtn.disabled = false;
+    }
+    if (clipStatus) {
+      clipStatus.textContent =
+        "Zona seleccionada: " +
+        bbox.map(function (n, i) {
+          // Two-decimal precision in the status line keeps it readable.
+          return Number(n).toFixed(2);
+        }).join(", ") +
+        ". Solicitando composición...";
+    }
+    requestClip(bbox, currentYear);
+  }
+
+  /**
+   * Fire the clip-stats endpoint and route the response into the panel.
+   *
+   * In-flight requests are tracked by an incrementing counter so a stale
+   * response from a previous year never overwrites a fresher one (the
+   * year slider can move while the endpoint is still computing on a
+   * large window).
+   */
+  function requestClip(bbox, year) {
+    if (!api || typeof api.fetchClipStats !== "function") {
+      return;
+    }
+    var reqId = ++inFlightClipRequest;
+    api
+      .fetchClipStats(year, bbox)
+      .then(function (doc) {
+        if (reqId !== inFlightClipRequest) {
+          // A newer request has fired; drop this response silently so the
+          // panel always shows the most recent state.
+          return;
+        }
+        if (clipStatus) {
+          clipStatus.textContent =
+            "Zona actualizada para " + year + ".";
+        }
+        if (panel && typeof panel.renderClip === "function") {
+          panel.renderClip(doc);
+        }
+      })
+      .catch(function (err) {
+        if (reqId !== inFlightClipRequest) {
+          return;
+        }
+        if (clipStatus) {
+          clipStatus.textContent = err.message || "Error al obtener la zona.";
+        }
+        if (panel && typeof panel.showClipError === "function") {
+          panel.showClipError(err.message || "Error al obtener la zona.");
+        }
+      });
+  }
+
+  /**
+   * Clear the rectangle layer, the committed bbox, the panel rendering,
+   * and the status banner. Wired to the "Limpiar zona" toolbar button.
+   */
+  function clearClip() {
+    clipBbox = null;
+    if (map && typeof map.getSource === "function") {
+      var src = map.getSource("clip-rectangle");
+      if (src && typeof src.setData === "function") {
+        src.setData(emptyPolygonFeature());
+      }
+    }
+    if (clipClearBtn) {
+      clipClearBtn.disabled = true;
+    }
+    if (clipStatus) {
+      clipStatus.textContent = "";
+    }
+    if (drawMode && clipToggleBtn) {
+      // Keep the toolbar button state in sync: clearing the rectangle
+      // does not exit draw mode (the user may want to draw another one).
+      // We just disable the clear button.
+    }
+    if (panel && typeof panel.clearClip === "function") {
+      panel.clearClip();
+    }
+    // Restore the per-year breakdown for the current year. We re-fetch
+    // because the panel's in-memory year doc is unchanged; the bar list
+    // was already cleared by ``panel.clearClip`` but the user expects
+    // the per-year view back, so we trigger the host's normal flow.
+    if (panel && typeof panel.setYear === "function" && currentYear) {
+      panel.setYear(currentYear);
+    }
   }
 
   // Defensive scheduling state.

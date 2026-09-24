@@ -246,6 +246,82 @@ body {
   color: var(--fg-muted);
 }
 
+/* ------- Clip tool (slice T8c) -------
+ *
+ * Toolbar pinned to the top-left of the map. The two buttons drive the
+ * draw-on-map rectangle tool: the primary button toggles draw mode, the
+ * secondary button clears the committed rectangle. A short status line
+ * sits below so the reader can see what the endpoint is doing without
+ * leaving the map. */
+.map-controls {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  max-width: calc(100% - 24px);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+  z-index: 1;
+  font-size: 12px;
+}
+
+.map-tool {
+  background: var(--accent);
+  color: #ffffff;
+  border: 0;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.map-tool:focus-visible {
+  outline: 2px solid var(--fg-strong);
+  outline-offset: 2px;
+}
+
+.map-tool[disabled] {
+  background: #cbd5e1;
+  color: #475569;
+  cursor: not-allowed;
+}
+
+.map-tool.is-active {
+  background: #1d4ed8;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.35);
+}
+
+.map-tool-secondary {
+  background: var(--bg-panel);
+  color: var(--fg-strong);
+  border: 1px solid var(--border);
+}
+
+.map-tool-secondary.is-active {
+  background: var(--bg-panel-alt);
+}
+
+.map-tool-help {
+  flex-basis: 100%;
+  color: var(--fg-muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.map-tool-status {
+  flex-basis: 100%;
+  color: var(--fg-text);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ------- Time bar ------- */
 .time-bar {
   grid-area: time;
@@ -583,6 +659,19 @@ body {
   font-size: 12px;
   font-weight: 600;
   color: var(--fg-strong);
+}
+
+/* The clip result adds an extra summary line under the year total so the
+ * reader sees the rectangle's area / valid area / nodata split without
+ * doing the arithmetic in their head. */
+.panel-bar-window-summary {
+  padding: 4px 4px 0;
+  font-size: 11px;
+  color: var(--fg-muted);
+}
+
+.panel-bar-window-label {
+  font-variant-numeric: tabular-nums;
 }
 
 .panel-bar-total-label {

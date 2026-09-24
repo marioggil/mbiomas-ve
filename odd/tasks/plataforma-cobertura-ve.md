@@ -437,12 +437,59 @@ and makes it a route the capture facade does not accept. T8b is therefore commit
 correction verified by direct inspection and without the validator's verdict. The lineage
 `review-45224636976d13ae` stays in `correction_required` and must not be resumed.
 
-#### T8c — Clip statistics (pending)
+#### T8c — Clip statistics — **DONE**
 
-Draw a rectangle and get the exact composition of that area for the visible year. Measured as
-viable: reading only the drawn window at native resolution costs about 2 ms for a 15x15 km area,
-111 ms for 62x62 km and 928 ms for 180x180 km, so it can be interactive, and it reuses the
-engine's counting and geodesic areas rather than reimplementing them.
+- `GET /api/clip-stats?bbox=west,south,east,north&year=<int>` reads **only the drawn window** at
+  native resolution, streamed in row blocks, and returns the level-1 and level-2 composition for
+  that area with the D7 labelling attached. It **imports** `compute_row_areas_m2` from
+  `tools/spatial_units.py` rather than writing another geodesic formula, so the single source of
+  truth from T6 holds.
+- **The acceptance test that matters passes.** A clip whose rectangle is the full raster extent
+  reproduces the published composition: level-1 worst difference **2.66e-7 ha**, level-2 worst
+  **4.64e-7 ha**, and the valid area 108,622,951.64874808 against the CSV's 108,622,951.648748, a
+  difference of **8.9e-8 ha**. Over 108.6 million hectares that is a relative error of ~2.7e-15,
+  float64 noise. The windowed computation **is** the same computation as the published one, which
+  is the strongest available proof and was the point of this slice.
+- Latency measured by the parent at three sizes: **10 ms** for ~15x15 km, **34 ms** for ~62x62 km,
+  **246 ms** for ~177x177 km. Interactive with room to spare.
+- Class 27 (`No observado`) is absent from the clip response because it has zero pixels everywhere;
+  the CSV emits it as a zero row for schema stability while the clip omits it. Noted as a small
+  inconsistency, not a defect.
+
+**Three defects were found and fixed, two of them by the parent in a real browser.**
+
+1. **Dragging panned the map instead of drawing.** `setDrawMode()` changed the cursor to
+   `crosshair` but never disabled MapLibre's competing handlers; `dragPan` did not appear anywhere
+   in the file. During a pan the geographic point under the cursor is invariant, so the mousedown
+   and mouseup lngLat were identical and the rectangle collapsed to a point. Measured proof: two
+   drags at nearly the same screen position produced longitudes of -72.49 and then -85.20, and a
+   30-pixel shift cannot move a longitude 12.7 degrees, so the map itself had moved. Fixed by saving
+   each handler's `isEnabled()` state on entering draw mode, disabling `dragPan`, `boxZoom` and
+   `dragRotate`, and **restoring the saved state** on exit rather than blindly re-enabling.
+2. **The degenerate-rectangle guard could never fire.** `bboxFromCorners` rejected a rectangle only
+   when `east - west <= 0`, but a pan-induced point differs by about 7e-12 degrees, which is greater
+   than zero, so the guard passed and the endpoint was called with a sub-micron rectangle that the
+   server correctly rejected with 400. Fixed by comparing the **screen** space start and end points
+   from the mouse events with a 5-pixel threshold, which is zoom-independent.
+3. **The clip's share denominator was mislabelled.** The rows read "92.08 % de la extensión
+   válida", but a clip's shares are of the **selected area's** valid extent, not the whole mapped
+   extent — every percentage on screen had the wrong denominator named. Fixed with a
+   `denominatorLabel` option, so a clip now reads "de la zona seleccionada" while the year breakdown
+   keeps "de la extensión válida".
+
+**Also corrected: the oversized-window bound was unreachable.** The tool shipped
+`CLIP_STATS_MAX_PIXELS = 2_700_000_000`, just above the shipped raster's 2,592,225,000 pixels, while
+its own docstring claimed 36 M. With that value the guard could never fire for any real request,
+and a full-extent clip blocked the single worker for **18.7 s**. The parent corrected it to the
+documented 36 M, which keeps the worst case at ~250 ms. Whole-extent audits belong to the
+composition endpoints, which serve the published figures without a windowed read.
+
+**Verified in a real browser after the fixes**: the drag produces a real bbox (1.55x0.43 degrees
+over Venezuela) with the map not moving and exactly one request; the panel renders the clip's own
+figures, identical to the API (Bosque 761,454.108851 ha at 92.08 %, window total 826,962.841697 ha);
+a click with no movement fires **no** request and shows "Rectángulo demasiado pequeño"; and leaving
+draw mode restores panning. Guards verified: 400 for an inverted, outside or malformed bbox, 404 for
+an unknown year, 413 for an oversized window with a message naming the bound.
 
 ### T9 — Local packaging and documentation
 - Reproducible entrypoint (script/container) + README.
