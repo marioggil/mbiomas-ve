@@ -227,9 +227,56 @@ ambiguity.
   versus configurable cell grid) and are not interchangeable today. Converging them is
   follow-up work, listed in section 14.
 
-### T7 — Static tile pyramid
-- Per-year z0–z12 pyramid with the official palette; storage estimate first.
-- **Evidence**: tile counts, total size, spot-check of a rendered year.
+### T7 — Static tile pyramid — **DONE**
+
+- `tools/build_tiles.py` builds a per-year XYZ raster pyramid in Web Mercator for all 40
+years, using the official palette taken from the codebook. A paletted VRT carries the
+256-entry colour table with alpha 0 for every index that is not a codebook `pixel_id`;
+it is expanded to an RGBA VRT and tiled with
+`-p mercator -r near --xyz -x -w none`. Both VRTs reference the COG and copy no raster
+data, so colouring 2.6 GB per year costs nothing in storage.
+- `-r near` is the correctness requirement established in T3: these are class codes,
+and the gdal2tiles default of `average` would invent classes.
+- **Storage estimate first, as the task required.** Measured per zoom on 2024 before
+any full run: z0-6 19 tiles, z7-8 103, z9-10 1,110, z11 3,185, z12 12,147. That gave
+15,332 tiles and 141 MB per year, so 613,280 tiles and 5.5 GB for 40 years, and the
+feasibility verdict that no zoom cap and no dynamic tile server were needed.
+- **Actual result**: **16,565 tiles and ~120 MB per year; 662,600 tiles and 4,987 MB of
+PNG content (6.1 GB on disk with block padding) for the 40 years.** Wall clock
+140-164 s per year, about 110 minutes in total across two runs.
+- **My estimate was 8 % low and I know why**: the per-zoom measurements were right, but
+my own summary step printed 15,332 instead of the correct 16,564 per-year sum. An
+arithmetic slip in the reporting, not in the data. The feasibility conclusion held; the
+number did not, and it is corrected here.
+- **Independent structural verifications**, all read back from disk rather than trusted:
+  - Every one of the 40 years has exactly 16,565 tiles, 13 zoom levels and tile counts
+    per zoom identical to every other year.
+  - The sorted tile path set is byte-identical across years: one single hash for all of
+    them, so the pyramid geometry is stable year to year.
+  - All **662,600 PNGs verified** for non-zero size, PNG signature and trailing `IEND`:
+    **0 zero-byte, 0 malformed**.
+  - Palette spot-check on 9 tiles across z8, z10 and z12: **zero colours outside the
+    official palette**, and the classes present are real (3 Bosque, 4 Sabana arbolada,
+    6 Bosque inundable, 11, 12, 13, 18, 21, 23, 24, 25, 29, 33, 66, 81). The tiles render
+    the official classes with the official colours.
+- The manifest records the codebook path and its SHA-256, so a palette change is
+  detectable after the fact, plus the D7 labels at the top level.
+
+**Two real gaps the interruption exposed, both fixed rather than papered over.** The
+machine rebooted mid-build after 13 years, and recovery was run for the remaining 27:
+
+1. **The manifest described the run, not the pyramid.** After the recovery run the
+   manifest covered 27 years and the first 13 had no record at all. Fixed by adding
+   `--scan-only`, which rebuilds the manifest from what is on disk and needs no COG
+   directory. The real manifest now covers all 40 years.
+2. **Tile integrity was counted, never verified.** The reboot left exactly one truncated
+   tile: `1998/12/1326/1984.png`, 0 bytes. It was found by hand, and that is the problem,
+   because `--resume` passes `-e` to gdal2tiles and `-e` skips files that already exist:
+   **that empty tile would have been preserved silently forever**. Fixed by verifying
+   every PNG in both modes and exiting non-zero on any malformed or zero-byte tile, while
+   still writing the manifest so an operator can inspect what failed. The check was proven
+   to fire on a deliberately broken scratch pyramid (`exit 1`,
+   `integrity=BROKEN(zero=1, malformed=2)`).
 
 ### T8 — Viewer
 - Year slider, hierarchical legend, composition panel, clip/download.
@@ -258,7 +305,8 @@ ambiguity.
 | T3 | `84e786f` | 40/40 COG converted, 0 failed, 320 integrity windows with 0 differing pixels, 4.44 GB output, versioned manifest with 80 checksums; independent NEAREST verification PASS with a discriminating AVERAGE control (see section 7/T3) |
 | T4 | `5961577` | 40/40 years of exact native-resolution composition, 1504 s, peak RSS 567 MB; level-2 vs level-1 = 0 pixel difference; class 34 in 2024 = exactly 18 pixels, matching the independent verifier; valid area 1,086,229.52 km² with the D7 label at the top level of the summary JSON; glacier series 989 → 18 pixels. **Committed without lens review** — see section 12 |
 | T5 | `ba6b55f` | `tools/class_change_probe.py` plus the class-33 probe: 2,123,147 pixels (189,001.33 ha) of net water gain, of which the top two clusters are step changes externally corroborated as Caruachi (2003) and Boconó–Tucupido (1990); only 19.4 % of the gain sits in the top 10 cells, so the majority is unexplained. See section 13 |
-| T6 | this commit | `tools/spatial_units.py` (single source of truth for units and geodesic area), `tools/priority_schema.py` (D2 and D3 as mechanical invariants, study_gap disabled at weight 0.0), and `composition_stats.py` parameterized by `--unit`. Full 40-year regression: level-1 CSV byte-identical, JSON numerics identical across all 40 years, level-2 CSV differs on 1 of 1040 rows by 1e-6 ha (float64 accumulation noise, relative 3.8e-15) |
+| T6 | `9b243b0` | `tools/spatial_units.py` (single source of truth for units and geodesic area), `tools/priority_schema.py` (D2 and D3 as mechanical invariants, study_gap disabled at weight 0.0), and `composition_stats.py` parameterized by `--unit`. Full 40-year regression: level-1 CSV byte-identical, JSON numerics identical across all 40 years, level-2 CSV differs on 1 of 1040 rows by 1e-6 ha (float64 accumulation noise, relative 3.8e-15) |
+| T7 | this commit | `tools/build_tiles.py` plus the 40-year pyramid: 662,600 tiles, 4,987 MB of PNG content, ~110 min. Every year 16,565 tiles, identical path set and identical per-zoom counts across all 40 years; all 662,600 PNGs integrity-verified with 0 zero-byte and 0 malformed; palette spot-check found 0 colours outside the official table. The mid-build reboot exposed two tool gaps (run-scoped manifest, unverified tiles) and both were fixed |
 
 ## 10. Deviation record: harness routing defect
 
@@ -561,3 +609,12 @@ row versus configurable cell grid). Converging them is a real refactor, not a re
 - The composition summary JSON still does not carry per-class **areas**, only per-class
   pixel counts, so a per-class area regression cannot be detected from the JSON alone.
   The CSV is currently the only place those numbers live.
+- The tile manifest names its year list `totals.years_requested` even in `--scan-only`
+  mode, where nothing was requested and the years were discovered on disk. Rename or
+  add a mode-aware key.
+- In `--scan-only` mode `source_dir` is `null` and each entry's COG fields are `null`
+  by design, since no COG directory is needed to scan an existing pyramid. Consumers
+  must tolerate nulls there.
+- Unit inconsistency in the tile reporting: the log prints MiB and the manifest stores
+  raw bytes, so the same pyramid reads as 4,756 MB and 4,987 MB depending on the unit
+  convention. Pick one and state it.
