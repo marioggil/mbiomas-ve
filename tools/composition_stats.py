@@ -20,18 +20,25 @@ the row area is
 
     R^2 * delta_lambda_rad * (sin(phi_top) - sin(phi_bottom))
 
-with the WGS84 authalic radius R = 6371007.181 m. Each row's area is then
-divided by the raster width to give the per-pixel area for that row. The
-geotransform is read from every file (gdal GetGeoTransform) so the formula
-is never hardcoded for a single extent.
+with the WGS84 authalic radius R = 6371007.181 m. The actual computation
+lives in ``tools.spatial_units.compute_row_areas_m2`` (single source of
+truth, derived from each file's own geotransform, with an orientation
+guard that works for both north-up and south-up rasters). Each row's
+area is divided by the raster width to give the per-pixel area for that
+row. The geotransform is read from every file (gdal GetGeoTransform) so
+the formula is never hardcoded for a single extent.
 
 Pixel counts use a VECTORISED BLOCK-WIDE BINARY KEY. With 45000 rows per
 year, a Python loop over rows calling np.bincount would be prohibitively
-slow. Instead, for each row-block we build a single int32 key shaped like
-the block where each cell encodes (row_in_block * 256 + class_value); a
-single np.bincount call with minlength=block_rows * 256 reshaped to
-(block_rows, 256) gives every per-row histogram in one call. Class values
-are Byte, so 256 buckets per row are sufficient.
+slow. Instead, for each row-block we build a single int32 key shaped
+like the block where each cell encodes (row_in_block * unit_count * 256 +
+unit_index * 256 + class_value); a single np.bincount call with
+minlength=block_rows * unit_count * 256 reshaped to (block_rows,
+unit_count, 256) gives every per-row per-unit histogram in one call.
+Class values are Byte, so 256 buckets per row are sufficient. For the
+shipped ExtentUnit (unit_count=1) the key collapses to the original
+two-dimensional form, so counts are bit-identical to the pre-refactor
+output.
 
 Nodata is reported SEPARATELY from classes, not silently dropped. Nodata
 conflates "outside the mapped extent" with "not observed" and that
@@ -44,10 +51,19 @@ rather than internationally recognized borders, which includes disputed
 territory. The ``extent_label`` and ``boundary_note`` fields are written
 at the top level of the JSON so no downstream consumer can miss them.
 
+SPATIAL UNITS
+-------------
+The counting loop is parameterised by a ``SpatialUnit`` from
+``tools.spatial_units``. The shipped default is ``ExtentUnit``, which
+treats the whole raster as a single unit and reproduces today's numbers
+exactly. Hexagonal aggregation via ``H3Unit`` is scheduled for phase F3
+(decision D4); requesting ``--unit h3`` exits non-zero with an F3-bound
+message instead of silently falling back to extent.
+
 Usage:
     tools/composition_stats.py --country <c> --collection <n> \\
         --cog-dir <dir> --codebook <json> --outdir <dir> \\
-        [--row-block 256] [--years 2024 1985]
+        [--row-block 256] [--unit extent|h3] [--years 2024 1985]
 """
 
 from __future__ import annotations
@@ -74,15 +90,24 @@ gdal.UseExceptions()
 # a small cache does not cost us extra I/O.
 gdal.SetCacheMax(256 * 1024 * 1024)
 
+# tools/ is a flat scripts directory, not a Python package. Add its
+# absolute path to sys.path so we can import our siblings (spatial_units)
+# when the script is launched as `python3 tools/composition_stats.py`.
+# This stays inside the tools/ surface and never touches the repo layout.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from spatial_units import (  # noqa: E402  (after sys.path tweak)
+    AUTHALIC_RADIUS_M,
+    ExtentUnit,
+    H3Unit,
+    SpatialUnit,
+    compute_row_areas_m2,
+)
+
 
 # First 19xx/20xx year token in the filename. A file without such a token is
 # treated as a recorded failure, not a crash.
 YEAR_RE = re.compile(r"(19|20)\d{2}")
-
-# Authalic radius of the WGS84 ellipsoid in metres - the radius of a sphere
-# with the same surface area as the ellipsoid. Used so the sum of row areas
-# approximates the true surface area of the geographic grid.
-AUTHALIC_RADIUS_M = 6371007.181
 
 # Tolerance for the internal consistency checks. Total extent ==
 # sum(class areas) + nodata area should hold exactly because everything is
@@ -110,39 +135,29 @@ AREA_METHOD_DESCRIPTION = (
     "Pixel area in row j is area_m2 / RasterXSize."
 )
 
+# Single source of truth for the F3-bound error string, kept here verbatim
+# so the error path does not silently drift from ``tools/spatial_units.py``.
+F3_H3_NOT_IMPLEMENTED_MSG = (
+    "h3 aggregation is declared in tools/spatial_units.H3Unit but not "
+    "implemented in this build; hexagonal aggregation is scheduled for "
+    "phase F3 of the plataforma-cobertura-ve rollout (decision D4). "
+    "Re-run with --unit extent to keep using the committed extent-based "
+    "composition pipeline; do not request --unit h3 against this build."
+)
+
+# Unit name -> SpatialUnit factory. Mapping to callable so the CLI
+# dispatcher exits BEFORE constructing the H3Unit stub (whose __init__
+# raises loudly by contract). New spatial units register here.
+UNIT_FACTORIES: dict[str, Any] = {
+    "extent": ExtentUnit,
+    "h3": H3Unit,
+}
+
 
 def extract_year(name: str) -> int | None:
     """Return the first 19xx/20xx year token in the filename, or None."""
     m = YEAR_RE.search(name)
     return int(m.group(0)) if m else None
-
-
-def compute_row_areas_m2(
-    geotransform: tuple[float, ...],
-    width: int,
-    height: int,
-) -> np.ndarray:
-    """Return a (height,) array of geodesic row areas in m^2.
-
-    For each row j we derive the top and bottom edge latitudes from the
-    file's own geotransform (gdal GetGeoTransform), map them to radians,
-    and apply the spherical-strip formula. We order phi_top >= phi_bot so
-    sin(phi_top) - sin(phi_bot) stays positive for both north-up (negative
-    pixel height) and south-up (positive pixel height) rasters. The
-    longitude extent is RasterXSize * pixel width in radians.
-    """
-    gt = geotransform
-    j = np.arange(height, dtype=np.float64)
-    top_edge = gt[3] + j * gt[5]
-    bot_edge = top_edge + gt[5]
-    phi_top_deg = np.maximum(top_edge, bot_edge)
-    phi_bot_deg = np.minimum(top_edge, bot_edge)
-
-    delta_lambda_rad = width * gt[1] * (np.pi / 180.0)
-    sin_top = np.sin(np.deg2rad(phi_top_deg))
-    sin_bot = np.sin(np.deg2rad(phi_bot_deg))
-
-    return (AUTHALIC_RADIUS_M ** 2) * delta_lambda_rad * (sin_top - sin_bot)
 
 
 @dataclass
@@ -159,12 +174,47 @@ class YearTotals:
     height: int = 0
 
 
+def _extent_histogram_and_pixel_area(
+    arr: np.ndarray,
+    pixel_area_per_row_m2: np.ndarray,
+    yoff: int,
+    block_h: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Specialised per-block pass for ``ExtentUnit``.
+
+    Every pixel lives in unit 0 with row area = full row area, so the
+    per-row per-unit pixel area is just ``pixel_area_per_row_m2`` for
+    the rows of the block (reshaped to (block_h, 1)). The histogram
+    collapses to the original 2-D (row x class) form; the returned
+    shape (block_h, 1, 256) keeps the downstream code-uniform with the
+    general path, where the singleton unit dimension carries no
+    additional information.
+
+    Skipping the per-pixel assignment matrix keeps peak RSS in line
+    with the pre-refactor baseline; that allocation alone costs ~50 MB
+    per block at the Venezuela width of ~57500 pixels.
+    """
+    unit_pixel_area = pixel_area_per_row_m2[yoff:yoff + block_h].reshape(
+        block_h, 1,
+    )
+    row_idx_arr = (
+        np.arange(block_h, dtype=np.int32).reshape(-1, 1) * 256
+    )
+    arr_int = arr.astype(np.int32)
+    keyed = (row_idx_arr + arr_int).ravel()
+    hist2 = np.bincount(keyed, minlength=block_h * 256).reshape(
+        block_h, 256,
+    )
+    return unit_pixel_area, hist2.reshape(block_h, 1, 256)
+
+
 def process_year(
     path: Path,
     valid_pixel_ids: set[int],
     aggregator_ids: set[int],
     row_block: int,
     fallback_nodata: int | None,
+    unit: SpatialUnit,
 ) -> tuple[YearTotals, list[int], list[int]]:
     """Stream one COG at native resolution and return per-year totals.
 
@@ -172,6 +222,12 @@ def process_year(
     latter two are sorted lists of offending values for this year (empty in
     clean data). The bincount-based histogram runs at native resolution
     inside each row block, so no full-raster array is ever held in memory.
+
+    The partition is driven by ``unit``: it assigns every pixel of a row
+    block to a unit index (or the spatial_units.OUTSIDE_UNIT sentinel)
+    and supplies each unit's area in m^2 for those rows. ExtentUnit
+    reproduces the pre-refactor counts and areas exactly; H3Unit is a
+    stub that fails loudly when constructed.
     """
     ds = gdal.Open(str(path))
     if ds is None:
@@ -194,6 +250,8 @@ def process_year(
         pixel_area_per_row_m2 = area_per_row_m2 / float(width)
         total_extent_m2 = float(area_per_row_m2.sum())
 
+        unit_count = unit.unit_count
+
         class_pixels: dict[int, int] = {pid: 0 for pid in valid_pixel_ids}
         class_area_m2: dict[int, float] = {pid: 0.0 for pid in valid_pixel_ids}
         nodata_count_per_row = np.zeros(height, dtype=np.int64)
@@ -207,25 +265,84 @@ def process_year(
             if arr is None:
                 raise RuntimeError(f"ReadAsArray returned None at yoff={yoff}")
 
-            # Vectorised per-row histogram via the binary-key trick.
-            # key = row_in_block * 256 + class_value; a single np.bincount
-            # with minlength=block_h * 256 reshaped to (block_h, 256) gives
-            # every per-row count in one call. Class values are Byte so 256
-            # buckets per row are sufficient.
-            row_idx = np.arange(block_h, dtype=np.int32).reshape(-1, 1)
-            key = (row_idx * 256 + arr.astype(np.int32)).ravel()
-            hist = np.bincount(key, minlength=block_h * 256).reshape(block_h, 256)
+            # Branch on partition triviality. ExtentUnit is the whole
+            # raster as a single unit, so every pixel lives in unit 0;
+            # the general per-pixel assignment + per-row per-unit pixel
+            # count is unnecessary and would cost a ~50 MB allocation
+            # per block at the Venezuela width of ~57500 pixels. We
+            # route H3Unit and any future non-trivial partition through
+            # the general path; the H3Unit stub fails loudly on
+            # construction so a future contributor cannot land here
+            # accidentally.
+            if isinstance(unit, ExtentUnit):
+                unit_pixel_area, hist3 = _extent_histogram_and_pixel_area(
+                    arr, pixel_area_per_row_m2, yoff, block_h,
+                )
+            else:
+                # 1. Per-pixel unit assignment for this block.
+                assign = unit.assign_row_block(gt, width, yoff, block_h)
 
-            # Nodata column (when present) holds the per-row nodata count.
+                # 2. Per-row, per-unit area in m^2 for this block.
+                unit_row_areas = unit.unit_areas_m2_row_block(
+                    area_per_row_m2, yoff, block_h,
+                )
+                if unit_row_areas.shape != (block_h, unit_count):
+                    raise RuntimeError(
+                        f"unit {unit.name!r} returned unit_areas shape "
+                        f"{unit_row_areas.shape!r}, expected "
+                        f"{(block_h, unit_count)}"
+                    )
+
+                # 3. Per-row, per-unit pixel counts for this block.
+                unit_pixel_count = np.zeros(
+                    (block_h, unit_count), dtype=np.int64,
+                )
+                for u in range(unit_count):
+                    unit_pixel_count[:, u] = (assign == u).sum(axis=1)
+
+                # 4. Per-row, per-unit pixel area in m^2. Rows where
+                #    the unit has zero pixels (including OUTSIDE_UNIT
+                #    rows) keep a zero denominator; we guard against
+                #    divide-by-zero here by leaving 0 in those slots.
+                with np.errstate(divide="ignore", invalid="ignore"):
+                    unit_pixel_area = np.where(
+                        unit_pixel_count > 0,
+                        unit_row_areas / unit_pixel_count,
+                        0.0,
+                    )
+
+                # 5. Build the (row, unit, class) histogram. The base
+                #    for the row index is unit_count * 256, so a single
+                #    bincount call covers every row x unit x class in
+                #    one shot. int32 is wide enough for any plausible
+                #    unit_count (block_h=256, unit_count<=100000 keeps
+                #    the max key under 2**31).
+                stride = unit_count * 256
+                row_idx_arr = (
+                    np.arange(block_h, dtype=np.int32).reshape(-1, 1) * stride
+                )
+                unit_byte = assign.astype(np.int32) * 256
+                arr_int = arr.astype(np.int32)
+                keyed = (row_idx_arr + unit_byte + arr_int).ravel()
+                hist3 = np.bincount(
+                    keyed, minlength=block_h * unit_count * 256,
+                ).reshape(block_h, unit_count, 256)
+
+            # Nodata column (when present) holds the per-row nodata
+            # count. We sum across units because nodata is a class-level
+            # signal, not a per-unit signal in the shipped ExtentUnit;
+            # for future H3 partitioning the output JSON will need to
+            # attribute nodata per-unit and that rework is part of F3.
             if nodata_val is not None and 0 <= nodata_val < 256:
-                nodata_row = hist[:, nodata_val].astype(np.int64)
+                nodata_row = hist3[:, :, nodata_val].sum(axis=1).astype(
+                    np.int64,
+                )
                 nodata_count_per_row[yoff:yoff + block_h] = nodata_row
 
-            block_pixel_area = pixel_area_per_row_m2[yoff:yoff + block_h]
             for pid in valid_pixel_ids:
-                col = hist[:, pid].astype(np.int64)
-                class_pixels[pid] += int(col.sum())
-                class_area_m2[pid] += float(np.dot(col, block_pixel_area))
+                col_unit = hist3[:, :, pid].astype(np.int64)
+                class_pixels[pid] += int(col_unit.sum())
+                class_area_m2[pid] += float((col_unit * unit_pixel_area).sum())
 
             # Unknown / aggregator detection on non-nodata values.
             if nodata_val is None:
@@ -357,6 +474,7 @@ def write_outputs(
     codebook: dict[str, Any],
     year_totals: list[YearTotals],
     outdir: Path,
+    unit: SpatialUnit,
 ) -> None:
     """Write the two CSVs and the summary JSON after assertions pass."""
     # Build CSV rows; this also runs the consistency assertions and raises
@@ -391,8 +509,11 @@ def write_outputs(
         w1.writerow(l1_header)
         w1.writerows(level1_rows)
 
-    # Summary JSON with the D7 labelling at the top level so no consumer
-    # can miss it.
+    # Summary JSON with the D7 labelling at the top level so no
+    # consumer can miss it. The active spatial unit is recorded by
+    # name and by its self-description so downstream readers can pin
+    # the partition the numbers came from without parsing tool
+    # version history.
     summary: dict[str, Any] = {
         "extent_label": EXTENT_LABEL,
         "boundary_note": BOUNDARY_NOTE,
@@ -403,6 +524,8 @@ def write_outputs(
         "area_method": AREA_METHOD_DESCRIPTION,
         "authalic_radius_m": AUTHALIC_RADIUS_M,
         "nodata_value": codebook.get("invariants", {}).get("nodata_value"),
+        "spatial_unit": unit.name,
+        "spatial_unit_metadata": unit.describe(),
     }
     for t in year_totals:
         valid_area_m2 = t.total_extent_m2 - t.nodata_area_m2
@@ -435,10 +558,28 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--outdir", required=True, type=Path)
     parser.add_argument("--row-block", type=int, default=256)
     parser.add_argument("--years", type=int, nargs="*", default=None)
+    parser.add_argument(
+        "--unit",
+        choices=sorted(UNIT_FACTORIES.keys()),
+        default="extent",
+        help=(
+            "Spatial partition to aggregate over. 'extent' (default) "
+            "treats the whole raster as one unit and reproduces the "
+            "committed numbers exactly. 'h3' is scheduled for phase F3 "
+            "and exits non-zero against this build."
+        ),
+    )
     args = parser.parse_args(argv)
 
     if args.row_block <= 0:
         print(f"error: --row-block must be positive (got {args.row_block})", file=sys.stderr)
+        return 1
+
+    # --unit h3 must exit non-zero with an F3-bound message BEFORE any
+    # H3Unit construction (the class itself raises on __init__ as a
+    # safety net, but the dispatcher exits earlier by design).
+    if args.unit == "h3":
+        print(f"error: {F3_H3_NOT_IMPLEMENTED_MSG}", file=sys.stderr)
         return 1
 
     codebook = json.loads(args.codebook.read_text(encoding="utf-8"))
@@ -455,6 +596,14 @@ def main(argv: list[str]) -> int:
     )
 
     args.outdir.mkdir(parents=True, exist_ok=True)
+
+    # Construct the spatial unit AFTER the dispatcher short-circuit so
+    # a valid --unit value produces a usable partition.
+    unit = UNIT_FACTORIES[args.unit]()
+    if not isinstance(unit, SpatialUnit):
+        raise RuntimeError(
+            f"unit {unit!r} does not satisfy the SpatialUnit contract"
+        )
 
     inputs = sorted(args.cog_dir.glob("*.tif"))
     if not inputs:
@@ -491,7 +640,8 @@ def main(argv: list[str]) -> int:
     for i, (year, path) in enumerate(selected, start=1):
         t0 = time.monotonic()
         totals, unknown, aggregator = process_year(
-            path, valid_pixel_ids, aggregator_ids, args.row_block, fallback_nodata,
+            path, valid_pixel_ids, aggregator_ids, args.row_block,
+            fallback_nodata, unit,
         )
         elapsed = time.monotonic() - t0
         valid_area_ha = (totals.total_extent_m2 - totals.nodata_area_m2) / 10000.0
@@ -510,7 +660,7 @@ def main(argv: list[str]) -> int:
     year_totals.sort(key=lambda t: t.year)
 
     total_elapsed = time.monotonic() - overall_t0
-    write_outputs(args, codebook, year_totals, args.outdir)
+    write_outputs(args, codebook, year_totals, args.outdir, unit)
 
     # Peak RSS for this process, in MB (ru_maxrss is kilobytes on Linux).
     peak_kb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss

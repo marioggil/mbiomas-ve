@@ -188,10 +188,44 @@ ambiguity.
   attributed to a cause yet.
 - **Evidence**: section 13 below.
 
-### T6 — Reusable statistics engine (shape for F3)
-- Parameterized by spatial unit: country and collection now, H3 later.
-- H3 term for "study gap" present in the schema with weight 0 (D2).
-- **Evidence**: same numbers as T4 when unit=country; unit interface documented.
+### T6 — Reusable statistics engine (shape for F3) — **DONE**
+
+- `tools/spatial_units.py` is the single source of truth for the spatial partition and
+  for row-wise geodesic area. `compute_row_areas_m2` and `AUTHALIC_RADIUS_M` live only
+  here; `composition_stats.py` imports them instead of defining them.
+- `SpatialUnit` is the interface a future H3 implementation must satisfy: `name`,
+  `describe()`, `unit_count`, per-block pixel-to-unit assignment with an `OUTSIDE_UNIT`
+  sentinel, per-block per-unit areas, and stable `unit_ids`.
+- `ExtentUnit` reproduces the committed behaviour: one unit, the whole raster.
+- `H3Unit` is **declared but not implemented** and fails loudly, naming phase F3 and
+  decision D4. `--unit h3` exits 1 with that message and writes no files. A stub that
+  returned plausible-but-wrong numbers would be worse than no stub.
+- `tools/priority_schema.py` encodes D3 and D2 as **mechanical invariants** in
+  `__post_init__`, not as comments: weights must be finite and non-negative, term keys
+  unique, and a disabled term must carry weight 0.0. Verified by construction: five
+  violation cases (disabled with non-zero weight, negative, NaN, infinite, empty key)
+  are all rejected. The shipped schema is `change_magnitude` 0.4,
+  `transition_rarity_irreversibility` 0.4, `study_gap` **0.0 disabled**, `accessibility`
+  0.2, and the study-gap rationale names D2.
+- **Evidence, full 40-year regression** (the parent ran it, not the writer):
+  1488 s, peak RSS 623 MB, 40/40 years. The level-1 CSV is **byte-identical** to the
+  committed fixture (same SHA-256 `70a6e95f…`). The JSON matches the fixture on every
+  numeric field for all 40 years with **0 differences**, plus two new fields
+  (`spatial_unit`, `spatial_unit_metadata`) and the D7 labels preserved unchanged.
+- **One quantified exception, stated rather than hidden**: the level-2 CSV differs from
+  the fixture on exactly **1 row out of 1040**, in the last printed digit of `area_ha`
+  (265812.097677 → 265812.097678 for year 2002, pixel_id 81). That is 1e-6 ha =
+  0.01 m², a relative difference of 3.8e-15, which is float64 accumulation-order noise
+  from the refactor. Pixel counts, share values and row order are all identical, and the
+  internal assertion chain still passes at machine precision. This is evidence of
+  numerical stability, not of a defect — but it is not a clean byte-for-byte pass and
+  must not be reported as one. A future strict regression check must allow a 1e-6 ha
+  tolerance on `area_ha`.
+- **Deviation recorded**: `AUTHALIC_RADIUS_M` and a structurally similar geodesic area
+  function remain duplicated in `tools/class_change_probe.py`, which was outside this
+  task's allowed edit surfaces. The two operate on different abstractions (raster row
+  versus configurable cell grid) and are not interchangeable today. Converging them is
+  follow-up work, listed in section 14.
 
 ### T7 — Static tile pyramid
 - Per-year z0–z12 pyramid with the official palette; storage estimate first.
@@ -223,7 +257,8 @@ ambiguity.
 | T2 | `71d94c1` | `tools/build_codebook.py` emits `data/legend/venezuela-collection-3.{json,csv}`: 6 level-1 groups, 26 classes, unique pixel ids, colors taken from the PDF, 9 PDF-vs-QGIS discrepancies recorded instead of silently resolved |
 | T3 | `84e786f` | 40/40 COG converted, 0 failed, 320 integrity windows with 0 differing pixels, 4.44 GB output, versioned manifest with 80 checksums; independent NEAREST verification PASS with a discriminating AVERAGE control (see section 7/T3) |
 | T4 | `5961577` | 40/40 years of exact native-resolution composition, 1504 s, peak RSS 567 MB; level-2 vs level-1 = 0 pixel difference; class 34 in 2024 = exactly 18 pixels, matching the independent verifier; valid area 1,086,229.52 km² with the D7 label at the top level of the summary JSON; glacier series 989 → 18 pixels. **Committed without lens review** — see section 12 |
-| T5 | this commit | `tools/class_change_probe.py` plus the class-33 probe: 2,123,147 pixels (189,001.33 ha) of net water gain, of which the top two clusters are step changes externally corroborated as Caruachi (2003) and Boconó–Tucupido (1990); only 19.4 % of the gain sits in the top 10 cells, so the majority is unexplained. See section 13 |
+| T5 | `ba6b55f` | `tools/class_change_probe.py` plus the class-33 probe: 2,123,147 pixels (189,001.33 ha) of net water gain, of which the top two clusters are step changes externally corroborated as Caruachi (2003) and Boconó–Tucupido (1990); only 19.4 % of the gain sits in the top 10 cells, so the majority is unexplained. See section 13 |
+| T6 | this commit | `tools/spatial_units.py` (single source of truth for units and geodesic area), `tools/priority_schema.py` (D2 and D3 as mechanical invariants, study_gap disabled at weight 0.0), and `composition_stats.py` parameterized by `--unit`. Full 40-year regression: level-1 CSV byte-identical, JSON numerics identical across all 40 years, level-2 CSV differs on 1 of 1040 rows by 1e-6 ha (float64 accumulation noise, relative 3.8e-15) |
 
 ## 10. Deviation record: harness routing defect
 
@@ -371,6 +406,43 @@ Consequences to carry forward:
 - **Not to be re-run**: do not re-review the T4 candidate. Its files are committed; any
   further review belongs to the next candidate that touches them.
 
+### 12.1 T6 review debt
+
+**T6 was also committed without lens review**, by the same user decision as T4, after two
+provider-upstream failures on the frozen candidate:
+
+| Attempt | Lens that failed | Failure | Elapsed |
+|---|---|---|---|
+| 1 | `review-risk` | `[server_error] upstream service failed` | 340 s |
+| 2 | `review-resilience` | `[server_error] upstream service failed` | 225 s |
+
+Both returned `prepared_reviewers: 0`, `submitted_reviewers: 0`,
+`mutation_performed: false`, so nothing was contaminated and no partial lens result was
+admitted. A third attempt was offered and declined in favour of committing.
+
+Running total across the feature: the reviewer model `opencode-go/glm-5.3-flash` has now
+failed **three** separate reviewer runs with long-generation upstream errors (T4 twice,
+T6 twice — five failed runs in total counting each attempt). The common factor is the
+endpoint, not the candidate: the T5 review succeeded on that same model once, and the
+candidate sizing, memory and transcription causes were all eliminated separately. **The
+recommended fix is to switch the lens model in `~/.pi/gentle-ai/models.json` to a
+different family before the next review**, for example `opencode-go/grok-4.7` or
+`opencode-go/kimi-k3`.
+
+Consequences to carry forward:
+
+- The lineage `review-84f62fbbac67a7d9` is left **open** in state `reviewing` with zero
+  lens results, alongside T4's `review-81491992caa75a25`. No operation available to this
+  agent abandons a non-legacy lineage, so both are orphans. Neither may be resumed.
+- **Compensating evidence, which is why this debt is acceptable here**: T6's central claim
+  is that the parameterized engine reproduces the already-verified numbers, and that was
+  proven by the parent against the committed fixture over all 40 years — level-1 CSV
+  byte-identical, JSON numerics identical, level-2 CSV differing on 1 of 1040 rows by
+  1e-6 ha. What is *not* covered: resilience and readability of the refactor, the
+  `spatial_units` interface design, and the priority-schema invariants. Those are open.
+- **Not to be re-run**: do not re-review the T6 candidate. Its files are committed; any
+  further review belongs to the next candidate that touches them.
+
 ## 13. Class 33 (water) gain: what was verified and what was not
 
 T4 measured class 33 (Río, lago u océano) growing from 4,280,192 ha (1985) to
@@ -440,3 +512,52 @@ municipality names, and secondary sources for the reservoir facts. These are not
 primary engineering documents, and the coordinates were matched to the cells by eye at
 0.1° resolution. Anyone publishing the reservoir attribution should confirm it against
 the operator's or the ministry's own records.
+
+## 14. Follow-up backlog
+
+Ordered by the risk of leaving it undone.
+
+### 14.1 Open review findings (34, all non-blocking)
+
+Neither review envelope carried the body text of its findings, only the id, lens,
+location, severity and disposition. The T3 index is in section 11. The T5 review
+(lineage `review-905ea42b8047deff`, approved, authority burned) added 17 more:
+
+WARNING level, all in `tools/class_change_probe.py`:
+
+| Id | Lens | Location | Note |
+|---|---|---|---|
+| `R1-pixelid-uint8-wrap` | risk | :276-277 | uint8 wrap risk in pixel-id handling — **the most substantive open item, missed by hand review** |
+| `R1-profile-union-bbox-rss` | risk | :494 | union bounding box memory |
+| `R4-uint8-wrap` | resilience | :279 | same uint8 wrap risk |
+| `R4-union-bbox-oom` | resilience | :460-497 | union bounding box memory |
+| `R2-1` | readability | :470-590 | |
+| `R3-1` | reliability | :478-497 | |
+| `R3-2` | reliability | :279-280 | |
+| `R3-3` | reliability | :301-303 | |
+
+Two of these independently reproduce the union-bbox memory fragility that was found by
+hand and documented in section 13, which is useful corroboration. The uint8 wrap risk
+was **not** found by hand and is the one worth fixing first.
+
+SUGGESTION level: `R2-2` (:600-632), `R2-3` (:370-376), `R2-4` (:586-589), `R2-5`
+(:545-550), `R2-6` (:927), `R3-4` (:558-560), `R3-5` (:714-722), `R3-6` (:529-571),
+`R4-no-checkpoint` (:730-732).
+
+### 14.2 Geodesic area duplicated in the probe
+
+`AUTHALIC_RADIUS_M` and a cell-grid geodesic area function remain in
+`tools/class_change_probe.py` after T6 established `tools/spatial_units.py` as the
+single source of truth. The T6 writer could not fix it because that file was outside
+its allowed edit surfaces, and the two functions are not interchangeable today (raster
+row versus configurable cell grid). Converging them is a real refactor, not a rename.
+
+### 14.3 Smaller items
+
+- `tools/class_change_probe.py` carries mode `100755` while the other tools are `644`.
+  Inconsistent, harmless, worth normalising.
+- The composition summary JSON keys years at the top level (`"1985": {…}`) alongside
+  metadata keys, mixing namespaces for consumers. Nest under `per_year`.
+- The composition summary JSON still does not carry per-class **areas**, only per-class
+  pixel counts, so a per-class area regression cannot be detected from the JSON alone.
+  The CSV is currently the only place those numbers live.
