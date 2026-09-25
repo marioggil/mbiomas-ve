@@ -564,6 +564,8 @@ result is synced. Serving needs no system GDAL.
 | O3 | H3 term weights and "interesting zone" thresholds | F3 start |
 | ~~O4~~ | ~~Host-side subagent launch defect (see section 10)~~ **RESOLVED** by restarting Pi; kept struck through so the record is not silently renumbered. The underlying finding stays documented in 10.1 in case it recurs | Nothing |
 
+| O5 | Country name hardcoded in `run.sh:57`, which overrides the multi-country path expression on line 53. A D5 violation, found by the T9 review and labelled only as a readability WARNING. Detail and the reason it was not fixed in place: section 14.4 | Multi-country correctness of `run.sh`. Deferred by explicit user decision at the close of T9 |
+
 Two tool-surface gaps were found later and are recorded in section 12.2: no facade operation
 exists for the provider's `external.select_base_ref` or `review.capture-validation` selections.
 
@@ -949,4 +951,35 @@ row versus configurable cell grid). Converging them is a real refactor, not a re
   GDAL, to avoid a GDAL dependency in the service. It was tested against the real file only, not
   against a range of malformed or exotic COG layouts. If it ever misparses, `/api/meta` fails
   loudly rather than silently centring the map in the wrong place, but the parser deserves
-  hardening or replacement with `gdalinfo -json` when T9 packages the service.
+  hardening or replacement with `gdalinfo -json` when T9 packages the service. T9 did not touch it.
+
+### 14.4 Country hardcoded in `run.sh`, overriding the multi-country expression (D5)
+
+The T9 review reported `R2-run-sh-duplicate-codebook-pdf-path` — readability, `run.sh:55-61`,
+WARNING, disposition informational. The label understates it.
+
+```bash
+CODEBOOK_PDF="$LEGEND_DIR/source/MB-${COUNTRY^}-Col-${COLLECTION}-Legend-Code.pdf"   # line 53
+# ...a comment explaining that ${COUNTRY^} yields "Venezuela" for "venezuela"...
+CODEBOOK_PDF="$LEGEND_DIR/source/MB-Venezuela-Col-${COLLECTION}-Legend-Code.pdf"    # line 57
+```
+
+Line 57 reassigns the variable line 53 has just computed from `COUNTRY`, so the expansion the
+comment defends is dead code. For every country other than Venezuela the codebook PDF path is
+wrong, and this is exactly the hardcoding D5 forbids: no country name literal inside a code path.
+
+The fix is to delete line 57, keep the expression on line 53, and move the comment directly
+beneath it.
+
+**Why it is recorded instead of fixed, which is a decision and not an oversight.** T9 was reviewed
+and approved, `7aca576` was committed from exactly the bytes that review covered, and the exact
+acknowledgement burned the authority. Editing afterwards would have made the commit differ from the
+approved candidate and silently invalidated the receipt. The user chose to leave it noted. Whoever
+picks it up should treat it as its own work unit with its own review pass, never as a footnote to
+T9.
+
+**The general lesson, which is worth more than the fix.** Nothing observed this defect before the
+review: the three T9 verifications that ran — `check`, `serve` and the container — all ran with
+`COUNTRY=venezuela`, and that is precisely the value that makes the wrong line produce the right
+path. A default-valued variable hides its own hardcoded override, so any check of a multi-country
+code path has to use a non-default country value, or it is only re-testing the default.
