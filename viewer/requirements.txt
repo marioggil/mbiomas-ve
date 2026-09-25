@@ -1,14 +1,40 @@
-# Viewer service runtime dependencies.
+# Viewer service runtime dependencies — exact freeze of the working .venv.
 #
-# Pinned to the versions installed in this repository's .venv. The service
-# does NOT pull in GDAL, rasterio or Pillow: the source COG extent is parsed
-# from the BigTIFF header directly, and PNG tiles are streamed from disk.
+# Regenerate with:
+#   uv pip freeze --python .venv/bin/python | sort
 #
-fastapi==0.141.1
-uvicorn==0.53.0
-pydantic==2.13.5
-starlette==1.7.0
-h11==0.16.0
+# rasterio is REQUIRED, not optional. The clip endpoint imports it lazily to read
+# the drawn window from the COG, so without it the service starts and serves the
+# map, the legend and the composition panel normally, and then fails on the first
+# rectangle a user draws. It was missing from this file while the installed venv
+# happened to have it, which is exactly the kind of gap that only surfaces on a
+# clean environment or in a fresh image.
+#
+# rasterio's manylinux wheels bundle their own GDAL, so the image needs no system
+# GDAL packages. The COG extent for /api/meta is still parsed from the BigTIFF
+# header by hand, which keeps GDAL off the import path and startup fast.
+#
+# httpx and httpcore are test tooling rather than runtime imports; they are kept
+# here so that a clean install reproduces this environment exactly.
+
+affine==3.0.1
+annotated-doc==0.0.5
+annotated-types==0.8.0
 anyio==4.15.1
+attrs==26.1.0
+certifi==2026.7.22
 click==8.5.0
-typing_extensions==4.16.0
+fastapi==0.141.1
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.20
+numpy==2.5.3
+pydantic==2.13.5
+pydantic-core==2.46.5
+pyparsing==3.3.3
+rasterio==1.5.1
+starlette==1.7.0
+typing-extensions==4.16.0
+typing-inspection==0.4.4
+uvicorn==0.53.0

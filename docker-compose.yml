@@ -1,0 +1,86 @@
+# Dokploy deployment for the MapBiomas Venezuela viewer.
+#
+# In Dokploy: create a service of type Compose, point it at this repository, and let
+# it read this file. Then set the domain in the Domains tab, choosing service
+# `viewer` and port 8000. Dokploy injects the Traefik routing from there, which is
+# the recommended path since v0.7.0; the manual label alternative is at the bottom
+# of this file, commented out.
+#
+# Ports are deliberately NOT published. Dokploy's Traefik reaches the container over
+# dokploy-network, and publishing 8000 on the host would collide with anything else
+# on the same server.
+#
+# THE DATA IS NOT IN THE IMAGE. data/raw, data/cog and data/tiles are gitignored and
+# total about 13 GB. This compose mounts only the two big subdirectories, because
+# mounting over /app/data would shadow the tracked legend, composition outputs and
+# manifests that the image already carries. Prerequisites on the server, in
+# Dokploy's files directory for this service:
+#
+#   /etc/dokploy/compose/<app>/files/data/cog      <- the 40 COGs, ~4.4 GB
+#   /etc/dokploy/compose/<app>/files/data/tiles    <- the tile pyramid, ~6.1 GB
+#
+# Fill them by syncing an existing data tree, which is far faster than recomputing:
+#
+#   rsync -a --info=progress2 data/cog/   server:/etc/dokploy/compose/<app>/files/data/cog/
+#   rsync -a --info=progress2 data/tiles/ server:/etc/dokploy/compose/<app>/files/data/tiles/
+#
+# Regenerating inside this container is not possible: the pipeline tools import
+# `from osgeo import gdal`, which needs the GDAL Python bindings that rasterio's
+# wheels do not provide. See the README.
+
+services:
+  viewer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+    # Reached by Traefik over dokploy-network; not published on the host.
+    expose:
+      - "8000"
+
+    # Dokploy writes the variables set in its UI to a .env beside this file, and
+    # Compose reads that file automatically for ${VAR:-default} interpolation, so no
+    # env_file directive is needed and nothing breaks when .env is absent.
+    environment:
+      MAPBIOMAS_COUNTRY: ${MAPBIOMAS_COUNTRY:-venezuela}
+      MAPBIOMAS_COLLECTION: ${MAPBIOMAS_COLLECTION:-3}
+      MAPBIOMAS_REPO_ROOT: /app
+
+    volumes:
+      - ../files/data/cog:/app/data/cog:ro
+      - ../files/data/tiles:/app/data/tiles:ro
+
+    networks:
+      - dokploy-network
+
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - |
+          import sys, urllib.request
+          try:
+              ok = urllib.request.urlopen("http://127.0.0.1:8000/api/health", timeout=5).status == 200
+          except Exception:
+              ok = False
+          sys.exit(0 if ok else 1)
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+networks:
+  dokploy-network:
+    external: true
+
+# Manual domain configuration alternative, only if you prefer labels over the
+# Domains tab. Traefik must already be listening on dokploy-network.
+#
+#     labels:
+#       - traefik.enable=true
+#       - traefik.http.routers.mambiomas-viewer.rule=Host(`viewer.example.org`)
+#       - traefik.http.routers.mambiomas-viewer.entrypoints=websecure
+#       - traefik.http.routers.mambiomas-viewer.tls.certresolver=letsencrypt
+#       - traefik.http.services.mambiomas-viewer.loadbalancer.server.port=8000

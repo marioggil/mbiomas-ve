@@ -491,7 +491,66 @@ a click with no movement fires **no** request and shows "Rectángulo demasiado p
 draw mode restores panning. Guards verified: 400 for an inverted, outside or malformed bbox, 404 for
 an unknown year, 413 for an oversized window with a message naming the bound.
 
-### T9 — Local packaging and documentation
+### T9 — Local packaging and documentation — **DONE**
+
+- `run.sh` is the single entrypoint: `check` (what is present, what is missing and the exact
+  command that produces it, separating what is needed to **serve** from what is needed only to
+  **rebuild**), `pipeline` (the four stages in order, skipping the ones whose outputs exist, with
+  `--force` and `--dry-run`), and `serve` (builds the environment, then starts uvicorn).
+- `README.md` covers what the platform is, the mandatory labelling, and prominently that the data
+  is **not** in the repository, plus the quickstart, the measured stage costs, what the viewer
+  shows, a Dokploy deployment section, the behaviours that look like bugs but are not,
+  multi-country, measured performance, the unresolved licence, and a limitations section.
+- `Dockerfile` builds a 108 MB serve-only image, and `docker-compose.yml` is ready for Dokploy:
+  external `dokploy-network`, no published ports because Traefik reaches the container over that
+  network, the domain configured in the Domains tab, and only the two large data subdirectories
+  mounted so the tracked metadata inside the image is not shadowed.
+
+**Evidence, and this is the strongest part of the task, because the packaging work found five real
+defects that nothing else had found.**
+
+A real clone, reproduced with `git archive HEAD` plus the four new files, which is exactly what a
+clone would contain: `check` exits 1 with a precise list (COG directory, tiles pyramid and viewer
+dependencies missing as serving prerequisites, raw rasters as rebuild-only) and prints the symlink
+recipe. With the data symlinked it reports only the missing environment. With `serve` run from
+nothing, the clone **created its own environment, installed the 21 pinned packages and started in
+10 s**, serving `/api/health`, `/api/meta`, a tile and the clip endpoint, with the clip returning
+**826,962.8 ha over 11 classes, identical to the locally verified value**. `check` then exits 0.
+`pipeline --dry-run` prints the commands for the stages whose inputs are missing and exits 0, and
+`pipeline` skips all four stages in 1 s. The image builds in 40 s and, run with the compose's exact
+volume layout, serves the same four endpoints with the same clip numbers.
+
+**The five defects the packaging exposed:**
+
+1. **`run.sh check` started a server and would have launched the whole pipeline.** Two log lines
+   used backticks inside double-quoted strings, and in bash those are command substitution, so the
+   message text `./run.sh serve` and `./run.sh pipeline` were executed. Observed as a hang killed
+   with exit 137.
+2. **`run.sh serve` could never work on a fresh clone.** It ran the prerequisites check, which
+   requires the Python environment, *before* creating it, so every clean clone failed on the very
+   thing the command was about to build. Reordered: build the environment, then verify.
+3. **`set -euo pipefail` plus `n=$(find "$dir" ... | wc -l)` aborted the pipeline on a fresh
+   clone.** When the directory does not exist `find` exits non-zero, `pipefail` fails the whole
+   assignment and `set -e` kills the script, in the exact scenario the packaging exists for.
+   Replaced with one `count_files` helper, which removes the class of bug rather than the two
+   instances that happened to be reachable.
+4. **`viewer/requirements.txt` omitted rasterio while claiming the opposite.** The file stated that
+   the service pulls in no GDAL, rasterio or Pillow, but the clip endpoint imports rasterio
+   lazily. The installed environment happened to have it, so everything worked locally while a
+   clean install would serve the map, the legend and the composition panel normally and then fail
+   on the first drawn rectangle. Now pinned, with the reason recorded.
+5. **The image built fine and its clip endpoint failed at runtime.** rasterio's wheel links
+   dynamically against `libexpat`, absent from `python:3.13-slim`, so the container returned 503
+   with `libexpat.so.1: cannot open shared object file`. Found **only because the container was run
+   rather than merely built**, which is why the packaging test runs it.
+
+**A limitation this work established rather than assumed**: the container serves but cannot
+rebuild, because every pipeline tool imports `from osgeo import gdal` and rasterio's wheels do not
+provide the GDAL Python bindings. Regeneration therefore runs where GDAL is installed and the
+result is synced. Serving needs no system GDAL.
+
+#### Original task statement (kept for the record)
+
 - Reproducible entrypoint (script/container) + README.
 - License/attribution section left as an explicit **unresolved** placeholder.
 - **Evidence**: clean-clone-to-running instructions executed once.
@@ -520,7 +579,10 @@ exists for the provider's `external.select_base_ref` or `review.capture-validati
 | T6 | `9b243b0` | `tools/spatial_units.py` (single source of truth for units and geodesic area), `tools/priority_schema.py` (D2 and D3 as mechanical invariants, study_gap disabled at weight 0.0), and `composition_stats.py` parameterized by `--unit`. Full 40-year regression: level-1 CSV byte-identical, JSON numerics identical across all 40 years, level-2 CSV differs on 1 of 1040 rows by 1e-6 ha (float64 accumulation noise, relative 3.8e-15) |
 | T7 | `9672341` | `tools/build_tiles.py` plus the 40-year pyramid: 662,600 tiles, 4,987 MB of PNG content, ~110 min. Every year 16,565 tiles, identical path set and identical per-zoom counts across all 40 years; all 662,600 PNGs integrity-verified with 0 zero-byte and 0 malformed; palette spot-check found 0 colours outside the official table. The mid-build reboot exposed two tool gaps (run-scoped manifest, unverified tiles) and both were fixed |
 | T8a | `5d42cff` | `tools/serve_viewer.py` plus `viewer/` with vendored MapLibre GL 5.6.2. Verified in a real browser: zero console errors, map paints, legend 6 groups and 26 classes, D7 label always visible, slider switches years with 200s and a visibly different pattern between 2024 and 1985, and a burst of rapid slider moves coalesces with zero wasted tile requests. One real `AbortError` found in the browser and fixed before commit. The native review then found a CRITICAL, deterministic, candidate-caused defect — the manifest re-read twice per tile — verified at exactly 400 calls per 200 tiles, corrected in 23 lines, and measured after the fix at 0 calls and ~440-460 tiles/s. Committed **without the provider's targeted validation**, which could not be submitted |
-| T8b | this commit | `GET /api/composition/series` and `/api/composition/year/{year}` serving the committed CSV values verbatim, parsed once at import (counters 1/1 after 50 requests), with an import-time consistency check proven to fire on malformed fixtures; `viewer/panel.js` with a hand-rolled SVG stacked area chart and the level-2 year breakdown, no new dependency. Figures verified identical to the committed CSVs on four independent values including a live check after moving the slider. Two layout defects found in the browser and fixed by measurement: the map collapsed to 0 x 32 px, then the panel trapped 2692 px of content in a 360 px box. Both viewports re-measured after the fixes: map 400 px at 1280x800 and 285 px at 1042x569, canvas matching its container, page scrolls. Reviewed at medium risk with one lens, which found a CRITICAL dead-code DOM id mismatch, corrected in 2 lines. Committed **without the provider's targeted validation**, refused twice on two lineages |
+| T8b | `4588fa7` | `GET /api/composition/series` and `/api/composition/year/{year}` serving the committed CSV values verbatim, parsed once at import (counters 1/1 after 50 requests), with an import-time consistency check proven to fire on malformed fixtures; `viewer/panel.js` with a hand-rolled SVG stacked area chart and the level-2 year breakdown, no new dependency. Figures verified identical to the committed CSVs on four independent values including a live check after moving the slider. Two layout defects found in the browser and fixed by measurement: the map collapsed to 0 x 32 px, then the panel trapped 2692 px of content in a 360 px box. Both viewports re-measured after the fixes: map 400 px at 1280x800 and 285 px at 1042x569, canvas matching its container, page scrolls. Reviewed at medium risk with one lens, which found a CRITICAL dead-code DOM id mismatch, corrected in 2 lines. Committed **without the provider's targeted validation**, refused twice on two lineages |
+
+| T8c | `9b90445` | `GET /api/clip-stats`, reading only the drawn window at native resolution and importing the geodesic area from `tools/spatial_units.py`. Acceptance test: a clip of the full extent reproduces the published composition, worst difference 2.66e-7 ha on level 1 against a 108.6 million ha total, a relative error of ~2.7e-15. Latency 10 / 34 / 246 ms for ~15x15, ~62x62 and ~177x177 km. Three defects found and fixed, two of them in a real browser: dragging panned the map because `dragPan` was never disabled, so the rectangle collapsed to a point; the degenerate guard could never fire because it compared floats with `<= 0`; and the clip's share denominator was mislabelled. An unreachable oversized-window bound was also corrected. Reviewed and approved with no findings |
+| T9 | this commit | `run.sh`, `README.md`, `Dockerfile` and `docker-compose.yml` for Dokploy. Verified with a real clone: `check` fails precisely and prints the symlink recipe, `serve` builds its own environment from nothing and starts in 10 s, and health, meta, tile and clip all serve with clip numbers identical to local. The image builds in 40 s and serves the same four endpoints under the compose's volume layout. **The packaging work itself found five real defects**, described in the T9 section: backticks in log strings executing `serve` and `pipeline`; `serve` checking for the environment before creating it; a `find`-under-`pipefail` landmine aborting the pipeline on a fresh clone; rasterio missing from `requirements.txt` while the file claimed it was absent; and `libexpat` missing from the image, found only by running the container |
 
 ## 10. Deviation record: harness routing defect
 
