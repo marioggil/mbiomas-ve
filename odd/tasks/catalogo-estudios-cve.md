@@ -170,12 +170,39 @@ Each task closes with one work-unit commit and observed evidence.
   comma-separated, and not valid JSON in every row, so parsing it would invent structure that is
   not there.
 
-### T2 — Catalog contract tests
-- `tests/test_study_catalog_contract.py` in the established style: stdlib `unittest`, drives the
-  real classification functions, and carries discriminating controls that pin each reason with
-  `assertRaisesRegex` where an assertion is involved.
-- The lesson from T10 is applied up front: **every check gets a control that proves it can fire**.
-- **Evidence**: test run output, with the controls named.
+### T2 — Catalog contract tests — **DONE**
+- `tests/test_study_catalog_contract.py`: **140 tests in 18 classes**, stdlib `unittest` only, and it
+  runs on a bare interpreter because T2 also made the builder's heavy imports lazy (below). It
+  covers the pure logic (`slugify`, `make_study_id`, `classify`, `display_class_for`,
+  `exclusion_reason_for`, `check_n_autores`, both JSON column parsers, every reachable
+  `validate_rows` failure, `build_study`, `build_catalog`, `_csv_value`) plus an integration anchor
+  that asserts the **committed** artifact's display contract, so a regenerated catalog that breaks
+  the contract fails a test instead of reaching the viewer.
+- **Every check carries a control that proves it can fire.** The controls are pinned with
+  `assertRaisesRegex`: the file contains **0 bare `assertRaises`**, 48 `assertRaisesRegex` sites, and
+  each of the 27 contract branches has its own mutation control. The T10 lesson is applied up front
+  rather than rediscovered.
+- **Enabling change in the builder: the rebuild-only imports are now lazy.** The module previously
+  did `raise SystemExit(1)` at import time when `pyarrow` or `osgeo` was missing, which killed the
+  test runner during import and made `slugify` or `classify` unimportable. They now load inside
+  `read_rows` and `cog_extent` and raise `StudyCatalogError` with the **identical wording**, and the
+  CLI still prints that message to stderr and exits 1. A library module must not decide to exit.
+- **Evidence**: `Ran 162 tests ... OK` (140 new plus the 22 pre-existing) in 0.142 s, with the lazy
+  import proven on both the system interpreter and the repository `.venv`, which has neither
+  dependency. The refactor is behaviour-preserving on real output: regenerating with the new code
+  differs from the committed artifact **only** in `generated_utc`, and the CSV is byte-identical
+  (`a8955935…` on both sides).
+- **The controls are shown able to fail, by mutation**: forcing `display_class_for` to always return
+  `placeable` produces 13 failures, `slugify` returning its input 7 failures plus 16 errors, ignoring
+  the shared coordinate 4, disabling the `n_autores` check 3, and joining `_csv_value` strings 2.
+  A green suite that has never been shown to go red is not evidence, and this one was.
+- **A wrong premise of the parent, corrected by the writer**: the system `python3` *does* have GDAL;
+  only `pyarrow` is missing. The bare-interpreter proof therefore also runs on the repository
+  `.venv`, which has neither, and the GDAL-absent path is exercised by simulating the missing module
+  rather than by relying on an interpreter that lacks it.
+- **Coverage gaps, stated rather than implied**: `load_labelling` and `write_outputs` have no
+  dedicated tests. `load_labelling` is patched in the CLI tests and `write_outputs` is exercised only
+  indirectly, through the byte-identity rebuild.
 
 ### T3 — API
 - `GET /api/studies/catalog` returns the catalog, the per-class counts and the exclusion reasons.
