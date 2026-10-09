@@ -165,12 +165,20 @@ and recorded. The intent is to state them here once they are confirmed.
 
 ## Limitations a reader should know
 
-- **Three authored files have never been through lens review**: `tools/spatial_units.py` (the
-  single source of truth for the geodesic area), `tools/priority_schema.py` (the weighted-score
-  schema) and `tools/composition_stats.py`. The rest of the pipeline and the whole viewer have
-  been reviewed, and several real defects were found and fixed that way. Two provider validation
-  steps could not be executed either, because the review facade does not expose them. Do not
-  assume the code is fully reviewed.
+- **Review coverage is partial, and the gaps are named.** `tools/spatial_units.py` (the geodesic
+  area source of truth) and `tools/priority_schema.py` (the weighted-score schema) **are** lens
+  reviewed, approved with no blocking findings. `tools/composition_stats.py` is reviewed for its
+  parameterisation refactor and for its schema-version-2 change; the T4-era lines that neither
+  commit touched were never reviewed, because reviewing the T4 commit would have meant a 4525-line
+  candidate that is 85 % generated CSV and JSON. The schema change itself escalated one review
+  with a CRITICAL finding of unknown causality — the missing assertion anchoring the v2 shape —
+  which is now closed by `tests/test_composition_summary_schema.py`. Two provider validation steps
+  (the targeted validator offered after a correction) still could not be executed, because the
+  review facade does not expose `review.capture-validation`. **Do not assume the code is fully
+  reviewed.**
+- The schema anchor test runs with the **system** interpreter, not the pinned `.venv`, because
+  `tools/composition_stats.py` imports `from osgeo import gdal` at module level and the `.venv`
+  carries no GDAL: `python3 -m unittest discover -s tests -v`. It reads no raster.
 - The composition summary JSON carries per-class pixel counts and presence but not per-class
   **areas**; those live in the CSV.
 - Class 33 (water) grows 4.42 % over the series. Two step changes are externally corroborated as

@@ -555,6 +555,47 @@ result is synced. Serving needs no system GDAL.
 - License/attribution section left as an explicit **unresolved** placeholder.
 - **Evidence**: clean-clone-to-running instructions executed once.
 
+### T10 — Anchor the composition-summary schema — **DONE**
+
+Raised by the `a48cb6c` review, which escalated with `R3-missing-coverage-v2-shape` (CRITICAL,
+causality unknown): the v2 shape change recorded as resolved in 14.3 had no assertion anchoring
+it, so flattening the years back to the top level, or dropping `schema_version`, would satisfy
+every existing check.
+
+- `tests/test_composition_summary_schema.py`, **stdlib `unittest` only**. The repository has no
+test suite and no pytest, and adding a test dependency to close a coverage finding would trade one
+gap for another. It runs under the **system** interpreter, because `tools/composition_stats.py`
+imports `from osgeo import gdal` at module level and the pinned `.venv` has no GDAL.
+- The test **drives the real writer** (`write_outputs`) with synthetic `YearTotals`, a minimal
+  codebook, an `ExtentUnit` and a temporary output directory. It reads no raster and modifies no
+  production code, so it adds no unreviewed production surface.
+- Assertions: `schema_version == 2`; every `per_year` key is a four-digit year string and the
+  `per_year` key set equals the reported `years` list; **no year key survives at the top level**;
+  the per-year payload keeps its v1 field set; and `per_year` is an object, not a list.
+- **Discriminating control, not optional** (the T3 lesson): the test includes cases that fail on a
+  deliberately flattened or dropped-version summary, so it proves it can separate v2 from v1
+  instead of merely passing over the current output.
+- **Evidence**. 22 tests, all passing, in 0.002 s: `python3 -m unittest discover -s tests -v`
+  reports `Ran 22 tests` then `OK`. Seven assert the contract against output produced by the real
+  `write_outputs`; fifteen are controls, and each one pins the specific assertion it exercises with
+  `assertRaisesRegex` rather than a bare `assertRaises`.
+- **The first version of this test was wrong, and building the control is what caught it.** The
+  initial control set used bare `assertRaises`, and its "flattened v1 summary" case was rejected by
+  the missing-version check long before reaching the year-leak check. So the assertion this file
+  exists for — that no year key survives at the top level — was never exercised: the suite was
+  green and the regression was unguarded. Rewritten with `assertRaisesRegex`, the leak check now has
+  two dedicated controls, one of them a summary valid in every other respect so that nothing else
+  can reject it. This is the T3 lesson repeating itself: a check that has not been shown able to
+  fail is not a check.
+- **Verified against the real committed artifact, not only the synthetic fixture.** The committed
+  `composition-summary-venezuela-collection-3.json` (40 years, `schema_version` 2, zero top-level
+  year keys) satisfies the contract, and a copy of that same real summary with the years duplicated
+  at the top level **and `schema_version` left intact** is rejected with
+  `year keys leaked to the top level: ['1985', '1986', '1987', ...]`. That is the regression the
+  finding named, demonstrated on the artifact that ships rather than on a toy.
+- The test is written by the parent, not delegated: the writer route failed twice at launch and no
+  native `Agent` fallback exists in this session. The deviation is recorded in 10.4.
+
 ## 8. Open items (blocking, not yet resolved)
 
 | # | Item | Blocks |
@@ -566,8 +607,9 @@ result is synced. Serving needs no system GDAL.
 
 | O5 | Country name hardcoded in `run.sh:57`, which overrides the multi-country path expression on line 53. A D5 violation, found by the T9 review and labelled only as a readability WARNING. Detail and the reason it was not fixed in place: section 14.4 | Multi-country correctness of `run.sh`. Deferred by explicit user decision at the close of T9 |
 
-Two tool-surface gaps were found later and are recorded in section 12.2: no facade operation
-exists for the provider's `external.select_base_ref` or `review.capture-validation` selections.
+The `external.select_base_ref` route recorded as a tool-surface gap in section 12.2 turned out not
+to be a gap: the attempt was malformed and the route works (section 12.3). One genuine facade gap
+remains, `review.capture-validation`, which is what blocks the T8a and T8b targeted validations.
 
 ## 9. Commit log (evidence)
 
@@ -585,6 +627,7 @@ exists for the provider's `external.select_base_ref` or `review.capture-validati
 
 | T8c | `9b90445` | `GET /api/clip-stats`, reading only the drawn window at native resolution and importing the geodesic area from `tools/spatial_units.py`. Acceptance test: a clip of the full extent reproduces the published composition, worst difference 2.66e-7 ha on level 1 against a 108.6 million ha total, a relative error of ~2.7e-15. Latency 10 / 34 / 246 ms for ~15x15, ~62x62 and ~177x177 km. Three defects found and fixed, two of them in a real browser: dragging panned the map because `dragPan` was never disabled, so the rectangle collapsed to a point; the degenerate guard could never fire because it compared floats with `<= 0`; and the clip's share denominator was mislabelled. An unreachable oversized-window bound was also corrected. Reviewed and approved with no findings |
 | T9 | this commit | `run.sh`, `README.md`, `Dockerfile` and `docker-compose.yml` for Dokploy. Verified with a real clone: `check` fails precisely and prints the symlink recipe, `serve` builds its own environment from nothing and starts in 10 s, and health, meta, tile and clip all serve with clip numbers identical to local. The image builds in 40 s and serves the same four endpoints under the compose's volume layout. **The packaging work itself found five real defects**, described in the T9 section: backticks in log strings executing `serve` and `pipeline`; `serve` checking for the environment before creating it; a `find`-under-`pipefail` landmine aborting the pipeline on a fresh clone; rasterio missing from `requirements.txt` while the file claimed it was absent; and `libexpat` missing from the image, found only by running the container |
+| T10 | this commit | `tests/test_composition_summary_schema.py`, closing `R3-missing-coverage-v2-shape` from the `a48cb6c` escalation, plus the section 12.3 record and the README correction. Evidence: 22 tests pass in 0.002 s under the system interpreter; the checker accepts the real committed 40-year summary and rejects a copy of it with the years duplicated at the top level while `schema_version` stays intact; the first version of the suite was green while leaving that very assertion unexercised, and the control is what caught it. This commit also records the T6 review payment (lineage `review-42afa5987aa5f681`, approved, authority burned) and the corrected base-ref route |
 
 ## 10. Deviation record: harness routing defect
 
@@ -664,6 +707,30 @@ T3 closed with the delegation route working. Nothing was broken and no data was
 harmed while blocked: T1 and T2 were already committed and the raw rasters were
 untouched throughout.
 
+**It recurred on 2026-10-08**, twice in a row. Two `gentle-ai-worker` launches for the T10 test
+file both returned `failed` with **one turn, zero tool calls** and `assistant reported an error`,
+so the fault is in the child's first model call or in the launch path rather than in the task
+description. A malformed delegation is ruled out: the host validates the
+`## Allowed edit surfaces` block before launching, and the first attempt was rejected for exactly
+that reason and relaunched in the accepted form. A Pi restart is again the remedy this record
+points to. The workaround actually used, and the deviation it represents, is in 10.4.
+
+### 10.4 The parent wrote the T10 test inline, and that is a recorded deviation
+
+The routing ladder says a new code file is delegated. With the writer route failing twice at launch
+(10.1) and no native `Agent` fallback available in this session, the parent wrote
+`tests/test_composition_summary_schema.py` directly rather than leaving the work undone. The host's
+own multi-file write guard **accepted** it, so the fallback was permitted rather than evaded: no
+shell heredoc, no redirection, the sanctioned file-writing tool, and the guard's refusal would have
+been reported instead of routed around.
+
+The deviation is recorded because the ladder exists for a reason. In this case the parent had
+already paid the context cost the ladder protects against: the exact `write_outputs` signature, the
+codebook keys the writer reads, and the pre-write assertions the synthetic input must satisfy were
+all derived while probing the failure, and the contract was then verified empirically with a real
+call before a line was written. That is a fallback of last resort, not a shortcut, and it should not
+be read as licence to write code inline next time the writer is healthy.
+
 ## 11. Review findings backlog
 
 The T3 review (lineage `review-d0e8dcb9c0cad2ba`) closed **approved** with 17 findings,
@@ -732,7 +799,7 @@ Consequences to carry forward:
 - **Not to be re-run**: do not re-review the T4 candidate. Its files are committed; any
   further review belongs to the next candidate that touches them.
 
-### 12.1 T6 review debt
+### 12.1 T6 review debt — **PAID 2026-10-08, see section 12.3**
 
 **T6 was also committed without lens review**, by the same user decision as T4, after two
 provider-upstream failures on the frozen candidate:
@@ -808,10 +875,81 @@ unversioned change was made along the way, to `.git/info/exclude`: `.playwright-
 checkout of an older commit carries an older `.gitignore` that does not yet ignore them. That
 is the documented way to keep tool output out of the review inventory at any revision.
 
-**Consequence:** the T4 and T6 debt stays as recorded in sections 12 and 12.1. It is not
-payable with the available tool surface, and the reason is specific and evidenced rather than
-a matter of effort. The unreviewed authored files remain `tools/spatial_units.py`,
-`tools/priority_schema.py` and `tools/composition_stats.py`.
+**Consequence, as far as it was correct:** the T4 debt stays as recorded in section 12, and the
+part of the T6 debt that the correct route did not reach also stays. The conclusion that the route
+itself is unusable was **wrong**; see section 12.3, which corrects this paragraph and records the
+T6 payment.
+
+### 12.3 The debt was payable: section 12.2's conclusion was wrong
+
+The route was retried on 2026-10-08 with the currently documented form and it works. Section 12.2
+concluded "not usable with this facade" from a **single malformed attempt**, and that conclusion
+was propagated into the README as a limitation. It is corrected here rather than left standing.
+
+**What was malformed about the 12.2 attempt.** It sent
+`{"baseRef":"ba6b55f","committedOnly":true}`. Two defects: `mode` was missing, and the `baseRef`
+was an **abbreviated** commit id, which the facade rejects (it requires `HEAD`, a full 40- or
+64-character commit id, or a ref name). With the correct form the
+`Judgment Day graph-v1 START requires lineageId` error disappears entirely.
+
+**The form that works**, recorded verbatim because this cost the project a wrong conclusion:
+
+1. `git checkout --detach <tip commit>`, so the workspace is the candidate tip;
+2. `inspect`, which returns `empty_candidate_base_ref_required` with `action: start`;
+3. `start` with `input = {"mode":"ordinary","baseRef":"<full 40-char SHA>","committedOnly":true}`
+   and a fresh `idempotencyKey`.
+
+The provider resolves the range itself (it reported its own internal `--base-ref`), freezes the
+candidate, and continues to the ordinary reviewer slots. The workspace must be restored to its
+branch afterwards; nothing in the provider's work touches the worktree.
+
+**T6 is paid.** Lineage `review-42afa5987aa5f681`, tier `high`, 894 original changed lines over
+four paths (`tools/spatial_units.py`, `tools/priority_schema.py`, `tools/composition_stats.py` and
+this document), four lenses admitted, state **approved**, authority **burned**
+(`gentle-ai.review-acknowledged/v1`, terminal consumption recorded under
+`.git/gentle-ai/review-transactions/terminal-consumption/v1/`). Zero blocking findings. Four
+informational findings, all in `tools/composition_stats.py`:
+
+| Id | Lens | Location | Severity |
+|---|---|---|---|
+| `R2-duplicated-f3-error-msg` | readability | `:143-149` | WARNING |
+| `R3-001` | reliability | `:577-580` | WARNING |
+| `R3-002` | reliability | `:600-603` | SUGGESTION |
+| `R3-003` | reliability | `:289-291` | SUGGESTION |
+
+This covers `tools/spatial_units.py` and `tools/priority_schema.py` at their current content (no
+commit after `9b243b0` touched either), plus the T6 refactor delta of `composition_stats.py`.
+
+**`a48cb6c` attempted and escalated — terminal, not approved.** Lineage
+`review-44bdd3a6300aecc9`, 49 lines, one path. One reviewer slot was refused at admission
+("no complete JSON object ... scan ended at byte 1": the payload truncated to one byte, preserved
+under `.git/gentle-ai/rejected-results/`); the refused bytes were **not** resent. On the retry of
+the re-offered slots two were admitted and the third returned an ambiguous `partial_unknown`, which
+was reconciled with exactly one fresh STATUS. STATUS then reported `state: escalated`,
+`action: stop`, `reason_code: native_stop_required`, `cause: unknown_causality`, naming two
+findings:
+
+| Id | Lens | Location | Severity | Evidence | Causality |
+|---|---|---|---|---|---|
+| `R4-JSON-SHAPE-BREAK-NO-GUARD` | resilience | `:568-592` | CRITICAL | deterministic | unknown |
+| `R3-missing-coverage-v2-shape` | reliability | `:565-589` | CRITICAL | insufficient | unknown |
+
+Both were downgraded at admission for `unverified_location`, and the provider escalates instead of
+deciding whether the risk is candidate-caused or pre-existing. Per the stop table this is terminal:
+**the maintainer inspects and the lineage is never resumed.** The second finding is the substantive
+one: the v2 shape change recorded as resolved in 14.3 had no assertion anchoring it, so a refactor
+that flattened the years back to the top level would satisfy every existing check. That gap is
+T10.
+
+**T4 was not attempted, and the reason is structural.** Its committed range is 4525 changed lines,
+of which **3854 are the generated CSV and JSON artifacts**. That is the candidate-sizing trap this
+document already recorded in section 11, and 85 % generated tabular data is dilution rather than
+review. The T4-era lines of `composition_stats.py` that neither T6 nor `a48cb6c` touched therefore
+remain unreviewed, and that residual is recorded rather than labelled as reviewed.
+
+**Method lesson, worth more than the fix.** A pendency recorded as "not payable" decays. Section
+12.2 recorded it from one malformed attempt and the README repeated it as a limitation. Before
+accepting a waiver, the route has to be retried with the form the facade documents **today**.
 
 ## 13. Class 33 (water) gain: what was verified and what was not
 
@@ -913,6 +1051,16 @@ was **not** found by hand and is the one worth fixing first.
 SUGGESTION level: `R2-2` (:600-632), `R2-3` (:370-376), `R2-4` (:586-589), `R2-5`
 (:545-550), `R2-6` (:927), `R3-4` (:558-560), `R3-5` (:714-722), `R3-6` (:529-571),
 `R4-no-checkpoint` (:730-732).
+
+**Additions from the 2026-10-08 payment run.** The T6 approval added four informational findings,
+all in `tools/composition_stats.py` (`R2-duplicated-f3-error-msg` WARNING :143-149, `R3-001`
+WARNING :577-580, `R3-002` SUGGESTION :600-603, `R3-003` SUGGESTION :289-291). The `a48cb6c`
+review escalated terminally with two CRITICAL findings of unknown causality
+(`R4-JSON-SHAPE-BREAK-NO-GUARD` :568-592, `R3-missing-coverage-v2-shape` :565-589); the second is
+closed by T10 and the first is recorded in section 12.3. Body text for every finding above lives
+in the native store, not in the closing envelopes: read
+`.git/gentle-ai/review-transactions/v2/<lineage>/review-state.json` under
+`state.admitted_role_results[N].value.result.findings[]`.
 
 ### 14.2 Geodesic area duplicated in the probe
 
