@@ -52,6 +52,7 @@
   var clipToggleBtn = document.getElementById("clip-draw-toggle");
   var clipClearBtn = document.getElementById("clip-clear");
   var clipStatus = document.getElementById("clip-status");
+  var studyLegendCount = document.getElementById("study-map-legend-count");
 
   // State.
   /** @type {object|null} */
@@ -66,6 +67,26 @@
   var clipBbox = null;
   /** @type {number} */
   var inFlightClipRequest = 0;
+  /** @type {Object<string, object>} study_id -> study, from the catalog. */
+  var studiesById = {};
+  /** @type {string|null} the study currently selected in the catalog. */
+  var selectedStudyId = null;
+  /** @type {boolean} the studies GeoJSON source + layers are on the map. */
+  var studiesLayerInstalled = false;
+  /** @type {boolean} MapLibre has fired its "load" event. */
+  var mapLoaded = false;
+  /** @type {number|null} coalesced rAF handle for study-layer mutations. */
+  var studiesRafHandle = null;
+  /** @type {string|undefined} study id whose marker should be recentred. */
+  var pendingRecenterId;
+
+  // Map layer / source ids for the secondary study point layer. One
+  // feature per placeable study; no clustering, no counters, so the map
+  // never implies a location the data does not establish.
+  var STUDIES_SOURCE_ID = "studies-points";
+  var STUDIES_LAYER_ID = "studies-points-circle";
+  var STUDIES_SELECTED_LAYER_ID = "studies-points-selected";
+  var STUDIES_NO_SELECTION = "__none__";
 
   api
     .fetchMeta()
@@ -76,6 +97,14 @@
     .catch(function (err) {
       showFatal("No se pudieron cargar los metadatos del visor: " + err.message);
     });
+
+  // Catalog panel (slice F4 / T4). The panel is the authoritative view of
+  // the studies and owns its own fetch through api.js; the host hands it a
+  // selection callback and receives the loaded document back so it can
+  // feed the secondary map point layer exactly once. A catalog failure is
+  // isolated: the map, slider, legend, composition panel and clip drawing
+  // keep working.
+  initCatalogPanel();
 
   // -------------------------------------------------------------------------
   // Meta → UI
@@ -268,6 +297,222 @@
   }
 
   // -------------------------------------------------------------------------
+  // Study catalog panel + secondary point layer (slice F4 / T4)
+  // -------------------------------------------------------------------------
+  // The catalog panel is the authoritative view; the map points are an
+  // index into it. One marker represents exactly one study, and a marker
+  // click selects that study in the panel. Selecting a study highlights
+  // the matching marker and eases the camera to it when the study has a
+  // coordinate.
+  //
+  // Every MapLibre source/filter mutation triggered by a map event is
+  // deferred onto a coalesced requestAnimationFrame tick. The T8a record
+  // shows that a synchronous source write inside a MapLibre callback
+  // aborts the in-flight tile load; the rAF runs after the frame, exactly
+  // like the year path below.
+
+  function initCatalogPanel() {
+    var catalog = window.MapBiomasCatalog;
+    if (!catalog || typeof catalog.init !== "function") {
+      showCatalogFatal("El panel del catálogo de estudios no se cargó.");
+      return;
+    }
+    catalog.init({
+      onLoaded: onCatalogLoaded,
+      onSelect: onCatalogSelectionChanged,
+    });
+  }
+
+  // The catalog panel reports a fetch failure through its own error node;
+  // this fallback only runs when the panel module itself is missing.
+  function showCatalogFatal(message) {
+    var el = document.getElementById("catalog-error");
+    if (el) {
+      el.textContent = message;
+      el.style.display = "block";
+    }
+  }
+
+  function onCatalogLoaded(doc) {
+    studiesById = {};
+    (doc.studies || []).forEach(function (study) {
+      studiesById[study.study_id] = study;
+    });
+    // The legend count is a fact from the display contract, never a
+    // hardcoded literal, so it cannot drift from the artifact.
+    var contract = doc.display_contract || {};
+    if (studyLegendCount && Number.isFinite(contract.map_visible_count)) {
+      studyLegendCount.textContent = String(contract.map_visible_count);
+    }
+    if (studiesLayerInstalled) {
+      requestStudiesRefresh();
+    } else {
+      installStudiesLayer();
+    }
+  }
+
+  function onCatalogSelectionChanged(study) {
+    selectedStudyId = study && study.study_id ? study.study_id : null;
+    requestStudiesRefresh(selectedStudyId);
+  }
+
+  function installStudiesLayer() {
+    if (!map || studiesLayerInstalled || !mapLoaded) {
+      return;
+    }
+    map.addSource(STUDIES_SOURCE_ID, {
+      type: "geojson",
+      data: studiesFeatureCollection(),
+    });
+    map.addLayer({
+      id: STUDIES_LAYER_ID,
+      type: "circle",
+      source: STUDIES_SOURCE_ID,
+      paint: {
+        "circle-radius": [
+          "interpolate", ["linear"], ["zoom"],
+          4, 4,
+          10, 8,
+        ],
+        "circle-color": "#be123c",
+        "circle-opacity": 0.9,
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 1.5,
+      },
+    });
+    // A second circle layer outlines only the selected study. Its filter
+    // starts matching nothing and is updated on the coalesced rAF tick.
+    map.addLayer({
+      id: STUDIES_SELECTED_LAYER_ID,
+      type: "circle",
+      source: STUDIES_SOURCE_ID,
+      filter: ["==", ["get", "study_id"], STUDIES_NO_SELECTION],
+      paint: {
+        "circle-radius": [
+          "interpolate", ["linear"], ["zoom"],
+          4, 7,
+          10, 13,
+        ],
+        "circle-color": "rgba(190, 18, 60, 0)",
+        "circle-stroke-color": "#f59e0b",
+        "circle-stroke-width": 3,
+      },
+    });
+    map.on("mouseenter", STUDIES_LAYER_ID, function () {
+      // Do not clobber the crosshair the clip tool sets while drawing.
+      if (drawMode) {
+        return;
+      }
+      if (map && typeof map.getCanvas === "function") {
+        map.getCanvas().style.cursor = "pointer";
+      }
+    });
+    map.on("mouseleave", STUDIES_LAYER_ID, function () {
+      if (drawMode) {
+        return;
+      }
+      if (map && typeof map.getCanvas === "function") {
+        map.getCanvas().style.cursor = "";
+      }
+    });
+    map.on("click", STUDIES_LAYER_ID, function (e) {
+      if (!e || !e.features || !e.features.length) {
+        return;
+      }
+      var props = e.features[0].properties || {};
+      var id = props.study_id;
+      var catalog = window.MapBiomasCatalog;
+      if (id && catalog && typeof catalog.selectStudy === "function") {
+        catalog.selectStudy(id);
+      }
+    });
+    studiesLayerInstalled = true;
+  }
+
+  /**
+   * Build the GeoJSON FeatureCollection for the map source: exactly one
+   * Point feature per study with ``on_map`` true. No clustering and no
+   * per-coordinate counters: the four studies that share one coordinate
+   * are excluded upstream and never reach this collection.
+   */
+  function studiesFeatureCollection() {
+    var features = [];
+    Object.keys(studiesById).forEach(function (id) {
+      var study = studiesById[id];
+      if (!study || !study.on_map) {
+        return;
+      }
+      if (!Number.isFinite(study.longitud) || !Number.isFinite(study.latitud)) {
+        return;
+      }
+      features.push({
+        type: "Feature",
+        properties: {
+          study_id: study.study_id,
+          titulo: study.titulo || "",
+          anio: study.anio,
+          congreso: study.congreso || "",
+          ciudad: study.ciudad || "",
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [study.longitud, study.latitud],
+        },
+      });
+    });
+    return { type: "FeatureCollection", features: features };
+  }
+
+  function requestStudiesRefresh(recenterId) {
+    if (recenterId !== undefined) {
+      pendingRecenterId = recenterId || undefined;
+    }
+    if (studiesRafHandle !== null) {
+      return;
+    }
+    studiesRafHandle = requestAnimationFrame(function () {
+      studiesRafHandle = null;
+      applyStudiesRefresh();
+    });
+  }
+
+  function applyStudiesRefresh() {
+    if (!map || !studiesLayerInstalled) {
+      return;
+    }
+    var src = map.getSource(STUDIES_SOURCE_ID);
+    if (src && typeof src.setData === "function") {
+      src.setData(studiesFeatureCollection());
+    }
+    if (
+      typeof map.getLayer === "function" &&
+      map.getLayer(STUDIES_SELECTED_LAYER_ID)
+    ) {
+      map.setFilter(STUDIES_SELECTED_LAYER_ID, [
+        "==",
+        ["get", "study_id"],
+        selectedStudyId || STUDIES_NO_SELECTION,
+      ]);
+    }
+    var recenterId = pendingRecenterId;
+    pendingRecenterId = undefined;
+    if (recenterId) {
+      var study = studiesById[recenterId];
+      if (
+        study &&
+        study.on_map &&
+        Number.isFinite(study.longitud) &&
+        Number.isFinite(study.latitud)
+      ) {
+        map.easeTo({
+          center: [study.longitud, study.latitud],
+          duration: 600,
+        });
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------------
   // Map
   // -------------------------------------------------------------------------
 
@@ -348,6 +593,7 @@
       if (typeof map.resize === "function") {
         map.resize();
       }
+      mapLoaded = true;
       map.addSource("mbtiles-coverage", {
         type: "raster",
         tiles: [api.tileUrl(tileUrl, currentYear, 0, 0, 0).replace("/0/0/0.png", "/{z}/{x}/{y}.png")],
@@ -413,6 +659,10 @@
       }
       // Wire up the year slider once the source exists.
       onYearChanged(currentYear);
+      // Secondary study point layer (slice F4 / T4). Installed here so the
+      // source and both circle layers exist before the catalog fetch
+      // resolves; the fetch callback only refreshes the source data.
+      installStudiesLayer();
       // Initialise the clip draw handlers now that the map and the
       // rectangle layer are real.
       initClipDraw();

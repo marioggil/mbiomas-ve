@@ -230,13 +230,43 @@ Each task closes with one work-unit commit and observed evidence.
   all still return 200. The diff against the previous revision is **additions only, zero deleted
   lines**, which is why no existing endpoint could have changed behaviour.
 
-### T4 — Frontend: catalog panel and map layer
-- A catalog section in `viewer/index.html`, rendered by a new module, with all 31 studies and
-  per-class counts.
-- A secondary point layer in `viewer/app.js`: 24 markers, click selects the study in the catalog.
-- `viewer/api.js` remains the only file in the frontend containing `fetch`.
-- **Evidence**: verified in a real browser, not a stubbed DOM. Layout measured at two viewports,
-  because the T8b record shows layout defects are invisible to a stub.
+### T4 — Frontend: catalog panel and map layer — **DONE**
+- `viewer/catalog.js` (new, 624 lines) renders the catalog panel: **all 31 studies**, an edition
+  filter with the exact counts (14 / 14 / 3), per-row metadata, a detail view with every author and
+  affiliation, and the **builder-produced exclusion reason rendered verbatim**. The frontend never
+  derives or paraphrases that string, which is the whole reason it is computed at build time.
+- `viewer/app.js` adds a secondary MapLibre `geojson` source and two circle layers: 24 one-per-study
+  markers plus a selection ring. No counter markers and no aggregation, per decision D9.
+- `viewer/api.js` remains the only frontend file containing `fetch`: two new exported functions,
+  confirmed by grep.
+- **Evidence, from a real browser with the map constructor intercepted** so the marker count could be
+  read from the live source instead of inferred: **31 catalog rows**, **24 features in the
+  `studies-points` source**, both layers present, the summary reading `31 estudios · 24 en el mapa ·
+  7 no ubicables` with the four class counts, **7 rows carrying an exclusion reason**, and a marker
+  click selecting the right row and opening its detail. That click did **not** trigger the clip
+  tool, which was an open risk the writer had flagged.
+- **The 7 console errors are all tile 404s and all of them are correct.** Every one of the 6
+  distinct paths is absent from disk, and the tile manifest declares `exclude_transparent: true`:
+  the client relies on 404 meaning "no tile", exactly as section 14.3 of the parent document
+  records. None of the seven is a JavaScript error.
+- **Two layout defects were found by measuring in the browser and fixed, and one of them was
+  pre-existing.** The studies legend sat at `bottom: 34px` while the D7 labelling sat at
+  `bottom: 12px`, so the legend painted over the boundary note: **229 × 3 px** of measured overlap,
+  with the note reading as truncated even though no CSS clipped it. Fixing that exposed a second,
+  older collision with the **MapLibre attribution control**: **217 × 13 px** of the note painted
+  over, present before this task and never measured until now.
+- Both are now structurally impossible rather than tuned away: the two overlays share one
+  content-sized bottom column, and that column clears the attribution strip. A fixed offset would
+  have failed, and the measurement proves it — the note wraps from 56 px tall at 1280 px wide to
+  **72 px** at 1042 px, so any constant chosen for the wider viewport would collide again at the
+  narrower one.
+- **Measured clean at both viewports** (1280×800 and 1042×569): no overlap between the note, the
+  legend and the attribution; both overlays inside the map bounds; the note not clipped; the map
+  keeping its deterministic height (400 px and 285 px) with the canvas matching its container; and
+  the page scrolling instead of any panel trapping its content.
+- **The writer reported honestly that it has no browser and verified no rendering, layout or
+  interaction.** That is why the browser pass above was worth doing: both defects, and the correct
+  classification of the 404s, were invisible to every static check the writer could run.
 
 ### T5 — Packaging and documentation
 - `run.sh`: a `stage_studies` stage and the parquet named in `check` as a rebuild-only
