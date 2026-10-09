@@ -1,0 +1,1385 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-10-09T03:10:50.861714+00:00",
+  "country": "venezuela",
+  "source_parquet": "data/raw/congresos/congresos_revisados.parquet",
+  "extent_label": "extension MapBiomas Venezuela",
+  "extent_boundary_note": "The pixel extent in the source COGs exceeds internationally recognised borders and includes disputed territory. No boundary mask has been applied to the pyramid.",
+  "extent": {
+    "west": -73.51785335775641,
+    "south": 0.5274009033065727,
+    "east": -57.9936177752449,
+    "north": 12.654657238920112
+  },
+  "study_count": 31,
+  "display_contract": {
+    "map_visible_count": 24,
+    "excluded_count": 7
+  },
+  "classes": [
+    {
+      "key": "placeable",
+      "count": 24,
+      "on_map": true,
+      "label_es": "Ubicable",
+      "reason": null
+    },
+    {
+      "key": "shared_coordinate",
+      "count": 4,
+      "on_map": false,
+      "label_es": "Coordenada compartida",
+      "reason": "Más de un estudio comparte exactamente la misma coordenada; el mapa no los dibuja para no afirmar una ubicación común que los datos no establecen."
+    },
+    {
+      "key": "outside_extent",
+      "count": 1,
+      "on_map": false,
+      "label_es": "Fuera de la extensión",
+      "reason": "La coordenada cae fuera del rectángulo de la extensión del COG; el mapa no puede dibujarla."
+    },
+    {
+      "key": "no_coordinate",
+      "count": 2,
+      "on_map": false,
+      "label_es": "Sin coordenada",
+      "reason": "El estudio no trae latitud ni longitud."
+    }
+  ],
+  "studies": [
+    {
+      "study_id": "cve-1991-pagina-5-2",
+      "titulo": "ECOFISIOLOGIA Y DASONOMIA TROPICAL: PERSPECTIVAS. ECOLOGY AND TROPICAL. PHYSIOLOGICAL ECOLOGY AND TROPICAL.",
+      "resumen": "La relación entre los estudios fisiológicos y el manejo y regeneración de los bosques tropicales ha sido poco explorado. Tres ejemplos de investigación presentados para mostrar la potencial contribución de los estudios fisiológicos a la dasonomía tropical. En el primer ejemplo, se examinan estudios sobre la aclimatación de plántulas de diferentes especies de árboles a diferentes condiciones de sombreado, y su aplicación al diseño de sistemas de corredores o mantenidas en sombra por árboles nativos generalmente tuvieron el más alto potencial de crecimiento. En el segundo ejemplo, un estudio del crecimiento de las plantas en los derrumbes fue utilizado como guía en los esfuerzos por regenerar los derrumbes que ocurren a lo largo de caminos en el Bosque Nacional del Caribe. Se encontró que tanto el nitrógeno como el fósforo limitan fuertemente el crecimiento de las plántulas en los derrumbes. En tercer lugar, los efectos de la deforestación. Aunque los estudios de la fotonihidrición crónica no parecen ser un importante factor limitante en la regeneración de árboles tropicales. Áreas de aplicación en el futuro incluyen el modelaje de la productividad a nivel del paisaje y la identificación de sitios para una óptima regeneración.",
+      "autores": [
+        {
+          "nombre": "Peterson, George",
+          "afiliacion": "University of Puerto Rico",
+          "ror": null,
+          "pais": "USA",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "University of Puerto Rico"
+      ],
+      "ubicaciongeografica": "Bosque Nacional del Caribe",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "source_path": "I/curatedwithgeo/pagina_5_2.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 5,
+      "indice": 2,
+      "n_autores": 1,
+      "paises": [
+        "USA"
+      ],
+      "latitud": 18.306781,
+      "longitud": -65.805511,
+      "display_class": "outside_extent",
+      "on_map": false,
+      "exclusion_reason": "La latitud 18.306781 supera el límite norte de la extensión mapeada (12.654657238920112); el punto (18.306781, -65.805511) queda fuera del área del mapa."
+    },
+    {
+      "study_id": "cve-1991-pagina-6-1",
+      "titulo": "¿ ES ADAPTATIVA LA FLEXIBILIDAD? IS FLEXIBILITY ADAPTIVE?",
+      "resumen": "El clásico análisis estratégico de la adaptación en ambientes fluctuantes (Levins, 1968) solo considera fenotipos óptimos rígidos en las modalidades siguientes: generalista, especialista, polimorfismo de especialistas. Pero los organismos exhiben muy variadas formas de flexibilidad: de enzimas inducibles de las bacterias a la plasticidad morfo-fisiológica de las plantas. ¿Cuáles de las modalidades siguientes favorecen la adquisición de estas capacidades? En ambientes fluctuantes, la flexibilidad rifa siempre óptima si no tuviese costo alguno y si el ambiente fuese perfectamente describible. Pero las señales que indiquen los estados ambientales vigentes pueden ser difíciles de adquirir, o costosas, o poco fiables. Y la capacidad misma de cambiar de fenotipo puede ser muy costosa. Así pues, mediante análisis estratégico pueden identificarse condiciones para que sean óptimas: (1) la flexibilidad informada (2) la flexibilidad errante (Switching aleatorio) (3) la rigidez (4) la canalización homostática o enantioestática. También en un ambiente estable pero con interacciones \"sociales\" variadas es posible identificar condiciones en que estrategia flexible sea una EEE. Por último, se examina la flexibilidad secuencial: cambios de sexo o ciclos de vida complejos. En tales casos, un mismo individuo cambia drásticamente de fenotipo en secuencia fija.",
+      "autores": [
+        {
+          "nombre": "León, Jesús Alberto",
+          "afiliacion": "Instituto de Zoología Tropical, U.C.V.",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Instituto de Zoología Tropical, U.C.V."
+      ],
+      "ubicaciongeografica": null,
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "source_path": "I/curatedwithgeo/pagina_6_1.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 6,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": null,
+      "longitud": null,
+      "display_class": "no_coordinate",
+      "on_map": false,
+      "exclusion_reason": "El estudio no tiene latitud ni longitud, así que no se puede situar en el mapa."
+    },
+    {
+      "study_id": "cve-1991-pagina-6-2",
+      "titulo": "ECO-FISIOLOGIA DEL GENERO Ananas (Bromeliaceae): CONTRIBUCION AL ANALISIS DE LA ECOLOGIA Y EVOLUCION DE PLANTAS CAM. ECOPHYSIOLOGY OF THE GENUS Ananas (Bromeliaceae): CONTRIBUTION TO THE ANALYSIS OF THE ECOLOGY AND EVOLUTION OF CAM PLANTS.",
+      "resumen": "El género Ananas parece tener su centro de diversificación en el norte de América del Sur (Leal y Antonioli 1981). A este género pertenecen especies que crecen naturalmente bajo sombra parcial (A. ananassoides, A. paraguensis), con bajo plena exposición (A. comosus), A. comosus pertenece a la subfamilia de las Bromelias que se comportan como especies con metabolismo CAM permanente. Este tipo de metabolismo está asociado a una mayor eficiencia de uso de agua y a la posibilidad de fijación de CO2 producto de la respiración nocturna. En este trabajo se presentan datos anatómicos, fisiológicos y bioquímicos de especies de Ananas de diferentes regiones lumínicos. En especial se comparan poblaciones de A. ananassoides que crecen bajo sombra parcial en diversos áreas del Territorio Amazonas, Edo. Bolívar, Edo. Apure, con cultivos de A. comosus (var. Pre-cachache, Leal y Antonioli 1981) y A. comosus (var. pañoña Roja) bajo plena exposición en el Edo. Lara. Esta presentación tiene por objeto discutir la significación de la presencia de mecanismos de utilización del CO2 en plantas de sombra y la posibilidad de utilizar el cambio de metabolismo CAM como un marcador evolutivo de diversificación en el norte de América del Sur.",
+      "autores": [
+        {
+          "nombre": "Medina, Ernesto",
+          "afiliacion": "Centro de Ecología, IVIC.",
+          "ror": "https://ror.org/02ntheh91",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Centro de Ecología, IVIC."
+      ],
+      "ubicaciongeografica": "Territorio Amazonas, Edo. Bolívar, Edo. Apure, Edo. Lara",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "Ananas ananassoides, Ananas paraguensis, Ananas comosus",
+      "source_path": "I/curatedwithgeo/pagina_6_2.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 6,
+      "indice": 2,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 9.990491,
+      "longitud": -69.872248,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1991-pagina-6-3",
+      "titulo": "LA ESTRUCUTURA DE COMUNIDADES ECOLOGICAS Y LA CO-OCURRENCIA DE ESPECCIES: LA IMPORTACIA DE ESTUDIOS DE REGIONES TROPICALES  COMO MODELOS PARA ENCONTRAR PATRONES. COMMUNITY STRUCTURE AND CO-REFERENCE OF SPECIES: THE IMPORTANCE OF STUDIES IN THE TROPICS. MODELS FOR PATTERN DETECTION.",
+      "resumen": "Después de 30 años de estudios intensivos sobre la estructura de las comunidades ecológicas y la co-ocurrencia de especies, no han podido ser elegidos patrones que las expliquen. Esta ausencia de patrones responde fundamentalmente a cinco razones: estudios en este campo: 1) se han concentrado sobre modelos específicos para determinados hábitats y taxones; 2) no suelen considerar todos los estados de los ciclos de vida; 3) ignoran fuerzas selectivas alternativas o simultáneas; 4) la mayoría de ellos son estudios a corto plazo; y finalmente 5) se han concentrado fundamentalmente en zonas templadas. A partir de la reflexión sobre estos problemas se pueden establecer condiciones que deberían cumplir, tanto las futuras investigaciones como los organismos, como los diseños experimentales a cerca de la co-ocurrencia de especies en gradientes latitudinales, con el fin de que el estudio de comunidades pueda conducir a patrones válidos. Este punto de vista sugiere que no todos los organismos o hábitats son igualmente apropiados para el desarrollo de estos estudios, y se discuten suficientes evidencias que sugieren que las comunidades y hábitats de regiones tropicales pueden resultar los más apropiados para la resolución de estos problemas básicos en la teoría ecológica.",
+      "autores": [
+        {
+          "nombre": "Pearson, David L.",
+          "afiliacion": "Arizona University. Dept. of Zoology.",
+          "ror": null,
+          "pais": "U.S.S.",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Arizona University. Dept. of Zoology."
+      ],
+      "ubicaciongeografica": null,
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "source_path": "I/curatedwithgeo/pagina_6_3.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 6,
+      "indice": 3,
+      "n_autores": 1,
+      "paises": [
+        "U.S.S."
+      ],
+      "latitud": null,
+      "longitud": null,
+      "display_class": "no_coordinate",
+      "on_map": false,
+      "exclusion_reason": "El estudio no tiene latitud ni longitud, así que no se puede situar en el mapa."
+    },
+    {
+      "study_id": "cve-1991-pagina-7-1",
+      "titulo": "ASPECTOS DE LA DINAMICA DEL NITROGENO EN PARCELAS CON DIFERENTE TIEMPO DE DESCANSO EN EL PARAMO DE GAVIARIA. NITROGEN DYNAMICS IN PLOTS WITH DIFFERENT RESTING PERIODS IN THE PARAMO DE GAVIARIA. FA",
+      "resumen": "Este trabajo se encuentra enmarcado dentro del proyecto: \"Sucesión, Regeneración y Estabilización de Ecosistemas y Agroecosistemas de Páramo\" en donde se estudian diferentes aspectos de la agricultura tradicional practicada en el Páramo de Gavidia, dentro del Parque Nacional Sierra Nevada.\n\nLa forma tradicional de manejo de las parcelas agrícolas utilizadas en esta zona, contempla el aprovechamiento agrícola de los suelos durante 2 ó 3 años consecutivos. A este período sigue una etapa de descanso de la tierra, donde se inicia una sucesión ecológica que regenera la vegetación natural del páramo andino antes de volver a iniciar las labores agrícolas. Los cultivos principales son papa y cereales.\n\nEnfocamos nuestra atención en un parámetro edáfico que nos indicará la recuperación del agroecosistema. Para ello seguimos la dinámica del nitrógeno en el suelo, tanto del comportamiento mineral (amonio y nitrato) como el contenido de nitrógeno total. Se muestrearon una serie de parcelas que tenían diferentes tiempos sin ser sembradas, es decir, se encontraban en diferentes etapas de una sucesión ecológica.\n\nEl nitrógeno mineral se extrajo utilizando KCl (1N), el amonio se cuantificó con el electrodos selectivo de amonio y mediante una reducción-destilación-titulación Kjeldahl el nitrato nitrato presente en dichos extractos.\n\nPara el nitrógeno total se empleó la técnica Kjeldahl tradicional. Los resultados de amonio en la época seca oscila entre 3.7-12 µg/g de suelo seco, y en la época húmeda entre 10-21.8 µg/g de suelo seco. Mientras que el nitrato-nitrato oscila entre 2.3-3.9 µg/g de suelo seco en la época seca y de 14-18 µg/g de suelo seco en la época de lluvias.\n\nAl comparar los resultados obtenidos de las parcelas recién abandonadas con aquellas de un año, de seis años y de doce años de descanso, se evidenciaron pequeños cambios que aunque no nos permiten descartar la hipótesis de la recuperación nutritiva inducida por el descanso, nos indican que el nitrógeno no es el factor clave en el proceso sucesional en el agroecosistema que estamos estudiando. Nuestros resultados por otra parte, indican una variación apreciable del nitrógeno total del suelo entre la época seca y la época húmeda.",
+      "autores": [
+        {
+          "nombre": "Anairamiz y Monasterio, M.",
+          "afiliacion": "C. de Ciencias, Universidad de Los Andes - Mérida (5101) Venezuela.",
+          "ror": "https://ror.org/02h1b1x27",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "C. de Ciencias, Universidad de Los Andes - Mérida (5101) Venezuela."
+      ],
+      "ubicaciongeografica": "Páramo de Gavidia dentro del Parque Nacional Sierra Nevada",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "source_path": "I/curatedwithgeo/pagina_7_1.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 7,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.698802,
+      "longitud": -70.873818,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1991-pagina-8-1",
+      "titulo": "EVALUACION DE CAPTURAS DE AVES DE LA FAMILIA RALLIDAE EN UNA COSECHA DE ARROZ EN TUREN, EDO. PORTUGUESA, VENEZUELA. (EVALUATION OF RALLIDAE SPECIES CAPTURED DURING RICE HARVESTING IN TUREN, EDO. PORTUGUESA, VENEZUELA.)",
+      "resumen": "Cada año son más frecuentes las quejas de sembradores de arroz sobre vertebrados plagas. La familia avícola acuática es una de ellas. En trabajos anteriores hemos señalado daños por la construcción de nidos y también por el hábito de quebrar las cañas de arroz para alcanzar las panículas. Entre los agricultores existe confusión referente a la identidad de tales aves y de cuáles representan peligro potencial como plagas. Debido a lo anterior muchos agricultores las ahuyentan con disparos o cohetes, o las exterminan indiscriminadamente. Esta evaluación preliminar del total de especies presentes en el arrozal se realizó en mayo de 1990, en una finca cerca de Cardonillo, Turen, Edo. Portuguesa, en pleno proceso de cosecha de arroz con riego. Se capturaron-84 ejemplares de la Familia RALLIDAE en un lote de aprox. 10 has. Las capturas fueron identificadas y pesadas. Se les extrajo la cola para analizar su contenido y determinar la naturaleza de las ingestas. Los resultados se indican en el cuadro siguiente:\n\nCAPTURAS Peso Consumo Consumo Cnsun\nTotal % x g. paddy/ paddy/ porce\nespecie 100 g pv\n\nPorphyryula martinica 20 23% 256 x= 152p x= 60p 40.4%\nRallus maculatus 30 36% 180 x= 72p x= 60p 28.7%\nGallinula chloropus 8 10% 256 x= 290p x= 81p 30.8%\nLaterallus exilis 10 12% 33 x nulo\nPorzana flaviventor 6 7% 22 x nulo\nNeocrex erythrops 1 1% 80 T= 40p\nNo identificados 9 11% 100 No calc.\n\nSe concluye que en base al consumo relativo (Total de aves x consumo de paddy, llevado a una relación porcentual), en las condiciones en que se realizó el muestreo, Porphyryula martinica fue la especie más consumidora de arroz en la parcela. Neocrex erythrops también consume bastante paddy a pesar de su bajo peso, pero su escasa presencia no significa problema para el cultivo. Laterallus exilis y Porzana flaviventor revelaron tener hábitos insectívoros, y raras veces un grano de paddy. Deben continuarse estudios para desarrollar técnicas no contaminantes que reduzcan las poblaciones de Porphyryula sp., Gallinula sp y Rallus sp dentro de los arrozales. La preservación de Laterallus exilis y Porzana flaviventor es indispensable por su utilidad como insectívoros.",
+      "autores": [
+        {
+          "nombre": "CASTILLO J.J.",
+          "afiliacion": "Facultad de Agronomía - UCV, Maracay, Venezuela, 2101.",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "LANDER E.",
+          "afiliacion": "Facultad de Agronomía - UCV, Maracay, Venezuela, 2101.",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "FLORES Rosa",
+          "afiliacion": "Facultad de Agronomía - UCV, Maracay, Venezuela, 2101.",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "RODRÍGUEZ J. ",
+          "afiliacion": "Facultad de Agronomía - UCV, Maracay, Venezuela, 2101.",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "LOPEZ J.",
+          "afiliacion": "Facultad de Agronomía - UCV, Maracay, Venezuela, 2101.",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Facultad de Agronomía - UCV, Maracay, Venezuela, 2101."
+      ],
+      "ubicaciongeografica": "TUREN, EDO. PORTUGUESA, VENEZUELA",
+      "ubicaciontemporal": "1990",
+      "especiesmencionadas": "Porphyryula martinica, Rallus maculatus, Gallinula chloropus, Laterallus exilis, Porzana flaviventor, Neocrex erythrops",
+      "source_path": "I/curatedwithgeo/pagina_8_1.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 8,
+      "indice": 1,
+      "n_autores": 5,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 9.324411,
+      "longitud": -69.12728,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1991-pagina-8-2",
+      "titulo": "CRECIMIENTO COMPENSATORIO DE Panicum maximum. I. PRODUCCION PRIMARIA BAJO CORTE Y FERTILIZACION. (COMPENSATORY GROWTH OF Panicum maximum. I. PRIMARY PRODUCTION UNDER CUTTING AND FERTILIZATION.)",
+      "resumen": "Se analizaron los mecanismos de crecimiento compensatorio de Panicum maximum, específicamente la producción primaria de biomasa bajo diferentes frecuencias y alturas de corte y tratamientos de fertilización. El trabajo se desarrolló en el Jardín Botánico de la ULA, en Barinas, en 1989,90. El primer año se hicieron tratamientos de corte cada 15, 30 y 45 días con dos alturas de corte (cada 30 días a 25 cm de altura) y cuatro tratamientos de fertilización: a.- sin fertilizante, b.- con N a 32 Kg/ha y d.- con la misma cantidad repartida en dos oportunidades; la producción primaria fue cuantificada cosechando la biomasa aérea cada 30 días.\n\nSe obtuvieron diferencias significativas en las distintas frecuencias de corte y fertilización. Las plantas cortadas a 15 cm, para acumular una biomasa aérea mayor que las plantas cortadas a 25 cm cada 30 días obtuvieron la mayor cantidad de biomasa. La producción fue de 10,44 g/planta.día para las plantas cortadas a 25 cm cada 30 días; las plantas cortadas a 15 días, una producción de 8,10 y 7,55 g/planta.día para las alturas de corte 15 y 25 cm respectivamente. Las plantas con mayor acumulación de biomasa y la mayor producción primaria con 4258 g de biomasa en órganos asimilatorios. En relación a los tratamientos de fertilización las plantas con NPK en una y dos oportunidades produjeron 11,10 y 10,34 g/planta.día respectivamente, mientras que las fertilizadas con N y sin fertilizante produjeron 7,13 y 5,28 g/planta.día respectivamente.\n\nComo conclusión, la frecuencia de corte óptima para la obtención de una alta productividad asociada a una buena disponibilidad de forraje es de 25 cm y un suministro de fertilización por el corte, aplicado en dos o más oportunidades. También se concluyó que la respuesta de P. maximum al corte es a través de un crecimiento compensatorio que compense la biomasa perdida, y que esta respuesta es mayor cuando la frecuencia e intensidad del corte no son extremas.",
+      "autores": [
+        {
+          "nombre": "Chacón M., Eulogio",
+          "afiliacion": "Fac. Ciencias, Universidad de Los Andes, Mérida (5101)",
+          "ror": "https://ror.org/02h1b1x27",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Samiento, G.",
+          "afiliacion": "Fac. Ciencias, Universidad de Los Andes, Mérida (5101)",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Acevedo, D.",
+          "afiliacion": "Fac. Ciencias, Universidad de Los Andes, Mérida (5101)",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Fac. Ciencias, Universidad de Los Andes, Mérida (5101)"
+      ],
+      "ubicaciongeografica": "Jardín Botánico de la ULA, Barinas",
+      "ubicaciontemporal": "1989,90",
+      "especiesmencionadas": "Panicum maximum",
+      "source_path": "I/curatedwithgeo/pagina_8_2.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 8,
+      "indice": 2,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.1450535,
+      "longitud": -69.8567392,
+      "display_class": "shared_coordinate",
+      "on_map": false,
+      "exclusion_reason": "4 estudios comparten exactamente la misma coordenada (8.1450535, -69.8567392); el mapa no los dibuja para no afirmar una ubicación común que los datos no establecen."
+    },
+    {
+      "study_id": "cve-1991-pagina-9-1",
+      "titulo": "REPORTE PRELIMINAR SOBRE HABITOS ALIMENTARIOS DEL \"TORDO NEGRO\" Quiscalus lugubris EN STEMBRAS DE ARROZ DE TUREN, EDO. PORTUGUESA, VENEZUELA. (PRELIMINARY REPORT ON THE \"CARIB GRACKLE\" Quiscalus lugubris FEEDING HABITS WITHIN RICE FIELDS IN TUREN, EDO. PORTUGUESA, VENEZUELA.)",
+      "resumen": "Entre los agricultores sembradores de arroz del Estado Portuguesa el \"tordo negro\" (Quiscalus lugubris) ha sido denunciado ataque en bandadas a las siembras de ese cereal. Este trabajo se realizó con el objeto de evaluar los hábitos alimenticios de la mencionada especie dentro de una finca típica productora de arroz ubicada cerca de Cardenillo, Turen. Las observaciones se efectuaron durante los meses de octubre, noviembre y diciembre de 1990. Mediante tomas fotográficas se pudo establecer que las bandadas oscilaban entre 30 y 500 aves aproximadamente. Tienen como hábitat preferencial los campos de arroz, pero también se les ha visto apastoreando en rastrojos bajos cerca del arrozal y de las bordas de montañas o bosques circundantes. También ocupan árboles enteros de \"guásimo\" (Guazuma ulmifolia) o de frutales arbustivos adyacentes a las viviendas principales de la finca. Las bandadas pueden ser observadas en los caminos para picotear el arroz que cae de las gandolas que transportan el grano. Bandadas de 80 a 200 aves son comunes avanzando detrás de las cosechadoras para picotear el arroz caído o insectos. En los rastrojos de arroz median las bandadas de más grandes. Con el uso de mallas se capturaron 150 ejemplares de ambos sexos, tanto juveniles como adultos. Los análisis del contenido de las moléjuelas revelaron que el 91% de ellos habían consumido insectos. El 82% de las capturas había ingerido arroz el cual se pudo observar en el contenido de moléjulas de 1 a 2 granos o en fragmentos. El consumo promedio de arroz fue de 1.2 granos por ave, lo cual es insignificante si se compara con el consumo promedio de otras especies granívoras de la familia RALLIDAE (Rallus maculatus- 72 granos; Porphyrio martinica- 152 granos; Gallinula chloropus- 290 granos). Aparentemente Quiscalus lugubris prefiere descascarar el arroz en las moléjulas, y aún los casos donde se observó arroz verde podría deberse al hábito de comer insectos en las paniculas de gramíneas silvestres en sus moléjulas. Esto podría tender a cambiar en la búsqueda de carbohidratos ya que este estudio se observó dirigido hacia el arroz. Aún así, el bajo consumo de arroz en esta especie de Quiscalus lugubris (1.2 granos/ave) y la alta frecuencia en consumo de insectos (91%) justifican que se le considere ave útil en los arrozales.",
+      "autores": [
+        {
+          "nombre": "Flores, Rosa M.",
+          "afiliacion": "Facultad de Agronomía - UCV, Maracay, VENEZUELA, 2101",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Castillo A, J.J.",
+          "afiliacion": "Facultad de Agronomía - UCV, Maracay, VENEZUELA, 2101",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Lander, E.",
+          "afiliacion": "Facultad de Agronomía - UCV, Maracay, VENEZUELA, 2101",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Facultad de Agronomía - UCV, Maracay, VENEZUELA, 2101"
+      ],
+      "ubicaciongeografica": "TUREN, EDO. PORTUGUESA, VENEZUELA",
+      "ubicaciontemporal": "1990",
+      "especiesmencionadas": "Quiscalus lugubris, Guazuma ulmifolia, Rallus maculatus, Porphyrio martinica, Gallinula chloropus",
+      "source_path": "I/curatedwithgeo/pagina_9_1.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 9,
+      "indice": 1,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.516515,
+      "longitud": -70.112682,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1991-pagina-9-2",
+      "titulo": "DETERMINACION DE PARAMETROS DEL BALANCE HIDRICO PARA EL MODELO CERES-MAIZ. DETERMINATION OF WATER BALANCE PARAMETERS IN THE CERES-MAIZ MODEL.",
+      "resumen": "El modelo biofísico CERES-Maíz constituye una valiosa herramienta para la planificación de las actividades agrícolas que predice con aceptable exactitud los principales eventos fenológicos de los cultivos de maíz y el número y peso de los granos por mazorca. En nuestra investigación se estudiaron los suelos del Jardín Botánico de la UNELLEZ en Barinas (suelos de la Serie Barinas) tres parámetros hidrológicos necesarios para una más exacta utilización del modelo: límite inferior de agua extraíble por los cultivos, capacidad de campo y los resultados de campo se observó una constante subestimación de los parámetros citados, tal como se muestra a continuación: Contenido de Agua (%) en el Suelo de la UNELLEZ en Barinas, en el Límite Inferior (LI), Capacidad de Campo (CC) y Saturación (SAT), determinados por el Modelo CERES-Maíz (CH) y por Experimentos de Campo en dos condiciones: en cáscara (paddy) o descascarado (endosperma). Se observó una preferencia superior de 3 a 1 de endosperma respecto a paddy. El consumo promedio de paddy fue de 1.2 granos, lo cual es insignificante si se compara con el consumo promedio de otras especies granívoras de la familia RALLIDAE (Rallus maculatus- 72 granos; Porphyrio martinica- 152 granos; Gallinula chloropus- 290 granos). Aparentemente Quiscalus lugubris prefiere descascarar el arroz en las moléjulas, y aún los casos donde se observó arroz verde podría deberse al hábito de comer insectos en las paniculas de gramíneas silvestres en sus moléjulas. Esto podría tender a cambiar en la búsqueda de carbohidratos ya que este estudio se observó dirigido hacia el arroz. Aún así, el bajo consumo de arroz en esta especie de Quiscalus lugubris (1.2 granos/ave) y la alta frecuencia en consumo de insectos (91%) justifican que se le considere ave útil en los arrozales.",
+      "autores": [
+        {
+          "nombre": "Maytín, Carlos",
+          "afiliacion": null,
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        },
+        {
+          "nombre": "Zuvia, Marilena",
+          "afiliacion": null,
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        },
+        {
+          "nombre": "Hetier, Jean",
+          "afiliacion": null,
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        },
+        {
+          "nombre": "Pérez, Jesús",
+          "afiliacion": null,
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        },
+        {
+          "nombre": "Acevedo, Dimas",
+          "afiliacion": null,
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        }
+      ],
+      "instituciones": [],
+      "ubicaciongeografica": "Barinas",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "source_path": "I/curatedwithgeo/pagina_9_2.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 9,
+      "indice": 2,
+      "n_autores": 5,
+      "paises": [],
+      "latitud": 8.1450535,
+      "longitud": -69.8567392,
+      "display_class": "shared_coordinate",
+      "on_map": false,
+      "exclusion_reason": "4 estudios comparten exactamente la misma coordenada (8.1450535, -69.8567392); el mapa no los dibuja para no afirmar una ubicación común que los datos no establecen."
+    },
+    {
+      "study_id": "cve-1991-pagina-10-1",
+      "titulo": "IMPACTO DE CAMBIOS CLIMATICOS POR EFECTO INVERNADERO SOBRE LOS MAICES HIBRIDOS CENIAP PB-8 y OBREGON EN BARINAS, TUREN Y YARITAGUA. IMPACT OF GREENHOUSE CLIMATIC CHANGE ON CENIAP PB-8 AND OBREGON HYBRID CORN IN BARINAS, TUREN AND YARITAGUA.",
+      "resumen": "Si se mantiene el incremento observado hasta ahora en el CO2 atmosférico, se espera que para la primera mitad del próximo siglo pueda ocurrir un calentamiento global de 1 a 4 grados, lo que probablemente modifique los patrones espacio-temporales de nubosidad, radiación y precipitación. Estos cambios pueden afectar a los agroecosistemas, en el cual se seleccionaron dos maices híbridos denominados CENIAP PB-8 y Obregón para estudiar sus posibles respuestas fenológicas y productivas. Se contó con información generada por el FONAIAP en cuanto a características genéticas de los cultivares, la que junto a datos de suelo, manejo y una serie de escenarios de cambios climáticos, permitió generar los datos necesarios para utilizar el modelo CERES-Maíz (versión 2.1), con el cual se simularon aspectos fenológicos y productivos de interés. Los escenarios de cambios climáticos contemplan incrementos térmicos entre 1 y 4 grados (C) y de pluviosidad entre 40%, mientras que la radiación solar se reduce de 20 a 40%. Los principales resultados son los siguientes: el incremento de temperatura por sí sólo causa un acortamiento de la fase de llenado de granos al tiempo que las tasas de fotosíntesis también disminuyen por el incremento de los requerimientos respiratorios. Si se agrega el efecto de la disminución de la radiación solar se produce además un número de nódulos por macollos inferior al potencial de los cultivares, lo cual también favorece una reducción en la producción. En relación a los incrementos de precipitación, el modelo tiene capacidad de simular los efectos de los cambios hídricos, pero dada la conocida sensibilidad de los cultivares de maíz ante problemas de encharcamiento, se piensa que el incrementarse la pluviosidad en el futuro la producción puede verse limitada por esa causa. Las reducciones de producción se simulan en Yaritagua (54%) y Barinas (-50%), con menor impacto en Turen (-40%). Si bien no se evaluó el posible efecto directo del incremento del CO2 en la ecología de los cultivares, se piensa que dado su mecanismo fotosintético C4, estos no afectan nuestros resultados en forma determinante.",
+      "autores": [
+        {
+          "nombre": "Maytín, Carlos",
+          "afiliacion": "Postgrado de Ecología Tropical de la Universidad de Los Andes y Proyecto PAN-BARTH.",
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        },
+        {
+          "nombre": "Jaimez, Ramón",
+          "afiliacion": "Postgrado de Ecología Tropical de la Universidad de Los Andes y Proyecto PAN-BARTH.",
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        },
+        {
+          "nombre": "Acevedo, Miguel",
+          "afiliacion": "N.A.Postgrado de Ecología Tropical de la Universidad de Los Andes y Proyecto PAN-BARTH.",
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        },
+        {
+          "nombre": "Andréssen, Rigoberto",
+          "afiliacion": "Postgrado de Ecología Tropical de la Universidad de Los Andes y Proyecto PAN-BARTH.",
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "N.A.Postgrado de Ecología Tropical de la Universidad de Los Andes y Proyecto PAN-BARTH.",
+        "Postgrado de Ecología Tropical de la Universidad de Los Andes y Proyecto PAN-BARTH."
+      ],
+      "ubicaciongeografica": "Barinas, Turen y Yaritagua",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "source_path": "I/curatedwithgeo/pagina_10_1.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 10,
+      "indice": 1,
+      "n_autores": 4,
+      "paises": [],
+      "latitud": 8.1450535,
+      "longitud": -69.8567392,
+      "display_class": "shared_coordinate",
+      "on_map": false,
+      "exclusion_reason": "4 estudios comparten exactamente la misma coordenada (8.1450535, -69.8567392); el mapa no los dibuja para no afirmar una ubicación común que los datos no establecen."
+    },
+    {
+      "study_id": "cve-1991-pagina-10-2",
+      "titulo": "DINAMICA DE LA FITOMASA Y LOS NUTRIENTES EN LA SUCESION-REGENERACION DE UN AGROECOSISTEMA DE PARAMO. BIOMASS AND NUTRIENT DYNAMICS IN THE SUCCESSION-REGENERATION OF A PARAMO AGROECOSYSTEM.",
+      "resumen": "En el piso andino de los páramos venezolanos (3000-3500) el manejo campesino incluye descansos (7-20 años), que alternan con períodos más cortos de cultivo (1-3 años). Durante el descanso la vegetación natural de páramo se restablece siendo utilizada como abono verde al iniciarse el cultivo. En este trabajo se analizan los cambios estacionales en la fitomasa aérea y subterránea y la dinámica de los nutrientes (C, N, P, K, Ca y Mg) en el suelo y la vegetación de cuatro parcelas en regeneración después de abandonado el cultivo. En cada parcela se realizaron 2 muestreos: uno en la época seca y otro, en la húmeda; cada vez se seleccionaron al azar 20 cuadrados de 0.20 m² y el método de cosecha, distinguiéndose las especies dominantes y los compartimientos de la vegetación. La fitomasa subterránea se colectó hasta una profundidad de 20 cm. Los análisis de nutrientes se realizaron en muestras de suelo y en muestras de la fitomasa aérea y subterránea. Con la sucesión se va incrementando casi linealmente la fitomasa, desde 228,5 g/m² en la parcela de 1 año, hasta 988,5 g/m² en la de 12 años de descanso. La biomasa subterránea tiene mayor importancia relativa en las parcelas tempranas, correspondiendo el 60 y 45% a las parcelas de 1 y 3 años, siendo las raíces el mayor componente, mientras que las de 6 y 12 años muestran el 25 y 13% respectivamente. Durante la estación húmeda se incrementa la biomasa asimilatoria y la subterránea en términos absolutos y el porcentaje del compartimiento más importante; en las parcelas de 20-30% sin mayores fluctuaciones. La necromasa es un componente estacional, y en la parcela más antigua se mantiene en valores encontrados en la biomasa total alcanzando los valores más altos en la época seca. Biomasa y nutrientes siguen patrones de distribución diferentes; no hay una acumulación de nutrientes en la subterránea mantiene valores bajos a excepción del nitrógeno y el potasio, que se acumulan en las raíces de la etapa de 1 año, superando los valores encontrados en la biomasa aérea.",
+      "autores": [
+        {
+          "nombre": "Monasterio, Maximina",
+          "afiliacion": "CIEAT, Facultad de Ciencias, Universidad de Los Andes, Mérida (5101) Venezuela.",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Montilla, M.",
+          "afiliacion": "CIEAT, Facultad de Ciencias, Universidad de Los Andes, Mérida (5101) Venezuela.",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Samiento, L.",
+          "afiliacion": "CIEAT, Facultad de Ciencias, Universidad de Los Andes, Mérida (5101) Venezuela.",
+          "ror": "https://ror.org/02h1b1x27",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "CIEAT, Facultad de Ciencias, Universidad de Los Andes, Mérida (5101) Venezuela."
+      ],
+      "ubicaciongeografica": "Páramos venezolanos",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "source_path": "I/curatedwithgeo/pagina_10_2.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 10,
+      "indice": 2,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.794833,
+      "longitud": -71.11523,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1991-pagina-11-1",
+      "titulo": "EL IMPACTO DE LA VARIACIÓN DEL SUELO EN EL RENDIMIENTO DE MAIZ. THE IMPACT OF SOIL VARIATION ON MAIZ YIELD.",
+      "resumen": "La producción de los ecosistemas agrícolas es función de factores de carácter abiótico (clima, suelo), cultivo y manejo (insumos, tecnología). La producción y las exigencias de niveles de manejo dependen del grado de armonización existente entre el ambiente y los requerimientos de los cultivos; consecuentemente, los rendimientos de los cultivos están altamente influenciados por la diversidad de condiciones ambientales. Por esto el suelo es fuente de la producción agrícola, su variabilidad es una de las causas de la variabilidad de los rendimientos. En este trabajo se seleccionó una parcela experimental de 1.1 ha ubicada en el estado Barinas, con el fin de: (i) evaluar la influencia de los cambios de suelo en el rendimiento del cultivo de maíz, (ii) determinar las propiedades de suelo que más influyen en el rendimiento, (iii) establecer el o los modelos de variación del suelo. El muestreo se dividió en dos etapas: una primera con un muestreo anidado para establecer la distancia más eficiente para caracterizar la variación del suelo y una segunda con un muestreo sistemático para caracterizar la variación del suelo en la parcela. Se tomaron 110 muestras ubicadas en 4 cuadrantes de 10x10 m, cada una de las cuales se analizó para: fósforo disponible (P), materia orgánica (MO), fósforo total (P), calcio (Ca) (mg kg-1) y pH. Adicionalmente, en cada punto de muestreo se determinaron valores de materia seca (MS) y rendimiento en granos (RG) del cultivo de maíz. Finalmente los factores obtenidos fueron empleados en un análisis de componentes principales (ACP). Los resultados indicaron que la distancia de muestreo más eficiente es de 10 m. El análisis de componentes principales agrupó los factores en 3 grupos: A (P, P, MO, Ca, pH), B (MS, RG) y C (pH). La variación de los factores expresó un carácter transitivo e isotrópico, con un radio de dependencia espacial que fluctúa entre 15 y 41 m y un componente aleatorio mayor al 50%, indicando la influencia de otros factores ambientales. Los diagramas de interpolación por Kriging expresan la influencia de la distancia de muestreo sobre MS y RG. Sin embargo, la correlación entre ellos es baja (menor a 0.30), lo cual es el resultado de la interrelación de un mayor número de variables de carácter ambiental.",
+      "autores": [
+        {
+          "nombre": "Ovalles, Francisco",
+          "afiliacion": null,
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Velazquez, L",
+          "afiliacion": null,
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [],
+      "ubicaciongeografica": "estado Barinas",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "Zea mays",
+      "source_path": "I/curatedwithgeo/pagina_11_1.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 11,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.1450535,
+      "longitud": -69.8567392,
+      "display_class": "shared_coordinate",
+      "on_map": false,
+      "exclusion_reason": "4 estudios comparten exactamente la misma coordenada (8.1450535, -69.8567392); el mapa no los dibuja para no afirmar una ubicación común que los datos no establecen."
+    },
+    {
+      "study_id": "cve-1991-pagina-12-1",
+      "titulo": "PERDIDAS DE NUTRIENTES OCASIONADAS POR QUEMAS PRE- Y POST-COSECHA DE UNA PLANTACIÓN DE CAÑA DE AZÚCAR (Nutrient losses resulting from burning of a sugar cane field before and after harvest)",
+      "resumen": "En este trabajo se determinaron las pérdidas de nutrientes ocasionadas por las quemas de una plantación de caña de azúcar antes (Qprec) y después de la cosecha (QpostC). El estudio se realizó en la Hacienda Fe, cerca de Palmarito y en el Río. Yaracuy. La biomasa aérea de la caña al momento de la cosecha se separaron en cañas (C), hojas (H), ramas (Pe) y P y Pe se quemaron para facilitar la cosecha de C y el reco general de la plantación. Para determinar las pérdidas de nutrientes se muestreó biomasa antes de Qprec y biomasa y cenizas después de eventos de Qprec, cosecha y QpostC para determinar el peso y contenido de nutrientes de cada fracción. En la Qprec II se quemaron por su contenido de agua (23%) pero no los panachos probablemente por su contenido de agua (80%). Durante la Qprec desaparecen 12,1 ton/ha de biomasa foliar y se volatilizan 50,8 kg/ha de N. En el campo queda forma de cenizas 735 kg/ha de material y (expresados en kg/ha) 1,6, 2,94 de P, 34,7 de K, 61,4 de Ca y 10,3 de Mg. La extracción de nutrientes por la cosecha representa una salida de 39 ton/ha de cañas, 39/ha 160 de N, 40 de P, 234 de K, 134 de Ca y 36,7 de Mg. Por la cenizas de la QpostC quedan en el campo y se incorporan al suelo. El balance general de las pérdidas de nutrientes por quema y cosecha de plantación es el siguiente:\n\nBiomasa N P K Ca\nTon/ha\nPérdidas por cosecha 39,3 161 41 248 160\nPérdidas a la atmósfera 23,0 155 3 35 61\nVolatilizados + cenizas\nRestos en el campo (cenizas) 2,2 5,2 22 233 162\n\nLa cosecha y quema de la plantación determina pérdidas considerables de nutrientes del sistema agrícola. Estas pérdidas pueden sustentarse por el elevado nivel nutricional del suelo y por la adición de fertilizantes. Los gases producidos por las quemas (CO2, CO y óxidos de Nitrógeno) podrían tener significación ambiental por su carácter de \"gases de invernadero\". Se estima que en el valle del río Yaracuy se cultivan una ha de caña, por lo que anualmente se queman 73600 ton de biomasa y producirían alrededor de 508 t de N en forma de óxidos y N2. Además dispersarían alrededor 2408 ton de cenizas. Se desconoce el efecto ambiental que estas prácticas agrícolas tengan a nivel local y regional.",
+      "autores": [
+        {
+          "nombre": "Pulido, R.",
+          "afiliacion": "Centro de Ecología Tropical, IVIC, Apdo. 21827, Caracas, Venezuela",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Medina, D.",
+          "afiliacion": "Centro de Ecología Tropical, IVIC, Apdo. 21827, Caracas, Venezuela",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "López-Hernández, D.",
+          "afiliacion": "Centro de Ecología Tropical, IVIC, Apdo. 21827, Caracas, Venezuela",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Centro de Ecología Tropical, IVIC, Apdo. 21827, Caracas, Venezuela"
+      ],
+      "ubicaciongeografica": "Hacienda Fe, cerca de Palmarito y en el Río. Yaracuy",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "Saccharum officinarum",
+      "source_path": "I/curatedwithgeo/pagina_12_1.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 12,
+      "indice": 1,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.063854,
+      "longitud": -68.497177,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1991-pagina-64-1",
+      "titulo": "SIMPOSIO SINDROME PARAPLEJICO EN BOVINOS: UN PROBLEMA DE ECOLOGIA APLICADA",
+      "resumen": "En los Llanos de Venezuela los paisajes con suelos poco fértiles y vegetación de sabana, presentan ocurrencia del síndrome parapléjico en bovinos a pastoreo, bajo sistemas de producción extensivos. El objetivo del trabajo es determinar la extensión de suelos poco fértiles, sus principales características, la forma como se agrupan por taxas, limitación de área y posibilidad de ocurrencia del síndrome. Luego de definir áreas de sabanas con suelos poco fértiles, se procedió a describir los perfiles representativos (77), identificándolos según su taxonomía de suelos, se elaboró mapas a escala 1:4.000.000 y realizó análisis de agrupamiento y varianza de los perfiles de suelo a profundidades de 0-25 cm, 0-100 cm y todo el perfil. El área de suelo poco fértil del Estado Guárico tiene una alta proporción de áreas ubicadas entre 7°40' - 9°35' de latitud norte y 64°50' - 67°55' de longitud oeste. El objetivo del trabajo es representar en un mapa los paisajes ecológicos del área de influencia del síndrome, cuantificar y comprender las relaciones de los elementos del sistema y representar las tierras con incidencia del síndrome. Se realizó interpretación de imágenes LANDSAT-MS y SLAR para definir las áreas de interés ecológicos se describió vegetación, geomorfología y suelo. El clima se analizó por balances hídricos de Thornthwaite y mesoclimas. Los sistemas ecológicos son conformados por 21 paisajes diferenciados en ARC - INFO, se realizó un sistema multicategorico y subdivide el total de suelos poco fértiles es de 22.714 km2, el 34.37%. El 24,65% de los paisajes tiene coraza en superficie, lo cual representa una limitación para la producción primaria y prácticas de mecanización. El pH promedio del total de 152 muestras analizadas es de 4.83, los niveles de fósforo, calcio y magnesio son bajos a excepción de los Paisajes Chaguaramos y Requena. Dos grupos de suelos son los más limitantes para la producción de pastos, los de Llanuras Aluviales Meridionales de Mancela tienen muy baja probabilidad de incidencia del síndrome y las Llanuras de Loess de Elorza moderada probabilidad. Todas las áreas drenadas de suelos poco fértiles tienen muy alta, alta o moderada posibilidad de ocurrencia. El análisis de agrupamiento y varianza demostró que los suelos más limitantes son los Paleultisoles arenosos o francos de Altiplanicies de Llanos Orientales, Centrales y Meridionales, Pasmientos aluviales de Llanos Orientales, Pasmientos de dunas de Planicie Meridional del Cañamaparo y Dystropepts de mesaz de Llanos Meridionales y Centrales. Sigue en grado de limitación los Paleultisoles francos de Llanos Centrales y Orientales y Haplultisoles Francos de Llanos Centrales. Se concluye que los suelos poco fértiles bien drenados tienen más probabilidad de ocurrencia del síndrome que los mal drenados y de estos es donde se presenta la mayor variabilidad que condiciona la susceptibilidad de incidencia del síndrome y manejo de suelos.",
+      "autores": [
+        {
+          "nombre": "Berrortérán, José",
+          "afiliacion": "Universidad Central de Venezuela. Facultad de Ciencias. Instituto de Zoología Tropical.",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Ramos, S.",
+          "afiliacion": "Universidad Central de Venezuela. Facultad de Ciencias. Instituto de Zoología Tropical.",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad Central de Venezuela. Facultad de Ciencias. Instituto de Zoología Tropical."
+      ],
+      "ubicaciongeografica": "Llanos de Venezuela, Estado Guárico",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "A. purpusii, P. plicatulum",
+      "source_path": "I/curatedwithgeo/pagina_64_1.json",
+      "anio": 1991,
+      "congreso": "I",
+      "ciudad": "Sartenejas",
+      "pagina": 64,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.341953,
+      "longitud": -67.390513,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-25-1",
+      "titulo": "CARACTERIZACION TAXONOMICA Y ECOLOGICA DE LAS COMUNIDADES DE AVES ACUATICAS EN EL ESTADO DELTA AMACURO",
+      "resumen": "El presente trabajo se basa en los estudios de fauna que realiza CVG Tecmin en la Región Guayana, ubicándose el área de estudio entre las coordenadas 8°-10° N y 60°-63° W del Edo. Delta Amacuro. La metodología presentada sigue los lineamientos de la unidad de fauna del Proyecto, determinándose tres unidades ecológicas asociadas a los ambientes acuáticos, definidas con la información cartográfica de la Unidad de Vegetación. Conjuntamente, se recopilaron registros de museos y literatura para la elaboración de los listados de especies. Se efectuó una caracterización taxonómica-ecológica y un análisis comparativo de la composición taxonómica y estructura trófica de las diferentes comunidades de aves asociadas a: Bosque Ombrófilo Tropical Inundable (BOTI), HerbazaI (Hb) y Manglar (Ma). Se reportan 263 sp, 60 familias y 19 órdenes para BOTI; 411 sp, 52 familias y 17 órdenes para Hb y 220 sp, 45 familias y 16 órdenes para Ma. Las familias más representadas: Tyrannidae, Fringillidae, Throchilidae y Ardeidae.",
+      "autores": [
+        {
+          "nombre": "Abad R., Nélida",
+          "afiliacion": "CVG TECMIN CA",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "CVG TECMIN CA"
+      ],
+      "ubicaciongeografica": "Región Guayana, Estado Delta Amacuro, Venezuela (8°-10° N, 60°-63° W)",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "Tyrannidae, Fringillidae, Throchilidae, Ardeidae, aves acuáticas",
+      "source_path": "II/curatedwithgeo/pagina_25_1.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 25,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 5.718479,
+      "longitud": -64.276427,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-25-2",
+      "titulo": "CAMPAÑA CONSERVACIONISTA DE OFIDOLOGIA",
+      "resumen": "El hombre siempre ha temido a las serpientes, sobre las cuales han creado infinidad de fábulas y leyendas. Este grupo faunístico ha sido sometido a matanzas despiadadas. han destruido su hábitat, anualmente se pierden 17 millones de hectáreas de bosques y selvas en el mundo correspondiendo la mitad a América Latina (México, Colombia, Brasil, Venezuela), acorralando de ésta forma las 3.000 especies y sub-especies de serpientes descritas mundialmente. Para contrarrestar ésta acción, se ha llevado a cabo una labor conservacionista de ofidología en la región de los Andes y Sur del Lago de Maracaibo. Entendiendo que Venezuela, ocupa el segundo lugar en el mundo, en mortalidad a consecuencia de la mordeduras de serpientes ponzoñosas, se ha creado un centro de distribución de suero antiofídico en Mérida, cumpliendo una labor social prioritaria.",
+      "autores": [
+        {
+          "nombre": "Abreu Montilla Williams",
+          "afiliacion": "Universidad de Los Andes",
+          "ror": "https://ror.org/02h1b1x27",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad de Los Andes"
+      ],
+      "ubicaciongeografica": "Región de los Andes, Sur del Lago de Maracaibo, Mérida, Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "Serpientes, serpientes ponzoñosas",
+      "source_path": "II/curatedwithgeo/pagina_25_2.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 25,
+      "indice": 2,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.667918,
+      "longitud": -71.169308,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-26-1",
+      "titulo": "Estudio de visitantes: tipología, preferencias y usos. Parque Nacional 'El Ávila'. Caracas.",
+      "resumen": "Venezuela tiene un sistema de áreas naturales con categorías de manejo entre las cuales se encuentra el Parque Nacional 'El Ávila'. Para la toma de decisión en la gestión del Parque Nacional 'El Ávila', es necesario considerar las características del visitante y su demanda potencial por la necesidad de uso de la población caraqueña y de turistas tanto de otras regiones del país como internacionales. Esta consideración ha sido eje fundamental para determinar en otros Parques del mundo satisfacer sus demandas tanto de recreación, paisajísticas, educativas, culturales, de salud física, conservación, investigación entre otras (Fagence, 1988; Schomaker y Leatherberry, 1983; Settle, 1980; Fediow, 1988; Bernáldez, 1990.). El proyecto consiste en el estudio de los visitantes del Parque Nacional 'El Ávila', que se encuentra en la periferia de la ciudad de Caracas-Venezuela. Las encuestas permitieron determinar la tipología del visitante, modalidad de visita, actividades, valoración del parque, publicidad y medidas de gestión. Los resultados obtenidos reflejan que los usuarios del Parque son en mayor proporción universitarios, asisten con una frecuencia mensual, una permanencia promedio de 1 a 2 horas. Las actividades predominantes son las deportivas y observación de flora y fauna. El agua y las partes de la vegetación constituyen los elementos que más interactúan con el visitante. El paisaje, el clima y la vegetación son los aspectos más valorados por el usuario. Entre las propuestas de gestión del Parque sugeridas por los visitantes destacan las de índole administrativa, legales, infraestructura, publicitarias y de actividades organizadas, prevaleciendo esta última en un mayor porcentaje. El conocimiento del Parque, senderos, visitas guiadas son algunas de las proposiciones de los usuarios.",
+      "autores": [
+        {
+          "nombre": "Jesús Aranguren",
+          "afiliacion": "Universidad Pedagógica Experimental Libertador. Instituto Pedagógico de Caracas. Centro de Investigaciones en Ciencias Naturales Prof. M.A. Sponga. Departamento de Biología y Química",
+          "ror": "https://ror.org/05xc4qj60",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Belinda Perdomo",
+          "afiliacion": "Universidad Pedagógica Experimental Libertador. Instituto Pedagógico de Caracas. Centro de Investigaciones en Ciencias Naturales Prof. M.A. Sponga. Departamento de Biología y Química",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad Pedagógica Experimental Libertador. Instituto Pedagógico de Caracas. Centro de Investigaciones en Ciencias Naturales Prof. M.A. Sponga. Departamento de Biología y Química"
+      ],
+      "ubicaciongeografica": "Parque Nacional 'El Ávila', Caracas, Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "flora, fauna",
+      "source_path": "II/curatedwithgeo/pagina_26_1.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 26,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.5413259,
+      "longitud": -66.7037438,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-26-2",
+      "titulo": "Los Parques Recreacionales, son servicios que se ofrecen a los miembros de una comunidad con fines lúdicos, deportivos y educativos.",
+      "resumen": "Los Parques Recreacionales, son servicios que se ofrecen a los miembros de una comunidad con fines lúdicos, deportivos y educativos. Es necesario determinar el Perfil del Visitante de los Parques recreacionales para conocer su Tipología, sus conocimientos sobre el parque, actividades que realizan, motivaciones, preferencias y grado de satisfacción y de esta forma poder determinar las medidas de gestión del parque en función de las demandas de sus usuarios. El presente trabajo determinó el Perfil del Visitante del Parque Recreacional Morros de La Guarita, ubicado en la Urbanización el Cafetal, estado Miranda. Para la determinación del Perfil del visitante, se diseñó una entrevista estructurada que constaba de 29 preguntas cerradas y 3 abiertas. Para optimizar el instrumento se incorporaron las observaciones de 2 expertos y la prueba piloto. Posteriormente se aplicaron 200 encuestas a los usuarios del parque, lo cual representa el 20 % de la población que lo visita un fin de semana. Los datos fueron tratados con el programa Excel 4.0 para Window 5.1. Los resultados estiman que el 55 % de los visitantes son de sexo masculino, entre 18 y 29 años (70 %), con una entrada económica familiar mayor de los Bs 5.000, el nivel educativo es universitario (56 %) y de educación media (27 %) correspondiente con las edades de mayor afluencia y de profesión estudiantes (37 %); por lo tanto la información que se le suministre al usuario debería tener un nivel medio. Provienen en su mayoría de Petare (23 %), Baruta (11 %) y El Hatillo (1 %), Zonas adyacentes al parque, y el 58 % llega en Carro particular, las zonas adyacentes al parque. El 42 % de los visitantes lo frecuenta todos los fines de semana, lo cual indica que el parque es un área natural frecuentemente visitado, no es de visita única, como suele suceder con monumentos y otras áreas de esparcimiento, esto se debe al potencial que ofrece el parque para realizar múltiples actividades como son: paseos por caminos (46 %), y visitas a cuevas (54 %) entre otras. El 66 % de los visitantes conoce la figura legal del parque, pero el 72 % no conoce su reglamento. Su mayor atractivo es el paisaje (81 %).",
+      "autores": [
+        {
+          "nombre": "Aranguren, J.",
+          "afiliacion": "Universidad Pedagógica Experimental Libertador (UPEL). Instituto Pedagógico de Caracas (IPC). Centro de Investigaciones en Ciencias Naturales Prof. M. A. Sponga (CICNAT) Laboratorio de Ecología Humana. Departamento de Biología y Química.",
+          "ror": "https://ror.org/05xc4qj60",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Torres, L.",
+          "afiliacion": "Universidad Pedagógica Experimental Libertador (UPEL). Instituto Pedagógico de Caracas (IPC). Centro de Investigaciones en Ciencias Naturales Prof. M. A. Sponga (CICNAT) Laboratorio de Ecología Humana. Departamento de Biología y Química.",
+          "ror": "https://ror.org/05xc4qj60",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Hernandez, B.",
+          "afiliacion": "Universidad Pedagógica Experimental Libertador (UPEL). Instituto Pedagógico de Caracas (IPC). Centro de Investigaciones en Ciencias Naturales Prof. M. A. Sponga (CICNAT) Laboratorio de Ecología Humana. Departamento de Biología y Química.",
+          "ror": "https://ror.org/05xc4qj60",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Fernandez, J.",
+          "afiliacion": "Universidad Pedagógica Experimental Libertador (UPEL). Instituto Pedagógico de Caracas (IPC). Centro de Investigaciones en Ciencias Naturales Prof. M. A. Sponga (CICNAT) Laboratorio de Ecología Humana. Departamento de Biología y Química.",
+          "ror": "https://ror.org/05xc4qj60",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Chiquin, A.",
+          "afiliacion": "Universidad Pedagógica Experimental Libertador (UPEL). Instituto Pedagógico de Caracas (IPC). Centro de Investigaciones en Ciencias Naturales Prof. M. A. Sponga (CICNAT) Laboratorio de Ecología Humana. Departamento de Biología y Química.",
+          "ror": "https://ror.org/05xc4qj60",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Rodriguez, F.",
+          "afiliacion": "Universidad Pedagógica Experimental Libertador (UPEL). Instituto Pedagógico de Caracas (IPC). Centro de Investigaciones en Ciencias Naturales Prof. M. A. Sponga (CICNAT) Laboratorio de Ecología Humana. Departamento de Biología y Química.",
+          "ror": "https://ror.org/05xc4qj60",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad Pedagógica Experimental Libertador (UPEL). Instituto Pedagógico de Caracas (IPC). Centro de Investigaciones en Ciencias Naturales Prof. M. A. Sponga (CICNAT) Laboratorio de Ecología Humana. Departamento de Biología y Química."
+      ],
+      "ubicaciongeografica": "Parque Recreacional Morros de La Guarita, Urbanización el Cafetal, estado Miranda, Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "source_path": "II/curatedwithgeo/pagina_26_2.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 26,
+      "indice": 2,
+      "n_autores": 6,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.4649711,
+      "longitud": -66.8294792,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-27-1",
+      "titulo": "PATRON DE HETEROGENEIDAD ESPACIAL DE UNA VEGETACION AFECTADA POR FUEGO EN EL P. N. \"EL AVILA\"",
+      "resumen": "Un modelo evolutivo basado en el análisis Variograma del proceso sucesional, tras la incidencia del fuego, predice el desplazamiento de la vegetación, desde una dinámica gruesa, de acuerdo al régimen del fenómeno, hacia una dinámica más fina, provocada por la apertura de claros en el dosel de las áreas restablecidas. A partir de la fase de hierbas anuales, y luego de las plantas perennes, hasta las especies arbóreas, se relaciona gráficamente, la heterogeneidad de la vegetación con la distancia lineal entre muestras esparcidas sistemáticamente, sobre un suelo homogéneo suficientemente extenso, a través de promediar el porcentaje de disimilitud de mediciones de parámetros sobre la comunidad entera.",
+      "autores": [
+        {
+          "nombre": "Bio. Manuel Arratia",
+          "afiliacion": "Dircción de Vegetación. MARNR",
+          "ror": "https://ror.org/05ak8xb62",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Dircción de Vegetación. MARNR"
+      ],
+      "ubicaciongeografica": "P. N. \"EL AVILA\"",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "Papilionaceac, Euphorbiaceac, Bignoniaceae, Caesalpinaceac, Mimosaceae, Rubiaceae, Verbenaceae",
+      "source_path": "II/curatedwithgeo/pagina_27_1.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 27,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.522919,
+      "longitud": -66.706127,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-27-2",
+      "titulo": "Limitación de alimento y/o competencia intraespecífica como moduladores del fenotipo de Aedes aegypti (Diptera: Culicidae) criados en toneles metálicos en un área urbana",
+      "resumen": "Este trabajo tiene como objetivo determinar si parámetros bioecológicos tales como disponibilidad de alimento (cantidad y calidad) y/o la competencia intraespecífica pueden estar modulando respuestas fenotípicas como el peso de adultos recién emergidos y el tiempo de sobrevivencia de larvas de 3er estadio de Ae. aegypti en ausencia de alimento (RFA). El diseño experimental se llevó a cabo en 2 fases: 1) De toneles metálicos de 208 lts de capacidad utilizados para el almacenamiento de agua en la población de Piritu- Pto. Píritu (Edo. Anzoátegui, Vzla) se colectaron individuos de la fase pupal para la obtención de adultos (los cuales fueron pesados individualmente) y larvas de 3er estadio para los ensayos de RFA. 2) Cría de inmaduros bajo condiciones de laboratorio en toneles metálicos (acondicionados previamente) con un máximo de disponibilidad de alimento y mínima densidad larval. Los resultados sugieren una baja disponibilidad de alimento en los criaderos naturales, ya sea por una limitación de alimento y/o competencia intraespecífica, lo que determina menores masas corporales para los adultos emergidos en condiciones naturales (campo) de manera comparativa a la cría de este culícido bajo las \"mejores\" condiciones experimentales (fase 2). Sin embargo no se encontraron diferencias significativas entre los valores de RFA obtenidos en ambas fases siendo este valor bastante bajo, por lo que aparentemente la calidad del alimento podría ser considerada como un factor importante en la modulación de la RFA, mientras la cantidad del alimento y la competencia intraespecífica determinan el peso de los adultos de esta cepa doméstica de Ae. aegypti",
+      "autores": [
+        {
+          "nombre": "Arrivillaga Jazzmin",
+          "afiliacion": "Instituto de Zoología Tropical. Laboratorio de Biología de Vectores. U.C.V.",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Roberto Barrera",
+          "afiliacion": "Instituto de Zoología Tropical. Laboratorio de Biología de Vectores. U.C.V.",
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        },
+        {
+          "nombre": "Juan Carlos Navarro",
+          "afiliacion": "Instituto de Zoología Tropical. Laboratorio de Biología de Vectores. U.C.V.",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Instituto de Zoología Tropical. Laboratorio de Biología de Vectores. U.C.V."
+      ],
+      "ubicaciongeografica": "Piritu- Pto. Píritu (Edo. Anzoátegui, Vzla)",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "Aedes aegypti",
+      "source_path": "II/curatedwithgeo/pagina_27_2.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 27,
+      "indice": 2,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.045937,
+      "longitud": -65.035086,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-28-1",
+      "titulo": "Situación actual del Caimán de la Costa en 7 localidades del Estado Falcón, Venezuela",
+      "resumen": "Entre 1991 y 1993 se realizaron estudios para evaluar la situación actual del Caimán de la Costa (Crocodylus acutus), en 7 localidades de la costa oriental del Estado Falcón. El método de estudio consistió en conteos nocturnos de caimanes, usando luz de alta intensidad para detectarlos y estimar su longitud total. Se calcularon índices de abundancia relativas (N caimanes/km) en base a las distancias recorridas, obteniéndose los siguientes resultados: RFS Cuare = 0.92/km; PN Morrocoy = 0.42/km; Río Yaracuy = 4.42/km; Río Aroa = 0.71/km; Cuare = 0.92/km; PN Morrocoy = 0.42/km; Río Yaracuy = 4.42/km; Río Aroa = 0.71/km; Río Tocuyo = 5.10/km; Embalse de Tacarigua = 5.26/km, y Embalse de Jatira = 3.22/km. Se compararon estos resultados con los obtenidos en estudios anteriores, con lo que se concluye que la abundancia de caimanes permanece crítica en RFS Cuare, PN Morrocoy y Río Aroa; es estable en Río Yaracuy y Embalse Jatira, y ha incrementado en el Embalse de Tacarigua y Río Tocuyo. En el Río Aroa el bajo nivel poblacional de caimanes contrastó con una alta densidad de babillas (Caiman crocodilus fuscus). Por otra parte, existe variabilidad en las estructuras de tamaños estimadas en cada localidad, pero en general predominan clases juveniles y subadultas. Finalmente, se plantean y evalúan estrategias directas e indirectas para contribuir a la recuperación poblacional de la especie.",
+      "autores": [
+        {
+          "nombre": "Arteaga P. Alfredo A.",
+          "afiliacion": "FUDENA",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "FUDENA"
+      ],
+      "ubicaciongeografica": "Estado Falcón, Venezuela",
+      "ubicaciontemporal": "1991-1993",
+      "especiesmencionadas": "Crocodylus acutus,Caiman crocodilus fuscus",
+      "source_path": "II/curatedwithgeo/pagina_28_1.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 28,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 11.0658861,
+      "longitud": -69.7782901,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-29-1",
+      "titulo": "Flujos de Materia en el Sistema Demerso-Pelagico de Golfo Triste, Edo. Carabobo, Venezuela",
+      "resumen": "Se construyó un diagrama de flujo de materia (kgs.) para Golfo Triste, edo. Carabobo, Venezuela, con información proveniente de muestreos realizados en el área, a bordo de embarcaciones de la flota arrastrera de Puerto Cabello y del buque de investigación R/V Fridtjof Nansen, y la bibliografía especializada. Utilizando el modelo ECOPATH se pudieron agrupar 19 especies tróficas, distribuidas en cuatro niveles, los productores primarios (fitoplancton y productores bentónicos), el nivel de consumidores de primer orden (zooplancton, bentos heterotrófico, camarones Penaeus sp. y salmonete Upeneus parvus), consumidores de segundo nivel (calamares Loligo sp., catalina Prionathus arenatus, coro-coros Haemulon sp., demersales varios, pargos Lutjanidae, y pequeños carangidos) y los consumidores de tercer nivel (lamparosa Selene setapinnis, picuás Sphyraena sp., tajalíes Trichiurus lepturus, roncadores Sciaenidae y tiburones). La producción primaria estimada por el modelo para el área es moderadamente baja, 188.54 ton/km²/año, la producción para los consumidores de primero, segundo y tercer orden es respectivamente 87.45 ton/km²/año, 6.38 ton/km²/año y 0.33 ton/km²/año. La cantidad de biomasa explotada en Golfo Triste para el año de 1988 fue de 0.02 ton/km²/año, en consecuencia la eficiencia de la pesquería (capturas/productividad primaria) se situó en 8*10^-4. La eficiencia de transferencia entre los cuatro niveles tróficos se encuentra un orden de magnitud por debajo de lo esperado, lo que puede ser un reflejo de la construcción de especies tróficas muy artificiales, compuestas por organismos pertenecientes a mas de un nivel trófico. El modelo permitió además identificar tres debilidades en el proceso de investigación realizado en el Golfo Triste, en primer lugar, el desconocimiento de la productividad primaria en el área, en segundo la poca información generada en grupos como plancton y pequeños invertebrados y por último, la inconsistencia en el estudio de la dinámica poblacional de las principales especies sujetas a explotación.",
+      "autores": [
+        {
+          "nombre": "Marco T. Badaracco",
+          "afiliacion": "Centro Nacional para el Mejoramiento de la Enseñanza de la Ciencia",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "R. Molinet",
+          "afiliacion": "usb",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "J.J. Salaya",
+          "afiliacion": "usb",
+          "ror": null,
+          "pais": null,
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Centro Nacional para el Mejoramiento de la Enseñanza de la Ciencia",
+        "usb"
+      ],
+      "ubicaciongeografica": "Golfo Triste, Edo. Carabobo, Venezuela",
+      "ubicaciontemporal": "1988",
+      "especiesmencionadas": "['Loligo sp.', 'Prionathus arenatus', 'Haemulon sp.', 'Penaeus sp.', 'Upeneus parvus', 'Selene setapinnis', 'Sphyraena sp.', 'Trichiurus lepturus', 'Sciaenidae']",
+      "source_path": "II/curatedwithgeo/pagina_29_1.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 29,
+      "indice": 1,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.6843488,
+      "longitud": -68.0690438,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-29-2",
+      "titulo": "Influencia Antropogénica en la Historia del Regimen Fluvial del Rio Acarigua",
+      "resumen": "La intervención antropogénica a la cubierta vegetal de la cuenca del Río Acarigua en el período de 1946-1988, fue medida mediante el uso de las fotografías aéreas de las misiones de vuelo de los años 1947, 1960 y 1975, y el uso de una imagen de satélite SPOT del año 1988, donde se obtuvo como resultado que el 67.8% de área no intervenida en el año 1947, pasó a 7.2% en 1988, siendo el período de mayor intervención el de 1960-1975; esta intervención alteró el régimen fluvial del Río Acarigua en cuanto a la ocurrencia de caudales máximos y los volúmenes totales de escurrimiento, información que fue obtenida mediante el uso de los registros fluviométricos medidos en la salida de la cuenca del puente Río Acarigua durante el período 1952-1988, siendo el período de 1976-1988 en donde ocurrieron las crecidas de mayor volumen y con mayor frecuencia, analizando los registros pluviométricos del período 1970-1992 de seis (6) estaciones ubicadas en distintas áreas dentro de la cuenca, en los cuales no se encontraron cambios significativos del régimen de lluvia.",
+      "autores": [
+        {
+          "nombre": "Ing. Oswaldo Barbera",
+          "afiliacion": "UNELLEZ",
+          "ror": "https://ror.org/04382kq29",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "UNELLEZ"
+      ],
+      "ubicaciongeografica": "Río Acarigua, Venezuela",
+      "ubicaciontemporal": "1946-1988",
+      "especiesmencionadas": null,
+      "source_path": "II/curatedwithgeo/pagina_29_2.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 29,
+      "indice": 2,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 9.5146296,
+      "longitud": -69.274292,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-30-1",
+      "titulo": "Estructura de talla y reproducción de la trucha arcoiris, Oncorhynchus mykiss, en dos quebradas de los Andes merideños",
+      "resumen": "Esta investigación se realizó en la quebrada El Oro y Mucunuútan, son cursos de agua de origen glacial que nacen en la vertiente norte de la Sierra Nevada de los Andes venezolanos en el Estado Mérida. Mensualmente (marzo 1987-febrero 1988) se capturaron las truchas, utilizando la técnica de pesca elìtrica. La estructura de talla en ambas quebradas fue muy parecida, los ejemplares mayores de 6 cm LS y hasta 18 cm LS se observaron en casi todos los meses estudiados. A partir de los 18 cm LS se encontraron principalmente entre septiembre y enero. La clase de tamaño de 0-3 cm LS se observó de marzo a mayo y de octubre a febrero en la quebrada Mucunuútan, en El Oro se encontró en abril (1987) y en enero y febrero (1988). Estos resultados indican la incorporación de una nueva cohorte a las poblaciones estudiadas, pudéndose decir que la reproducción de la trucha, en esas quebradas, ocurre en los últimos meses del año, prolongándose hasta los primeros meses del año siguiente.",
+      "autores": [
+        {
+          "nombre": "Hilda Bastardo de C.",
+          "afiliacion": "Centro Investigaciones Agropecuarias del Estado Mérida. FONAIAP-Mérida. Avenida Urdaneta, Edif. MAC. Planta Alta, Mérida 5101, Venezuela",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Samuel Segnini",
+          "afiliacion": "ULA-Facultad de Ciencias, Mérida-Venezuela",
+          "ror": "https://ror.org/02h1b1x27",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Centro Investigaciones Agropecuarias del Estado Mérida. FONAIAP-Mérida. Avenida Urdaneta, Edif. MAC. Planta Alta, Mérida 5101, Venezuela",
+        "ULA-Facultad de Ciencias, Mérida-Venezuela"
+      ],
+      "ubicaciongeografica": "Sierra Nevada de los Andes venezolanos, Estado Mérida, quebrada El Oro y Mucunuútan",
+      "ubicaciontemporal": "marzo 1987 - febrero 1988",
+      "especiesmencionadas": "Oncorhynchus mykiss",
+      "source_path": "II/curatedwithgeo/pagina_30_1.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 30,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.5060738,
+      "longitud": -71.2649632,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-31-2",
+      "titulo": "CAMBIOS EN SUELOS BAJO CULTIVO DE MAIZ CON RELACION A LOS SISTEMAS NATIVOS EN LOS LLANOS ALTOS CENTRALES VENEZOLANOS",
+      "resumen": "El estudio se realizó en un área de los Llanos Altos Centrales. Tiene una extensión de 70 Km, ubicada a 9° 14' 6\" y 9° 19' 57\" de LN y entre 67° 1' 52\" y 66° 57' 44\" de LO, en el Estado Guárico. Se cuantificaron los cambios introducidos en el suelo, debido a la deforestación y las prácticas de manejo en la producción de maíz de secano. Se seleccionaron 6 subformaciones vegetales, en cada una se muestreó un ecosistema con 3 repeticiones, tanto en estado nativo como cultivado con maíz por 8-9 años, en el ciclo de 1989-90. La ganancia relativa de fósforo superficial (50,97 %), potasio subsuperficial (41,42 %), calcio superficial (31,26 %) y subsuperficial (57,91 %) en los suelos del agrosistema maíz, indican que hay un efecto significativo en el enriquecimiento de las reservas de nutrientes, lo cual se explica por las altas dosis anuales de fertilizantes. Otro efecto positivo es la disminución de los niveles de aluminio intercambiable en los suelos encalados. Un efecto negativo por la deforestación, es la pérdida del contenido de materia orgánica superficial (24 %) en el agrosistema maíz. El magnesio presenta niveles decrecientes. La relación magnesio:potasio se ha hecho desfavorable para la aprovechabilidad del magnesio. Otra tendencia negativa es la acidificación de los suelos no encalados, por efecto residual del fertilizante.",
+      "autores": [
+        {
+          "nombre": "BERROTERAN NUÑEZ, JOSE L.",
+          "afiliacion": "Instituto de Zoología Tropical. Facultad de Ciencias.UCV",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Instituto de Zoología Tropical. Facultad de Ciencias.UCV"
+      ],
+      "ubicaciongeografica": "Llanos Altos Centrales, Estado Guárico, Venezuela",
+      "ubicaciontemporal": "1989-90",
+      "especiesmencionadas": "zea maíz",
+      "source_path": "II/curatedwithgeo/pagina_31_2.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 31,
+      "indice": 2,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.8207873,
+      "longitud": -66.5330316,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-32-1",
+      "titulo": "ESTUDIO GENETICO Y MORFOLOGICO PRELIMINAR DE LA ESPECIE Moenkhausia pittieri (PISCES:CHARACIDAE) EN DOS CUENCAS AISLADAS DE LA REGION CENTRO-ORIENTAL DE VENEZUELA",
+      "resumen": "Las cuencas hidrográficas del Lago de Valencia y del Río Tuy se encuentran separadas geográficamente desde hace aproximadamente 10,000 a 10^6 años, por la divisoria de aguas entre las cabeceras de dos ríos Aragua y Tuy, ocasionando el aislamiento de las especies de peces que allí habitaban. El objetivo de este trabajo fue comparar genética y morfológicamente la especie Moenkhausia pittieri para ambas cuencas, con la finalidad de determinar posibles cambios en estos aspectos. Para cubrir este objetivo se utilizaron las técnicas de electroforesis en gel de poliacrilamida (PAGE) para el análisis genético mediante el revestado de diez sistemas enzimáticos y el método de Cerchas para el análisis de 34 medidas morfológicas mediante Componentes Principales. Los resultados del análisis morfológico revelaron que no existían diferencias significativas entre las poblaciones de ambas cuencas. Las pruebas electroforéticas indicaron que la mitad de las enzimas estudiadas mostraron patrones de bandas diferentes para ambas cuencas. En resumen, se observó una apreciable diferenciación a nivel bioquímico en contraste con un mantenimiento de la estructura morfológica dentro de esta especie, donde la condición de aislamiento geográfico y por ende reproductivo, parecer ser el factor clave ya que las variables ambientales analizadas no mostraron una diferenciación apreciable entre ambas cuencas.",
+      "autores": [
+        {
+          "nombre": "BONILLA R.",
+          "afiliacion": "Postgrado de Ecología, Laboratorio de Ictiología, Instituto de Zoología Tropical, Fac. de Ciencias, UCV",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "ANA L.",
+          "afiliacion": "Postgrado de Ecología, Laboratorio de Ictiología, Instituto de Zoología Tropical, Fac. de Ciencias, UCV",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Postgrado de Ecología, Laboratorio de Ictiología, Instituto de Zoología Tropical, Fac. de Ciencias, UCV"
+      ],
+      "ubicaciongeografica": "Región Centro-Oriental de Venezuela, cuencas del Lago de Valencia y del Río Tuy",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "Moenkhausia pittieri",
+      "source_path": "II/curatedwithgeo/pagina_32_1.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 32,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.139228,
+      "longitud": -67.738937,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-93-1",
+      "titulo": "CAMBIOS MICROCLIMATICOS DERIVADOS DE LA SUSTITUCION DE LA VEGETACION NATURAL POR LA PLANTACIONES DE PINO CARIBE (Pinus caribaea var hondurensis) EN EL SUR DEL ESTADO MONAGAS",
+      "resumen": "En el sur de los Estados Monagas y Anzoátegui la empresa CVG-PROFORCA, ha venido desarrollando amplios programas de plantaciones forestales con fines industriales con la especie Pinus caribaea, donde actualmente se tiene una superficie de aproximadamente 450.000 ha. Este proceso de sustitución de la vegetación natural por plantaciones forestales, ha conllevado a cambios ecológicos de importancia, donde uno de los componentes del ambiente que ha sufrido modificaciones es el microclima de la región. Con la finalidad de determinar los cambios microclimáticos derivados de la sustitución de la vegetación natural por plantaciones forestales, se instalaron estaciones climatológicas de primer orden o de tipo C1, en el interior de un rodal de pino caribe moderadamente denso de la plantación 1980 del Proyecto Uverito, y en una sabana inarbolada con vegetación predominante herbácea. Elemento meteorológicos tales como Temperatura del aire, Humedad Relativa, Radiación Solar y Temperatura del Suelo a profundidades entre 5 y 100 cm, muestran variaciones importantes en el interior del bosque comparado con el ambiente de sabana. El tipo y las características de la vegetación inducen los cambios microclimáticos originados en la región como consecuencia de la implementación de los programas forestales.",
+      "autores": [
+        {
+          "nombre": "Francisco Visáez",
+          "afiliacion": "CVG-PROFORCA",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "CVG-PROFORCA"
+      ],
+      "ubicaciongeografica": "Sur del Estado Monagas, Venezuela",
+      "ubicaciontemporal": "1980",
+      "especiesmencionadas": "['Pinus caribaea']",
+      "source_path": "II/curatedwithgeo/pagina_93_1.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 93,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 9.7030415,
+      "longitud": -63.1530963,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1994-pagina-94-1",
+      "titulo": "Educación Ambiental para la Conservación de los Ecosistemas Dulceacuícolas (Caso Insectos Acuáticos)",
+      "resumen": "La disminución de la Calidad Ambiental (calidad de agua, ocurrencia de sedimentos, arrastre de sedimentos) participan en la situación de destrucción de los Ecosistemas Acuáticos y por ende contribuyen a justificar desde cualquier punto de vista las investigaciones y programas educativos que se diseñen para minimizar los problemas ambientales generados por factores antrópicos y naturales. Como objetivo primordial para la formación y actualización de los docentes activos de 7mo., 8vo. y 9no. grado de Educación Básica, se desarrolla el Programa con actividades educativas no convencionales en el área de Conservación de los Ecosistemas Dulceacuícolas. Para llevar a cabo ésta tarea, se hace necesario un proceso de capacitación en las materias de los currícula de cada uno de éstos niveles y su posterior aplicación en el proceso educativo. Este consiste en la enseñanza de algunos componentes de los Ecosistemas Acuáticos (Insectos), con actividades educativas creativas, innovadoras y participativas, tales como juegos, simulaciones, dramatizaciones, aplicadas en las asignaturas de Temáticas y Ciencias.",
+      "autores": [
+        {
+          "nombre": "Gloria Zúccaro",
+          "afiliacion": "UNELLEZ Vice-rectorado Planificación y Desarrollo",
+          "ror": "https://ror.org/04382kq29",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "UNELLEZ Vice-rectorado Planificación y Desarrollo"
+      ],
+      "ubicaciongeografica": "Alto Barinas (Edo. Barinas), Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "Insectos Acuáticos",
+      "source_path": "II/curatedwithgeo/pagina_94_1.json",
+      "anio": 1994,
+      "congreso": "II",
+      "ciudad": "Guanare",
+      "pagina": 94,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.477805,
+      "longitud": -70.219181,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1999-pagina-114-2",
+      "titulo": "ESTIMACION DE COSTOS PARA LA RECUPERACION DE LAS AREAS AFECTADAS POR LAS ACTIVIDADES MINERAS",
+      "resumen": "En este estudio presentamos una estimación de los costos de recuperación de las áreas afectadas por las intervenciones minera y agropecuaria en los sectores enmarcados por los ejes El Dorado-Km.88 y Santa Elena-icabarú, ubicados al sur del Estado Bolívar. Nos apoyamos en los datos recopilados en el Diagnóstico y Plan ambiental realizado por FUNDAGEOMINAS (U.D.O.), con el apoyo de otras instituciones de la región. Detectamos 15.290 hectáreas afectadas y las clasificamos en cinco (5) categorías, de acuerdo al grado de deterioro sufrido, distribuidas así: 9.418 ha en la categoría A-1, 915 ha; en A-2, 2.563 ha; en A-3, 1.264 ha; en A-4, y 1.150 ha; en A-5. Establecimos un plan para recuperar un 62% (9.496 ha), usando diferentes sistemas cuyas actividades contemplan el levantamiento topográfico, la preparación del terreno y la siembra de especies vegetales. El costo total para recuperar toda el área es estimado en 7,49 millardos y es equivalente a 489.783 Bs. ha⁻¹",
+      "autores": [
+        {
+          "nombre": "Vera, Horacio",
+          "afiliacion": "UDO-IAMOT-FUNDAGEOMINAS",
+          "ror": "https://ror.org/03xygw105",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "UDO-IAMOT-FUNDAGEOMINAS"
+      ],
+      "ubicaciongeografica": "Estado Bolívar, Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "source_path": "III/curatedwithgeo/pagina_114_2.json",
+      "anio": 1999,
+      "congreso": "III",
+      "ciudad": "Puerto Ordaz",
+      "pagina": 114,
+      "indice": 2,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 5.309766,
+      "longitud": -61.490225,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1999-pagina-115-1",
+      "titulo": "Inventario preliminar de gorgonáceos presentes en diversas localidades del estado Sucre, Venezuela",
+      "resumen": "Los gorgonáceos (octocorales) en nuestro país son un campo casi inexplorado. Con la finalidad de conocer la distribución de los gorgonáceos en el área costera del estado Sucre, se realizaron observaciones 'in situ' en 4 localidades: Punta Aguirre (bahía de Mochima), Isla Caribe (frente a Chacopata), Punta de Tacarigua y ensenada de Carenero (golfo de Cariaco) en el Edo. Sucre, Venezuela. Para tal fin se usaron equipos autónomos SCUBA: tanque de buceo, regulador, profundímetro, tabla de anotaciones, cámara fotográfica. Se realizaron inmersiones mensuales a lo largo de las zonas previamente establecidas. Se anotaron datos de sustrato, profundidad y localidad donde se encontraron. Las muestras fueron identificadas tomando en cuenta sus características externas distintivas y un examen microscópico de sus espículas. Se registraron un total de 6 especies, 5 géneros, 2 familia, 1 orden; presentando mayor distribución la zona de punta Aguirre con un número de 5 especies, siendo la más abundante y constante la especie Plexaura flexuosa. Los gorgonáceos fueron encontrados en sustratos rocosos y sobre fragmentos de corales pétreos. El factor determinante en su distribución basado en las observaciones realizadas fue el efecto de las corrientes.",
+      "autores": [
+        {
+          "nombre": "Zapata, E.",
+          "afiliacion": "Universidad de Oriente. Núcleo de Sucre. Dpto. de Biología",
+          "ror": "https://ror.org/03xygw105",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "López, I.",
+          "afiliacion": "Fundación Pro-desarrollo de las Ciencias Marinas (FUNDEMAR). ",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Chinchilla, L.",
+          "afiliacion": "Instituto Oceanográfico de Venezuela",
+          "ror": "https://ror.org/02v75tb58",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Fundación Pro-desarrollo de las Ciencias Marinas (FUNDEMAR). ",
+        "Instituto Oceanográfico de Venezuela",
+        "Universidad de Oriente. Núcleo de Sucre. Dpto. de Biología"
+      ],
+      "ubicaciongeografica": "Estado Sucre, Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Plexaura flexuosa']",
+      "source_path": "III/curatedwithgeo/pagina_115_1.json",
+      "anio": 1999,
+      "congreso": "III",
+      "ciudad": "Puerto Ordaz",
+      "pagina": 115,
+      "indice": 1,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.4088276,
+      "longitud": -63.351996,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    },
+    {
+      "study_id": "cve-1999-pagina-115-2",
+      "titulo": "Importancia y calidad del agar de Gracilariopsis tenuifrons (Gracilariales, Rhodophyta) como materia prima para la industria alimenticia",
+      "resumen": "Los productos que se extraen de las algas marinas son los que le otorgan valor comercial a estos organismos, ya que son aprovechados en cantidades apreciables en la industria alimenticia, textilera, cosmética, farmacéutica, en investigaciones biológicas y médicas. Se evaluó la calidad del agar de Gracilariopsis tenuifrons, determinando el rendimiento y fuerza del gel, con la finalidad de demostrar su factibilidad económica. La colecta del alga se realizó en la zona sublitoral en Guayacán, NE de la Península de Araya, Edo Sucre desde octubre de 1997 a junio de 1998. La extracción del agar se realizó mensualmente utilizando: extracción directa en agua y tratamiento alcalino con NaOH al 3%. Los valores del rendimiento estuvieron comprendidos entre 23,38 – 35,50 % para la extracción directa en agua y entre 16,59 – 20,34 % cuando se aplicó tratamiento alcalino. Para la fuerza del gel estos oscilaron entre 202,31 – 691,06 g/cm^2 y 520,40 – 1191,45 g/cm^2 respectivamente. Los resultados obtenidos señalan que el tratamiento alcalino mejora la fuerza del gel pero disminuye el rendimiento, sin embargo, los valores de rendimiento y fuerza del gel indican que el agar obtenido de esta especie es de buena calidad pudiendo ser usada a escala industrial, ya que para mejorar la calidad de vida en el mundo de hoy implica la utilización de sustancias extraídas de recursos naturales renovables.",
+      "autores": [
+        {
+          "nombre": "Zecchinel, E.",
+          "afiliacion": "Universidad de Oriente. Núcleo de Sucre. Departamento de Biología",
+          "ror": "https://ror.org/03xygw105",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Lárez, G.",
+          "afiliacion": "Universidad de Oriente. Núcleo de Sucre. Departamento de Biología",
+          "ror": "https://ror.org/03xygw105",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad de Oriente. Núcleo de Sucre. Departamento de Biología"
+      ],
+      "ubicaciongeografica": "Península de Araya, Edo Sucre, Venezuela",
+      "ubicaciontemporal": "Octubre de 1997 a junio de 1998",
+      "especiesmencionadas": "['Gracilariopsis tenuifrons']",
+      "source_path": "III/curatedwithgeo/pagina_115_2.json",
+      "anio": 1999,
+      "congreso": "III",
+      "ciudad": "Puerto Ordaz",
+      "pagina": 115,
+      "indice": 2,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.5942021,
+      "longitud": -63.834001,
+      "display_class": "placeable",
+      "on_map": true,
+      "exclusion_reason": null
+    }
+  ]
+}
