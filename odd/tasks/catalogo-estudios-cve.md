@@ -204,13 +204,31 @@ Each task closes with one work-unit commit and observed evidence.
   dedicated tests. `load_labelling` is patched in the CLI tests and `write_outputs` is exercised only
   indirectly, through the byte-identity rebuild.
 
-### T3 — API
-- `GET /api/studies/catalog` returns the catalog, the per-class counts and the exclusion reasons.
-- `GET /api/studies/{study_id}` returns one study.
-- The JSON is parsed **once at import**, applying the T8a CRITICAL finding before it can repeat,
-  with a counter endpoint that makes the invariant measurable, as the composition endpoints do.
-- Import-time consistency check that fails loudly on a missing or malformed artifact.
-- **Evidence**: counters read 1/1 before and after N requests; guards fire on malformed fixtures.
+### T3 — API — **DONE**
+- Three read-only endpoints in `tools/serve_viewer.py`, as **pure additions**:
+  `/api/studies/catalog`, `/api/studies/{study_id}` and `/api/studies/_load_counters`.
+  Declaration order is deliberate and load-bearing: the two literal routes come **before** the
+  `{study_id}` catch-all, or the catch-all would swallow them and `/api/studies/catalog` would
+  answer `study not found: catalog`.
+- `STUDIES_CATALOG_PATH` is `data/derived/<country>/congresos/…` and deliberately **not** under
+  `DERIVED_ROOT`, because studies are not collection-scoped. Deriving it from `DERIVED_ROOT` would
+  have produced a path that does not exist and a confusing startup failure.
+- **Parsed once at import**, applying the T8a CRITICAL finding before it could repeat. The counter
+  endpoint exists to make that invariant measurable rather than asserted, following the shape the
+  composition endpoints already established.
+- An import-time consistency check stops the service with a specific message on a missing,
+  unparseable or internally inconsistent artifact. It validates the **superset** of what this
+  document originally asked for: the brief said "the three `classes` counts" and the artifact ships
+  **four**, so it checks the four-class total against `study_count`, the non-placeable subtotal
+  against `excluded_count`, the placeable count against `map_visible_count`, and each declared count
+  against the real per-class tally. The imprecision was reported rather than guessed at.
+- **Evidence, reproduced by the parent rather than taken from the handoff**: `/api/studies/catalog`
+  returns HTTP 200 with 31 studies and counts 24/4/1/2; `/api/studies/_load_counters` reads **1
+  before and 1 after 24 requests** (20 catalog plus 4 per-study), which is the parse-once invariant
+  measured rather than claimed; an unknown id returns **404** with `study not found: no-existe`; and
+  `/api/health`, `/api/meta`, `/api/composition/series`, `/api/composition/year/2024` and one tile
+  all still return 200. The diff against the previous revision is **additions only, zero deleted
+  lines**, which is why no existing endpoint could have changed behaviour.
 
 ### T4 — Frontend: catalog panel and map layer
 - A catalog section in `viewer/index.html`, rendered by a new module, with all 31 studies and
