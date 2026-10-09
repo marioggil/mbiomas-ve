@@ -20,6 +20,12 @@ are needed only to REBUILD the catalog. They are deliberately absent from the
 service and the image, and must never be added to a requirements file. This tool
 fails with an actionable message when either is missing.
 
+Both imports are lazy, inside the function that needs them. A library module
+must never call ``sys.exit`` on import: ``slugify``, ``classify`` and the rest of
+the pure logic stay importable and testable on an interpreter with neither
+dependency, and the CLI still fails with the same stderr line and exit status 1
+because ``main`` reports the ``StudyCatalogError`` itself.
+
 The classification is computed here, at build time, so the service never
 recomputes it and the exclusion reasons are reviewable in the derived artifact.
 
@@ -50,29 +56,23 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-try:
-    import pyarrow.parquet as pq
-except ImportError:  # pragma: no cover - exercised only on a bare interpreter
-    sys.stderr.write(
-        "error: pyarrow is required to REBUILD the study catalog. It is a "
-        "rebuild-only dependency: install it in a build environment (for "
-        "example `pip install 'pyarrow>=25'`), never in the viewer's "
-        "requirements or the image. Nothing else in this project reads Parquet.\n"
-    )
-    raise SystemExit(1)
+# The two rebuild-only dependencies are imported inside the functions that use
+# them (see the module docstring). The wording below is the message the CLI has
+# always printed; only the delivery changed from an import-time exit to a
+# StudyCatalogError that ``main`` prints and turns into exit status 1.
+PYARROW_MISSING = (
+    "pyarrow is required to REBUILD the study catalog. It is a "
+    "rebuild-only dependency: install it in a build environment (for "
+    "example `pip install 'pyarrow>=25'`), never in the viewer's "
+    "requirements or the image. Nothing else in this project reads Parquet."
+)
 
-try:
-    from osgeo import gdal
-except ImportError:  # pragma: no cover - exercised only on a bare interpreter
-    sys.stderr.write(
-        "error: the GDAL Python bindings (osgeo) are required to REBUILD the "
-        "study catalog, because the extent comes from the COG's own "
-        "geotransform. They are a rebuild-only dependency: install GDAL in the "
-        "build environment, never in the viewer's requirements or the image.\n"
-    )
-    raise SystemExit(1)
-
-gdal.UseExceptions()
+GDAL_MISSING = (
+    "the GDAL Python bindings (osgeo) are required to REBUILD the "
+    "study catalog, because the extent comes from the COG's own "
+    "geotransform. They are a rebuild-only dependency: install GDAL in the "
+    "build environment, never in the viewer's requirements or the image."
+)
 
 
 # Columns the source Parquet must carry. The first block is the contract's
@@ -182,6 +182,13 @@ def load_labelling(path: Path) -> tuple[str, str]:
 
 def cog_extent(path: Path) -> dict[str, float]:
     """Read the COG's real extent from its geotransform, never a constant."""
+    # Lazy so importing this module does not require GDAL. Checked before the
+    # path, exactly as the old module-level import was.
+    try:
+        from osgeo import gdal
+    except ImportError as exc:  # pragma: no cover - bare interpreter only
+        raise StudyCatalogError(GDAL_MISSING) from exc
+    gdal.UseExceptions()
     if not path.is_file():
         raise StudyCatalogError(f"--cog not found: {path}")
     dataset = gdal.Open(str(path))
@@ -204,6 +211,12 @@ def cog_extent(path: Path) -> dict[str, float]:
 
 
 def read_rows(path: Path) -> list[dict[str, Any]]:
+    # Lazy so importing this module does not require pyarrow. Checked before the
+    # path, exactly as the old module-level import was.
+    try:
+        import pyarrow.parquet as pq
+    except ImportError as exc:  # pragma: no cover - bare interpreter only
+        raise StudyCatalogError(PYARROW_MISSING) from exc
     if not path.is_file():
         raise StudyCatalogError(f"--parquet not found: {path}")
     try:
