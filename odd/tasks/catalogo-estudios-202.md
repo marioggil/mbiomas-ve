@@ -523,7 +523,7 @@ tests stayed green.
 
 ### T4 — API invariants and packaging — **DONE**
 
-**Commit**: recorded below.
+**Commit**: `f0a8bc4`.
 
 - Eight new import-time invariants in `tools/serve_viewer.py`, each naming the offending study:
   the level is `T0`/`T1`/`T2`; the coordinate-conditional class rule (section 5);
