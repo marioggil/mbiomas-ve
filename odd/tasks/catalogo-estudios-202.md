@@ -255,6 +255,9 @@ the rebuild is not treated as truth until they are reviewed.
 Each task closes with one work-unit commit carrying code, its tests and its documentation together.
 
 ### T1 — Provenance plumbing in the builder — **DONE**
+
+**Commit**: `7b47474` — work unit carrying the builder, its tests and this document.
+
 - `read_rows` reads the Parquet **once** into memory, hashes those bytes and parses them from the same
   buffer, returning `(rows, source_identity)` with exactly `source_sha256`, `source_rows` and
   `source_bytes`. There is no second read of the path, so the digest cannot describe a different
