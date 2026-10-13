@@ -108,10 +108,9 @@
       "razon": "unidad administrativa de primer nivel"
     },
     "II/curatedwithgeo/pagina_29_1.json": {
-      "nivel": "T1",
+      "nivel": "T2",
       "texto": "Golfo Triste, Edo. Carabobo, Venezuela",
-      "razon": "accidente geográfico de escala regional",
-      "nota": "¿T1 por escala o T2 por bahía concreta?"
+      "nota": "revisado: queda T2. Bahía concreta en Carabobo, a 18 km del punto habitado más cercano."
     },
     "II/curatedwithgeo/pagina_29_2.json": {
       "nivel": "T2",
@@ -178,10 +177,10 @@
       "texto": "Kwakwani, Guyana"
     },
     "III/curatedwithgeo/pagina_56_3.json": {
-      "nivel": "T0",
+      "nivel": "T1",
       "texto": "Mar Caribe, Venezuela",
-      "razon": "cuerpo marino, sin lugar",
-      "nota": "¿T0 por cuerpo marino o T2 por cuerpo concreto?"
+      "razon": "cuerpo marino sin localidad; el punto geocodificado cae en la costa central",
+      "nota": "revisado: queda T1 (era T0). El mar no identifica un sitio de estudio. No mueve el mapa: T0 y T1 quedan las dos fuera."
     },
     "III/curatedwithgeo/pagina_60_1.json": {
       "nivel": "T0",
@@ -398,7 +397,7 @@
     "V/curatedwithgeo/pagina_212_2.json": {
       "nivel": "T2",
       "texto": "Laguna de Asfalto Guanoco, Sucre, Estados Mérida y Lara, Venezuela",
-      "nota": "quedó T2: el sitio nombrado manda sobre los estados ajenos que la extracción arrastró"
+      "nota": "revisado: queda T2. La coordenada cae en el estado Mérida, a 38 km de Lagunillas, y 'Sucre' es también un municipio de Mérida, no solo el estado oriental: mi lectura multi-estado siguió el texto y no el lugar."
     },
     "V/curatedwithgeo/pagina_241_1.json": {
       "nivel": "T2",
@@ -459,10 +458,9 @@
       "razon": "enumera dos lugares distintos"
     },
     "VI/curatedwithgeo/pagina_126_1.json": {
-      "nivel": "T1",
+      "nivel": "T2",
       "texto": "Desembocadura del estuario de Maracaibo, Venezuela",
-      "razon": "tramo de costa, sin localidad puntual",
-      "nota": "¿T1 por tramo de costa o T2 por accidente concreto?"
+      "nota": "revisado: queda T2. Tramo corto y concreto de costa, a 3 km de 'Capitán Chico, Edo. Zulia'."
     },
     "VI/curatedwithgeo/pagina_130_1.json": {
       "nivel": "T0",
@@ -575,10 +573,9 @@
       "razon": "tipo de vegetación, no un lugar"
     },
     "VII/curatedwithgeo/pagina_536_1.json": {
-      "nivel": "T1",
+      "nivel": "T2",
       "texto": "Golfo de Venezuela",
-      "razon": "accidente geográfico de escala regional",
-      "nota": "¿T1 por escala o T2 por cuerpo concreto?"
+      "nota": "revisado: queda T2. Su coordenada coincide exactamente con dos estudios T2 ya mapeados (costa occidental, Islas San Bernardo / Punta de Palma, Puertos de Altagracia): incluirlo suma un estudio sin agregar una afirmación espacial nueva."
     },
     "VII/curatedwithgeo/pagina_55_1.json": {
       "nivel": "T0",
@@ -953,5 +950,17 @@
       "razon": "sin texto de ubicación utilizable",
       "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
     }
+  },
+  "reviewed": {
+    "date": "2026-10-14",
+    "by": "human review of the 43 boundary notes, case by case",
+    "changed": [
+      "Desembocadura del estuario de Maracaibo, Venezuela",
+      "Golfo Triste, Edo. Carabobo, Venezuela",
+      "Golfo de Venezuela",
+      "Laguna de Asfalto Guanoco, Sucre, Estados Mérida y Lara, Venezuela",
+      "Mar Caribe, Venezuela"
+    ],
+    "note_convention": "una 'nota' marca un caso que se discutió; el 'nivel' es la decisión"
   }
 }
