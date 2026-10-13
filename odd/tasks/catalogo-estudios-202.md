@@ -251,8 +251,8 @@ texts, with every T0/T1 decision written out in the file next to its reason:
 
 A named site wins over an appended list of states: the states are not the anchor.
 
-Result over the 202-row corpus: **T0 61, T1 31, T2 110**, which under the D12 evaluation order
-leaves **100 placeable / 83 coarse_location / 10 outside_extent / 9 no_coordinate**. The F4 contract
+Result, **after the human review**: **T0 60, T1 29, T2 113**, which under the D12 evaluation order
+leaves **103 placeable / 80 coarse_location / 10 outside_extent / 9 no_coordinate**. The F4 contract
 on the same rows gave 107 placeable — a similar *number*, for entirely different reasons: it
 excluded studies for sharing a coordinate, including the Mérida and Lago de Maracaibo clusters,
 while the taxonomy excludes the mentions that name no place and keeps those clusters on the map.
@@ -263,8 +263,15 @@ whole point of a curated file. The text is not decoration: `check_granularity_co
 the recorded text no longer matches the corpus row, so an upstream extraction fix stops the build
 until a human re-judges the level.
 
-**43 entries carry a `nota`** recording a boundary call and the alternative; **27 of them would move
-at least one study on or off the map**. They are grouped into five decisions in T2's evidence below.
+**43 entries carry a `nota`** recording a boundary call that was argued; **28 of them concern a
+mention with at least one study inside the map extent**. The file states its own convention: a `nota`
+marks a case that was discussed, the `nivel` is the decision.
+
+**The human review of 2026-10-14** walked the consequential cases one by one and changed **four
+levels and no location text**: `Golfo de Venezuela`, `Golfo Triste` and the `Desembocadura del
+estuario de Maracaibo` moved T1 → T2 (each a bounded feature whose own row already sits on or beside
+a mapped point), and `Mar Caribe, Venezuela` moved T0 → T1, which does not move the map because both
+levels are excluded. The outcome is recorded in the file's top-level `reviewed` block.
 
 **Fail-loud**: a parquet row with no entry aborts the build; an entry matching no row aborts; a level
 outside T0/T1/T2 aborts; a T0/T1 entry without `razon` aborts.
@@ -356,6 +363,30 @@ document).
 | `Isla de Margarita, Venezuela` held as T2 while `Nueva Esparta` is T1 | 1 | −1; the Margarita/Porlamar cluster is 5 studies |
 
 Whatever the review changes lands as a **data-only commit** on top of this one.
+
+**Review outcome (2026-10-14), commit `05359af`.**
+
+- **The effect was +3 studies, not +15.** Eight of the mentions I flagged as boundary calls were
+  **already T2**, so accepting them changed nothing; only `Golfo de Venezuela`, `Golfo Triste` and the
+  `Desembocadura del estuario de Maracaibo` were actually outside and moved inside (T1 → T2), and
+  `Mar Caribe, Venezuela` moved T0 → T1 without moving the map. **100 → 103 markers of 202**, measured
+  after the edit with the rebuild interpreter, which also re-ran `load_granularity` and
+  `check_granularity_coverage` over the real Parquet: 202 rows ↔ 202 entries, no orphans, every text
+  matching its corpus row.
+- **Two errors of mine, both in the summary and neither in the artifact.** The first was arithmetic:
+  I reported the review's effect as "+15 → 115 markers" by counting entries that were already
+  placeable as if they were gains. The second was reading the pending list wrong: I presented
+  `Laguna de Asfalto Guanoco` as a default I was correcting from T0 to T2, when the entry had always
+  been T2 — the reasoning was right, the "correction" framing was false. The classification now
+  encodes exactly the seventeen recommendations presented; what was wrong was how I added them up.
+- The review also settled `Guanoco` in writing: its coordinate falls in Mérida state, 38 km from
+  Lagunillas, and `Sucre` is also a municipality of Mérida, so the multi-state reading had followed
+  the text rather than the place. Its `nota` is now a decision record instead of an open question.
+- **Group decisions accepted as defaults**: a named site wins over the administrative apparatus that
+  contains it (Municipio Campo Elías + Parroquia Jají, parroquia Canoabo, Valle de Caracas, Maracay +
+  Estado Aragua, Isla de Margarita, and the rest); and the four mentions that name only
+  administration — `Municipio Caroní`, `Municipio El Hatillo`, `Municipio Libertador del Distrito
+  Capital`, `Estado Portuguesa, municipio Ospino`, `Programa Colorido` — stay outside the map.
 
 ### T3 — Builder at 202, new contract, artifact regenerated
 
