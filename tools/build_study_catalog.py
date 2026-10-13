@@ -13,6 +13,16 @@ This follows the project's established raster -> COG -> derived pattern: the raw
 Parquet stays raw and unversioned, the derived CSV/JSON under ``data/derived/``
 is versioned and ships.
 
+PROVENANCE
+----------
+An unversioned input can change under a derived artifact without anything
+noticing, so the JSON records the identity of the file it was built from
+next to its path: ``source_sha256``, ``source_rows`` and ``source_bytes``.
+The digest is computed from the exact bytes that were parsed, in a single
+read, so the artifact cannot describe a different revision of the file than
+the one it was built from. The CSV stays a flat per-study table: provenance
+is document-level and lives only in the JSON.
+
 REBUILD-ONLY DEPENDENCY
 -----------------------
 ``pyarrow`` (to read Parquet) and ``osgeo``/GDAL (to read the COG geotransform)
@@ -46,6 +56,8 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
+import io
 import json
 import os
 import re
@@ -210,7 +222,14 @@ def cog_extent(path: Path) -> dict[str, float]:
     }
 
 
-def read_rows(path: Path) -> list[dict[str, Any]]:
+def read_rows(path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Read the Parquet once and return its rows plus the input's identity.
+
+    The bytes are read into memory first, hashed, and parsed from that same
+    buffer. There is deliberately no second read of ``path``: a digest computed
+    from a separate read could describe a different revision of the file than
+    the one that was parsed.
+    """
     # Lazy so importing this module does not require pyarrow. Checked before the
     # path, exactly as the old module-level import was.
     try:
@@ -220,10 +239,16 @@ def read_rows(path: Path) -> list[dict[str, Any]]:
     if not path.is_file():
         raise StudyCatalogError(f"--parquet not found: {path}")
     try:
-        table = pq.read_table(str(path))
+        data = path.read_bytes()
+        table = pq.read_table(io.BytesIO(data))
     except Exception as exc:  # pyarrow raises its own hierarchy
         raise StudyCatalogError(f"could not read --parquet {path}: {exc}") from exc
-    return table.to_pylist()
+    source_identity = {
+        "source_sha256": hashlib.sha256(data).hexdigest(),
+        "source_rows": int(table.num_rows),
+        "source_bytes": len(data),
+    }
+    return table.to_pylist(), source_identity
 
 
 # --- validation ---------------------------------------------------------------
@@ -498,7 +523,14 @@ def build_catalog(
     source_parquet: str,
     extent_label: str,
     extent_boundary_note: str,
+    source_identity: dict[str, Any],
 ) -> tuple[dict[str, Any], dict[str, int]]:
+    """Assemble the catalog document.
+
+    ``source_identity`` comes from :func:`read_rows` and carries the three
+    provenance fields. It is written immediately after ``source_parquet`` so the
+    document reads as one provenance block.
+    """
     coord_counts = classify(rows, extent)
     studies = [build_study(row, extent, coord_counts) for row in rows]
     studies.sort(key=lambda s: (s["anio"], s["congreso"], s["pagina"], s["indice"]))
@@ -534,6 +566,9 @@ def build_catalog(
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "country": country,
         "source_parquet": source_parquet,
+        "source_sha256": source_identity["source_sha256"],
+        "source_rows": source_identity["source_rows"],
+        "source_bytes": source_identity["source_bytes"],
         "extent_label": extent_label,
         "extent_boundary_note": extent_boundary_note,
         "extent": extent,
@@ -636,7 +671,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         extent_label, extent_boundary_note = load_labelling(args.labelling_json)
         extent = cog_extent(args.cog)
-        rows = read_rows(args.parquet)
+        rows, source_identity = read_rows(args.parquet)
         validate_rows(rows)
         matched, mismatches = check_n_autores(rows)
         if mismatches:
@@ -656,6 +691,7 @@ def main(argv: list[str] | None = None) -> int:
             str(args.parquet),
             extent_label,
             extent_boundary_note,
+            source_identity,
         )
         json_path, csv_path = write_outputs(catalog, args.outdir)
     except StudyCatalogError as exc:

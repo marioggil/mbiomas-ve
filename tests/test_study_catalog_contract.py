@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import contextlib
 import copy
+import hashlib
 import io
 import json
 import re
@@ -110,6 +111,17 @@ EXTENT = {"west": -73.0, "south": 1.0, "east": -58.0, "north": 12.0}
 INSIDE = (8.5, -69.0)
 INSIDE_OTHER = (8.6, -70.0)
 OUTSIDE = (40.0, -69.0)
+
+# The identity block ``read_rows`` returns. The builder copies it verbatim into
+# the catalog, so a synthetic value only has to be recognisably not a default.
+SOURCE_IDENTITY = {
+    "source_sha256": "a" * 64,
+    "source_rows": 6,
+    "source_bytes": 4096,
+}
+
+# The provenance keys, in the exact order the artifact must serialize them.
+PROVENANCE_FIELDS = ["source_sha256", "source_rows", "source_bytes"]
 
 AUTHOR = {
     "nombre": "Ana Pérez",
@@ -194,12 +206,35 @@ def build_test_catalog() -> tuple[dict[str, Any], dict[str, int]]:
         "data/raw/congresos/test.parquet",
         "extent label",
         "extent boundary note",
+        SOURCE_IDENTITY,
     )
 
 
 def load_shipped_catalog() -> dict[str, Any]:
     """Read the committed artifact the viewer serves."""
     return json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+
+
+def serialized_key_order(catalog: dict[str, Any]) -> list[str]:
+    """Return the catalog's top-level key order as the JSON serialization has it."""
+    pairs = json.loads(json.dumps(catalog, ensure_ascii=False), object_pairs_hook=list)
+    return [key for key, _ in pairs]
+
+
+def assert_provenance_block_follows_source_parquet(catalog: dict[str, Any]) -> None:
+    """Raise ``AssertionError`` unless the three identity fields follow the path.
+
+    The check runs over a JSON round-trip, so it constrains what is written to
+    disk, not just the in-memory dict.
+    """
+    keys = serialized_key_order(catalog)
+    assert "source_parquet" in keys, "source_parquet is missing from the catalog"
+    index = keys.index("source_parquet")
+    following = keys[index + 1:index + len(PROVENANCE_FIELDS) + 1]
+    assert following == PROVENANCE_FIELDS, (
+        f"the keys after source_parquet are {following}, expected "
+        f"{PROVENANCE_FIELDS}"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -223,8 +258,13 @@ def module_swaps(
 
 
 class FakeTable:
-    def __init__(self, rows: list[dict[str, Any]]) -> None:
+    def __init__(
+        self, rows: list[dict[str, Any]], num_rows: int | None = None
+    ) -> None:
         self._rows = rows
+        # A real pyarrow Table always reports num_rows == len(to_pylist()), but
+        # keeping them independent lets the tests pin which one is recorded.
+        self.num_rows = len(rows) if num_rows is None else num_rows
 
     def to_pylist(self) -> list[dict[str, Any]]:
         return self._rows
@@ -258,6 +298,15 @@ def fake_osgeo(open_dataset: Any) -> tuple[dict[str, Any], list[str]]:
     osgeo = types.ModuleType("osgeo")
     osgeo.gdal = gdal
     return {"osgeo": osgeo, "osgeo.gdal": gdal}, calls
+
+
+def write_source_file(test: unittest.TestCase, payload: bytes) -> Path:
+    """Write ``payload`` to a temp file that lives only as long as the test."""
+    directory = tempfile.TemporaryDirectory()
+    test.addCleanup(directory.cleanup)
+    path = Path(directory.name) / "source.parquet"
+    path.write_bytes(payload)
+    return path
 
 
 def run_probe(body: str) -> subprocess.CompletedProcess:
@@ -787,11 +836,15 @@ class ReadRowsTests(unittest.TestCase):
     """``read_rows`` reads through pyarrow and wraps its failures."""
 
     def test_control_read_rows_uses_the_parquet_reader_it_imported(self) -> None:
+        payload = b"not really parquet, but the reader is mocked\n"
+        path = write_source_file(self, payload)
         reader = mock.Mock(return_value=FakeTable([{"anio": 1991}]))
         with module_swaps(present=fake_pyarrow(reader)):
-            rows = subject.read_rows(REPO_ROOT / "README.md")
+            rows, _ = subject.read_rows(path)
         self.assertEqual(rows, [{"anio": 1991}])
-        reader.assert_called_once_with(str(REPO_ROOT / "README.md"))
+        (buffer,) = reader.call_args.args
+        self.assertIsInstance(buffer, io.BytesIO)
+        self.assertEqual(buffer.getvalue(), payload)
 
     def test_control_read_rows_rejects_a_missing_parquet_after_pyarrow_loads(self) -> None:
         with module_swaps(present=fake_pyarrow(mock.Mock())):
@@ -810,6 +863,82 @@ class ReadRowsTests(unittest.TestCase):
                 re.escape("could not read --parquet") + ".*boom",
             ):
                 subject.read_rows(REPO_ROOT / "README.md")
+
+
+class ReadRowsIdentityTests(unittest.TestCase):
+    """``read_rows`` records the identity of the bytes it actually parsed."""
+
+    def read_bytes(self, payload: bytes, num_rows: int | None = None) -> tuple[Any, ...]:
+        path = write_source_file(self, payload)
+        table = FakeTable([{"anio": 1991}], num_rows=num_rows)
+        with module_swaps(present=fake_pyarrow(mock.Mock(return_value=table))):
+            rows, identity = subject.read_rows(path)
+        return path, rows, identity
+
+    def test_the_identity_has_exactly_the_three_provenance_keys(self) -> None:
+        _, _, identity = self.read_bytes(b"some parquet bytes")
+        self.assertEqual(set(identity), set(PROVENANCE_FIELDS))
+
+    def test_the_identity_values_have_the_recorded_types(self) -> None:
+        _, _, identity = self.read_bytes(b"some parquet bytes")
+        self.assertIsInstance(identity["source_sha256"], str)
+        self.assertIsInstance(identity["source_rows"], int)
+        self.assertIsInstance(identity["source_bytes"], int)
+
+    def test_the_digest_is_lowercase_hex_sha256(self) -> None:
+        _, _, identity = self.read_bytes(b"some parquet bytes")
+        self.assertRegex(identity["source_sha256"], re.compile(r"^[0-9a-f]{64}$"))
+
+    def test_the_digest_matches_an_independent_sha256_of_the_same_bytes(self) -> None:
+        payload = b"the exact bytes the builder must have hashed\n"
+        _, _, identity = self.read_bytes(payload)
+        self.assertEqual(
+            identity["source_sha256"], hashlib.sha256(payload).hexdigest()
+        )
+
+    def test_source_bytes_is_the_real_file_size(self) -> None:
+        payload = b"x" * 1234
+        path, _, identity = self.read_bytes(payload)
+        self.assertEqual(identity["source_bytes"], len(payload))
+        self.assertEqual(identity["source_bytes"], path.stat().st_size)
+
+    def test_source_rows_matches_the_rows_returned(self) -> None:
+        path = write_source_file(self, b"payload")
+        rows = [{"anio": 1991}, {"anio": 1992}]
+        with module_swaps(
+            present=fake_pyarrow(mock.Mock(return_value=FakeTable(rows)))
+        ):
+            returned, identity = subject.read_rows(path)
+        self.assertEqual(len(returned), 2)
+        self.assertEqual(identity["source_rows"], len(returned))
+
+    def test_control_the_row_count_comes_from_the_table_not_the_row_list(self) -> None:
+        _, _, identity = self.read_bytes(b"payload", num_rows=7)
+        self.assertEqual(identity["source_rows"], 7)
+        self.assertNotEqual(identity["source_rows"], 1)
+
+    def test_control_a_different_payload_yields_a_different_digest(self) -> None:
+        _, _, first = self.read_bytes(b"the original parquet bytes\n")
+        _, _, second = self.read_bytes(b"the original parquet bytes?\n")
+        self.assertEqual(
+            first["source_sha256"],
+            hashlib.sha256(b"the original parquet bytes\n").hexdigest(),
+        )
+        self.assertNotEqual(first["source_sha256"], second["source_sha256"])
+
+    def test_control_identical_payloads_yield_the_same_digest(self) -> None:
+        payload = b"a stable payload\n"
+        _, _, first = self.read_bytes(payload)
+        _, _, second = self.read_bytes(payload)
+        self.assertEqual(first["source_sha256"], second["source_sha256"])
+
+    def test_control_the_digest_is_not_computed_from_the_path(self) -> None:
+        # Two files with equal names in different directories must not collide
+        # if the digest were derived from the path instead of the bytes.
+        _, _, first = self.read_bytes(b"first payload")
+        _, _, second = self.read_bytes(b"second payload")
+        self.assertNotEqual(first["source_sha256"], second["source_sha256"])
+        self.assertNotEqual(first["source_bytes"], second["source_bytes"])
 
 
 class CogExtentTests(unittest.TestCase):
@@ -1432,7 +1561,8 @@ class BuildCatalogTests(unittest.TestCase):
 
     def test_control_a_catalog_without_excluded_studies_reports_zero(self) -> None:
         catalog, counts = subject.build_catalog(
-            [make_row()], EXTENT, "testland", "p.parquet", "label", "note"
+            [make_row()], EXTENT, "testland", "p.parquet", "label", "note",
+            SOURCE_IDENTITY,
         )
         self.assertEqual(counts["placeable"], 1)
         self.assertEqual(
@@ -1456,7 +1586,8 @@ class BuildCatalogTests(unittest.TestCase):
             subject.StudyCatalogError, re.escape("duplicate study_id 'cve-1991-pagina-5-2'")
         ):
             subject.build_catalog(
-                [first, second], EXTENT, "testland", "p.parquet", "label", "note"
+                [first, second], EXTENT, "testland", "p.parquet", "label", "note",
+                SOURCE_IDENTITY,
             )
 
     def test_control_the_same_rows_with_distinct_stems_do_not_collide(self) -> None:
@@ -1464,7 +1595,8 @@ class BuildCatalogTests(unittest.TestCase):
         second = make_row(source_path="data/raw/congresos/pagina_5_3.pdf",
                           pagina=9, indice=9)
         catalog, _ = subject.build_catalog(
-            [first, second], EXTENT, "testland", "p.parquet", "label", "note"
+            [first, second], EXTENT, "testland", "p.parquet", "label", "note",
+            SOURCE_IDENTITY,
         )
         self.assertEqual(len({study["study_id"] for study in catalog["studies"]}), 2)
 
@@ -1479,10 +1611,56 @@ class BuildCatalogTests(unittest.TestCase):
 
     def test_control_the_recorded_country_is_the_argument(self) -> None:
         catalog, _ = subject.build_catalog(
-            [make_row()], EXTENT, "otro-pais", "p.parquet", "l", "n"
+            [make_row()], EXTENT, "otro-pais", "p.parquet", "l", "n",
+            SOURCE_IDENTITY,
         )
         self.assertEqual(catalog["country"], "otro-pais")
         self.assertNotEqual(catalog["country"], "testland")
+
+    def test_the_catalog_records_the_input_identity_the_reader_reported(self) -> None:
+        catalog, _ = build_test_catalog()
+        self.assertEqual(catalog["source_sha256"], SOURCE_IDENTITY["source_sha256"])
+        self.assertEqual(catalog["source_rows"], SOURCE_IDENTITY["source_rows"])
+        self.assertEqual(catalog["source_bytes"], SOURCE_IDENTITY["source_bytes"])
+
+    def test_the_identity_block_sits_immediately_after_source_parquet(self) -> None:
+        catalog, _ = build_test_catalog()
+        assert_provenance_block_follows_source_parquet(catalog)
+
+    def test_control_the_identity_block_check_rejects_a_reordered_block(self) -> None:
+        catalog = {
+            "source_parquet": "p.parquet",
+            "source_rows": 1,
+            "source_bytes": 2,
+            "source_sha256": "a" * 64,
+        }
+        with self.assertRaisesRegex(
+            AssertionError, re.escape("the keys after source_parquet")
+        ):
+            assert_provenance_block_follows_source_parquet(catalog)
+
+    def test_control_the_identity_block_check_rejects_a_field_before_the_path(self) -> None:
+        catalog = {
+            "source_sha256": "a" * 64,
+            "source_parquet": "p.parquet",
+            "source_rows": 1,
+            "source_bytes": 2,
+        }
+        with self.assertRaisesRegex(
+            AssertionError, re.escape("the keys after source_parquet")
+        ):
+            assert_provenance_block_follows_source_parquet(catalog)
+
+    def test_control_a_catalog_without_source_parquet_fails_the_block_check(self) -> None:
+        catalog = dict(SOURCE_IDENTITY)
+        with self.assertRaisesRegex(
+            AssertionError, re.escape("source_parquet is missing")
+        ):
+            assert_provenance_block_follows_source_parquet(catalog)
+
+    def test_the_csv_stays_a_flat_per_study_table_without_provenance(self) -> None:
+        for field in PROVENANCE_FIELDS + ["source_parquet"]:
+            self.assertNotIn(field, subject.CSV_FIELDS)
 
     def test_generated_utc_is_a_utc_timestamp(self) -> None:
         catalog, _ = build_test_catalog()
