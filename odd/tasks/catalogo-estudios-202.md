@@ -107,6 +107,25 @@ existing id changes, so no published URL churns.
    comparing `None` with an `int`. Undated studies sort **last**, ordered among themselves by
    `(congreso, pagina, indice)`, so the artifact order stays total and deterministic.
 
+### D15 — How the artifact/tool commit split stays green
+
+**Context.** The project rule is that a regenerated artifact lands in its **own commit before** the
+tool that produces it, so the review candidate is the tool and never the data. The naive split is
+impossible for T3: the pinned shipped-artifact expectations (`31` studies, `{24,4,1,2}`, `21` species)
+live in the same test file as the fixture tests, so regenerating the artifact under the old contract
+would either leave the shipped tests failing or drag the whole contract change into the data commit.
+
+**Decision.** Split by **what each test reads**, not by file:
+
+- **T3.2 (data commit)** carries the regenerated `catalogo-estudios.{json,csv}` **and** the
+  shipped-artifact expectations — the pinned constants, their mutation controls and
+  `EXPECTED_ESPECIES_NON_NULL`. Those assertions only read the committed JSON, so this commit is green
+  while the fixture tests still exercise the old tool.
+- **T3.3 (tool commit)** carries the contract rewrite, the new fixture tests, the `schema_version`
+  anchor and the freshness assertion, and it is green because the artifact already matches it.
+
+No commit in the sequence is red, and the contract change's review candidate is still the tool.
+
 ## 4. Measured facts (verified, not assumed)
 
 Everything in this section was measured on 2026-10-13/14 against the repository as it stands.
