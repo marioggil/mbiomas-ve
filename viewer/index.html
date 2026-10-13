@@ -29,7 +29,7 @@
   <section class="catalog-panel" aria-label="Catálogo de estudios">
     <h2 class="catalog-title">Catálogo de estudios</h2>
     <p class="catalog-help">
-      Catálogo completo de los estudios revisados de las tres ediciones del Congreso Venezolano de Ecología. El panel lista todos los estudios; el mapa solo ubica los que tienen una coordenada utilizable, con un punto por estudio.
+      Catálogo completo de los estudios revisados de las doce ediciones del Congreso Venezolano de Ecología. El panel es la vista autoritativa: lista todos los estudios y muestra la clasificación que el catálogo les asigna. El mapa es una vista secundaria que solo ubica los estudios con una coordenada utilizable, con un punto por estudio.
     </p>
     <div
       class="catalog-summary"
@@ -46,6 +46,28 @@
     >
       <!-- populated by catalog.js -->
     </div>
+    <div class="catalog-search">
+      <label class="catalog-search-label" for="catalog-search-input">
+        Buscar estudios
+      </label>
+      <input
+        class="catalog-search-input"
+        id="catalog-search-input"
+        type="search"
+        autocomplete="off"
+        placeholder="Título, autor o palabra clave"
+        aria-describedby="catalog-search-help"
+      />
+      <span
+        class="catalog-search-count"
+        id="catalog-search-count"
+        role="status"
+        aria-live="polite"
+      ></span>
+    </div>
+    <p class="catalog-search-help" id="catalog-search-help">
+      Filtra por título, nombres de autores y palabras clave; no distingue mayúsculas ni acentos. Se combina con el filtro de edición.
+    </p>
     <div class="catalog-body">
       <ul class="catalog-list" id="catalog-list" aria-label="Lista de estudios">
         <li class="catalog-empty">Cargando catálogo de estudios&hellip;</li>

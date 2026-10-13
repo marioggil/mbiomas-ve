@@ -563,17 +563,47 @@ tests stayed green.
   `viewer: studies catalog missing or malformed: studies catalog study 'cve-1991-pagina-8-2' has coordinate_group_size 4 but 2 coordinate_group_ids (expected 3)`,
   and returns to exit 0 once the artifact is restored **byte-identically** (sha256 `78159412…`).
 
-### T5 — Panel at 202
-- Bounded, scrollable list container (today `.catalog-list` has no `max-height`/`overflow`, so 202
-  rows make the whole document scroll); a compact reason badge with the full builder-produced reason
-  in the detail view (today the full text is printed inline on every excluded row); selection without
-  re-querying every row; and a text search over title, author names and `palabrasclaves`.
-- The edition filter is already derived from the data and needs no change (12 values).
-- **Undated studies (D14) must render, not break.** 16 Vol XI rows carry `anio: null` in the artifact,
-  and the panel sorts and filters by year: an undated row must appear in the list and must not fall
-  through a `null` comparison into a wrong position or an empty filter bucket.
-- Evidence: 202 rows rendered, search narrows the list, selection works, no document-level scroll
-  trap; measured in a real browser.
+### T5 — Panel at 202 — **DONE**
+
+**Commit**: recorded below.
+
+- **Bounded list.** `.catalog-list` is capped with `min-height == max-height = min(70vh, 720px)` and
+  `overflow-y: auto`. Measured at 1280x900: a **630 px window over 13 015 px of content**, with the
+  document at 4 250 px where the uncapped list alone would be ~13 000. The detail column keeps
+  `max-height: none`.
+- **This reverses an earlier deliberate decision, and the record says so.** F4's `catalog.js`
+  documented "no inner scroll region and no max-height: the document scrolls when the list grows, so
+  no study row ... can be trapped inside a fixed-height cap". That was written for 31 rows; with 202
+  the panel became tens of screens tall and the detail column was lost while scrolling. What the old
+  comment protected is preserved **by measurement**: every row is a native `<button>`, Tab reaches all
+  202, and focusing row 181 scrolls the **list**, not the document.
+- **Density.** The first cut showed **4.5 rows** (496 ÷ 114 px) — about 44 screens for 202 studies —
+  because the title wrapped to three lines. The title now clamps to two lines with the full text kept
+  in a `title` attribute (202 rows carry it; **16 are actually clamped**) and meta + author + badge
+  share one line: rowHeight **63.8 px**, **9.2 rows visible** at 1280x900 and 5.8 at 1042x569, with
+  **zero wrapped meta lines** at the wide viewport.
+- **Search** over title, author names and `palabrasclaves`, accent- and case-insensitive and combined
+  with the edition filter: `merida` = `Mérida` = 10 rows, `RIO ORINOCO` = 5, `gavidia` = 1, a nonsense
+  query = 0 with the empty state, clearing restores 202. Document height and `scrollY` do not change
+  while narrowing (4066 → 4066, 1200 → 1200), which the `min-height == max-height` equality is what
+  guarantees. **An earlier reading of mine that showed a 703 px jump was my test's fault**: `page.fill`
+  focuses the input and the browser scrolls it into view.
+- **Badge**: 99, exactly the excluded rows, tally 80/10/9 matching the artifact's classes, all inside
+  the meta line, **none with the placeable label**. The text is the builder's `classes[].label_es`
+  verbatim (D9). It first shipped on all 202 rows with `Ubicable` on 103 of them — noise, not
+  information, and my brief's fault for listing that label — and the original placement was restored.
+- **The first author went back into the row** (`Peterson, George · 1 autor` on all 202 rows, 0
+  count-only) after my brief dropped it by asking for "the author count". The name is a strong scan key
+  in a catalog of one's own field, and the count alone is not a substitute.
+- **Detail**: the full `exclusion_reason` renders **verbatim** — checked in the browser against the
+  artifact's own string (153 characters for `cve-1991-pagina-5-2`).
+- **Selection**: exactly one `.is-selected` after a click, and exactly one after clicking another.
+- 13 filter buttons (`Todas (202)` plus the twelve editions, `XI · sin año (16)` last); the 16 undated
+  studies render `sin año`, are the last 16 in order, and no row contains `null` or `NaN`.
+- Console: **0 errors, 0 warnings**.
+- **Residual gap, stated rather than implied**: the panel has **no persisted automated test**. Its
+  logic was checked with a throwaway headless DOM stub (not committed) and its layout evidence is this
+  browser pass, which no CI run reproduces. T7 records it as a known hole.
 
 ### T6 — Map: the collision becomes visible
 - A distinguishing halo for studies whose `coordinate_group_size > 1`, plus the note stating how many

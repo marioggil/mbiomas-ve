@@ -793,14 +793,14 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* ------- Study catalog panel (slice F4 / T4) -------
+/* ------- Study catalog panel (slice F4 / T4 / T5) -------
  *
  * The catalog panel is the authoritative view: it lists every study the
- * API returns, including the ones the map cannot place. It has NO
- * max-height and no inner scroll region, so no study row and no exclusion
- * reason can be trapped inside a fixed-height cap (the T8b defect). The
- * document scrolls when the list grows, exactly like the composition
- * panel. */
+ * API returns, including the ones the map cannot place. The list is the
+ * panel's only scroll container: a viewport-derived max-height plus
+ * overflow-y keeps 202 rows from stretching the document while every row
+ * stays reachable by scrolling and by keyboard focus. The detail column is
+ * never capped, so the full builder reason is never clipped. */
 .catalog-panel {
   grid-area: catalog;
   background: var(--bg-panel);
@@ -916,6 +916,54 @@ body {
   color: #ffffff;
 }
 
+.catalog-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.catalog-search-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.catalog-search-input {
+  flex: 1 1 220px;
+  min-width: 0;
+  background: var(--bg-panel);
+  color: var(--fg-strong);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 5px 8px;
+  font: inherit;
+  font-size: 12px;
+}
+
+.catalog-search-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.catalog-search-input:disabled {
+  background: var(--bg-panel-alt);
+  color: var(--fg-muted);
+}
+
+.catalog-search-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.catalog-search-help {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
 .catalog-body {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
@@ -929,7 +977,21 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
+  /* The list is the panel's only scroll container. Without this cap, 202
+   * rows make the whole document hundreds of rows tall. The cap is
+   * viewport-derived, like .legend-panel's, and overflow-y keeps every row
+   * reachable: Tab also walks every row button, so no row is trapped. The
+   * value leaves the dense two-line rows (see .catalog-row-title) room for
+   * at least seven rows at 1280x800.
+   *
+   * min-height equals max-height on purpose: the list keeps the same box
+   * when the text search narrows it to a handful of rows, so the document
+   * height — and with it the document scroll position — does not change and
+   * the page cannot jump under the reader's cursor. */
+  min-height: min(70vh, 720px);
+  max-height: min(70vh, 720px);
+  overflow-y: auto;
 }
 
 .catalog-empty {
@@ -947,11 +1009,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 3px;
+  gap: 2px;
   background: var(--bg-panel-alt);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 5px 8px;
   font: inherit;
   color: inherit;
   text-align: left;
@@ -969,9 +1031,32 @@ body {
 }
 
 .catalog-row-title {
+  /* Two lines maximum, with an ellipsis on the second. The clamp is visual
+   * only: the full title stays in the DOM (and in the ``title`` attribute),
+   * so the accessible name is complete. Fixed at two lines so every row has
+   * the same height and the list shows a predictable number of rows. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-weight: 600;
   font-size: 13px;
+  line-height: 1.3;
   color: var(--fg-strong);
+}
+
+.catalog-row-meta-line {
+  /* One line by default. ``nowrap`` is what keeps the badge on the meta
+   * block at 1280 px: the author span below shrinks and truncates instead
+   * of pushing the badge to a second line and doubling the row height. */
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 2px 8px;
+  width: 100%;
+  min-width: 0;
 }
 
 .catalog-row-meta,
@@ -979,24 +1064,47 @@ body {
   font-size: 11px;
   color: var(--fg-muted);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.catalog-row-meta {
+  flex: 0 0 auto;
+}
+
+.catalog-row-author {
+  /* The only part that gives up room: a long first-author name truncates
+   * with an ellipsis. ``min-width: 0`` lets the flex item shrink below its
+   * content width, which ``overflow: hidden`` + ``text-overflow`` turn into
+   * the ellipsis. The full name stays in the ``title`` attribute. */
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Narrow viewport: wrapping the meta block to a second line is acceptable
+ * here, and the full author name is preferable to a heavily truncated one. */
+@media (max-width: 1042px) {
+  .catalog-row-meta-line {
+    flex-wrap: wrap;
+  }
 }
 
 .catalog-row-badge {
-  margin-top: 2px;
+  flex: 0 0 auto;
   font-size: 10px;
+  line-height: 1.2;
   font-weight: 600;
-  text-transform: uppercase;
+  /* No ``text-transform``: the badge shows the builder's ``label_es``
+   * exactly as it was written (D9). Only excluded rows carry this badge, so
+   * its palette is the exclusion palette. */
   letter-spacing: 0.02em;
+  white-space: nowrap;
   color: #991b1b;
   background: #fef2f2;
   border: 1px solid #fecaca;
   border-radius: 3px;
   padding: 1px 6px;
-}
-
-.catalog-row-reason {
-  font-size: 11px;
-  color: #7f1d1d;
 }
 
 .catalog-detail {
@@ -1010,6 +1118,36 @@ body {
   margin: 0;
   font-size: 12px;
   color: var(--fg-muted);
+}
+
+.catalog-detail-offlist {
+  margin: 0 0 10px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #92400e;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.catalog-detail-offlist-action {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid #d97706;
+  border-radius: 4px;
+  color: #92400e;
+  font: inherit;
+  font-size: 12px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.catalog-detail-offlist-action:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .catalog-detail-title {
