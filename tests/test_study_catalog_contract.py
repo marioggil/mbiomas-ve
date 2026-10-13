@@ -3,12 +3,19 @@
 WHY THIS FILE EXISTS
 --------------------
 ``tools/build_study_catalog.py`` computed ``display_class``, ``on_map`` and
-``exclusion_reason`` for the 31 human-reviewed abstracts the viewer serves, and
+``exclusion_reason`` for the human-reviewed abstracts the viewer serves, and
 nothing asserted any of it. The builder also called ``raise SystemExit(1)`` at
 module import time when ``pyarrow`` or ``osgeo`` was missing, so importing it to
 test ``slugify`` killed the test process instead of reporting a failure. This
 file pins both: the pure logic through direct calls, and the artifact the viewer
 actually consumes.
+
+Since the location-granularity taxonomy landed, the class is decided by the
+curated level, not by a collision of coordinates: ``coarse_location`` replaced
+``shared_coordinate``, and the collision became the per-study attributes
+``coordinate_group_size``/``coordinate_group_ids``. The fixtures below exercise
+that contract, and ``CommittedArtifactFreshnessTests`` compares the committed
+artifact's recorded input identity with the unversioned Parquet on disk.
 
 WHAT IT DOES NOT DO
 -------------------
@@ -69,21 +76,28 @@ CATALOG_PATH = (
 GRANULARITY_PATH = (
     REPO_ROOT / "data" / "curated" / "congresos" / "granularidad-ubicaciones.json"
 )
+# The unversioned input of the rebuild. ``data/raw/`` is gitignored, so this
+# file is absent from a fresh clone; the freshness check below skips itself
+# there instead of failing on a missing input (open item C1).
+PARQUET_PATH = (
+    REPO_ROOT / "data" / "raw" / "congresos" / "congresos_revisados.parquet"
+)
 
 # ---------------------------------------------------------------------------
 # Pinned numbers. These describe the committed artifact; they are asserted
 # against the file, never re-derived from the Parquet.
 # ---------------------------------------------------------------------------
-EXPECTED_STUDY_COUNT = 31
+EXPECTED_SCHEMA_VERSION = 2
+EXPECTED_STUDY_COUNT = 202
 EXPECTED_CLASS_COUNTS = {
-    "placeable": 24,
-    "shared_coordinate": 4,
-    "outside_extent": 1,
-    "no_coordinate": 2,
+    "placeable": 103,
+    "coarse_location": 80,
+    "outside_extent": 10,
+    "no_coordinate": 9,
 }
-EXPECTED_MAP_VISIBLE = 24
-EXPECTED_EXCLUDED = 7
-EXPECTED_ESPECIES_NON_NULL = 21
+EXPECTED_MAP_VISIBLE = 103
+EXPECTED_EXCLUDED = 99
+EXPECTED_ESPECIES_NON_NULL = 162
 
 # The curated taxonomy is complete: one entry per row of the 202-study corpus.
 EXPECTED_GRANULARITY_ENTRIES = 202
@@ -157,6 +171,9 @@ def make_row(**overrides: Any) -> dict[str, Any]:
         "ubicaciongeografica": "Merida",
         "ubicaciontemporal": "1991",
         "especiesmencionadas": "Cedrela odorata",
+        # ``palabrasclaves`` is a real PyArrow list<string> column, so the
+        # fixture hands over a Python list, not a JSON-encoded string.
+        "palabrasclaves": ["Cedrela odorata"],
         "n_autores": 1,
         "paises": json.dumps(["VE"]),
     }
@@ -164,19 +181,61 @@ def make_row(**overrides: Any) -> dict[str, Any]:
     return row
 
 
+# The curated taxonomy. ``load_granularity`` normalises every entry to exactly
+# these four keys, so the builder fixtures use the same shape.
+def taxonomy_entry(
+    nivel: str = "T2",
+    texto: str = "Merida",
+    razon: str | None = None,
+    nota: str | None = None,
+) -> dict[str, Any]:
+    """Return one curated granularity entry with the loader's shape."""
+    return {"nivel": nivel, "texto": texto, "razon": razon, "nota": nota}
+
+
+def taxonomy_for(
+    rows: list[dict[str, Any]],
+    nivel: str = "T2",
+    razon: str | None = None,
+    nota: str | None = None,
+    texto: str | None = None,
+) -> dict[str, dict[str, Any]]:
+    """One curated entry per row, so every synthetic row carries a level.
+
+    ``texto`` defaults to :func:`row_location_text` of the row, which is what
+    the coverage check closes against the corpus. A T0/T1 entry needs a
+    ``razon`` in the real file, so a placeholder is supplied when the caller
+    does not care about the wording.
+    """
+    if nivel in ("T0", "T1") and razon is None:
+        razon = "nivel de grano grueso"
+    return {
+        row["source_path"]: taxonomy_entry(
+            nivel=nivel,
+            texto=subject.row_location_text(row) if texto is None else texto,
+            razon=razon,
+            nota=nota,
+        )
+        for row in rows
+    }
+
+
 # Six rows whose insertion order differs from every plausible sort order, so a
 # missing or partial sort key is visible in the result rather than coincidental.
+# The first two share an exact coordinate: with the taxonomy they are both
+# placeable and collide, so the fixture pins that collision and class are
+# independent.
 def catalog_rows() -> list[dict[str, Any]]:
     return [
         make_row(source_path="data/raw/congresos/pagina_5_2.pdf", anio=1992,
                  pagina=5, indice=2, congreso="A", latitud=INSIDE[0],
-                 longitud=INSIDE[1]),                                   # shared
+                 longitud=INSIDE[1]),                                   # colliding
         make_row(source_path="data/raw/congresos/pagina_5_1.pdf", anio=1992,
                  pagina=5, indice=1, congreso="A", latitud=INSIDE[0],
-                 longitud=INSIDE[1]),                                   # shared
+                 longitud=INSIDE[1]),                                   # colliding
         make_row(source_path="data/raw/congresos/pagina_3_9.pdf", anio=1992,
                  pagina=3, indice=9, congreso="A", latitud=INSIDE_OTHER[0],
-                 longitud=INSIDE_OTHER[1]),                             # placeable
+                 longitud=INSIDE_OTHER[1]),                             # alone
         make_row(source_path="data/raw/congresos/pagina_9_1.pdf", anio=1991,
                  pagina=9, indice=1, congreso="B", latitud=OUTSIDE[0],
                  longitud=OUTSIDE[1]),                                  # outside
@@ -278,11 +337,15 @@ def granularity_document(**overrides: Any) -> dict[str, Any]:
 
 def build_catalog_from(
     rows: list[dict[str, Any]],
+    granularity: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], dict[str, int]]:
-    """Run the real builder over the given synthetic rows."""
+    """Run the real builder over the given synthetic rows and taxonomy."""
+    if granularity is None:
+        granularity = taxonomy_for(rows)
     return subject.build_catalog(
         rows,
         EXTENT,
+        granularity,
         "testland",
         "data/raw/congresos/test.parquet",
         "extent label",
@@ -455,8 +518,9 @@ def assert_catalog_contract(catalog: dict[str, Any]) -> None:
     caller cannot pass by accident and a failure names the property. The
     matching controls live in ``ShippedCatalogControlTests``, one per branch.
     """
-    assert catalog.get("schema_version") == 1, (
-        f"schema_version is {catalog.get('schema_version')!r}, expected 1"
+    assert catalog.get("schema_version") == EXPECTED_SCHEMA_VERSION, (
+        f"schema_version is {catalog.get('schema_version')!r}, "
+        f"expected {EXPECTED_SCHEMA_VERSION}"
     )
     assert catalog.get("study_count") == EXPECTED_STUDY_COUNT, (
         f"study_count is {catalog.get('study_count')!r}, expected {EXPECTED_STUDY_COUNT}"
@@ -665,13 +729,13 @@ class ShippedCatalogControlTests(unittest.TestCase):
     # --- the artifact is versioned, and is the study set that was reviewed --
     def test_control_rejects_a_wrong_schema_version(self) -> None:
         broken = self._broken()
-        broken["schema_version"] = 2
-        self._fail(broken, "schema_version is 2")
+        broken["schema_version"] = EXPECTED_SCHEMA_VERSION - 1
+        self._fail(broken, f"schema_version is {EXPECTED_SCHEMA_VERSION - 1}")
 
     def test_control_rejects_a_wrong_study_count(self) -> None:
         broken = self._broken()
-        broken["study_count"] = 30
-        self._fail(broken, "study_count is 30")
+        broken["study_count"] = EXPECTED_STUDY_COUNT - 1
+        self._fail(broken, f"study_count is {EXPECTED_STUDY_COUNT - 1}")
 
     def test_control_rejects_a_non_list_studies_field(self) -> None:
         broken = self._broken()
@@ -736,7 +800,10 @@ class ShippedCatalogControlTests(unittest.TestCase):
     def test_control_rejects_a_lost_especiesmencionadas_value(self) -> None:
         broken = self._broken()
         broken["studies"][self._index_with_species(broken)]["especiesmencionadas"] = None
-        self._fail(broken, "especiesmencionadas is non-null in 20 studies")
+        self._fail(
+            broken,
+            f"especiesmencionadas is non-null in {EXPECTED_ESPECIES_NON_NULL - 1} studies",
+        )
 
     def test_control_rejects_a_non_string_especiesmencionadas(self) -> None:
         broken = self._broken()
@@ -748,8 +815,8 @@ class ShippedCatalogControlTests(unittest.TestCase):
         broken = self._broken()
         broken["studies"][self._index_of(broken, "placeable", True)][
             "display_class"
-        ] = "shared_coordinate"
-        self._fail(broken, "on_map is true but display_class is 'shared_coordinate'")
+        ] = "coarse_location"
+        self._fail(broken, "on_map is true but display_class is 'coarse_location'")
 
     def test_control_rejects_on_map_true_with_an_exclusion_reason(self) -> None:
         broken = self._broken()
@@ -777,7 +844,7 @@ class ShippedCatalogControlTests(unittest.TestCase):
         broken = self._broken()
         broken["studies"][self._index_of(broken, "no_coordinate", False)][
             "display_class"
-        ] = "shared_coordinate"
+        ] = "coarse_location"
         self._fail(broken, "class counts")
 
     def test_control_rejects_an_unknown_display_class(self) -> None:
@@ -789,7 +856,7 @@ class ShippedCatalogControlTests(unittest.TestCase):
 
     def test_control_rejects_a_non_list_classes_block(self) -> None:
         broken = self._broken()
-        broken["classes"] = {"placeable": {"count": 24}}
+        broken["classes"] = {"placeable": {"count": EXPECTED_CLASS_COUNTS["placeable"]}}
         self._fail(broken, "classes is dict, expected a list")
 
     def test_control_rejects_a_classes_block_in_the_wrong_order(self) -> None:
@@ -799,8 +866,8 @@ class ShippedCatalogControlTests(unittest.TestCase):
 
     def test_control_rejects_a_class_entry_that_disagrees_with_the_studies(self) -> None:
         broken = self._broken()
-        broken["classes"][0]["count"] = 23
-        self._fail(broken, "].count is 23")
+        broken["classes"][0]["count"] = EXPECTED_CLASS_COUNTS["placeable"] - 1
+        self._fail(broken, f"].count is {EXPECTED_CLASS_COUNTS['placeable'] - 1}")
 
     def test_control_rejects_a_class_entry_with_the_wrong_on_map_flag(self) -> None:
         broken = self._broken()
@@ -815,13 +882,17 @@ class ShippedCatalogControlTests(unittest.TestCase):
     # --- the display contract agrees with the counts ----------------------
     def test_control_rejects_a_map_visible_count_that_disagrees(self) -> None:
         broken = self._broken()
-        broken["display_contract"]["map_visible_count"] = 23
-        self._fail(broken, "display_contract.map_visible_count is 23")
+        broken["display_contract"]["map_visible_count"] = EXPECTED_MAP_VISIBLE - 1
+        self._fail(
+            broken, f"display_contract.map_visible_count is {EXPECTED_MAP_VISIBLE - 1}"
+        )
 
     def test_control_rejects_an_excluded_count_that_disagrees(self) -> None:
         broken = self._broken()
-        broken["display_contract"]["excluded_count"] = 6
-        self._fail(broken, "display_contract.excluded_count is 6")
+        broken["display_contract"]["excluded_count"] = EXPECTED_EXCLUDED - 1
+        self._fail(
+            broken, f"display_contract.excluded_count is {EXPECTED_EXCLUDED - 1}"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -903,13 +974,14 @@ class MissingDependencyTests(unittest.TestCase):
     def test_main_prints_the_pyarrow_message_and_returns_one(self) -> None:
         argv = [
             "--parquet", str(REPO_ROOT / "no-such.parquet"),
+            "--granularidad", str(REPO_ROOT / "no-such-granularidad.json"),
             "--cog", str(REPO_ROOT / "no-such.tif"),
             "--outdir", "unused",
             "--country", "venezuela",
         ]
         stderr = io.StringIO()
         with tempfile.TemporaryDirectory() as outdir:
-            argv[5] = outdir
+            argv[7] = outdir
             with module_swaps(absent=("pyarrow", "pyarrow.parquet")), mock.patch.object(
                 subject, "load_labelling", return_value=("label", "note")
             ), mock.patch.object(subject, "cog_extent", return_value=EXTENT):
@@ -923,13 +995,14 @@ class MissingDependencyTests(unittest.TestCase):
     def test_main_prints_the_gdal_message_and_returns_one(self) -> None:
         argv = [
             "--parquet", str(REPO_ROOT / "no-such.parquet"),
+            "--granularidad", str(REPO_ROOT / "no-such-granularidad.json"),
             "--cog", str(REPO_ROOT / "no-such.tif"),
             "--outdir", "unused",
             "--country", "venezuela",
         ]
         stderr = io.StringIO()
         with tempfile.TemporaryDirectory() as outdir:
-            argv[5] = outdir
+            argv[7] = outdir
             with module_swaps(absent=("osgeo", "osgeo.gdal")), mock.patch.object(
                 subject, "load_labelling", return_value=("label", "note")
             ):
@@ -938,10 +1011,121 @@ class MissingDependencyTests(unittest.TestCase):
         self.assertEqual(status, 1)
         self.assertEqual(stderr.getvalue(), f"error: {GDAL_MESSAGE}\n")
 
+    def test_control_a_missing_required_argument_is_a_usage_error(self) -> None:
+        # ``--granularidad`` is required, exactly like the other inputs.
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as caught:
+                subject.parse_args(
+                    ["--parquet", "p", "--cog", "c", "--outdir", "o",
+                     "--country", "venezuela"]
+                )
+        self.assertEqual(caught.exception.code, 2)
+
     def test_control_the_no_partial_artifact_check_can_fail(self) -> None:
         with tempfile.TemporaryDirectory() as outdir:
             (Path(outdir) / "catalogo-estudios.json").write_text("{}", encoding="utf-8")
             self.assertNotEqual(list(Path(outdir).iterdir()), [])
+
+
+class MainTaxonomyWiringTests(unittest.TestCase):
+    """``main`` loads the curated taxonomy and closes it against the rows."""
+
+    def main_argv(self, granularidad: Path) -> list[str]:
+        return [
+            "--parquet", str(REPO_ROOT / "no-such.parquet"),
+            "--granularidad", str(granularidad),
+            "--cog", str(REPO_ROOT / "no-such.tif"),
+            "--outdir", "unused",
+            "--country", "venezuela",
+        ]
+
+    def run_main(
+        self, rows: list[dict[str, Any]], granularidad: Path, outdir: str
+    ) -> tuple[int, str]:
+        argv = self.main_argv(granularidad)
+        # ``read_rows`` checks the path before it parses, so the fake bytes must
+        # live in a real temporary file, exactly as the other tests do it.
+        argv[1] = str(write_source_file(self, b"fake parquet bytes"))
+        argv[7] = outdir
+        stderr = io.StringIO()
+        with module_swaps(
+            present=fake_pyarrow(mock.Mock(return_value=FakeTable(rows)))
+        ), mock.patch.object(
+            subject, "load_labelling", return_value=("label", "note")
+        ), mock.patch.object(subject, "cog_extent", return_value=EXTENT):
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(
+                stderr
+            ):
+                status = subject.main(argv)
+        return status, stderr.getvalue()
+
+    def test_main_builds_both_artifacts_from_the_curated_level(self) -> None:
+        row = make_row(source_path="I/curatedwithgeo/pagina_5_2.json")
+        document = granularity_document(
+            entries={
+                row["source_path"]: {
+                    "nivel": "T1",
+                    "texto": "Merida",
+                    "razon": "unidad administrativa de primer nivel",
+                }
+            }
+        )
+        path = write_granularity(self, document)
+        with tempfile.TemporaryDirectory() as outdir:
+            status, stderr = self.run_main([row], path, outdir)
+            self.assertEqual(status, 0, stderr)
+            self.assertEqual(stderr, "")
+            catalog = json.loads(
+                (Path(outdir) / "catalogo-estudios.json").read_text(encoding="utf-8")
+            )
+            csv_text = (Path(outdir) / "catalogo-estudios.csv").read_text(
+                encoding="utf-8"
+            )
+        self.assertEqual(catalog["schema_version"], subject.SCHEMA_VERSION)
+        self.assertEqual(catalog["study_count"], 1)
+        study = catalog["studies"][0]
+        self.assertEqual(study["display_class"], "coarse_location")
+        self.assertEqual(study["granularidad_nivel"], "T1")
+        self.assertEqual(study["granularidad_razon"], "unidad administrativa de primer nivel")
+        self.assertIn("unidad administrativa de primer nivel", study["exclusion_reason"])
+        self.assertIn("coarse_location", csv_text.splitlines()[1])
+        self.assertIn("T1", csv_text.splitlines()[1])
+
+    def test_main_reports_a_missing_taxonomy_file_and_returns_one(self) -> None:
+        row = make_row(source_path="I/curatedwithgeo/pagina_5_2.json")
+        absent = REPO_ROOT / "no-such-granularidad.json"
+        with tempfile.TemporaryDirectory() as outdir:
+            status, stderr = self.run_main([row], absent, outdir)
+            leftovers = list(Path(outdir).iterdir())
+        self.assertEqual(status, 1)
+        self.assertIn("granularity file not found", stderr)
+        self.assertEqual(leftovers, [], "a partial artifact was written")
+
+    def test_main_reports_a_row_the_taxonomy_does_not_cover(self) -> None:
+        row = make_row(source_path="I/curatedwithgeo/pagina_5_2.json")
+        document = granularity_document(
+            entries={
+                "I/curatedwithgeo/otra_pagina.json": {"nivel": "T2", "texto": "Merida"}
+            }
+        )
+        path = write_granularity(self, document)
+        with tempfile.TemporaryDirectory() as outdir:
+            status, stderr = self.run_main([row], path, outdir)
+        self.assertEqual(status, 1)
+        self.assertIn("has no entry for parquet source_path", stderr)
+
+    def test_main_reports_a_taxonomy_text_that_no_longer_matches_the_row(self) -> None:
+        row = make_row(source_path="I/curatedwithgeo/pagina_5_2.json")
+        document = granularity_document(
+            entries={
+                row["source_path"]: {"nivel": "T2", "texto": "Merida, Venezuela"}
+            }
+        )
+        path = write_granularity(self, document)
+        with tempfile.TemporaryDirectory() as outdir:
+            status, stderr = self.run_main([row], path, outdir)
+        self.assertEqual(status, 1)
+        self.assertIn("location text no longer matches", stderr)
 
 
 class ReadRowsTests(unittest.TestCase):
@@ -1676,19 +1860,66 @@ class MakeStudyIdTests(unittest.TestCase):
 # ---------------------------------------------------------------------------
 
 
-class ClassifyTests(unittest.TestCase):
-    def test_counts_every_exact_coordinate_pair(self) -> None:
+# The three curated levels, in the shape ``load_granularity`` hands over.
+T0_ENTRY = taxonomy_entry(nivel="T0", texto="Venezuela", razon="mentions the whole country, not a place")
+T1_ENTRY = taxonomy_entry(nivel="T1", texto="Estado Miranda", razon="first-level administrative unit")
+T2_ENTRY = taxonomy_entry(nivel="T2", texto="Merida")
+
+
+class StudyIdForTests(unittest.TestCase):
+    """``study_id_for`` is the single id derivation the group map and studies share."""
+
+    def test_matches_the_id_the_study_carries(self) -> None:
+        row = make_row()
+        self.assertEqual(subject.study_id_for(row), "cve-1991-pagina-5-2")
+        self.assertEqual(
+            subject.study_id_for(row),
+            subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])["study_id"],
+        )
+
+    def test_control_a_null_year_uses_the_sin_anio_segment(self) -> None:
+        row = make_row(anio=None)
+        self.assertEqual(subject.study_id_for(row), "cve-sin-anio-pagina-5-2")
+
+    def test_control_the_id_depends_on_the_year_and_the_path(self) -> None:
+        self.assertNotEqual(
+            subject.study_id_for(make_row()),
+            subject.study_id_for(make_row(anio=1992)),
+        )
+
+
+class CoordinateGroupsTests(unittest.TestCase):
+    """``coordinate_groups`` groups ids by exact pair, independently of class."""
+
+    def groups(self, rows: list[dict[str, Any]]) -> dict[tuple, list[str]]:
+        return subject.coordinate_groups(
+            rows, [subject.study_id_for(row) for row in rows]
+        )
+
+    def test_groups_every_exact_coordinate_pair_by_id(self) -> None:
         rows = [make_row(), make_row(source_path="data/raw/congresos/b.pdf")]
-        self.assertEqual(subject.classify(rows, EXTENT), {INSIDE: 2})
+        self.assertEqual(
+            self.groups(rows),
+            {INSIDE: ["cve-1991-b", "cve-1991-pagina-5-2"]},
+        )
+
+    def test_control_the_ids_of_a_group_come_back_sorted(self) -> None:
+        rows = [
+            make_row(source_path="data/raw/congresos/z.pdf"),
+            make_row(source_path="data/raw/congresos/a.pdf"),
+        ]
+        grouped = self.groups(rows)[INSIDE]
+        self.assertEqual(grouped, ["cve-1991-a", "cve-1991-z"])
+        self.assertNotEqual(grouped, ["cve-1991-z", "cve-1991-a"])
 
     def test_control_ignores_rows_without_a_coordinate(self) -> None:
         rows = [
             make_row(),
             make_row(source_path="data/raw/congresos/b.pdf", latitud=None, longitud=None),
         ]
-        counts = subject.classify(rows, EXTENT)
-        self.assertEqual(counts, {INSIDE: 1})
-        self.assertNotIn((None, None), counts)
+        groups = self.groups(rows)
+        self.assertEqual(groups, {INSIDE: ["cve-1991-pagina-5-2"]})
+        self.assertNotIn((None, None), groups)
 
     def test_control_keeps_distinct_coordinates_apart(self) -> None:
         rows = [
@@ -1696,113 +1927,143 @@ class ClassifyTests(unittest.TestCase):
             make_row(source_path="data/raw/congresos/b.pdf",
                      latitud=INSIDE_OTHER[0], longitud=INSIDE_OTHER[1]),
         ]
-        self.assertEqual(len(subject.classify(rows, EXTENT)), 2)
+        self.assertEqual(len(self.groups(rows)), 2)
 
-    def test_control_no_rows_is_no_count(self) -> None:
-        self.assertEqual(subject.classify([], EXTENT), {})
+    def test_control_no_rows_is_no_group(self) -> None:
+        self.assertEqual(subject.coordinate_groups([], []), {})
+
+    def test_control_a_row_and_id_count_mismatch_aborts(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("one study_id per row")
+        ):
+            subject.coordinate_groups([make_row()], [])
+
+
+class GranularityEntryForTests(unittest.TestCase):
+    """A row the taxonomy does not classify is a hard error, not a default."""
+
+    def test_returns_the_entry_of_the_row(self) -> None:
+        row = make_row()
+        granularity = {row["source_path"]: T2_ENTRY}
+        self.assertIs(subject.granularity_entry_for(row, granularity), T2_ENTRY)
+
+    def test_control_rejects_a_row_without_an_entry_and_names_it(self) -> None:
+        row = make_row()
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("granularity file has no entry for")
+            + ".*"
+            + re.escape("pagina=5 indice=2"),
+        ):
+            subject.granularity_entry_for(row, {})
 
 
 class DisplayClassTests(unittest.TestCase):
-    def test_a_coordinate_inside_the_extent_is_placeable(self) -> None:
+    def test_a_t2_coordinate_inside_the_extent_is_placeable(self) -> None:
         self.assertEqual(
-            subject.display_class_for(make_row(), EXTENT, {INSIDE: 1}), "placeable"
+            subject.display_class_for(make_row(), EXTENT, T2_ENTRY), "placeable"
         )
 
-    def test_shared_coordinate_when_two_rows_share_the_pair(self) -> None:
+    def test_a_t0_mention_is_coarse_location_however_inside_it_sits(self) -> None:
         self.assertEqual(
-            subject.display_class_for(make_row(), EXTENT, {INSIDE: 2}),
-            "shared_coordinate",
+            subject.display_class_for(make_row(), EXTENT, T0_ENTRY), "coarse_location"
         )
 
-    def test_control_the_shared_branch_needs_a_multiplicity_above_one(self) -> None:
-        self.assertNotEqual(
-            subject.display_class_for(make_row(), EXTENT, {INSIDE: 1}), "shared_coordinate"
+    def test_a_t1_mention_is_coarse_location(self) -> None:
+        self.assertEqual(
+            subject.display_class_for(make_row(), EXTENT, T1_ENTRY), "coarse_location"
+        )
+
+    def test_control_a_second_study_at_the_same_coordinate_does_not_change_the_class(self) -> None:
+        # The collision is an attribute, not a class: nothing about the pair is
+        # passed to the classifier, so a T2 point stays placeable when it is
+        # shared and a T1 point stays coarse when it is not.
+        self.assertEqual(
+            subject.display_class_for(make_row(), EXTENT, T2_ENTRY),
+            subject.display_class_for(
+                make_row(source_path="data/raw/congresos/b.pdf"), EXTENT, T2_ENTRY
+            ),
         )
 
     def test_control_a_coordinate_beyond_the_north_edge_is_outside_extent(self) -> None:
         row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
         self.assertEqual(
-            subject.display_class_for(row, EXTENT, {OUTSIDE: 1}), "outside_extent"
+            subject.display_class_for(row, EXTENT, T2_ENTRY), "outside_extent"
         )
 
     def test_control_a_coordinate_just_past_the_west_edge_is_outside_extent(self) -> None:
         row = make_row(latitud=INSIDE[0], longitud=EXTENT["west"] - 0.001)
         self.assertEqual(
-            subject.display_class_for(row, EXTENT, {}), "outside_extent"
+            subject.display_class_for(row, EXTENT, T2_ENTRY), "outside_extent"
         )
 
     def test_coordinates_on_the_extent_border_are_inside(self) -> None:
         row = make_row(latitud=EXTENT["north"], longitud=EXTENT["west"])
-        self.assertEqual(subject.display_class_for(row, EXTENT, {}), "placeable")
+        self.assertEqual(subject.display_class_for(row, EXTENT, T2_ENTRY), "placeable")
 
     def test_control_the_border_check_is_not_a_strict_inequality(self) -> None:
         inside = make_row(latitud=EXTENT["north"], longitud=EXTENT["west"])
         outside = make_row(latitud=EXTENT["north"] + 0.001, longitud=EXTENT["west"])
         self.assertNotEqual(
-            subject.display_class_for(inside, EXTENT, {}),
-            subject.display_class_for(outside, EXTENT, {}),
+            subject.display_class_for(inside, EXTENT, T2_ENTRY),
+            subject.display_class_for(outside, EXTENT, T2_ENTRY),
+        )
+
+    def test_precedence_coarse_location_beats_outside_extent(self) -> None:
+        row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
+        self.assertEqual(
+            subject.display_class_for(row, EXTENT, T0_ENTRY), "coarse_location"
+        )
+
+    def test_control_a_t2_coordinate_outside_the_extent_is_not_coarse(self) -> None:
+        row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
+        self.assertNotEqual(
+            subject.display_class_for(row, EXTENT, T2_ENTRY), "coarse_location"
         )
 
     def test_a_null_coordinate_is_no_coordinate(self) -> None:
         row = make_row(latitud=None, longitud=None)
-        self.assertEqual(subject.display_class_for(row, EXTENT, {}), "no_coordinate")
+        self.assertEqual(
+            subject.display_class_for(row, EXTENT, T2_ENTRY), "no_coordinate"
+        )
+
+    def test_precedence_no_coordinate_beats_coarse_location(self) -> None:
+        row = make_row(latitud=None, longitud=None)
+        self.assertEqual(
+            subject.display_class_for(row, EXTENT, T0_ENTRY), "no_coordinate"
+        )
 
     def test_control_the_null_coordinate_branch_is_decided_before_the_extent(self) -> None:
         # An empty extent would raise if it were read, so returning the class
         # proves the null check runs first.
         row = make_row(latitud=None, longitud=None)
-        self.assertEqual(subject.display_class_for(row, {}, {}), "no_coordinate")
+        self.assertEqual(subject.display_class_for(row, {}, T2_ENTRY), "no_coordinate")
 
     def test_control_a_present_coordinate_does_consult_the_extent(self) -> None:
         with self.assertRaisesRegex(KeyError, "west"):
-            subject.display_class_for(make_row(), {}, {})
-
-    def test_precedence_outside_extent_beats_shared_coordinate(self) -> None:
-        rows = [
-            make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1]),
-            make_row(source_path="data/raw/congresos/b.pdf",
-                     latitud=OUTSIDE[0], longitud=OUTSIDE[1]),
-        ]
-        counts = subject.classify(rows, EXTENT)
-        self.assertEqual(counts[OUTSIDE], 2)
-        self.assertEqual(subject.display_class_for(rows[0], EXTENT, counts), "outside_extent")
-        self.assertNotIn(
-            subject.display_class_for(rows[0], EXTENT, counts),
-            {"shared_coordinate", "placeable"},
-        )
-
-    def test_control_precedence_shared_coordinate_beats_placeable(self) -> None:
-        rows = [
-            make_row(),
-            make_row(source_path="data/raw/congresos/b.pdf"),
-        ]
-        counts = subject.classify(rows, EXTENT)
-        self.assertEqual(counts[INSIDE], 2)
-        self.assertEqual(
-            subject.display_class_for(rows[0], EXTENT, counts), "shared_coordinate"
-        )
+            subject.display_class_for(make_row(), {}, T2_ENTRY)
 
 
 class ExclusionReasonTests(unittest.TestCase):
     def test_a_placeable_study_has_no_reason(self) -> None:
         self.assertIsNone(
-            subject.exclusion_reason_for(make_row(), "placeable", EXTENT, {INSIDE: 1})
+            subject.exclusion_reason_for(make_row(), "placeable", EXTENT, T2_ENTRY)
         )
 
     def test_control_every_other_class_carries_a_reason(self) -> None:
         row = make_row(latitud=None, longitud=None)
         self.assertIsNotNone(
-            subject.exclusion_reason_for(row, "no_coordinate", EXTENT, {})
+            subject.exclusion_reason_for(row, "no_coordinate", EXTENT, T2_ENTRY)
         )
 
     def test_the_no_coordinate_reason_says_why(self) -> None:
         row = make_row(latitud=None, longitud=None)
-        reason = subject.exclusion_reason_for(row, "no_coordinate", EXTENT, {})
+        reason = subject.exclusion_reason_for(row, "no_coordinate", EXTENT, T2_ENTRY)
         self.assertIn("no se puede situar en el mapa", reason)
 
     def test_the_outside_extent_reason_names_the_offending_coordinate(self) -> None:
         row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
-        reason = subject.exclusion_reason_for(row, "outside_extent", EXTENT, {})
+        reason = subject.exclusion_reason_for(row, "outside_extent", EXTENT, T2_ENTRY)
         self.assertIn("supera el límite norte", reason)
         self.assertIn(repr(EXTENT["north"]), reason)
         self.assertIn(repr(OUTSIDE[0]), reason)
@@ -1811,24 +2072,60 @@ class ExclusionReasonTests(unittest.TestCase):
         row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
         other = dict(EXTENT, north=99.5)
         self.assertNotEqual(
-            subject.exclusion_reason_for(row, "outside_extent", EXTENT, {}),
-            subject.exclusion_reason_for(row, "outside_extent", other, {}),
+            subject.exclusion_reason_for(row, "outside_extent", EXTENT, T2_ENTRY),
+            subject.exclusion_reason_for(row, "outside_extent", other, T2_ENTRY),
         )
 
-    def test_the_shared_reason_names_the_multiplicity(self) -> None:
-        reason = subject.exclusion_reason_for(make_row(), "shared_coordinate",
-                                               EXTENT, {INSIDE: 4})
-        self.assertIn("4 estudios comparten exactamente la misma coordenada", reason)
+    def test_the_coarse_reason_names_the_level_the_text_the_razon_and_the_gloss(self) -> None:
+        row = make_row(ubicaciongeografica="Estado Miranda")
+        entry = taxonomy_entry(
+            nivel="T1",
+            texto="Estado Miranda",
+            razon="unidad administrativa de primer nivel",
+            nota="una nota de revisión que no debe salir al usuario",
+        )
+        reason = subject.exclusion_reason_for(row, "coarse_location", EXTENT, entry)
+        self.assertIn("T1", reason)
+        self.assertIn("Estado Miranda", reason)
+        self.assertIn("unidad administrativa de primer nivel", reason)
+        self.assertIn("unidad administrativa sin localidad nombrada dentro", reason)
+        self.assertNotIn(entry["nota"], reason)
 
-    def test_control_the_shared_reason_reads_the_count_it_was_given(self) -> None:
-        reason = subject.exclusion_reason_for(make_row(), "shared_coordinate",
-                                              EXTENT, {INSIDE: 3})
-        self.assertIn("3 estudios comparten", reason)
-        self.assertNotIn("4 estudios comparten", reason)
+    def test_control_the_coarse_reason_reads_the_level_it_was_given(self) -> None:
+        row = make_row()
+        t0 = subject.exclusion_reason_for(row, "coarse_location", EXTENT, T0_ENTRY)
+        t1 = subject.exclusion_reason_for(row, "coarse_location", EXTENT, T1_ENTRY)
+        self.assertIn("T0", t0)
+        self.assertIn("T1", t1)
+        self.assertNotEqual(t0, t1)
 
-    def test_control_a_shared_reason_without_a_counted_pair_fails(self) -> None:
-        with self.assertRaisesRegex(KeyError, re.escape("(8.5, -69.0)")):
-            subject.exclusion_reason_for(make_row(), "shared_coordinate", EXTENT, {})
+    def test_control_the_coarse_reason_quotes_the_corpus_text_not_the_recorded_one(self) -> None:
+        # The text a reader sees must be the one the study carries, which the
+        # coverage check pins to the curated ``texto`` before the build runs.
+        row = make_row(ubicaciongeografica="Llanos de Venezuela")
+        entry = taxonomy_entry(
+            nivel="T0",
+            texto="otro texto",
+            razon="región natural amplia (multi-estado)",
+        )
+        reason = subject.exclusion_reason_for(row, "coarse_location", EXTENT, entry)
+        self.assertIn("Llanos de Venezuela", reason)
+        self.assertNotIn("otro texto", reason)
+
+    def test_control_the_coarse_reason_reads_the_razon_it_was_given(self) -> None:
+        row = make_row()
+        first = taxonomy_entry(nivel="T0", texto="Merida", razon="la primera razón")
+        second = taxonomy_entry(nivel="T0", texto="Merida", razon="la segunda razón")
+        self.assertNotEqual(
+            subject.exclusion_reason_for(row, "coarse_location", EXTENT, first),
+            subject.exclusion_reason_for(row, "coarse_location", EXTENT, second),
+        )
+
+    def test_control_the_t0_gloss_is_not_the_t1_gloss(self) -> None:
+        self.assertNotEqual(
+            subject.GRANULARITY_LEVEL_GLOSSES["T0"],
+            subject.GRANULARITY_LEVEL_GLOSSES["T1"],
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -1939,6 +2236,48 @@ class InstitutionParsingTests(unittest.TestCase):
             re.escape("instituciones must decode to a JSON array"),
         ):
             subject._parse_instituciones(row, "WHERE")
+
+
+class PalabrasclavesParsingTests(unittest.TestCase):
+    """``palabrasclaves`` is a real list column, not a JSON-encoded string."""
+
+    def test_returns_the_keyword_list(self) -> None:
+        row = make_row(palabrasclaves=["Cedrela odorata", "bosque seco"])
+        self.assertEqual(
+            subject._parse_palabrasclaves(row, "WHERE"),
+            ["Cedrela odorata", "bosque seco"],
+        )
+
+    def test_an_empty_list_is_valid(self) -> None:
+        self.assertEqual(subject._parse_palabrasclaves(make_row(palabrasclaves=[]), "WHERE"), [])
+
+    def test_control_the_result_is_a_copy(self) -> None:
+        keywords = ["Cedrela odorata"]
+        row = make_row(palabrasclaves=keywords)
+        subject._parse_palabrasclaves(row, "WHERE").append("otra")
+        self.assertEqual(keywords, ["Cedrela odorata"])
+
+    def test_control_rejects_a_json_encoded_string_and_names_the_row(self) -> None:
+        row = make_row(palabrasclaves="[\"Cedrela odorata\"]", pagina=7, indice=3)
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("palabrasclaves must be a list of strings")
+            + ".*"
+            + re.escape("pagina=7 indice=3"),
+        ):
+            subject._parse_palabrasclaves(row, subject.row_name(row))
+
+    def test_control_rejects_a_null_column(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("palabrasclaves must be a list of strings")
+        ):
+            subject._parse_palabrasclaves(make_row(palabrasclaves=None), "WHERE")
+
+    def test_control_rejects_a_non_string_item(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("palabrasclaves must be a list of strings")
+        ):
+            subject._parse_palabrasclaves(make_row(palabrasclaves=["ok", 7]), "WHERE")
 
 
 class NAutoresTests(unittest.TestCase):
@@ -2095,6 +2434,27 @@ class ValidateRowsTests(unittest.TestCase):
         ):
             subject.validate_rows([make_row(instituciones=json.dumps([7]))])
 
+    def test_control_rejects_a_palabrasclaves_column_that_is_not_a_list(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("palabrasclaves must be a list of strings")
+        ):
+            subject.validate_rows([make_row(palabrasclaves=json.dumps(["cedro"]))])
+
+    def test_control_rejects_a_palabrasclaves_list_with_a_non_string(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("palabrasclaves must be a list of strings")
+        ):
+            subject.validate_rows([make_row(palabrasclaves=["cedro", 7])])
+
+    def test_control_rejects_a_missing_palabrasclaves_column(self) -> None:
+        row = make_row()
+        del row["palabrasclaves"]
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("source Parquet is missing required column(s): palabrasclaves"),
+        ):
+            subject.validate_rows([row])
+
     def test_control_the_failure_names_the_offending_row(self) -> None:
         row = make_row(human_verified=False)
         with self.assertRaisesRegex(
@@ -2112,7 +2472,7 @@ class ValidateRowsTests(unittest.TestCase):
 class BuildStudyTests(unittest.TestCase):
     def test_a_placeable_row_becomes_an_on_map_study(self) -> None:
         row = make_row()
-        study = subject.build_study(row, EXTENT, {INSIDE: 1})
+        study = subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
         self.assertEqual(study["study_id"], "cve-1991-pagina-5-2")
         self.assertEqual(study["display_class"], "placeable")
         self.assertIs(study["on_map"], True)
@@ -2120,27 +2480,37 @@ class BuildStudyTests(unittest.TestCase):
         self.assertEqual(study["autores"], [dict(AUTHOR)])
         self.assertEqual(study["instituciones"], ["Universidad de Los Andes"])
         self.assertEqual(study["paises"], ["VE"])
+        self.assertEqual(study["palabrasclaves"], ["Cedrela odorata"])
         self.assertEqual((study["latitud"], study["longitud"]), INSIDE)
         self.assertEqual(study["titulo"], row["titulo"])
         self.assertEqual(study["resumen"], row["resumen"])
+        self.assertEqual(study["granularidad_nivel"], "T2")
+        self.assertIsNone(study["granularidad_razon"])
 
-    def test_control_a_shared_coordinate_row_is_not_on_the_map(self) -> None:
-        row = make_row()
-        study = subject.build_study(row, EXTENT, {INSIDE: 2})
-        self.assertEqual(study["display_class"], "shared_coordinate")
+    def test_a_coarse_row_is_not_on_the_map_and_carries_its_level(self) -> None:
+        row = make_row(ubicaciongeografica="Estado Miranda")
+        entry = taxonomy_entry(
+            nivel="T1",
+            texto="Estado Miranda",
+            razon="unidad administrativa de primer nivel",
+        )
+        study = subject.build_study(row, EXTENT, entry, ["cve-1991-pagina-5-2"])
+        self.assertEqual(study["display_class"], "coarse_location")
         self.assertIs(study["on_map"], False)
-        self.assertIn("2 estudios comparten", study["exclusion_reason"])
+        self.assertEqual(study["granularidad_nivel"], "T1")
+        self.assertEqual(study["granularidad_razon"], "unidad administrativa de primer nivel")
+        self.assertIn("T1", study["exclusion_reason"])
 
     def test_control_an_outside_extent_row_is_not_on_the_map(self) -> None:
         row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
-        study = subject.build_study(row, EXTENT, {OUTSIDE: 1})
+        study = subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
         self.assertEqual(study["display_class"], "outside_extent")
         self.assertIs(study["on_map"], False)
         self.assertIn("supera el límite norte", study["exclusion_reason"])
 
     def test_control_a_row_without_coordinates_is_not_on_the_map(self) -> None:
         row = make_row(latitud=None, longitud=None)
-        study = subject.build_study(row, EXTENT, {})
+        study = subject.build_study(row, EXTENT, T2_ENTRY, None)
         self.assertEqual(study["display_class"], "no_coordinate")
         self.assertIs(study["on_map"], False)
         self.assertIsNone(study["latitud"])
@@ -2149,7 +2519,7 @@ class BuildStudyTests(unittest.TestCase):
 
     def test_control_the_numeric_columns_are_cast_to_int(self) -> None:
         row = make_row(anio="1991", pagina="5", indice="2", n_autores="1")
-        study = subject.build_study(row, EXTENT, {INSIDE: 1})
+        study = subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
         self.assertEqual(
             (study["anio"], study["pagina"], study["indice"], study["n_autores"]),
             (1991, 5, 2, 1),
@@ -2157,12 +2527,12 @@ class BuildStudyTests(unittest.TestCase):
 
     def test_a_null_year_survives_as_none_and_keys_the_id(self) -> None:
         row = make_row(anio=None)
-        study = subject.build_study(row, EXTENT, {INSIDE: 1})
+        study = subject.build_study(row, EXTENT, T2_ENTRY, ["cve-sin-anio-pagina-5-2"])
         self.assertIsNone(study["anio"])
         self.assertEqual(study["study_id"], "cve-sin-anio-pagina-5-2")
 
     def test_control_a_dated_row_still_carries_an_int_year(self) -> None:
-        study = subject.build_study(make_row(), EXTENT, {INSIDE: 1})
+        study = subject.build_study(make_row(), EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
         self.assertEqual(study["anio"], 1991)
         self.assertEqual(study["study_id"], "cve-1991-pagina-5-2")
 
@@ -2171,14 +2541,70 @@ class BuildStudyTests(unittest.TestCase):
         with self.assertRaisesRegex(
             subject.StudyCatalogError, re.escape("has an empty slug")
         ):
-            subject.build_study(row, EXTENT, {INSIDE: 1})
+            subject.build_study(row, EXTENT, T2_ENTRY, None)
 
     def test_control_a_broken_author_column_aborts_the_study(self) -> None:
         row = make_row(autores="[")
         with self.assertRaisesRegex(
             subject.StudyCatalogError, re.escape("autores does not parse as JSON")
         ):
-            subject.build_study(row, EXTENT, {INSIDE: 1})
+            subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
+
+    # --- the collision attributes -------------------------------------
+    def test_an_alone_study_has_size_one_and_no_other_ids(self) -> None:
+        study = subject.build_study(make_row(), EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
+        self.assertEqual(study["coordinate_group_size"], 1)
+        self.assertEqual(study["coordinate_group_ids"], [])
+
+    def test_a_colliding_study_reports_the_group_without_its_own_id(self) -> None:
+        group = ["cve-1991-a", "cve-1991-pagina-5-2", "cve-1991-z"]
+        study = subject.build_study(make_row(), EXTENT, T2_ENTRY, group)
+        self.assertEqual(study["coordinate_group_size"], 3)
+        self.assertEqual(study["coordinate_group_ids"], ["cve-1991-a", "cve-1991-z"])
+        self.assertNotIn(study["study_id"], study["coordinate_group_ids"])
+        self.assertEqual(
+            len(study["coordinate_group_ids"]) + 1, study["coordinate_group_size"]
+        )
+
+    def test_control_the_group_ids_are_sorted_even_from_an_unsorted_group(self) -> None:
+        group = ["cve-1991-z", "cve-1991-pagina-5-2", "cve-1991-a"]
+        study = subject.build_study(make_row(), EXTENT, T2_ENTRY, group)
+        self.assertEqual(study["coordinate_group_ids"], ["cve-1991-a", "cve-1991-z"])
+
+    def test_a_row_without_a_coordinate_has_a_null_size_and_no_ids(self) -> None:
+        row = make_row(latitud=None, longitud=None)
+        study = subject.build_study(row, EXTENT, T2_ENTRY, None)
+        self.assertIsNone(study["coordinate_group_size"])
+        self.assertEqual(study["coordinate_group_ids"], [])
+
+    def test_control_the_collision_does_not_depend_on_the_display_class(self) -> None:
+        # One member of the Barinas group is T1 while the others are T2; the
+        # group is the same for both, which is the whole point of D12.
+        group = ["cve-1991-a", "cve-1991-pagina-5-2"]
+        placeable = subject.build_study(make_row(), EXTENT, T2_ENTRY, group)
+        coarse = subject.build_study(
+            make_row(ubicaciongeografica="estado Barinas"),
+            EXTENT,
+            taxonomy_entry(nivel="T1", texto="estado Barinas", razon="administrative unit"),
+            group,
+        )
+        self.assertEqual(placeable["display_class"], "placeable")
+        self.assertEqual(coarse["display_class"], "coarse_location")
+        self.assertEqual(placeable["coordinate_group_size"], coarse["coordinate_group_size"])
+        self.assertEqual(placeable["coordinate_group_ids"], coarse["coordinate_group_ids"])
+
+    def test_control_a_present_coordinate_without_a_group_aborts(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("no coordinate group was computed")
+        ):
+            subject.build_study(make_row(), EXTENT, T2_ENTRY, None)
+
+    def test_control_a_broken_palabrasclaves_column_aborts_the_study(self) -> None:
+        row = make_row(palabrasclaves=["ok", 7])
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("palabrasclaves must be a list of strings")
+        ):
+            subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
 
 
 class BuildCatalogTests(unittest.TestCase):
@@ -2208,13 +2634,7 @@ class BuildCatalogTests(unittest.TestCase):
 
     def test_control_the_undated_rows_do_not_keep_their_insertion_order(self) -> None:
         rows = catalog_rows_with_undated()
-        inserted = [
-            subject.make_study_id(
-                None if row["anio"] is None else int(row["anio"]),
-                row["source_path"],
-            )
-            for row in rows
-        ]
+        inserted = [subject.study_id_for(row) for row in rows]
         catalog, _ = build_catalog_from(rows)
         self.assertNotEqual(
             [study["study_id"] for study in catalog["studies"]], inserted
@@ -2230,13 +2650,15 @@ class BuildCatalogTests(unittest.TestCase):
     def test_class_counts_and_the_display_contract_agree(self) -> None:
         catalog, counts = build_test_catalog()
         self.assertEqual(catalog["study_count"], 6)
+        # The two rows sharing a coordinate are both placeable now: the
+        # collision is an attribute, not a class.
         self.assertEqual(
             counts,
-            {"placeable": 1, "shared_coordinate": 2, "outside_extent": 1,
+            {"placeable": 3, "coarse_location": 0, "outside_extent": 1,
              "no_coordinate": 2},
         )
         self.assertEqual(
-            catalog["display_contract"], {"map_visible_count": 1, "excluded_count": 5}
+            catalog["display_contract"], {"map_visible_count": 3, "excluded_count": 3}
         )
         self.assertEqual(sum(counts.values()), catalog["study_count"])
         self.assertEqual(
@@ -2248,14 +2670,22 @@ class BuildCatalogTests(unittest.TestCase):
         )
 
     def test_control_a_catalog_without_excluded_studies_reports_zero(self) -> None:
-        catalog, counts = subject.build_catalog(
-            [make_row()], EXTENT, "testland", "p.parquet", "label", "note",
-            SOURCE_IDENTITY,
-        )
+        rows = [make_row()]
+        catalog, counts = build_catalog_from(rows)
         self.assertEqual(counts["placeable"], 1)
         self.assertEqual(
             catalog["display_contract"], {"map_visible_count": 1, "excluded_count": 0}
         )
+
+    def test_a_coarse_catalog_moves_the_whole_level_off_the_map(self) -> None:
+        rows = catalog_rows()
+        catalog, counts = build_catalog_from(rows, taxonomy_for(rows, nivel="T0"))
+        # The T0 rows with a coordinate are coarse_location; the two with no
+        # coordinate are still no_coordinate, which is decided first.
+        self.assertEqual(counts["coarse_location"], 4)
+        self.assertEqual(counts["no_coordinate"], 2)
+        self.assertEqual(counts["placeable"], 0)
+        self.assertEqual(catalog["display_contract"]["map_visible_count"], 0)
 
     def test_the_classes_block_labels_every_class(self) -> None:
         catalog, counts = build_test_catalog()
@@ -2266,31 +2696,29 @@ class BuildCatalogTests(unittest.TestCase):
             self.assertEqual(entry["on_map"], entry["key"] == "placeable")
             self.assertEqual(entry["reason"] is None, entry["key"] == "placeable")
         self.assertEqual(classes[0]["label_es"], "Ubicable")
+        labels = {entry["key"]: entry["label_es"] for entry in classes}
+        self.assertEqual(labels["coarse_location"], "Ubicación de grano grueso")
+        self.assertNotIn("shared_coordinate", labels)
 
     def test_control_a_duplicate_study_id_is_a_hard_error(self) -> None:
         first = make_row()
         second = make_row(pagina=9, indice=9)
+        rows = [first, second]
         with self.assertRaisesRegex(
             subject.StudyCatalogError, re.escape("duplicate study_id 'cve-1991-pagina-5-2'")
         ):
-            subject.build_catalog(
-                [first, second], EXTENT, "testland", "p.parquet", "label", "note",
-                SOURCE_IDENTITY,
-            )
+            build_catalog_from(rows)
 
     def test_control_the_same_rows_with_distinct_stems_do_not_collide(self) -> None:
         first = make_row()
         second = make_row(source_path="data/raw/congresos/pagina_5_3.pdf",
                           pagina=9, indice=9)
-        catalog, _ = subject.build_catalog(
-            [first, second], EXTENT, "testland", "p.parquet", "label", "note",
-            SOURCE_IDENTITY,
-        )
+        catalog, _ = build_catalog_from([first, second])
         self.assertEqual(len({study["study_id"] for study in catalog["studies"]}), 2)
 
     def test_the_catalog_records_what_it_was_built_from(self) -> None:
         catalog, _ = build_test_catalog()
-        self.assertEqual(catalog["schema_version"], 1)
+        self.assertEqual(catalog["schema_version"], subject.SCHEMA_VERSION)
         self.assertEqual(catalog["country"], "testland")
         self.assertEqual(catalog["source_parquet"], "data/raw/congresos/test.parquet")
         self.assertEqual(catalog["extent_label"], "extent label")
@@ -2299,11 +2727,20 @@ class BuildCatalogTests(unittest.TestCase):
 
     def test_control_the_recorded_country_is_the_argument(self) -> None:
         catalog, _ = subject.build_catalog(
-            [make_row()], EXTENT, "otro-pais", "p.parquet", "l", "n",
-            SOURCE_IDENTITY,
+            [make_row()], EXTENT, taxonomy_for([make_row()]), "otro-pais", "p.parquet",
+            "l", "n", SOURCE_IDENTITY,
         )
         self.assertEqual(catalog["country"], "otro-pais")
         self.assertNotEqual(catalog["country"], "testland")
+
+    def test_control_a_row_without_a_taxonomy_entry_aborts_the_build(self) -> None:
+        rows = catalog_rows()
+        incomplete = taxonomy_for(rows)
+        del incomplete[rows[0]["source_path"]]
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("granularity file has no entry for")
+        ):
+            build_catalog_from(rows, incomplete)
 
     def test_the_catalog_records_the_input_identity_the_reader_reported(self) -> None:
         catalog, _ = build_test_catalog()
@@ -2380,6 +2817,26 @@ class CsvValueTests(unittest.TestCase):
         self.assertEqual(subject._csv_value("paises", ["VE", "CO"]), "VE; CO")
         self.assertEqual(subject._csv_value("instituciones", ["ULA"]), "ULA")
 
+    def test_the_new_list_columns_join_with_a_semicolon(self) -> None:
+        self.assertEqual(
+            subject._csv_value("palabrasclaves", ["Cedrela odorata", "bosque seco"]),
+            "Cedrela odorata; bosque seco",
+        )
+        self.assertEqual(
+            subject._csv_value("coordinate_group_ids", ["cve-1991-a", "cve-1991-z"]),
+            "cve-1991-a; cve-1991-z",
+        )
+
+    def test_control_an_empty_id_list_is_an_empty_cell(self) -> None:
+        self.assertEqual(subject._csv_value("coordinate_group_ids", []), "")
+
+    def test_control_the_group_size_stays_a_number(self) -> None:
+        self.assertEqual(subject._csv_value("coordinate_group_size", 3), 3)
+        self.assertNotEqual(subject._csv_value("coordinate_group_size", 3), "3")
+
+    def test_control_the_group_size_is_null_when_there_is_no_coordinate(self) -> None:
+        self.assertIsNone(subject._csv_value("coordinate_group_size", None))
+
     def test_control_a_string_list_is_not_rendered_as_its_repr(self) -> None:
         self.assertNotEqual(subject._csv_value("paises", ["VE", "CO"]), "['VE', 'CO']")
 
@@ -2394,6 +2851,182 @@ class CsvValueTests(unittest.TestCase):
     def test_control_scalars_pass_through_unchanged(self) -> None:
         self.assertEqual(subject._csv_value("pagina", 5), 5)
         self.assertEqual(subject._csv_value("latitud", 8.5), 8.5)
+
+
+class CsvFieldsTests(unittest.TestCase):
+    """The flat CSV carries the new contract's columns."""
+
+    def test_the_new_columns_are_declared(self) -> None:
+        for field in (
+            "granularidad_nivel",
+            "coordinate_group_size",
+            "coordinate_group_ids",
+            "palabrasclaves",
+        ):
+            self.assertIn(field, subject.CSV_FIELDS)
+
+    def test_control_the_coarse_class_is_not_a_csv_column(self) -> None:
+        # ``display_class`` already carries the class; the level is the extra
+        # fact the CSV adds beside it.
+        self.assertIn("display_class", subject.CSV_FIELDS)
+        self.assertNotEqual("coarse_location", "granularidad_nivel")
+
+    def test_control_a_full_row_writes_every_declared_column(self) -> None:
+        row = make_row()
+        study = subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
+        missing = [field for field in subject.CSV_FIELDS if field not in study]
+        self.assertEqual(missing, [])
+
+
+class SchemaVersionTests(unittest.TestCase):
+    """The artifact's schema version is anchored, not incidental."""
+
+    def test_the_builder_writes_the_anchored_version(self) -> None:
+        catalog, _ = build_test_catalog()
+        self.assertEqual(subject.SCHEMA_VERSION, 2)
+        self.assertEqual(catalog["schema_version"], subject.SCHEMA_VERSION)
+
+    def test_control_the_version_is_not_the_previous_contract_s(self) -> None:
+        # The taxonomy replaced the collision class, so a reader must not
+        # mistake this document for schema 1.
+        self.assertNotEqual(subject.SCHEMA_VERSION, 1)
+
+
+# ---------------------------------------------------------------------------
+# Freshness: the committed artifact against the unversioned input.
+# ---------------------------------------------------------------------------
+
+
+def pyarrow_available() -> bool:
+    """True when this interpreter can read Parquet (the rebuild environment)."""
+    try:
+        import pyarrow.parquet  # noqa: F401
+    except ImportError:
+        return False
+    return True
+
+
+PYARROW_AVAILABLE = pyarrow_available()
+
+
+def identity_mismatches(
+    recorded: dict[str, Any], fresh: dict[str, Any]
+) -> list[str]:
+    """Return one message per provenance field that does not match.
+
+    ``fresh`` carries only the fields that were actually measured, so a caller
+    without a Parquet reader can still compare the digest and the byte size.
+    Nothing here reads the artifact or the Parquet: the comparison is a pure
+    function so the control below can fire it on a mutated copy.
+    """
+    return [
+        f"{field}: the committed artifact records {recorded.get(field)!r} but "
+        f"the input measures {fresh[field]!r}"
+        for field in ("source_sha256", "source_rows", "source_bytes")
+        if field in fresh and recorded.get(field) != fresh[field]
+    ]
+
+
+@unittest.skipUnless(
+    PARQUET_PATH.is_file(),
+    f"the unversioned input is absent ({PARQUET_PATH}); data/raw/ is gitignored "
+    "(open item C1), so a fresh clone cannot run this check at all",
+)
+class CommittedArtifactFreshnessTests(unittest.TestCase):
+    """The committed artifact records the identity of the Parquet on disk.
+
+    ``data/raw/`` is gitignored, so this class skips itself where the
+    unversioned input is absent and the check is meaningless by construction
+    (open item C1). Where the input is present it is the only assertion here
+    that can notice the artifact was built from a different revision of the
+    same path, which is exactly the drift T1's provenance plumbing was added
+    for. The digest and the byte size are compared with the standard library;
+    the row count needs a Parquet reader and is pinned in its own test, which
+    skips on the bare interpreter the suite runs on.
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.catalog = load_shipped_catalog()
+
+    def test_the_committed_artifact_records_the_digest_and_size_of_the_parquet(self) -> None:
+        payload = PARQUET_PATH.read_bytes()
+        fresh = {
+            "source_sha256": hashlib.sha256(payload).hexdigest(),
+            "source_bytes": len(payload),
+        }
+        mismatches = identity_mismatches(self.catalog, fresh)
+        self.assertEqual(
+            mismatches,
+            [],
+            f"the committed catalog does not describe {PARQUET_PATH}:"
+            f"\n  "
+            + "\n  ".join(mismatches),
+        )
+
+    @unittest.skipUnless(PYARROW_AVAILABLE, "pyarrow is a rebuild-only dependency")
+    def test_the_committed_artifact_records_the_row_count_of_the_parquet(self) -> None:
+        import pyarrow.parquet as pq
+
+        fresh = {"source_rows": int(pq.read_table(PARQUET_PATH).num_rows)}
+        self.assertEqual(identity_mismatches(self.catalog, fresh), [])
+
+    def test_control_mutating_a_temporary_copy_of_the_parquet_reports_a_mismatch(self) -> None:
+        payload = PARQUET_PATH.read_bytes()
+        recorded = {
+            "source_sha256": hashlib.sha256(payload).hexdigest(),
+            "source_bytes": len(payload),
+        }
+        copy_path = write_source_file(self, payload)
+        copy_path.write_bytes(payload + b"\x00")
+        fresh = {
+            "source_sha256": hashlib.sha256(copy_path.read_bytes()).hexdigest(),
+            "source_bytes": copy_path.stat().st_size,
+        }
+        mismatches = identity_mismatches(recorded, fresh)
+        self.assertEqual(len(mismatches), 2)
+        self.assertIn("source_sha256", mismatches[0])
+
+
+class FreshnessControlTests(unittest.TestCase):
+    """The comparison fires on a mutated fixture copy of an input."""
+
+    def fixture_identity(self, payload: bytes) -> dict[str, Any]:
+        return {
+            "source_sha256": hashlib.sha256(payload).hexdigest(),
+            "source_rows": 1,
+            "source_bytes": len(payload),
+        }
+
+    def test_control_a_mutated_copy_reports_the_mutated_fields(self) -> None:
+        payload = b"the input bytes as they were when the catalog was built\n"
+        copy_path = write_source_file(self, payload)
+        copy_path.write_bytes(payload + b" ")
+        fresh = {
+            "source_sha256": hashlib.sha256(copy_path.read_bytes()).hexdigest(),
+            "source_rows": 2,
+            "source_bytes": copy_path.stat().st_size,
+        }
+        mismatches = identity_mismatches(self.fixture_identity(payload), fresh)
+        self.assertEqual(len(mismatches), 3)
+        self.assertIn("source_sha256", mismatches[0])
+        self.assertIn("source_rows", mismatches[1])
+        self.assertIn("source_bytes", mismatches[2])
+
+    def test_control_an_unmutated_copy_reports_nothing(self) -> None:
+        payload = b"stable bytes\n"
+        copy_path = write_source_file(self, payload)
+        fresh = {
+            "source_sha256": hashlib.sha256(copy_path.read_bytes()).hexdigest(),
+            "source_rows": 1,
+            "source_bytes": copy_path.stat().st_size,
+        }
+        self.assertEqual(identity_mismatches(self.fixture_identity(payload), fresh), [])
+
+    def test_control_a_partial_measurement_compares_only_what_it_measured(self) -> None:
+        recorded = {"source_sha256": "a" * 64, "source_rows": 1, "source_bytes": 5}
+        self.assertEqual(identity_mismatches(recorded, {"source_sha256": "a" * 64}), [])
+        self.assertEqual(len(identity_mismatches(recorded, {"source_bytes": 6})), 1)
 
 
 if __name__ == "__main__":

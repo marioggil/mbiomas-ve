@@ -126,6 +126,34 @@ would either leave the shipped tests failing or drag the whole contract change i
 
 No commit in the sequence is red, and the contract change's review candidate is still the tool.
 
+**Mechanics, so it is not improvised at commit time.** The two groups live in one file, so the split is
+built deliberately: the writer implements the whole change (tool + both test groups) **without
+touching the shipped-artifact expectations**, which stay at the old 31-row values and therefore still
+pass against the still-old committed artifact. The parent then:
+
+1. regenerates the artifact with the rebuild interpreter and verifies it against the taxonomy;
+2. restores **HEAD's** version of the test file, re-anchors only the shipped-artifact expectations to
+   the new artifact, and commits **T3.2 = artifact + those expectations**, green against the old tool;
+3. restores the writer's version and commits **T3.3 = tool + fixture tests + anchors + docs**, green
+   against the new artifact.
+
+The parent also asks the writer to **report** every shipped-artifact assertion the new artifact
+invalidates (`file:line`) instead of changing it, so the re-anchoring is done once, in one place, and
+cannot silently miss an assertion.
+
+**Revised by execution: the split is impossible, and T3 lands atomically.** The plan above assumed
+the shipped-artifact expectations could be re-anchored on their own. They cannot, because they live
+inside `assert_catalog_contract` — the same function the new contract *must* change, since it is what
+asserts the class order, the new per-study fields and the provenance block. There is no partition in
+which that function is green before the artifact is regenerated, and the freshness assertion could
+never pass against the old artifact at all: it carries no `source_sha256` to compare.
+
+So **T3.2 and T3.3 are one atomic commit** — artifact, tool, tests and this document together. The
+data/tool separation exists to keep generated data out of the review candidate; here the artifact *is*
+part of the deliverable and its contract is asserted by the very code that changed, so splitting would
+only produce a red commit. Review focus for that commit is the tool and the tests; the artifact's
+numbers are tabulated in 4.7 instead of read off the diff.
+
 ## 4. Measured facts (verified, not assumed)
 
 Everything in this section was measured on 2026-10-13/14 against the repository as it stands.
@@ -196,6 +224,29 @@ offered") **is no longer true**: 82 rows carry keywords.
 - **1** is a geocode bug: `XII/curatedwithgeo/pagina_227_1.json` says `La Florida, Piedra de
   Cachimbo, Colonia Tovar, Edo. Aragua, Venezuela` and sits at `(-33.52, -70.60)` — Santiago de
   Chile. Recorded with a note; the coordinate is not touched (D11).
+
+### 4.7 The regenerated artifact (T3), measured
+
+`catalogo-estudios.json` 749.7 KB, `catalogo-estudios.csv` 147.2 KB, both versioned. Rebuilt twice in
+a row: the runs differ **only** in `generated_utc` and the **CSV is byte-identical**.
+
+| Quantity | Value |
+|---|---|
+| `study_count` / `schema_version` | 202 / **2** |
+| `classes` | `placeable` **103** · `coarse_location` **80** · `outside_extent` **10** · `no_coordinate` **9** |
+| `display_contract` | `map_visible_count` 103, `excluded_count` 99 |
+| Provenance | `source_sha256` `111a0d05…`, `source_rows` 202, `source_bytes` 295 581 |
+| Granularity levels | T2 113 · T0 60 · T1 29 |
+| Collision groups | 23 coordinates shared by more than one study, the largest with **11** |
+| `palabrasclaves` non-empty | 82 of 202, byte-for-byte the Parquet column |
+| Undated studies | 16, all with a `cve-sin-anio-…` id, all sorted last |
+| CSV | 1 header + 202 rows |
+
+**Every one of those numbers was recomputed independently by the parent** from the Parquet and the
+curated taxonomy, not read from the tool's own output: the class counts, the granularity tally, the
+collision attributes of all 202 studies (size, ids, self-exclusion, `len(ids) + 1 == size`), the
+exclusion reasons (each carrying its level, its verbatim text and its curated reason), the keyword
+lists against the source column, and the CSV line count. All matched.
 
 ### 4.6 The builder cannot build the 202-row corpus at all
 
@@ -432,16 +483,26 @@ tests stayed green.
   guard (`cve-None-pagina-607-1`), the other showing that flipping the sort flag breaks the order
   tests. The artifact's bytes are unchanged (`fee40a59…` JSON, `a8955935…` CSV).
 
-**T3.2 — Regenerated artifact (data commit).** The artifact is regenerated in its **own commit
-before** the tool commit, per the project rule that the review candidate is the tool and never
-generated data.
+**T3.2 / T3.3 — one atomic commit (D15 revised). — DONE**
 
-**T3.3 — Tool and contract.** Taxonomy replaces the collision classification; collision attributes;
-reasons naming the level; class labels; `palabrasclaves` added; `schema_version` bumped; provenance
-fields populated; and the freshness assertion that consumes T1's plumbing.
-
-Also owed here: the module docstring's opening line still says "the 31 human-reviewed abstracts of
-the Congreso Venezolano de Ecologia" — stale since the corpus is 202 rows across **twelve** editions.
+- One commit carries the contract rewrite, the regenerated artifact, the tests and this document,
+  because the shipped-artifact expectations live inside the function the contract change must modify
+  (D15, revised).
+- **The writer stalled mid-task and delivered no handoff.** Its working tree was recovered and
+  verified by the parent instead of taken on trust, and that verification paid: `assert_catalog_contract`
+  asserted `schema_version == 1` while the tool emits `2`. That one stale literal fired before every
+  other branch and made **27 unrelated mutation controls report the schema-version mismatch instead of
+  their own target branch** — a green-looking suite with a whole layer of controls silently
+  miscalibrated. Fixed, and the controls now derive their numbers from the constants (`f"study_count
+  is {EXPECTED_STUDY_COUNT - 1}"`) instead of hardcoded literals, so the next refresh cannot desync
+  them in silence.
+- **Evidence**: **281 tests, OK** on the bare interpreter (1 skip, `pyarrow`-gated) and **281 tests,
+  OK, zero skips** on the rebuild interpreter, which exercises the freshness checks including their
+  mutation control. Independent recomputation of every number in 4.7 against the source data, all
+  matching.
+- **Seen red**: disabling the taxonomy exclusion in the tool (`if False:`) produces **7 failures**,
+  and the file was restored **byte-identical** (sha256 `505664a9…` before and after). A green suite
+  that has never been shown to fail is not evidence.
 - Tests: pinned constants at `tests/test_study_catalog_contract.py:73-82` recomputed; the six
   mutation controls at `:512-513, :578, :641-642, :657-658, :662-663` re-anchored;
   `EXPECTED_ESPECIES_NON_NULL` 21 → 162; new controls for every new branch; a `schema_version`

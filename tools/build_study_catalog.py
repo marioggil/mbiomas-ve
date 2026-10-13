@@ -3,9 +3,9 @@
 
 WHY THIS TOOL EXISTS
 --------------------
-The viewer needs the 31 human-reviewed abstracts of the Congreso Venezolano de
-Ecologia editions, each tagged with whether the annual map can place it. The
-service must NOT read Parquet: ``pyarrow`` is ~40 MB and the image is 108 MB
+The viewer needs the 202 human-reviewed abstracts of the Congreso Venezolano de
+Ecologia, across twelve editions, each tagged with whether the map can place it.
+The service must NOT read Parquet: ``pyarrow`` is ~40 MB and the image is 108 MB
 (project decision D10). So the raw Parquet is parsed once here and the service
 later reads the small versioned JSON with the standard library.
 
@@ -50,6 +50,30 @@ loader fails loudly on a missing or unreadable file, malformed JSON, a
 duplicate key anywhere in the document, an unknown level, a missing or
 non-string ``texto``, or a T0/T1 entry without a ``razon``.
 
+CLASSIFICATION
+--------------
+The display class is decided here, at build time, first match wins:
+
+1. a null ``latitud`` or ``longitud`` -> ``no_coordinate``;
+2. the curated level is T0 or T1 -> ``coarse_location``;
+3. the coordinate falls outside the COG extent -> ``outside_extent``;
+4. otherwise -> ``placeable``.
+
+Only ``placeable`` sets ``on_map``. Collision of coordinates stopped being a
+class: ``coordinate_group_size`` (how many studies sit at the exact same
+``(latitud, longitud)`` pair, ``null`` without a coordinate) and
+``coordinate_group_ids`` (the *other* study_ids there, sorted ascending, empty
+when alone) expose it as a per-study attribute computed from the coordinates
+alone and independently of the class, so a group may mix levels (the Barinas
+group mixes T1 and T2). Every study also carries ``granularidad_nivel``
+(``T0``/``T1``/``T2``), ``granularidad_razon`` (the curated justification,
+``null`` when the entry has none) and ``palabrasclaves`` (the parquet list
+column, so the panel can search it without a second artifact). Every
+non-placeable study carries an ``exclusion_reason`` in Spanish: the
+``coarse_location`` one names the level, quotes the corpus location text,
+repeats the curated ``razon`` and glosses what the level means, and never
+quotes the review-only ``nota``.
+
 REBUILD-ONLY DEPENDENCY
 -----------------------
 ``pyarrow`` (to read Parquet) and ``osgeo``/GDAL (to read the COG geotransform)
@@ -58,8 +82,8 @@ service and the image, and must never be added to a requirements file. This tool
 fails with an actionable message when either is missing.
 
 Both imports are lazy, inside the function that needs them. A library module
-must never call ``sys.exit`` on import: ``slugify``, ``classify`` and the rest of
-the pure logic stay importable and testable on an interpreter with neither
+must never call ``sys.exit`` on import: ``slugify``, ``display_class_for`` and the
+rest of the pure logic stay importable and testable on an interpreter with neither
 dependency, and the CLI still fails with the same stderr line and exit status 1
 because ``main`` reports the ``StudyCatalogError`` itself.
 
@@ -68,10 +92,11 @@ recomputes it and the exclusion reasons are reviewable in the derived artifact.
 
 Usage:
     tools/build_study_catalog.py \\
-        --parquet  data/raw/congresos/congresos_revisados.parquet \\
-        --cog      data/cog/venezuela/collection-3/coverage-venezuela_classification_2024.tif \\
-        --outdir   data/derived/venezuela/congresos \\
-        --country  venezuela \\
+        --parquet      data/raw/congresos/congresos_revisados.parquet \\
+        --granularidad data/curated/congresos/granularidad-ubicaciones.json \\
+        --cog          data/cog/venezuela/collection-3/coverage-venezuela_classification_2024.tif \\
+        --outdir       data/derived/venezuela/congresos \\
+        --country      venezuela \\
         --labelling-json data/derived/venezuela/collection-3/tiles-manifest.json
 
 The tool is strict on purpose: any missing column, non-labelable row or broken
@@ -134,11 +159,19 @@ REQUIRED_COLUMNS = [
     "ubicaciongeografica",
     "ubicaciontemporal",
     "especiesmencionadas",
+    "palabrasclaves",
     "n_autores",
     "paises",
 ]
 
-CLASS_ORDER = ["placeable", "shared_coordinate", "outside_extent", "no_coordinate"]
+# The schema version anchor, following the project's convention (the
+# composition summary is anchored the same way). Bumped when the display
+# contract changes in a way a reader must not mistake for the previous one.
+SCHEMA_VERSION = 2
+
+# The identity of the derived document: the taxonomy replaced the collision
+# class, so ``coarse_location`` sits where ``shared_coordinate`` used to.
+CLASS_ORDER = ["placeable", "coarse_location", "outside_extent", "no_coordinate"]
 
 # The curated location-granularity levels. T0 and T1 are excluded from the map;
 # the file repeats that exclusion list and ``load_granularity`` cross-checks it,
@@ -146,19 +179,39 @@ CLASS_ORDER = ["placeable", "shared_coordinate", "outside_extent", "no_coordinat
 GRANULARITY_LEVELS = ("T0", "T1", "T2")
 GRANULARITY_EXCLUDED_FROM_MAP = ["T0", "T1"]
 
+# What each level means, in the words the exclusion reason uses. The curated
+# file states the same definitions in its own ``levels`` block; this is the
+# code-side gloss the per-study reason can quote without reading that block
+# again.
+GRANULARITY_LEVEL_GLOSSES = {
+    "T0": (
+        "mención que no identifica un lugar: el país, una región supra-nacional, "
+        "una región natural amplia de varios estados, o una enumeración de "
+        "lugares distintos"
+    ),
+    "T1": (
+        "unidad administrativa sin localidad nombrada dentro, o accidente o "
+        "región de escala estadal o regional sin localidad"
+    ),
+    "T2": (
+        "localidad, sitio, parque, cuenca, isla o cuerpo de agua con nombre propio"
+    ),
+}
+
 CLASS_LABELS = {
     "placeable": "Ubicable",
-    "shared_coordinate": "Coordenada compartida",
+    "coarse_location": "Ubicación de grano grueso",
     "outside_extent": "Fuera de la extensión",
     "no_coordinate": "Sin coordenada",
 }
 
 CLASS_REASONS = {
     "placeable": None,
-    "shared_coordinate": (
-        "Más de un estudio comparte exactamente la misma coordenada; el mapa no "
-        "los dibuja para no afirmar una ubicación común que los datos no "
-        "establecen."
+    "coarse_location": (
+        "La mención de ubicación no identifica un lugar concreto: la taxonomía "
+        "curada la clasifica en un nivel de grano grueso (T0 o T1). El mapa no "
+        "la dibuja; el motivo detallado de cada estudio está en su "
+        "exclusion_reason."
     ),
     "outside_extent": (
         "La coordenada cae fuera del rectángulo de la extensión del COG; el mapa "
@@ -180,9 +233,13 @@ CSV_FIELDS = [
     "ubicaciongeografica",
     "ubicaciontemporal",
     "especiesmencionadas",
+    "palabrasclaves",
     "latitud",
     "longitud",
     "display_class",
+    "granularidad_nivel",
+    "coordinate_group_size",
+    "coordinate_group_ids",
     "on_map",
     "exclusion_reason",
     "source_path",
@@ -501,6 +558,7 @@ def validate_rows(rows: list[dict[str, Any]]) -> None:
         _parse_json_list_column(row, "paises", where)
         _parse_autores(row, where)
         _parse_instituciones(row, where)
+        _parse_palabrasclaves(row, where)
 
 
 def _parse_json_list_column(
@@ -561,6 +619,25 @@ def _parse_instituciones(row: dict[str, Any], where: str) -> list[str]:
                 f"of strings [{where}]"
             )
     return entries
+
+
+def _parse_palabrasclaves(row: dict[str, Any], where: str) -> list[str]:
+    """Return the parquet ``palabrasclaves`` list column as a list of strings.
+
+    This is a real PyArrow ``list<string>`` column, not a JSON-encoded string,
+    so there is nothing to decode. An empty list is valid (the corpus has rows
+    without keywords); anything that is not a list of strings aborts the build
+    and names the offending row, exactly as the other column parsers do.
+    """
+    value = row["palabrasclaves"]
+    if not isinstance(value, list) or any(
+        not isinstance(keyword, str) for keyword in value
+    ):
+        raise StudyCatalogError(
+            f"palabrasclaves must be a list of strings (got {value!r}); the "
+            f"keyword column cannot be repaired here [{where}]"
+        )
+    return list(value)
 
 
 def check_n_autores(
@@ -625,32 +702,80 @@ def make_study_id(anio: int | None, source_path: str) -> str:
 # --- classification -----------------------------------------------------------
 
 
-def classify(rows: list[dict[str, Any]], extent: dict[str, float]) -> dict[tuple, int]:
-    """Return the multiplicity of every exact coordinate pair."""
-    counts: Counter = Counter()
-    for row in rows:
+def study_id_for(row: dict[str, Any]) -> str:
+    """Return the ``study_id`` for one row.
+
+    ``build_catalog`` needs every id *before* it can build a study, because the
+    collision attributes relate ids to each other. ``build_study`` uses this same
+    function, so the id the group holds and the id the study carries cannot
+    drift apart.
+    """
+    anio = None if row["anio"] is None else int(row["anio"])
+    return make_study_id(anio, row["source_path"])
+
+
+def coordinate_groups(
+    rows: list[dict[str, Any]], study_ids: list[str]
+) -> dict[tuple, list[str]]:
+    """Map every exact ``(latitud, longitud)`` pair to the ids sitting on it.
+
+    ``study_ids`` is parallel to ``rows``. Rows without a coordinate are not a
+    group: a null pair is the absence of a location, not a location. The ids of
+    every group come back sorted ascending, so the artifact is deterministic and
+    a consumer can compare two builds byte for byte.
+    """
+    if len(rows) != len(study_ids):
+        raise StudyCatalogError(
+            f"coordinate_groups needs one study_id per row, got {len(study_ids)} "
+            f"ids for {len(rows)} rows"
+        )
+    groups: dict[tuple, list[str]] = {}
+    for row, study_id in zip(rows, study_ids):
         lat = row["latitud"]
         lon = row["longitud"]
-        if lat is not None and lon is not None:
-            counts[(lat, lon)] += 1
-    return dict(counts)
+        if lat is None or lon is None:
+            continue
+        groups.setdefault((lat, lon), []).append(study_id)
+    return {pair: sorted(ids) for pair, ids in groups.items()}
+
+
+def granularity_entry_for(
+    row: dict[str, Any], granularity: dict[str, dict[str, Any]]
+) -> dict[str, Any]:
+    """Return the curated entry for one row, naming the row when it is missing.
+
+    ``check_granularity_coverage`` closes the whole taxonomy against the whole
+    row set in ``main``; this is the in-build guard, so ``build_catalog`` cannot
+    classify a row by accident when it is called directly with a partial map.
+    """
+    source_path = row["source_path"]
+    entry = granularity.get(source_path)
+    if entry is None:
+        raise StudyCatalogError(
+            f"granularity file has no entry for {row_name(row)}; the curated "
+            f"taxonomy must cover every row before the catalog is built"
+        )
+    return entry
 
 
 def display_class_for(
-    row: dict[str, Any], extent: dict[str, float], coord_counts: dict[tuple, int]
+    row: dict[str, Any],
+    extent: dict[str, float],
+    granularity_entry: dict[str, Any],
 ) -> str:
+    """Classify one row, first match wins (see the module's CLASSIFICATION)."""
     lat = row["latitud"]
     lon = row["longitud"]
     if lat is None or lon is None:
         return "no_coordinate"
+    if granularity_entry["nivel"] in GRANULARITY_EXCLUDED_FROM_MAP:
+        return "coarse_location"
     inside = (
         extent["west"] <= lon <= extent["east"]
         and extent["south"] <= lat <= extent["north"]
     )
     if not inside:
         return "outside_extent"
-    if coord_counts.get((lat, lon), 0) > 1:
-        return "shared_coordinate"
     return "placeable"
 
 
@@ -658,8 +783,16 @@ def exclusion_reason_for(
     row: dict[str, Any],
     display_class: str,
     extent: dict[str, float],
-    coord_counts: dict[tuple, int],
+    granularity_entry: dict[str, Any],
 ) -> str | None:
+    """Build the Spanish reason a non-placeable study carries.
+
+    The ``coarse_location`` reason is produced here, never by the frontend: it
+    names the curated level, quotes the corpus location text verbatim, repeats
+    the curated ``razon`` and glosses what that level means. It deliberately
+    does not quote the entry's ``nota``, which records how a boundary call was
+    argued and is review material, not a user-facing explanation.
+    """
     if display_class == "placeable":
         return None
     lat = row["latitud"]
@@ -669,17 +802,20 @@ def exclusion_reason_for(
             "El estudio no tiene latitud ni longitud, así que no se puede "
             "situar en el mapa."
         )
-    if display_class == "outside_extent":
+    if display_class == "coarse_location":
+        nivel = granularity_entry["nivel"]
+        texto = row_location_text(row)
+        razon = granularity_entry["razon"]
         return (
-            f"La latitud {lat!r} supera el límite norte de la extensión mapeada "
-            f"({extent['north']!r}); el punto ({lat!r}, {lon!r}) queda fuera del "
-            f"área del mapa."
+            f"La ubicación {texto!r} no identifica un lugar concreto: la "
+            f"taxonomía curada de granularidad la clasifica en el nivel {nivel} "
+            f"({GRANULARITY_LEVEL_GLOSSES[nivel]}) porque {razon}. Un nivel "
+            f"{nivel} no se puede dibujar como un punto del mapa."
         )
-    n = coord_counts[(lat, lon)]
     return (
-        f"{n} estudios comparten exactamente la misma coordenada "
-        f"({lat!r}, {lon!r}); el mapa no los dibuja para no afirmar una "
-        f"ubicación común que los datos no establecen."
+        f"La latitud {lat!r} supera el límite norte de la extensión mapeada "
+        f"({extent['north']!r}); el punto ({lat!r}, {lon!r}) queda fuera del "
+        f"área del mapa."
     )
 
 
@@ -689,12 +825,32 @@ def exclusion_reason_for(
 def build_study(
     row: dict[str, Any],
     extent: dict[str, float],
-    coord_counts: dict[tuple, int],
+    granularity_entry: dict[str, Any],
+    coordinate_group: list[str] | None,
 ) -> dict[str, Any]:
-    anio = None if row["anio"] is None else int(row["anio"])
-    study_id = make_study_id(anio, row["source_path"])
-    display_class = display_class_for(row, extent, coord_counts)
-    on_map = display_class == "placeable"
+    """Assemble one study.
+
+    ``coordinate_group`` is the sorted list of ids at the row's exact
+    coordinate, including this study, or ``None`` when the row has no
+    coordinate. The collision attributes are derived from it and are independent
+    of the display class: a group may hold studies the map draws and studies it
+    does not, and the Barinas group genuinely mixes T1 and T2.
+    """
+    study_id = study_id_for(row)
+    display_class = display_class_for(row, extent, granularity_entry)
+    if row["latitud"] is None or row["longitud"] is None:
+        coordinate_group_size: int | None = None
+        coordinate_group_ids: list[str] = []
+    elif coordinate_group is None:
+        raise StudyCatalogError(
+            f"no coordinate group was computed for {row_name(row)}; the collision "
+            f"attributes need the id map built before the studies"
+        )
+    else:
+        coordinate_group_size = len(coordinate_group)
+        coordinate_group_ids = sorted(
+            other for other in coordinate_group if other != study_id
+        )
     return {
         "study_id": study_id,
         "titulo": row["titulo"],
@@ -704,8 +860,9 @@ def build_study(
         "ubicaciongeografica": row["ubicaciongeografica"],
         "ubicaciontemporal": row["ubicaciontemporal"],
         "especiesmencionadas": row["especiesmencionadas"],
+        "palabrasclaves": _parse_palabrasclaves(row, row_name(row)),
         "source_path": row["source_path"],
-        "anio": anio,
+        "anio": None if row["anio"] is None else int(row["anio"]),
         "congreso": row["congreso"],
         "ciudad": row["ciudad"],
         "pagina": int(row["pagina"]),
@@ -715,10 +872,14 @@ def build_study(
         "latitud": row["latitud"],
         "longitud": row["longitud"],
         "display_class": display_class,
-        "on_map": on_map,
+        "on_map": display_class == "placeable",
+        "granularidad_nivel": granularity_entry["nivel"],
+        "granularidad_razon": granularity_entry["razon"],
         "exclusion_reason": exclusion_reason_for(
-            row, display_class, extent, coord_counts
+            row, display_class, extent, granularity_entry
         ),
+        "coordinate_group_size": coordinate_group_size,
+        "coordinate_group_ids": coordinate_group_ids,
     }
 
 
@@ -739,6 +900,7 @@ def study_sort_key(study: dict[str, Any]) -> tuple[Any, ...]:
 def build_catalog(
     rows: list[dict[str, Any]],
     extent: dict[str, float],
+    granularity: dict[str, dict[str, Any]],
     country: str,
     source_parquet: str,
     extent_label: str,
@@ -747,12 +909,22 @@ def build_catalog(
 ) -> tuple[dict[str, Any], dict[str, int]]:
     """Assemble the catalog document.
 
+    ``granularity`` is the curated taxonomy, keyed by ``source_path``.
     ``source_identity`` comes from :func:`read_rows` and carries the three
     provenance fields. It is written immediately after ``source_parquet`` so the
     document reads as one provenance block.
+
+    The ids are computed first, in one pass parallel to ``rows``, because the
+    collision attributes relate ids to each other: ``coordinate_group_size`` and
+    ``coordinate_group_ids`` need the whole id map before any study is built.
     """
-    coord_counts = classify(rows, extent)
-    studies = [build_study(row, extent, coord_counts) for row in rows]
+    study_ids = [study_id_for(row) for row in rows]
+    groups = coordinate_groups(rows, study_ids)
+    studies = []
+    for row in rows:
+        entry = granularity_entry_for(row, granularity)
+        group = groups.get((row["latitud"], row["longitud"]))
+        studies.append(build_study(row, extent, entry, group))
     studies.sort(key=study_sort_key)
 
     seen: set[str] = set()
@@ -782,7 +954,7 @@ def build_catalog(
         )
 
     catalog = {
-        "schema_version": 1,
+        "schema_version": SCHEMA_VERSION,
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "country": country,
         "source_parquet": source_parquet,
@@ -810,9 +982,10 @@ def _csv_value(field: str, value: Any) -> Any:
     """Render one catalog value for the CSV.
 
     ``autores`` is a list of objects, so the CSV gets the author ``nombre``
-    values joined with ``"; "``; other lists (``instituciones``, ``paises``)
-    are already lists of strings. ``especiesmencionadas`` stays verbatim
-    because it is free text, not a list.
+    values joined with ``"; "``; the other list columns (``instituciones``,
+    ``paises``, ``palabrasclaves``, ``coordinate_group_ids``) are already lists
+    of strings and get the same treatment, so a spreadsheet stays readable.
+    ``especiesmencionadas`` stays verbatim because it is free text, not a list.
     """
     if field == "autores":
         return "; ".join(str(author["nombre"]) for author in value)
@@ -870,6 +1043,9 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--parquet", type=Path, required=True,
                         help="raw source Parquet (unversioned, rebuild-only)")
+    parser.add_argument("--granularidad", type=Path, required=True,
+                        help="curated location-granularity taxonomy, one entry "
+                             "per source_path")
     parser.add_argument("--cog", type=Path, required=True,
                         help="a COG whose geotransform defines the extent")
     parser.add_argument("--outdir", type=Path, required=True,
@@ -893,6 +1069,8 @@ def main(argv: list[str] | None = None) -> int:
         extent = cog_extent(args.cog)
         rows, source_identity = read_rows(args.parquet)
         validate_rows(rows)
+        granularity = load_granularity(args.granularidad)
+        check_granularity_coverage(granularity, rows)
         matched, mismatches = check_n_autores(rows)
         if mismatches:
             detail = "; ".join(
@@ -907,6 +1085,7 @@ def main(argv: list[str] | None = None) -> int:
         catalog, counts = build_catalog(
             rows,
             extent,
+            granularity,
             args.country,
             str(args.parquet),
             extent_label,
@@ -931,6 +1110,11 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"n_autores consistency: {matched}/{len(rows)} rows matched, "
         f"{len(mismatches)} mismatched"
+    )
+    level_tally = Counter(entry["nivel"] for entry in granularity.values())
+    print(
+        "granularity levels: "
+        + ", ".join(f"{level}={level_tally.get(level, 0)}" for level in GRANULARITY_LEVELS)
     )
     for key in CLASS_ORDER:
         print(f"  {key}: {counts[key]}")
