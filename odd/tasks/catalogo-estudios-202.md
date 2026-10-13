@@ -565,7 +565,7 @@ tests stayed green.
 
 ### T5 — Panel at 202 — **DONE**
 
-**Commit**: recorded below.
+**Commit**: `8233387`.
 
 - **Bounded list.** `.catalog-list` is capped with `min-height == max-height = min(70vh, 720px)` and
   `overflow-y: auto`. Measured at 1280x900: a **630 px window over 13 015 px of content**, with the
