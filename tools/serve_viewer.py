@@ -636,6 +636,18 @@ class StudiesCatalogError(RuntimeError):
 
 _STUDIES_CATALOG_LOAD_COUNTER: _LoadCounter = _LoadCounter()
 
+# The curated location-granularity taxonomy has exactly these three levels. The
+# validator knows the set so a level the builder could never emit is fatal
+# instead of being silently served. T0 and T1 are the levels excluded from the
+# map; T2 is the placeable remainder.
+_GRANULARITY_LEVELS: Final = ("T0", "T1", "T2")
+_GRANULARITY_EXCLUDED_FROM_MAP: Final = ("T0", "T1")
+
+# Classes whose studies must always carry a level of T2. The class set itself
+# stays contract-driven (read from the artifact); these two names are the
+# contract vocabulary the coordinate/level rule below is written against.
+_LEVEL_T2_CLASSES: Final = ("placeable", "outside_extent")
+
 
 def _load_studies_catalog(path: Path) -> dict[str, Any]:
     """Load the study catalog once and count the parse.
@@ -688,6 +700,29 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
       7. The declared counts agree with ``display_contract``: the placeable
          class is ``map_visible_count``, the excluded classes sum to
          ``excluded_count``, and the two counts sum to ``study_count``.
+      8. ``granularidad_nivel`` is one of ``T0``, ``T1``, ``T2``.
+      9. Coordinate presence and the display class agree. A study carries a
+         coordinate (non-null ``latitud`` and ``longitud``) exactly when its
+         ``display_class`` is not ``no_coordinate``; with a coordinate, a
+         T0/T1 level is ``coarse_location`` and a T2 level is ``placeable``
+         or ``outside_extent``. A coordinate-less study is ``no_coordinate``
+         whatever its level, because an unusable location text is classified
+         T0 while the absent coordinate still outranks the taxonomy test.
+     10. ``granularidad_razon`` is a non-empty string exactly for T0/T1 and
+         null otherwise.
+     11. ``palabrasclaves`` is a list of strings (empty allowed).
+     12. ``coordinate_group_size`` is null exactly when ``latitud`` or
+         ``longitud`` is null; otherwise it is a non-boolean int >= 1.
+     13. ``coordinate_group_ids`` is a list of strings, sorted ascending, free
+         of duplicates, never containing the study's own ``study_id``, and
+         every referenced id exists in the catalog.
+     14. ``len(coordinate_group_ids) + 1 == coordinate_group_size`` whenever
+         the size is not null; the list is empty when the size is null.
+     15. Membership in a coordinate group is consistent: every referenced
+         study shares the ``latitud``/``longitud`` pair and lists this study
+         back. The members are deliberately NOT required to share a
+         ``display_class``: the Barinas group of four mixes T1 and T2, and
+         asserting otherwise would encode a false invariant.
 
     A violation stops the service. We never patch the artifact: a value the
     map or the table would show that disagrees with the rest of the artifact
@@ -729,6 +764,10 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
 
     seen_ids: set[str] = set()
     tally: dict[str, int] = {}
+    # Collected in the per-study pass so the collision groups can be checked
+    # once every study_id and coordinate is known, in the second pass below.
+    coordinates: dict[str, tuple[Any, Any]] = {}
+    group_members: dict[str, list[str]] = {}
     for index, study in enumerate(studies):
         if not isinstance(study, dict):
             raise StudiesCatalogError(
@@ -777,7 +816,167 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
                 f"studies catalog study {study_id!r} is on the map but carries "
                 f"exclusion_reason={reason!r}; it must be null: {path}"
             )
+
+        nivel = study.get("granularidad_nivel")
+        if nivel not in _GRANULARITY_LEVELS:
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has granularidad_nivel "
+                f"{nivel!r} which is not one of {list(_GRANULARITY_LEVELS)}: {path}"
+            )
+
+        # A missing coordinate outranks the taxonomy test: the builder returns
+        # ``no_coordinate`` before it ever looks at the level, so a T0 row
+        # with no coordinate stays ``no_coordinate`` and keeps its level.
+        latitud = study.get("latitud")
+        longitud = study.get("longitud")
+        coords = latitud is not None and longitud is not None
+        if not coords:
+            if display_class != "no_coordinate":
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} has no coordinate "
+                    f"(latitud={latitud!r}, longitud={longitud!r}) but "
+                    f"display_class {display_class!r}; a study without a "
+                    f"coordinate must be 'no_coordinate': {path}"
+                )
+        else:
+            if display_class == "no_coordinate":
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} is 'no_coordinate' but "
+                    f"carries a coordinate ({latitud!r}, {longitud!r}); "
+                    f"'no_coordinate' requires latitud and longitud to be "
+                    f"null: {path}"
+                )
+            if nivel in _GRANULARITY_EXCLUDED_FROM_MAP:
+                if display_class != "coarse_location":
+                    raise StudiesCatalogError(
+                        f"studies catalog study {study_id!r} has a coordinate "
+                        f"and granularidad_nivel {nivel!r} but display_class "
+                        f"{display_class!r}; a T0/T1 study with a coordinate "
+                        f"must be 'coarse_location': {path}"
+                    )
+            elif display_class not in _LEVEL_T2_CLASSES:
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} has a coordinate and "
+                    f"granularidad_nivel {nivel!r} but display_class "
+                    f"{display_class!r}; a T2 study must be 'placeable' or "
+                    f"'outside_extent': {path}"
+                )
+
+        granularidad_razon = study.get("granularidad_razon")
+        if nivel in _GRANULARITY_EXCLUDED_FROM_MAP:
+            if (
+                not isinstance(granularidad_razon, str)
+                or not granularidad_razon.strip()
+            ):
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} has granularidad_nivel "
+                    f"{nivel!r} but no non-empty 'granularidad_razon': {path}: "
+                    f"{granularidad_razon!r}"
+                )
+        elif granularidad_razon is not None:
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has granularidad_nivel "
+                f"{nivel!r} but carries granularidad_razon "
+                f"{granularidad_razon!r}; it must be null except for T0/T1: "
+                f"{path}"
+            )
+
+        palabrasclaves = study.get("palabrasclaves")
+        if not isinstance(palabrasclaves, list) or not all(
+            isinstance(keyword, str) for keyword in palabrasclaves
+        ):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has 'palabrasclaves' which "
+                f"is not a list of strings: {path}: {palabrasclaves!r}"
+            )
+
+        group_size = study.get("coordinate_group_size")
+        if not coords:
+            if group_size is not None:
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} has no coordinate but "
+                    f"coordinate_group_size {group_size!r}; it must be null: "
+                    f"{path}"
+                )
+        elif (
+            not isinstance(group_size, int)
+            or isinstance(group_size, bool)
+            or group_size < 1
+        ):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has a coordinate but "
+                f"coordinate_group_size {group_size!r} is not an integer >= 1: "
+                f"{path}"
+            )
+
+        group_ids = study.get("coordinate_group_ids")
+        if not isinstance(group_ids, list) or not all(
+            isinstance(other, str) for other in group_ids
+        ):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has 'coordinate_group_ids' "
+                f"which is not a list of strings: {path}: {group_ids!r}"
+            )
+        if group_ids != sorted(group_ids):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has 'coordinate_group_ids' "
+                f"that are not sorted ascending: {path}: {group_ids!r}"
+            )
+        if len(set(group_ids)) != len(group_ids):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has duplicate "
+                f"'coordinate_group_ids': {path}: {group_ids!r}"
+            )
+        if study_id in group_ids:
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} lists itself in "
+                f"'coordinate_group_ids': {path}"
+            )
+        if group_size is None:
+            if group_ids:
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} has "
+                    f"coordinate_group_size null but a non-empty "
+                    f"'coordinate_group_ids': {path}: {group_ids!r}"
+                )
+        elif len(group_ids) + 1 != group_size:
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has coordinate_group_size "
+                f"{group_size} but {len(group_ids)} coordinate_group_ids "
+                f"(expected {group_size - 1}): {path}"
+            )
+
+        coordinates[study_id] = (latitud, longitud)
+        group_members[study_id] = group_ids
         tally[display_class] = tally.get(display_class, 0) + 1
+
+    # The collision attributes reference other studies, so they can only be
+    # checked once every study_id and coordinate is known. Existence is checked
+    # across all groups first so an unknown reference is always reported as
+    # such, whichever study happens to be iterated first.
+    for study_id, group_ids in group_members.items():
+        for other_id in group_ids:
+            if other_id not in seen_ids:
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} references unknown "
+                    f"study_id {other_id!r} in 'coordinate_group_ids': {path}"
+                )
+
+    for study_id, group_ids in group_members.items():
+        for other_id in group_ids:
+            if coordinates[study_id] != coordinates[other_id]:
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} shares a coordinate "
+                    f"group with {other_id!r} but their coordinates differ "
+                    f"({coordinates[study_id]!r} != {coordinates[other_id]!r}): "
+                    f"{path}"
+                )
+            if study_id not in group_members[other_id]:
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} lists {other_id!r} in "
+                    f"'coordinate_group_ids' but {other_id!r} does not list "
+                    f"{study_id!r} back: {path}"
+                )
 
     declared_counts: dict[str, int] = {}
     for cls in classes:

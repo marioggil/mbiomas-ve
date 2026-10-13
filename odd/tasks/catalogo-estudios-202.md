@@ -280,6 +280,15 @@ so the provenance block cannot be observed in a real artifact until the corpus b
 
 Only `placeable` is on the map (`on_map == (display_class == "placeable")`, unchanged from F4).
 
+**The evaluation order has a consequence that must be stated, not discovered.** A study can be coarse
+*by its text* and still have no coordinate — the 9 rows whose location text is empty are classified
+`T0` by rule A of section 6 and carry no `latitud`/`longitud`. For those, the class is
+**`no_coordinate`**, because coordinate absence is decided first, and the taxonomy level is still
+recorded as `T0` alongside them. So the invariant is not "`coarse_location` iff T0/T1" but the
+coordinate-conditional form: with coordinates, T0/T1 means `coarse_location`; without them, T0/T1
+means `no_coordinate` with the level preserved. Measured in the shipped artifact: `coarse_location`
+80 (51 T0 + 29 T1), `no_coordinate` 9 (all T0), `outside_extent` 10 and `placeable` 103 (all T2).
+
 **Artifact shape changes:**
 
 - New classes: `coarse_location` replaces `shared_coordinate` in `classes[]` (key, count, on_map,
@@ -512,16 +521,47 @@ tests stayed green.
   byte-identical; class counts close against `study_count`; the taxonomy's own T0/T1 tally equals the
   artifact's `coarse_location` count.
 
-### T4 — API invariants and packaging
-- New hard invariants in `tools/serve_viewer.py`: `coordinate_group_size` is `null` exactly for rows
-  without coordinates and an int ≥ 1 otherwise; `coordinate_group_ids` is sorted, unique, free of
-  self-reference, references existing `study_id`s, and `len(ids) + 1 == size`. The group is **not**
-  asserted to share a display class (the Barinas group mixes T1 and T2).
-- `run.sh`: the `stage_studies` stage F4 left pending, and the parquet named in `check` as a
-  rebuild-only prerequisite.
-- Evidence: `/api/studies/catalog` 200 with 202 studies; `_load_counters` unchanged across N
-  requests; unknown id 404; the service refusing to start on a deliberately inconsistent artifact;
-  the other endpoints unaffected.
+### T4 — API invariants and packaging — **DONE**
+
+**Commit**: recorded below.
+
+- Eight new import-time invariants in `tools/serve_viewer.py`, each naming the offending study:
+  the level is `T0`/`T1`/`T2`; the coordinate-conditional class rule (section 5);
+  `granularidad_razon` non-empty exactly for T0/T1; `palabrasclaves` a list of strings;
+  `coordinate_group_size` null exactly without coordinates and an int ≥ 1 otherwise;
+  `coordinate_group_ids` sorted, unique, self-free, referencing existing ids, with
+  `len(ids) + 1 == size`; every referenced study at the same coordinate; and **symmetric membership**,
+  so if A lists B then B lists A. The group is deliberately **not** asserted to share a display class:
+  the four Barinas studies mix T1 and T2.
+- `run.sh`: `stage_studies` (rebuild-only, wired after the tiles stage, refusing with the actionable
+  hint that the rebuild needs an environment carrying `pyarrow` — the system interpreter has GDAL but
+  not pyarrow), and two new `cmd_check` items: the studies catalog as `[serve]` and the congress
+  Parquet as `[rebuild]`, since `data/raw/` is gitignored and a fresh clone will not have it.
+- **A contradiction in this document's plan, caught by the writer before it wrote any code.** The T4
+  brief asserted "`coarse_location` iff T0/T1". That is false against the real artifact: the 9 studies
+  with no coordinate carry level `T0` (rule A of the taxonomy classifies an unusable location text as
+  T0) while their class is `no_coordinate`, because coordinate absence is decided first. The writer
+  stopped instead of inventing a semantics. The resolution is the coordinate-conditional form now
+  written in section 5, and it was verified independently before being adopted: 0 violations of
+  `coords is False ⟺ no_coordinate`, of "T0/T1 with coordinates ⇒ coarse_location" and of
+  "placeable/outside_extent ⇒ T2" across all 202 rows.
+- **Evidence — tests.** 308 tests OK on the system interpreter (with **28 skips**: the 27 new ones need
+  `fastapi` and the freshness row-count check needs `pyarrow`), 27/27 OK under the repository `.venv`,
+  and **308 tests OK with zero skips in a single interpreter** carrying GDAL, `pyarrow` and `fastapi`.
+  That last run is the honest statement of the project's dependency split: **no documented runner
+  executes the whole suite**, because the dependencies are deliberately disjoint (T7 documents this).
+  The `.venv` additionally errors on `test_composition_summary_schema`, which needs `osgeo` —
+  pre-existing, documented in that file's own docstring, and unrelated to this task.
+- **Evidence — the service.** Every endpoint returns 200 (`/api/health`, `/api/meta`,
+  `/api/composition/series`, `/api/composition/year/2024`, `/api/studies/catalog` at 664 630 bytes,
+  `/api/studies/_load_counters`, and a real tile `/tiles/1985/0/0/0.png`); an unknown id returns **404**
+  with `study not found: no-existe`; the catalog serves **202 studies, `schema_version` 2**, contract
+  `103/99` and the four classes; and the parse-once invariant is **measured, not asserted**:
+  `catalog_calls` reads 1 before and 1 after 24 requests.
+- **Evidence — the refusal, with its exit status.** With one group's symmetry broken the service
+  exits **1** with
+  `viewer: studies catalog missing or malformed: studies catalog study 'cve-1991-pagina-8-2' has coordinate_group_size 4 but 2 coordinate_group_ids (expected 3)`,
+  and returns to exit 0 once the artifact is restored **byte-identically** (sha256 `78159412…`).
 
 ### T5 — Panel at 202
 - Bounded, scrollable list container (today `.catalog-list` has no `max-height`/`overflow`, so 202
@@ -545,6 +585,12 @@ tests stayed green.
 
 ### T7 — Closing
 - `README.md`: the new contract and the standing `study_gap` warning.
+- **The runner matrix**, which no single documented command covers today: the system interpreter runs
+  the suite but skips the 27 `fastapi`-gated viewer cases and the `pyarrow`-gated row-count check; the
+  repository `.venv` runs those 27 and cannot run the `osgeo`-dependent composition test; and only an
+  interpreter carrying GDAL **and** `pyarrow` **and** `fastapi` runs all 308 with zero skips. T7 states
+  which command a contributor should run for which change, so nobody believes a green suite covered
+  something it skipped.
 - Open items C1–C6 below brought up to date, including C3's reversal.
 - This document's evidence sections filled with the observed results.
 
