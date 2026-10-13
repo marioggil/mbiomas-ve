@@ -719,7 +719,13 @@ body {
  * the note wraps to more lines at narrower viewports and the block grows
  * upward. Stacking both in one content-sized column makes the overlap
  * impossible at any viewport instead of tuning it away for one size.
- * The D7 block stays closest to the map edge, where it was before. */
+ * The D7 block stays closest to the map edge, where it was before.
+ *
+ * The collision note (T6 / D12) is a third child of the same column, so it
+ * inherits the same guarantee instead of repeating the defect: the column
+ * grows upward from its fixed ``bottom``, which is what keeps the new box
+ * clear of the D7 note, of the legend and of the MapLibre attribution
+ * strip at every width. Nothing here is positioned independently. */
 .map-overlays {
   position: absolute;
   left: 12px;
@@ -742,23 +748,27 @@ body {
 }
 
 .map-overlays > .labelling,
-.map-overlays > .study-map-legend {
+.map-overlays > .study-map-legend,
+.map-overlays > .study-map-halo-note {
   position: static;
   left: auto;
   right: auto;
   bottom: auto;
-  max-width: none;
   pointer-events: auto;
 }
 
-/* The extent label keeps the full width it had; the legend stays a
- * content-sized box aligned to the right edge. */
 .map-overlays > .labelling {
   align-self: stretch;
 }
 
-.map-overlays > .study-map-legend {
+/* The legend and the collision note are content-sized boxes aligned to the
+ * right edge. ``max-width: 100%`` is what lets the note wrap inside the
+ * column instead of overflowing the map panel at a narrow viewport: the
+ * box is only as wide as its text until the column becomes the limit. */
+.map-overlays > .study-map-legend,
+.map-overlays > .study-map-halo-note {
   align-self: flex-end;
+  max-width: 100%;
 }
 
 .study-map-legend {
@@ -791,6 +801,38 @@ body {
 
 .study-map-legend-text {
   font-variant-numeric: tabular-nums;
+}
+
+/* ------- Collision note (slice T6 / D12) -------
+ * The ring in the map needs its own one-line statement: what the ring
+ * means, and that it annotates the map rather than replacing the panel,
+ * which stays the authoritative list of every study — including the ones
+ * the map does not draw. No count is printed here: the number of collision
+ * groups is not in the artifact, and the only number the map overlays may
+ * show is the builder's ``map_visible_count`` on the legend line. */
+.study-map-halo-note {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--fg-strong);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 1;
+}
+
+/* Swatch drawn like the map ring: a translucent disc with a rose edge, so
+ * the reader can match it to what the layer paints. */
+.study-map-halo-ring {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: rgba(190, 18, 60, 0.16);
+  border: 1.5px solid rgba(190, 18, 60, 0.55);
+  flex-shrink: 0;
 }
 
 /* ------- Study catalog panel (slice F4 / T4 / T5) -------

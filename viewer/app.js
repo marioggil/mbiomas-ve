@@ -87,6 +87,14 @@
   var STUDIES_LAYER_ID = "studies-points-circle";
   var STUDIES_SELECTED_LAYER_ID = "studies-points-selected";
   var STUDIES_NO_SELECTION = "__none__";
+  // Collision annotation (T6 / D12 point 4). The ring source holds one
+  // feature per distinct coordinate where two or more markers are really
+  // drawn, and its single layer sits UNDER the marker layer. It is an
+  // annotation, not an aggregation: the marker layer keeps exactly one
+  // point per study (D9 rule 1), and one ring per coordinate — never one
+  // per study — is what keeps the rings from stacking like the markers.
+  var STUDIES_HALO_SOURCE_ID = "studies-halos";
+  var STUDIES_HALO_LAYER_ID = "studies-halos-ring";
 
   api
     .fetchMeta()
@@ -305,6 +313,11 @@
   // the matching marker and eases the camera to it when the study has a
   // coordinate.
   //
+  // A marker is still one study: the ring layer below only ANNOTATES the
+  // coordinates where markers coincide (one ring per coordinate, derived
+  // from the markers actually drawn), so the panel keeps listing studies
+  // the map never draws and the map keeps asserting nothing about them.
+  //
   // Every MapLibre source/filter mutation triggered by a map event is
   // deferred onto a coalesced requestAnimationFrame tick. The T8a record
   // shows that a synchronous source write inside a MapLibre callback
@@ -360,9 +373,35 @@
     if (!map || studiesLayerInstalled || !mapLoaded) {
       return;
     }
+    var draw = studiesDrawData();
     map.addSource(STUDIES_SOURCE_ID, {
       type: "geojson",
-      data: studiesFeatureCollection(),
+      data: draw.points,
+    });
+    map.addSource(STUDIES_HALO_SOURCE_ID, {
+      type: "geojson",
+      data: draw.halos,
+    });
+    // Added before the marker layer so it paints behind it: a larger
+    // circle under a stacked marker reads as a ring around it. MapLibre
+    // paints layers in the order they were added, so this position is the
+    // whole "behind" guarantee.
+    map.addLayer({
+      id: STUDIES_HALO_LAYER_ID,
+      type: "circle",
+      source: STUDIES_HALO_SOURCE_ID,
+      paint: {
+        // Always larger than STUDIES_LAYER_ID at the same zoom, so the
+        // marker never swallows the ring entirely.
+        "circle-radius": [
+          "interpolate", ["linear"], ["zoom"],
+          4, 9,
+          10, 18,
+        ],
+        "circle-color": "rgba(190, 18, 60, 0.16)",
+        "circle-stroke-color": "rgba(190, 18, 60, 0.55)",
+        "circle-stroke-width": 1.5,
+      },
     });
     map.addLayer({
       id: STUDIES_LAYER_ID,
@@ -419,6 +458,12 @@
       if (!e || !e.features || !e.features.length) {
         return;
       }
+      // A marker at a shared coordinate still selects a study: the
+      // handler is bound to the marker layer only (the ring layer has no
+      // handler), and the study it picks is one of the studies drawn at
+      // that coordinate. Which member of a stack MapLibre reports first
+      // is its own pick order, so the contract here is "one of the
+      // studies drawn there", not "a specific one".
       var props = e.features[0].properties || {};
       var id = props.study_id;
       var catalog = window.MapBiomasCatalog;
@@ -430,13 +475,43 @@
   }
 
   /**
-   * Build the GeoJSON FeatureCollection for the map source: exactly one
-   * Point feature per study with ``on_map`` true. No clustering and no
-   * per-coordinate counters: the four studies that share one coordinate
-   * are excluded upstream and never reach this collection.
+   * Build both collections the study layers draw, in ONE pass over the
+   * catalog, so the ring can never describe a set of markers other than
+   * the one the marker layer receives.
+   *
+   * ``points``: exactly one Point feature per study with ``on_map`` true.
+   * No clustering and no per-coordinate counters — D12 replaced the old
+   * collision exclusion, so studies that share a coordinate DO reach this
+   * collection, and the map declares the collision through the ring
+   * instead of hiding it.
+   *
+   * ``halos``: one feature per distinct coordinate where the markers
+   * actually drawn number two or more. Each carries both facts, so the UI
+   * never has to choose between them silently:
+   *
+   *   ``marker_count``          markers drawn at this coordinate. This is
+   *                             the number anything the map asserts must
+   *                             use; every ring the layer draws has 2 or
+   *                             more, because a coordinate with one drawn
+   *                             marker is not a collision.
+   *   ``coordinate_group_size`` the builder's ``coordinate_group_size``
+   *                             for the group, which counts every study at
+   *                             that coordinate regardless of display
+   *                             class. The two disagree wherever the group
+   *                             holds a study the map does not draw
+   *                             (Mérida: 6 in the artifact, 4 drawn;
+   *                             Barinas: 4 in the artifact, 2 drawn), so
+   *                             the ring must never be labelled with this
+   *                             one.
+   *
+   * The two collections are derived from the SAME coordinate predicate
+   * (``on_map`` and finite ``latitud``/``longitud``) that MapLibre draws,
+   * which is why the ring count is not the artifact's tally of collision
+   * groups.
    */
-  function studiesFeatureCollection() {
+  function studiesDrawData() {
     var features = [];
+    var groups = {};
     Object.keys(studiesById).forEach(function (id) {
       var study = studiesById[id];
       if (!study || !study.on_map) {
@@ -459,8 +534,51 @@
           coordinates: [study.longitud, study.latitud],
         },
       });
+      // Exact-coordinate grouping, the same equality the builder uses for
+      // ``coordinate_group_size``. The key is a string because two studies
+      // at one coordinate carry the same parsed number, so the key is
+      // exact and never a rounded bucket.
+      var key = study.latitud + "|" + study.longitud;
+      var group = groups[key];
+      if (group) {
+        group.marker_count += 1;
+      } else {
+        groups[key] = {
+          latitud: study.latitud,
+          longitud: study.longitud,
+          marker_count: 1,
+          coordinate_group_size:
+            typeof study.coordinate_group_size === "number"
+              ? study.coordinate_group_size
+              : null,
+        };
+      }
     });
-    return { type: "FeatureCollection", features: features };
+    // Sorted keys keep the ring source deterministic: the catalog order is
+    // not a contract, and an unstable source order would churn the layer.
+    var haloFeatures = Object.keys(groups)
+      .sort()
+      .map(function (key) {
+        var group = groups[key];
+        return {
+          type: "Feature",
+          properties: {
+            marker_count: group.marker_count,
+            coordinate_group_size: group.coordinate_group_size,
+          },
+          geometry: {
+            type: "Point",
+            coordinates: [group.longitud, group.latitud],
+          },
+        };
+      })
+      .filter(function (feature) {
+        return feature.properties.marker_count > 1;
+      });
+    return {
+      points: { type: "FeatureCollection", features: features },
+      halos: { type: "FeatureCollection", features: haloFeatures },
+    };
   }
 
   function requestStudiesRefresh(recenterId) {
@@ -480,9 +598,16 @@
     if (!map || !studiesLayerInstalled) {
       return;
     }
+    // One derivation feeds both sources, so a refresh can never leave the
+    // rings describing the previous set of markers.
+    var draw = studiesDrawData();
     var src = map.getSource(STUDIES_SOURCE_ID);
     if (src && typeof src.setData === "function") {
-      src.setData(studiesFeatureCollection());
+      src.setData(draw.points);
+    }
+    var haloSrc = map.getSource(STUDIES_HALO_SOURCE_ID);
+    if (haloSrc && typeof haloSrc.setData === "function") {
+      haloSrc.setData(draw.halos);
     }
     if (
       typeof map.getLayer === "function" &&

@@ -69,9 +69,11 @@ started deleting the strongest signal in the corpus.
    `coordinate_group_ids` (the *other* `study_id`s in that group, sorted ascending; `[]` when alone).
    It is computed by the builder from coordinates alone, **independently of class** — in the Barinas
    group one member is T1 and three are T2, and that is correct.
-4. The map must **show** the collision instead of hiding it: a study in a group larger than one is
-   drawn with a distinguishing halo, and the map note states how many studies share a coordinate
-   while the panel stays the authoritative view (D9).
+4. The map must **show** the collision instead of hiding it: **one ring per coordinate that carries
+   more than one marker**, added behind the markers, while the panel stays the authoritative view
+   (D9). **Corrected after T6**: the note states what the ring *means* and carries **no number**,
+   because the artifact exposes no builder-produced collision tally and D9 forbids the frontend from
+   deriving one. Making the count visible needs a builder-side field, recorded as open item C7.
 
 **Consequence.** The map stops excluding rows for sharing a coordinate and starts declaring the
 collision where it happens. The placeable count is no longer derivable from a formula: it is what
@@ -605,13 +607,40 @@ tests stayed green.
   logic was checked with a throwaway headless DOM stub (not committed) and its layout evidence is this
   browser pass, which no CI run reproduces. T7 records it as a known hole.
 
-### T6 — Map: the collision becomes visible
-- A distinguishing halo for studies whose `coordinate_group_size > 1`, plus the note stating how many
-  studies share a coordinate and that the panel is the authoritative view.
-- Evidence, in a real browser with the MapLibre constructor intercepted (the technique recorded after
-  F4's T4): marker count read from the live `studies-points` source, halo count read from the live
-  halo source, a click on a shared-coordinate marker selects the right study, and no overlap between
-  the D7 boundary note, the studies note/legend and the attribution strip at two viewport widths.
+### T6 — Map: the collision becomes visible — **DONE**
+
+**Commit**: recorded below.
+
+- New `studies-halos` source and `studies-halos-ring` layer, added **before** the marker layer so
+  MapLibre paints it underneath, with **one ring per coordinate** and never one per study — otherwise
+  the rings would stack exactly like the markers do. Measured in the live sources: **103 markers,
+  12 rings**, a `marker_count` multiset of `{5, 4, 3, 3, 3, 2×7}` summing **32** drawn studies, and 12
+  distinct ring coordinates.
+- The ring interpolates its radius 9 → 18 against the marker's 4 → 8, so the annulus is ~2.2x the
+  marker's diameter at the default zoom. Probed on the canvas: 12 px from the centre hits the ring and
+  **not** the marker.
+- **The trap the brief named, confirmed against the data**: two rings carry a
+  `coordinate_group_size` that differs from what is drawn — Barinas 4 in the catalog and 2 drawn,
+  Mérida 6 and 4 — because the artifact counts every study at that coordinate regardless of class.
+  The ring is driven by the **drawn** markers; the catalog number travels on the feature and is
+  deliberately **not rendered**.
+- **One ring per coordinate, one marker per study.** The ring is an annotation, not an aggregate and
+  not a counter marker, so D9's rule 1 still holds.
+- **Clicking a stacked marker**: `queryRenderedFeatures` at the Lago de Maracaibo coordinate returns
+  **5 features**, and clicking there selects exactly one study (`.is-selected` count 1) whose detail
+  reads `Lago de Maracaibo, Venezuela`. Which member of the stack wins is MapLibre's own order, not
+  our code — that was already true before this change.
+- **Overlays**: a third child inside F4's content-sized column, so it inherits the no-overlap
+  guarantee instead of re-tuning offsets. Measured bounding boxes at 1280x900 and 1042x569 give
+  **zero overlaps** among the legend, the ring note, the D7 note and the MapLibre attribution. The
+  toolbar clearance is clear in the 1280 view; at 1042 the column sits at the map's bottom edge and
+  the toolbar at its top, which is F4's `bottom: 40px` structure and not a new offset. **The toolbar
+  distance was eyeballed, not measured pixel by pixel**, and it is stated as such.
+- **A contradiction the writer caught, and my own text was at fault.** D12 point 4 said the note
+  "states how many studies share a coordinate", while my T6 item 3 forbade frontend-derived counts.
+  Both cannot hold: no builder-produced collision tally exists. The writer followed the more specific
+  instruction and refused to improvise. D12's wording is corrected above and the missing count is
+  item **C7**.
 
 ### T7 — Closing
 - `README.md`: the new contract and the standing `study_gap` warning.
@@ -634,6 +663,7 @@ tests stayed green.
 | C4 | The `study_gap` rationale in `tools/priority_schema.py` names D2 and reads as stale | Nothing yet. Section 6 of the parent document is the answer; with 202 studies the term is still insufficient for an H3 res 8–9 index. Do not flip it |
 | C5 | **New**: decide whether the raw parquet is versioned in this repository or the sync from `Congresos_CVE_V2` becomes a documented, hash-checked mandatory step | A fresh clone's rebuild. A decision, not a task |
 | C6 | **New**: 16 Vol XI rows have `anio` null (legacy CSV ETL) | Any per-year study layer (stage E2) will have 16 undated studies |
+| C7 | **New**: the map overlays carry no collision tally, so the ring note explains the ring without a number | A builder-side `display_contract` field (a coordinate count and a marker count) plus its API invariant would make the number visible. Recorded, not scheduled: it reopens the artifact, the validator and the pinned expectations for a figure of modest value |
 
 ## 9. Rebuild environment
 
