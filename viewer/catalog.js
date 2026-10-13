@@ -27,8 +27,12 @@
  * re-derives the label (decision D9). The full ``exclusion_reason`` stays
  * in the detail view, also verbatim.
  *
- * The text search filters on title, author names and ``palabrasclaves``,
- * case- and accent-insensitively, and combines with the edition filter.
+ * The text search filters on title, author names, ``palabrasclaves``, the
+ * ``ubicaciongeografica`` place text and the ``especiesmencionadas`` taxon
+ * text, case- and accent-insensitively, and combines with the edition
+ * filter. ``especiesmencionadas`` is free text (some rows hold a JSON-looking
+ * list, others prose), so it enters the haystack verbatim as a string: the
+ * panel never parses it, strips its brackets or quotes, or splits it.
  *
  * No ``fetch`` call lives in this file. All data access goes through
  * ``window.MapBiomasAPI``, the single data-access module of the frontend.
@@ -347,9 +351,16 @@
   }
 
   /**
-   * Normalized haystack for the text search: the title, every author name
-   * and every ``palabrasclaves`` entry, joined with a separator so a query
-   * can never match across two different fields.
+   * Normalized haystack for the text search: the title, every author name,
+   * every ``palabrasclaves`` entry, the ``ubicaciongeografica`` place text
+   * and the ``especiesmencionadas`` taxon text, joined with a separator so a
+   * query can never match across two different fields.
+   *
+   * ``especiesmencionadas`` is free text: some rows carry a JSON-looking list
+   * (``['Loligo sp.', 'Prionotus arenatus']``) and others carry prose
+   * (``peces, reptiles, anfibios, aves, mamíferos``). It enters the haystack
+   * VERBATIM as a string — never parsed, never stripped of brackets or
+   * quotes, never split — so a query for one name inside a list still hits.
    *
    * @param {object} study
    * @returns {string}
@@ -369,6 +380,12 @@
         parts.push(keyword);
       }
     });
+    if (study.ubicaciongeografica) {
+      parts.push(study.ubicaciongeografica);
+    }
+    if (study.especiesmencionadas) {
+      parts.push(study.especiesmencionadas);
+    }
     return normalizeText(parts.join("\n"));
   }
 

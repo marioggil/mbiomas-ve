@@ -599,6 +599,16 @@ tests stayed green.
   while narrowing (4066 → 4066, 1200 → 1200), which the `min-height == max-height` equality is what
   guarantees. **An earlier reading of mine that showed a 703 px jump was my test's fault**: `page.fill`
   focuses the input and the browser scrolls it into view.
+- **Correction, after the audit (C8).** The search originally covered **three** fields, and that was
+  too narrow for this corpus: a query by **place** or by **species** silently missed rows, and
+  `reptiles` returned **zero** although four studies mention reptiles. `ubicaciongeografica` and
+  `especiesmencionadas` were added to the haystack (indexed verbatim as free text — never parsed,
+  never split), and the placeholder and help text now name what is covered. Verified in a real
+  browser afterwards, all thirteen numbers: `reptiles`/`reptil` **4**, `morrocoy` 4, `merida` **14**,
+  `aves` **14**, `atelopus` 3, `orinoco` 10, `cafe` 5, `manglar` 5, with the four controls unmoved
+  (`aves acuaticas` 1, `panicum` 1, `tacarigua` 3, `quiscalus` 1), the baseline still 202, the 99
+  badges unchanged, the empty state intact, and clearing restoring 202. The previous numbers in this
+  entry (`merida` 10, `gavidia` 1, `RIO ORINOCO` 5) describe the three-field search as it was.
 - **Badge**: 99, exactly the excluded rows, tally 80/10/9 matching the artifact's classes, all inside
   the meta line, **none with the placeable label**. The text is the builder's `classes[].label_es`
   verbatim (D9). It first shipped on all 202 rows with `Ubicable` on 103 of them — noise, not
@@ -685,7 +695,7 @@ tests stayed green.
 | C5 | **New**: decide whether the raw parquet is versioned in this repository or the sync from `Congresos_CVE_V2` becomes a documented, hash-checked mandatory step | A fresh clone's rebuild. A decision, not a task |
 | C6 | **New**: 16 Vol XI rows have `anio` null (legacy CSV ETL) | Any per-year study layer (stage E2) will have 16 undated studies |
 | C7 | **New**: the map overlays carry no collision tally, so the ring note explains the ring without a number | A builder-side `display_contract` field (a coordinate count and a marker count) plus its API invariant would make the number visible. Recorded, not scheduled: it reopens the artifact, the validator and the pinned expectations for a figure of modest value |
-| C8 | **New, measured**: the panel's search covers title, author names and `palabrasclaves` **only**, so a query by **place** or by **species** silently misses rows. Measured against the artifact: adding `ubicaciongeografica` and `especiesmencionadas` to the haystack finds far more — across 346 genera sampled from the 162 studies that carry a species list, **288 improve**, gaining **355 study matches** in total (`Reptiles` 0 → 4, `Atelopus` 0 → 3, `Aves` 8 → 14, `Peces` 6 → 12), and place names too (`morrocoy` 1 → 4, `merida` 10 → 14, `orinoco` 7 → 10). The artifact already carries both fields, so the fix is a two-field change in the panel plus its label copy | A product decision on what the search covers. **Recommended**, because a species query returning zero is the query an ecologist is most likely to make |
+| C8 | **New, measured**: the panel's search covers title, author names and `palabrasclaves` **only**, so a query by **place** or by **species** silently misses rows. Measured against the artifact: adding `ubicaciongeografica` and `especiesmencionadas` to the haystack finds far more — across 346 genera sampled from the 162 studies that carry a species list, **288 improve**, gaining **355 study matches** in total (`Reptiles` 0 → 4, `Atelopus` 0 → 3, `Aves` 8 → 14, `Peces` 6 → 12), and place names too (`morrocoy` 1 → 4, `merida` 10 → 14, `orinoco` 7 → 10). The artifact already carries both fields, so the fix is a two-field change in the panel plus its label copy | **CLOSED**: both fields are in the haystack, indexed verbatim as free text, with the copy updated and all thirteen browser-verified numbers recorded in T5's correction note |
 | C9 | **New**: `data/curated/congresos/granularidad-ubicaciones.json` was pre-filled by a **one-off script that is not committed**. The file states its own rules in section 6 and every T0/T1 row carries its reason, and the recorded text is verified against the corpus, so the artifact itself is sound — but the next corpus growth would have to redo the pre-fill by hand | Nothing today. A committed helper that only *proposes* entries for unclassified rows, never overwriting a reviewed one, would close it |
 
 ## 9. Rebuild environment
