@@ -610,7 +610,7 @@ tests stayed green.
 
 ### T6 — Map: the collision becomes visible — **DONE**
 
-**Commit**: recorded below.
+**Commit**: `e944e38`.
 
 - New `studies-halos` source and `studies-halos-ring` layer, added **before** the marker layer so
   MapLibre paints it underneath, with **one ring per coordinate** and never one per study — otherwise
@@ -645,7 +645,7 @@ tests stayed green.
 
 ### T7 — Closing — **DONE**
 
-**Commit**: recorded below.
+**Commit**: `1a57427`.
 
 - **`README.md` gained what F4 never wrote.** A **"The study catalog"** section: the corpus, the panel
   as the authoritative view with the map secondary, the contract and its four classes with counts,
