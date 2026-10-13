@@ -87,7 +87,7 @@ PARQUET_PATH = (
 # Pinned numbers. These describe the committed artifact; they are asserted
 # against the file, never re-derived from the Parquet.
 # ---------------------------------------------------------------------------
-EXPECTED_SCHEMA_VERSION = 2
+EXPECTED_SCHEMA_VERSION = 3
 EXPECTED_STUDY_COUNT = 202
 EXPECTED_CLASS_COUNTS = {
     "placeable": 103,
@@ -97,6 +97,13 @@ EXPECTED_CLASS_COUNTS = {
 }
 EXPECTED_MAP_VISIBLE = 103
 EXPECTED_EXCLUDED = 99
+# The builder's collision tallies, describing what the map draws: 12 exact
+# coordinates carry two or more of the 103 placed studies, and those
+# coordinates gather 32 markers. The catalog-wide collision is 23 coordinates
+# because it also counts coordinates whose extra studies the map does not
+# draw, so these two numbers must come from the ``placeable`` studies alone.
+EXPECTED_COLLISION_COORDINATE_COUNT = 12
+EXPECTED_COLLISION_MARKER_COUNT = 32
 EXPECTED_ESPECIES_NON_NULL = 162
 
 # The curated taxonomy is complete: one entry per row of the 202-study corpus.
@@ -295,6 +302,52 @@ EXPECTED_UNDATED_IDS = [
     "cve-sin-anio-pagina-7-1",
     "cve-sin-anio-pagina-7-2",
 ]
+
+
+# A fixture for the builder's collision tallies. Three coordinates, chosen so
+# each branch of the derivation is exercised:
+#   INSIDE       two placeable studies AND one coarse_location study, so the
+#                catalog-wide ``coordinate_group_size`` is 3 while the map
+#                draws only 2 markers;
+#   INSIDE_OTHER a single placeable study, which is not a collision;
+#   OUTSIDE      an outside_extent study the map never draws.
+# Plus a row without coordinates. Expected tallies: 1 coordinate / 2 markers,
+# and a builder that reused ``coordinate_group_size`` would report 2 / 3.
+def collision_rows() -> list[dict[str, Any]]:
+    return [
+        make_row(source_path="data/raw/congresos/pagina_5_2.pdf", anio=1992,
+                 pagina=5, indice=2, congreso="A",
+                 latitud=INSIDE[0], longitud=INSIDE[1]),
+        make_row(source_path="data/raw/congresos/pagina_5_1.pdf", anio=1992,
+                 pagina=5, indice=1, congreso="A",
+                 latitud=INSIDE[0], longitud=INSIDE[1]),
+        make_row(source_path="data/raw/congresos/pagina_4_1.pdf", anio=1992,
+                 pagina=4, indice=1, congreso="A",
+                 latitud=INSIDE[0], longitud=INSIDE[1],
+                 ubicaciongeografica="estado Barinas"),
+        make_row(source_path="data/raw/congresos/pagina_3_9.pdf", anio=1992,
+                 pagina=3, indice=9, congreso="A",
+                 latitud=INSIDE_OTHER[0], longitud=INSIDE_OTHER[1]),
+        make_row(source_path="data/raw/congresos/pagina_9_1.pdf", anio=1991,
+                 pagina=9, indice=1, congreso="B",
+                 latitud=OUTSIDE[0], longitud=OUTSIDE[1]),
+        make_row(source_path="data/raw/congresos/pagina_1_1.pdf", anio=1993,
+                 pagina=1, indice=1, congreso="C", latitud=None,
+                 longitud=None),
+    ]
+
+
+# ``taxonomy_for`` with the Barinas row held at T1, so it shares the first
+# coordinate group without being drawn. That is exactly the case where the
+# collision tallies and ``coordinate_group_size`` must disagree.
+def collision_taxonomy(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    taxonomy = taxonomy_for(rows)
+    taxonomy[rows[2]["source_path"]] = taxonomy_entry(
+        nivel="T1",
+        texto=subject.row_location_text(rows[2]),
+        razon="administrative unit with no locality named inside it",
+    )
+    return taxonomy
 
 
 # The curated granularity taxonomy. One entry per ``source_path``; every entry
@@ -538,9 +591,15 @@ def assert_catalog_contract(catalog: dict[str, Any]) -> None:
     assert isinstance(contract, dict), (
         f"display_contract is {type(contract).__name__}, expected an object"
     )
-    assert set(contract) == {"map_visible_count", "excluded_count"}, (
+    assert set(contract) == {
+        "map_visible_count",
+        "excluded_count",
+        "collision_coordinate_count",
+        "collision_marker_count",
+    }, (
         f"display_contract fields are {sorted(contract)}, expected exactly "
-        f"['excluded_count', 'map_visible_count']"
+        f"['collision_coordinate_count', 'collision_marker_count', "
+        f"'excluded_count', 'map_visible_count']"
     )
 
     # --- identity ---------------------------------------------------------
@@ -670,6 +729,24 @@ def assert_catalog_contract(catalog: dict[str, Any]) -> None:
         f"display_contract.excluded_count is {contract['excluded_count']!r}, expected "
         f"{EXPECTED_EXCLUDED} and "
         f"{EXPECTED_STUDY_COUNT - counts['placeable']} excluded studies"
+    )
+    # The two collision tallies describe the markers the map draws, so they are
+    # pinned against the artifact and kept below the visible count: the ring
+    # note prints them, and a stale pair would state a false number.
+    assert (
+        contract["collision_coordinate_count"]
+        == EXPECTED_COLLISION_COORDINATE_COUNT
+    ), (
+        f"display_contract.collision_coordinate_count is "
+        f"{contract['collision_coordinate_count']!r}, expected "
+        f"{EXPECTED_COLLISION_COORDINATE_COUNT}"
+    )
+    assert (
+        contract["collision_marker_count"] == EXPECTED_COLLISION_MARKER_COUNT
+    ), (
+        f"display_contract.collision_marker_count is "
+        f"{contract['collision_marker_count']!r}, expected "
+        f"{EXPECTED_COLLISION_MARKER_COUNT}"
     )
 
 
@@ -892,6 +969,28 @@ class ShippedCatalogControlTests(unittest.TestCase):
         broken["display_contract"]["excluded_count"] = EXPECTED_EXCLUDED - 1
         self._fail(
             broken, f"display_contract.excluded_count is {EXPECTED_EXCLUDED - 1}"
+        )
+
+    def test_control_rejects_a_collision_coordinate_count_that_disagrees(self) -> None:
+        broken = self._broken()
+        broken["display_contract"]["collision_coordinate_count"] = (
+            EXPECTED_COLLISION_COORDINATE_COUNT - 1
+        )
+        self._fail(
+            broken,
+            f"display_contract.collision_coordinate_count is "
+            f"{EXPECTED_COLLISION_COORDINATE_COUNT - 1}",
+        )
+
+    def test_control_rejects_a_collision_marker_count_that_disagrees(self) -> None:
+        broken = self._broken()
+        broken["display_contract"]["collision_marker_count"] = (
+            EXPECTED_COLLISION_MARKER_COUNT - 1
+        )
+        self._fail(
+            broken,
+            f"display_contract.collision_marker_count is "
+            f"{EXPECTED_COLLISION_MARKER_COUNT - 1}",
         )
 
 
@@ -2658,7 +2757,13 @@ class BuildCatalogTests(unittest.TestCase):
              "no_coordinate": 2},
         )
         self.assertEqual(
-            catalog["display_contract"], {"map_visible_count": 3, "excluded_count": 3}
+            catalog["display_contract"],
+            {
+                "map_visible_count": 3,
+                "excluded_count": 3,
+                "collision_coordinate_count": 1,
+                "collision_marker_count": 2,
+            },
         )
         self.assertEqual(sum(counts.values()), catalog["study_count"])
         self.assertEqual(
@@ -2674,8 +2779,75 @@ class BuildCatalogTests(unittest.TestCase):
         catalog, counts = build_catalog_from(rows)
         self.assertEqual(counts["placeable"], 1)
         self.assertEqual(
-            catalog["display_contract"], {"map_visible_count": 1, "excluded_count": 0}
+            catalog["display_contract"],
+            {
+                "map_visible_count": 1,
+                "excluded_count": 0,
+                "collision_coordinate_count": 0,
+                "collision_marker_count": 0,
+            },
         )
+
+    # --- the collision tallies describe what the map draws -----------------
+    def test_the_collision_tallies_count_only_drawn_markers(self) -> None:
+        rows = collision_rows()
+        catalog, counts = build_catalog_from(rows, collision_taxonomy(rows))
+        self.assertEqual(counts["placeable"], 3)
+        self.assertEqual(counts["coarse_location"], 1)
+        contract = catalog["display_contract"]
+        self.assertEqual(contract["map_visible_count"], 3)
+        # The excluded study shares the colliding coordinate, so the
+        # catalog-wide size is 3 there while the map draws 2 markers: the
+        # tallies must not have been read from ``coordinate_group_size``.
+        drawn = [
+            study for study in catalog["studies"]
+            if study["display_class"] == "placeable"
+        ]
+        self.assertEqual(
+            sorted(study["coordinate_group_size"] for study in drawn), [1, 3, 3]
+        )
+        self.assertEqual(contract["collision_coordinate_count"], 1)
+        self.assertEqual(contract["collision_marker_count"], 2)
+
+    def test_control_a_lone_placeable_study_is_not_a_collision(self) -> None:
+        rows = [make_row()]
+        catalog, counts = build_catalog_from(rows)
+        self.assertEqual(counts["placeable"], 1)
+        contract = catalog["display_contract"]
+        self.assertEqual(contract["collision_coordinate_count"], 0)
+        self.assertEqual(contract["collision_marker_count"], 0)
+
+    def test_control_a_placeable_pair_turns_its_coordinate_into_a_collision(
+        self,
+    ) -> None:
+        rows = [
+            make_row(),
+            make_row(source_path="data/raw/congresos/pagina_5_1.pdf",
+                     pagina=5, indice=1),
+        ]
+        catalog, counts = build_catalog_from(rows)
+        self.assertEqual(counts["placeable"], 2)
+        contract = catalog["display_contract"]
+        self.assertEqual(contract["collision_coordinate_count"], 1)
+        self.assertEqual(contract["collision_marker_count"], 2)
+
+    def test_control_a_coordinate_shared_only_by_excluded_studies_is_not_counted(
+        self,
+    ) -> None:
+        rows = [
+            make_row(source_path="data/raw/congresos/pagina_5_2.pdf",
+                     ubicaciongeografica="estado Barinas"),
+            make_row(source_path="data/raw/congresos/pagina_5_1.pdf",
+                     pagina=5, indice=1,
+                     ubicaciongeografica="estado Barinas"),
+        ]
+        catalog, counts = build_catalog_from(rows, taxonomy_for(rows, nivel="T1"))
+        self.assertEqual(counts["placeable"], 0)
+        contract = catalog["display_contract"]
+        self.assertEqual(contract["collision_coordinate_count"], 0)
+        self.assertEqual(contract["collision_marker_count"], 0)
+        # The coordinate is still a collision in the catalog-wide attribute.
+        self.assertEqual(catalog["studies"][0]["coordinate_group_size"], 2)
 
     def test_a_coarse_catalog_moves_the_whole_level_off_the_map(self) -> None:
         rows = catalog_rows()
@@ -2883,13 +3055,14 @@ class SchemaVersionTests(unittest.TestCase):
 
     def test_the_builder_writes_the_anchored_version(self) -> None:
         catalog, _ = build_test_catalog()
-        self.assertEqual(subject.SCHEMA_VERSION, 2)
+        self.assertEqual(subject.SCHEMA_VERSION, 3)
         self.assertEqual(catalog["schema_version"], subject.SCHEMA_VERSION)
 
-    def test_control_the_version_is_not_the_previous_contract_s(self) -> None:
-        # The taxonomy replaced the collision class, so a reader must not
-        # mistake this document for schema 1.
+    def test_control_the_version_is_not_a_previous_contract_s(self) -> None:
+        # Version 3 added the collision tallies the map note renders, so a
+        # reader must not mistake this document for schema 1 or schema 2.
         self.assertNotEqual(subject.SCHEMA_VERSION, 1)
+        self.assertNotEqual(subject.SCHEMA_VERSION, 2)
 
 
 # ---------------------------------------------------------------------------

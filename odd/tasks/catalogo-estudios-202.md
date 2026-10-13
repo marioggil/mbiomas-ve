@@ -300,8 +300,14 @@ means `no_coordinate` with the level preserved. Measured in the shipped artifact
   (`T0`/`T1`/`T2`), `granularidad_razon`, and **`palabrasclaves`** (`list[str]`) so the panel can
   search it without a second artifact.
 - `source_sha256`, `source_rows`, `source_bytes` next to `source_parquet` (T1).
-- `schema_version` is **bumped** and anchored by a test, following the project's existing convention
-  (the composition summary is anchored the same way).
+- `schema_version` **3** (it was 2). The version moved because `display_contract` gained two
+  **builder-produced collision counts** so the map note could state the figure without the frontend
+  deriving it (C7): `collision_coordinate_count` — the distinct coordinates among the `placeable`
+  studies that carry two or more markers, **12** — and `collision_marker_count` — the `placeable`
+  studies sitting on them, **32**. Both are about what the map draws, computed exactly as the viewer's
+  ring derivation does it, and deliberately **not** from `coordinate_group_size`, which counts every
+  study at a coordinate regardless of class (the catalog's own shared groups number 23 and the largest
+  holds 11). Anchored by a test, following the project's existing convention.
 
 `serve_viewer.py`'s import-time validator is **contract-driven**, not nominal: it checks invariants
 (`sum(class counts) == study_count`, `on_map ⟺ placeable`, a non-empty reason for every non-placeable
@@ -544,6 +550,11 @@ tests stayed green.
   `len(ids) + 1 == size`; every referenced study at the same coordinate; and **symmetric membership**,
   so if A lists B then B lists A. The group is deliberately **not** asserted to share a display class:
   the four Barinas studies mix T1 and T2.
+  - **Extended by C7**: `display_contract` is now pinned to an exact field set, its two collision
+    counts must be non-bool ints ≥ 0 that satisfy `marker ≤ visible` and `marker ≥ 2 × coordinates`,
+    they are **recounted from the `placeable` studies** and compared, and `schema_version` must equal
+    the version the service understands (3). The bounds run **before** the recount, because a passing
+    recount makes them unreachable — the writer found that ordering problem and reported it.
 - `run.sh`: `stage_studies` (rebuild-only, wired after the tiles stage, refusing with the actionable
   hint that the rebuild needs an environment carrying `pyarrow` — the system interpreter has GDAL but
   not pyarrow), and two new `cmd_check` items: the studies catalog as `[serve]` and the congress
@@ -621,7 +632,12 @@ tests stayed green.
 - **Selection**: exactly one `.is-selected` after a click, and exactly one after clicking another.
 - 13 filter buttons (`Todas (202)` plus the twelve editions, `XI · sin año (16)` last); the 16 undated
   studies render `sin año`, are the last 16 in order, and no row contains `null` or `NaN`.
-- Console: **0 errors, 0 warnings**.
+- Console: **0 errors, 0 warnings** — in *that* pass. **Corrected after C7**: a later pass that
+  resizes the viewport re-requests tiles and the console then shows tile 404s. They are correct and
+  documented (`exclude_transparent: true` in the manifest, every requested path absent from disk, the
+  client relying on 404 meaning "no tile"), but "0 errors" must not be read as "the viewer never logs
+  an error": eight tile 404s across three distinct paths appeared in the C7 pass, all of them absent
+  on disk.
 - **Residual gap, stated rather than implied**: the panel has **no persisted automated test**. Its
   logic was checked with a throwaway headless DOM stub (not committed) and its layout evidence is this
   browser pass, which no CI run reproduces. T7 records it as a known hole.
@@ -657,9 +673,11 @@ tests stayed green.
   distance was eyeballed, not measured pixel by pixel**, and it is stated as such.
 - **A contradiction the writer caught, and my own text was at fault.** D12 point 4 said the note
   "states how many studies share a coordinate", while my T6 item 3 forbade frontend-derived counts.
-  Both cannot hold: no builder-produced collision tally exists. The writer followed the more specific
-  instruction and refused to improvise. D12's wording is corrected above and the missing count is
-  item **C7**.
+  Both cannot hold: no builder-produced collision tally existed. The writer followed the more specific
+  instruction and refused to improvise. **Resolved by C7**: the builder now emits the two counts, the
+  version moved to 3, and the note states them — verified in the browser as `12 / 32 / 103` in the
+  live DOM while the live sources report 103 markers and 12 rings summing 32. D12's wording was
+  corrected in the meantime and the counts are no longer missing.
 
 ### T7 — Closing — **DONE**
 
@@ -694,7 +712,7 @@ tests stayed green.
 | C4 | The `study_gap` rationale in `tools/priority_schema.py` names D2 and reads as stale | Nothing yet. Section 6 of the parent document is the answer; with 202 studies the term is still insufficient for an H3 res 8–9 index. Do not flip it |
 | C5 | **New**: decide whether the raw parquet is versioned in this repository or the sync from `Congresos_CVE_V2` becomes a documented, hash-checked mandatory step | A fresh clone's rebuild. A decision, not a task |
 | C6 | **New**: 16 Vol XI rows have `anio` null (legacy CSV ETL) | Any per-year study layer (stage E2) will have 16 undated studies |
-| C7 | **New**: the map overlays carry no collision tally, so the ring note explains the ring without a number | A builder-side `display_contract` field (a coordinate count and a marker count) plus its API invariant would make the number visible. Recorded, not scheduled: it reopens the artifact, the validator and the pinned expectations for a figure of modest value |
+| C7 | **New**: the map overlays carry no collision tally, so the ring note explains the ring without a number | **CLOSED**: the builder emits `collision_coordinate_count` and `collision_marker_count`, the schema moved to 3, the service recounts them and pins the version, and the note states `12 / 32 / 103` — verified in the browser against the live sources. The catalog-wide `coordinate_group_size` stays a different quantity on purpose |
 | C8 | **New, measured**: the panel's search covers title, author names and `palabrasclaves` **only**, so a query by **place** or by **species** silently misses rows. Measured against the artifact: adding `ubicaciongeografica` and `especiesmencionadas` to the haystack finds far more — across 346 genera sampled from the 162 studies that carry a species list, **288 improve**, gaining **355 study matches** in total (`Reptiles` 0 → 4, `Atelopus` 0 → 3, `Aves` 8 → 14, `Peces` 6 → 12), and place names too (`morrocoy` 1 → 4, `merida` 10 → 14, `orinoco` 7 → 10). The artifact already carries both fields, so the fix is a two-field change in the panel plus its label copy | **CLOSED**: both fields are in the haystack, indexed verbatim as free text, with the copy updated and all thirteen browser-verified numbers recorded in T5's correction note |
 | C9 | **New**: `data/curated/congresos/granularidad-ubicaciones.json` was pre-filled by a **one-off script that is not committed**. The file states its own rules in section 6 and every T0/T1 row carries its reason, and the recorded text is verified against the corpus, so the artifact itself is sound — but the next corpus growth would have to redo the pre-fill by hand | Nothing today. A committed helper that only *proposes* entries for unclassified rows, never overwriting a reviewed one, would close it |
 

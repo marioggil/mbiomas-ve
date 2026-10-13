@@ -121,7 +121,7 @@ that has a usable coordinate. The catalog list is capped and scrolls internally 
 unlike the composition panel, which grows to its content and lets the document scroll (see
 "Behaviours that look like bugs but are not").
 
-The artifact carries `schema_version` **2**, and `on_map` is true exactly for `placeable`, so the
+The artifact carries `schema_version` **3**, and `on_map` is true exactly for `placeable`, so the
 four classes partition the corpus and only the first is drawn:
 
 | Class | Count | On the map |
@@ -134,7 +134,9 @@ four classes partition the corpus and only the first is drawn:
 **Coordinates are shown as they are**, with no re-geocoding and no precision warnings. They are a
 geocoder's output, not sampling sites, so they collide: **23 coordinates are shared by more than one
 study**, and the largest is shared by **11**. Where two or more markers coincide the map draws a
-**ring**, so the overlap is visible instead of hidden.
+**ring**, so the overlap is visible instead of hidden: **12** coordinates carry more than one of the
+**103** plottable markers, gathering **32** of them. Those three figures come from the artifact's
+`display_contract`, not from counting in the browser.
 
 **Where it comes from.** `data/raw/congresos/congresos_revisados.parquet` (gitignored, unversioned —
 a copy of the export produced upstream in `Congresos_CVE_V2`) → `tools/build_study_catalog.py` →

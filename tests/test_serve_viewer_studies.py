@@ -89,11 +89,16 @@ class CommittedStudiesCatalogTests(unittest.TestCase):
             _committed_catalog(), serve_viewer.STUDIES_CATALOG_PATH
         )
 
-    def test_committed_catalog_is_the_version_2_202_study_rebuild(self) -> None:
+    def test_committed_catalog_is_the_version_3_202_study_rebuild(self) -> None:
         catalog = _committed_catalog()
-        self.assertEqual(catalog["schema_version"], 2)
+        self.assertEqual(catalog["schema_version"], 3)
         self.assertEqual(catalog["study_count"], 202)
         self.assertEqual(len(catalog["studies"]), 202)
+        # The numbers the map note renders, pinned against the committed
+        # artifact as a whole rather than through the validator.
+        contract = catalog["display_contract"]
+        self.assertEqual(contract["collision_coordinate_count"], 12)
+        self.assertEqual(contract["collision_marker_count"], 32)
 
 
 @unittest.skipUnless(_HAVE_FASTAPI, SERVE_ONLY)
@@ -336,6 +341,88 @@ class StudiesCatalogInvariantControlTests(unittest.TestCase):
         self._fail(self.catalog, r"does not list .* back")
         # The other study still holds the dangling membership.
         self.assertEqual(other["coordinate_group_ids"], [study["study_id"]])
+
+    # --- invariant 16: the display_contract field set ----------------------
+
+    def test_control_rejects_a_display_contract_missing_a_collision_count(
+        self,
+    ) -> None:
+        del self.catalog["display_contract"]["collision_marker_count"]
+        self._fail(
+            self.catalog, r"'display_contract' fields are .*expected exactly"
+        )
+
+    # --- invariant 17: the collision counts describe what the map draws ----
+
+    def test_control_rejects_a_negative_collision_coordinate_count(self) -> None:
+        self.catalog["display_contract"]["collision_coordinate_count"] = -1
+        self._fail(
+            self.catalog,
+            r"collision_coordinate_count' \(-1\) is not a non-boolean "
+            r"integer >= 0",
+        )
+
+    def test_control_rejects_a_boolean_collision_marker_count(self) -> None:
+        # True is an int in Python; the check must reject it as a bool.
+        self.catalog["display_contract"]["collision_marker_count"] = True
+        self._fail(
+            self.catalog,
+            r"collision_marker_count' \(True\) is not a non-boolean "
+            r"integer >= 0",
+        )
+
+    # --- the bounds on the declared numbers ---------------------------------
+
+    def test_control_rejects_a_marker_count_above_the_map_visible_count(
+        self,
+    ) -> None:
+        self.catalog["display_contract"]["collision_marker_count"] = 104
+        self._fail(
+            self.catalog,
+            r"collision_marker_count' \(104\) exceeds 'map_visible_count' \(103\)",
+        )
+
+    def test_control_rejects_a_marker_count_below_twice_the_coordinate_count(
+        self,
+    ) -> None:
+        self.catalog["display_contract"]["collision_coordinate_count"] = 20
+        self.catalog["display_contract"]["collision_marker_count"] = 32
+        self._fail(
+            self.catalog,
+            r"collision_marker_count' \(32\) is below twice "
+            r"'display_contract.collision_coordinate_count' \(20\)",
+        )
+
+    # --- the recount: the counts must describe the real data ----------------
+
+    def test_control_rejects_a_fabricated_pair_that_passes_the_bounds(self) -> None:
+        # 2 coordinates / 4 markers is a non-boolean int pair that satisfies
+        # both bounds (4 <= 103, 4 >= 2*2), so only the recount can reject it.
+        self.catalog["display_contract"]["collision_coordinate_count"] = 2
+        self.catalog["display_contract"]["collision_marker_count"] = 4
+        self._fail(
+            self.catalog,
+            r"collision_coordinate_count' \(2\) does not match the 12 "
+            r"coordinates",
+        )
+
+    def test_control_rejects_a_marker_count_that_does_not_match_the_studies(
+        self,
+    ) -> None:
+        # The coordinate count is honest, so the bounds pass and only the
+        # marker recount can reject the mutation.
+        self.catalog["display_contract"]["collision_marker_count"] = 31
+        self._fail(
+            self.catalog,
+            r"collision_marker_count' \(31\) does not match the 32 placeable "
+            r"studies",
+        )
+
+    # --- invariant 18: the schema version this service understands ---------
+
+    def test_control_rejects_a_previous_schema_version(self) -> None:
+        self.catalog["schema_version"] = 2
+        self._fail(self.catalog, r"schema_version is 2, expected 3")
 
 
 if __name__ == "__main__":

@@ -803,13 +803,14 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* ------- Collision note (slice T6 / D12) -------
+/* ------- Collision note (slice T6 / D12, counts in C7) -------
  * The ring in the map needs its own one-line statement: what the ring
  * means, and that it annotates the map rather than replacing the panel,
  * which stays the authoritative list of every study — including the ones
- * the map does not draw. No count is printed here: the number of collision
- * groups is not in the artifact, and the only number the map overlays may
- * show is the builder's ``map_visible_count`` on the legend line. */
+ * the map does not draw. The three numbers are facts from the builder's
+ * ``display_contract`` (``collision_coordinate_count``,
+ * ``collision_marker_count`` and ``map_visible_count``), written by
+ * ``app.js``; the frontend never counts markers itself (D9). */
 .study-map-halo-note {
   background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--border);
@@ -833,6 +834,12 @@ body {
   background: rgba(190, 18, 60, 0.16);
   border: 1.5px solid rgba(190, 18, 60, 0.55);
   flex-shrink: 0;
+}
+
+/* The counts share the legend's tabular figures so the note's numbers do
+ * not jitter against the text when the artifact changes. */
+.study-map-halo-text {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ------- Study catalog panel (slice F4 / T4 / T5) -------

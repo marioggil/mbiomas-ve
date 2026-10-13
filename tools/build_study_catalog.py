@@ -167,7 +167,10 @@ REQUIRED_COLUMNS = [
 # The schema version anchor, following the project's convention (the
 # composition summary is anchored the same way). Bumped when the display
 # contract changes in a way a reader must not mistake for the previous one.
-SCHEMA_VERSION = 2
+# Version 3 adds the two builder-produced collision tallies the map note
+# renders (``collision_coordinate_count`` / ``collision_marker_count``); a
+# version 2 artifact carries no number for the ring, so the viewer refuses it.
+SCHEMA_VERSION = 3
 
 # The identity of the derived document: the taxonomy replaced the collision
 # class, so ``coarse_location`` sits where ``shared_coordinate`` used to.
@@ -897,6 +900,33 @@ def study_sort_key(study: dict[str, Any]) -> tuple[Any, ...]:
     return (0, study["anio"], study["congreso"], study["pagina"], study["indice"])
 
 
+def collision_display_counts(studies: list[dict[str, Any]]) -> tuple[int, int]:
+    """Count the collisions the map actually draws.
+
+    Returns ``(collision_coordinate_count, collision_marker_count)``: the
+    distinct ``(latitud, longitud)`` pairs carrying **two or more** placeable
+    studies, and the number of placeable studies sitting on those pairs.
+
+    Only ``placeable`` studies reach the map, so only they can collide there.
+    The grouping is by exact coordinate, the same equality the viewer's halo
+    derivation uses, and this is deliberately NOT the catalog-wide
+    ``coordinate_group_size``: that attribute counts every study at a
+    coordinate regardless of display class, so a coordinate where one coarse
+    study shares a marker's spot would inflate the number the ring asserts
+    (Barinas: group size 4, two markers drawn).
+    """
+    drawn_by_coordinate: dict[tuple, int] = {}
+    for study in studies:
+        if study["display_class"] != "placeable":
+            continue
+        key = (study["latitud"], study["longitud"])
+        drawn_by_coordinate[key] = drawn_by_coordinate.get(key, 0) + 1
+    collision_sizes = [
+        size for size in drawn_by_coordinate.values() if size > 1
+    ]
+    return len(collision_sizes), sum(collision_sizes)
+
+
 def build_catalog(
     rows: list[dict[str, Any]],
     extent: dict[str, float],
@@ -941,6 +971,7 @@ def build_catalog(
         counts[study["display_class"]] += 1
 
     placeable = counts["placeable"]
+    collision_coordinates, collision_markers = collision_display_counts(studies)
     classes = []
     for key in CLASS_ORDER:
         classes.append(
@@ -968,6 +999,8 @@ def build_catalog(
         "display_contract": {
             "map_visible_count": placeable,
             "excluded_count": len(studies) - placeable,
+            "collision_coordinate_count": collision_coordinates,
+            "collision_marker_count": collision_markers,
         },
         "classes": classes,
         "studies": studies,
@@ -1105,7 +1138,9 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"studies: {catalog['study_count']} "
         f"(map_visible={catalog['display_contract']['map_visible_count']}, "
-        f"excluded={catalog['display_contract']['excluded_count']})"
+        f"excluded={catalog['display_contract']['excluded_count']}, "
+        f"collisions={catalog['display_contract']['collision_coordinate_count']} "
+        f"coords / {catalog['display_contract']['collision_marker_count']} markers)"
     )
     print(
         f"n_autores consistency: {matched}/{len(rows)} rows matched, "

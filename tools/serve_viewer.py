@@ -636,6 +636,22 @@ class StudiesCatalogError(RuntimeError):
 
 _STUDIES_CATALOG_LOAD_COUNTER: _LoadCounter = _LoadCounter()
 
+# The study-catalog schema version this service understands. Version 3 added the
+# two collision tallies the map note renders (``collision_coordinate_count`` and
+# ``collision_marker_count``); the note depends on those fields, so a version 2
+# artifact must be refused instead of served with the numbers silently absent.
+STUDIES_SCHEMA_VERSION: Final[int] = 3
+
+# The exact ``display_contract`` key set. Pinned so a contract that grows or
+# loses a field fails here rather than reaching a consumer that reads it by
+# name and silently renders ``undefined``.
+_DISPLAY_CONTRACT_FIELDS: Final = (
+    "map_visible_count",
+    "excluded_count",
+    "collision_coordinate_count",
+    "collision_marker_count",
+)
+
 # The curated location-granularity taxonomy has exactly these three levels. The
 # validator knows the set so a level the builder could never emit is fatal
 # instead of being silently served. T0 and T1 are the levels excluded from the
@@ -723,6 +739,18 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
          back. The members are deliberately NOT required to share a
          ``display_class``: the Barinas group of four mixes T1 and T2, and
          asserting otherwise would encode a false invariant.
+     16. ``display_contract`` carries exactly the declared key set:
+         ``map_visible_count``, ``excluded_count``,
+         ``collision_coordinate_count`` and ``collision_marker_count``.
+     17. The two collision counts are non-boolean ints >= 0 and describe what
+         the map draws: recounting the ``placeable`` studies by their exact
+         coordinate gives the same coordinate count and the same marker count.
+         The marker count never exceeds ``map_visible_count`` and is never
+         below twice the coordinate count, because every counted coordinate
+         draws at least two markers.
+     18. ``schema_version`` is the version this service understands. The map
+         note renders the collision tallies, so the fields it reads must
+         exist rather than be silently absent from an older artifact.
 
     A violation stops the service. We never patch the artifact: a value the
     map or the table would show that disagrees with the rest of the artifact
@@ -768,6 +796,9 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
     # once every study_id and coordinate is known, in the second pass below.
     coordinates: dict[str, tuple[Any, Any]] = {}
     group_members: dict[str, list[str]] = {}
+    # The exact coordinates the map draws a marker on, collected so the two
+    # collision tallies can be recomputed rather than trusted.
+    map_coordinates: list[tuple[Any, Any]] = []
     for index, study in enumerate(studies):
         if not isinstance(study, dict):
             raise StudiesCatalogError(
@@ -948,6 +979,8 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
 
         coordinates[study_id] = (latitud, longitud)
         group_members[study_id] = group_ids
+        if on_map and coords:
+            map_coordinates.append((latitud, longitud))
         tally[display_class] = tally.get(display_class, 0) + 1
 
     # The collision attributes reference other studies, so they can only be
@@ -1008,8 +1041,15 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
         raise StudiesCatalogError(
             f"studies catalog 'display_contract' is not an object: {path}"
         )
+    if set(contract) != set(_DISPLAY_CONTRACT_FIELDS):
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract' fields are {sorted(contract)}, "
+            f"expected exactly {sorted(_DISPLAY_CONTRACT_FIELDS)}: {path}"
+        )
     map_visible = contract.get("map_visible_count")
     excluded = contract.get("excluded_count")
+    collision_coordinates = contract.get("collision_coordinate_count")
+    collision_markers = contract.get("collision_marker_count")
     if (
         not isinstance(map_visible, int)
         or isinstance(map_visible, bool)
@@ -1020,6 +1060,18 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
             f"studies catalog 'display_contract' counts must be integers: "
             f"{path}: {contract!r}"
         )
+    # The two collision counts are the numbers the map note renders, so each is
+    # checked on its own so a fabricated value names the field it broke instead
+    # of a generic shape error.
+    for name, value in (
+        ("collision_coordinate_count", collision_coordinates),
+        ("collision_marker_count", collision_markers),
+    ):
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise StudiesCatalogError(
+                f"studies catalog 'display_contract.{name}' ({value!r}) is not a "
+                f"non-boolean integer >= 0: {path}"
+            )
 
     visible_total = 0
     excluded_total = 0
@@ -1057,6 +1109,62 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
             f"studies catalog 'display_contract' counts "
             f"({map_visible} + {excluded}) do not sum to study_count "
             f"({study_count}): {path}"
+        )
+
+    # The bounds below are cheap guards on the declared numbers, and they run
+    # before the recount so each is independently reachable: a passing recount
+    # would make them impossible to fire. Every counted coordinate draws at
+    # least two markers, so the marker count can never trail twice the
+    # coordinate count or lead the whole visible set.
+    if collision_markers > map_visible:
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract.collision_marker_count' "
+            f"({collision_markers}) exceeds 'map_visible_count' ({map_visible}): "
+            f"{path}"
+        )
+    if collision_markers < 2 * collision_coordinates:
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract.collision_marker_count' "
+            f"({collision_markers}) is below twice "
+            f"'display_contract.collision_coordinate_count' "
+            f"({collision_coordinates}); every collision coordinate draws at "
+            f"least two markers: {path}"
+        )
+
+    # The authoritative check: the two counts describe what the map draws, so
+    # they are recomputed from the placeable studies' exact coordinates. A pair
+    # that satisfies the bounds above but does not describe the studies fails
+    # here, which is what the fabricated-pair control pins.
+    drawn_groups: dict[tuple[Any, Any], int] = {}
+    for pair in map_coordinates:
+        drawn_groups[pair] = drawn_groups.get(pair, 0) + 1
+    expected_coordinates = sum(1 for size in drawn_groups.values() if size > 1)
+    expected_markers = sum(size for size in drawn_groups.values() if size > 1)
+    if collision_coordinates != expected_coordinates:
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract.collision_coordinate_count' "
+            f"({collision_coordinates}) does not match the "
+            f"{expected_coordinates} coordinates where the map draws more than "
+            f"one marker: {path}"
+        )
+    if collision_markers != expected_markers:
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract.collision_marker_count' "
+            f"({collision_markers}) does not match the {expected_markers} "
+            f"placeable studies sitting on those coordinates: {path}"
+        )
+
+    # The version gate is deliberately the LAST check: a specific structural
+    # defect (a missing field, a fabricated count) names the concrete problem,
+    # while an umbrella version mismatch would shadow it and make every other
+    # control report the version instead of its own branch. The note renders
+    # the collision tallies, so a version 2 artifact reaching this point is
+    # still refused rather than served with fields it was never built to carry.
+    schema_version = catalog.get("schema_version")
+    if schema_version != STUDIES_SCHEMA_VERSION:
+        raise StudiesCatalogError(
+            f"studies catalog schema_version is {schema_version!r}, expected "
+            f"{STUDIES_SCHEMA_VERSION}: {path}"
         )
 
 

@@ -53,6 +53,15 @@
   var clipClearBtn = document.getElementById("clip-clear");
   var clipStatus = document.getElementById("clip-status");
   var studyLegendCount = document.getElementById("study-map-legend-count");
+  var studyHaloCoordinateCount = document.getElementById(
+    "study-map-halo-coordinate-count"
+  );
+  var studyHaloMarkerCount = document.getElementById(
+    "study-map-halo-marker-count"
+  );
+  var studyHaloVisibleCount = document.getElementById(
+    "study-map-halo-visible-count"
+  );
 
   // State.
   /** @type {object|null} */
@@ -356,6 +365,26 @@
     var contract = doc.display_contract || {};
     if (studyLegendCount && Number.isFinite(contract.map_visible_count)) {
       studyLegendCount.textContent = String(contract.map_visible_count);
+    }
+    // The ring note renders the builder's collision tallies for the same
+    // reason: the frontend never counts markers (D9), it only prints the
+    // numbers the artifact already carries.
+    if (
+      studyHaloCoordinateCount &&
+      Number.isFinite(contract.collision_coordinate_count)
+    ) {
+      studyHaloCoordinateCount.textContent = String(
+        contract.collision_coordinate_count
+      );
+    }
+    if (
+      studyHaloMarkerCount &&
+      Number.isFinite(contract.collision_marker_count)
+    ) {
+      studyHaloMarkerCount.textContent = String(contract.collision_marker_count);
+    }
+    if (studyHaloVisibleCount && Number.isFinite(contract.map_visible_count)) {
+      studyHaloVisibleCount.textContent = String(contract.map_visible_count);
     }
     if (studiesLayerInstalled) {
       requestStudiesRefresh();

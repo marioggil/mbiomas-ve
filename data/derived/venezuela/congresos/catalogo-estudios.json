@@ -1,6 +1,6 @@
 {
-  "schema_version": 2,
-  "generated_utc": "2026-10-13T19:08:49.822040+00:00",
+  "schema_version": 3,
+  "generated_utc": "2026-10-13T22:50:02.567595+00:00",
   "country": "venezuela",
   "source_parquet": "data/raw/congresos/congresos_revisados.parquet",
   "source_sha256": "111a0d0526b46e7022f7b10967cd79fdaf1f37edb861012b322b1a85fcd4fde8",
@@ -17,7 +17,9 @@
   "study_count": 202,
   "display_contract": {
     "map_visible_count": 103,
-    "excluded_count": 99
+    "excluded_count": 99,
+    "collision_coordinate_count": 12,
+    "collision_marker_count": 32
   },
   "classes": [
     {
