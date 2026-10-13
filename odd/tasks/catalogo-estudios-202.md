@@ -307,7 +307,8 @@ Each task closes with one work-unit commit carrying code, its tests and its docu
 
 ### T2 — Curated granularity taxonomy — **DONE**
 
-**Commit**: recorded below.
+**Commit**: `89d456b` (the curated data, alone) and `f482b42` (the loader, its tests and this
+document).
 
 - Lands the file of section 6 (202 entries), `load_granularity`, `row_location_text` and
   `check_granularity_coverage`. It deliberately does **not** wire the taxonomy into the
