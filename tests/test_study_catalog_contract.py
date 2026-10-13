@@ -189,6 +189,33 @@ def catalog_rows() -> list[dict[str, Any]]:
     ]
 
 
+# Three undated rows. Their ids use the ``sin-anio`` segment and they must come
+# last, ordered among themselves by (congreso, pagina, indice).
+def undated_rows() -> list[dict[str, Any]]:
+    return [
+        make_row(source_path="data/raw/congresos/pagina_7_2.pdf", anio=None,
+                 pagina=7, indice=2, congreso="B", latitud=None,
+                 longitud=None),
+        make_row(source_path="data/raw/congresos/pagina_7_1.pdf", anio=None,
+                 pagina=7, indice=1, congreso="A", latitud=None,
+                 longitud=None),
+        make_row(source_path="data/raw/congresos/pagina_6_9.pdf", anio=None,
+                 pagina=6, indice=9, congreso="A", latitud=None,
+                 longitud=None),
+    ]
+
+
+# ``catalog_rows`` plus the undated rows, interleaved in insertion order so
+# neither the dated nor the undated relative order is an accident of position.
+def catalog_rows_with_undated() -> list[dict[str, Any]]:
+    dated = catalog_rows()
+    undated = undated_rows()
+    return [
+        dated[0], undated[0], dated[1], dated[2], undated[1],
+        dated[3], undated[2], dated[4], dated[5],
+    ]
+
+
 # (anio, congreso, pagina, indice) for the rows above, sorted:
 #   1991/B/9/1, 1992/A/3/9, 1992/A/5/1, 1992/A/5/2, 1993/A/1/2, 1993/C/1/1
 # The 1993 pair is inserted in the opposite order, so a sort that ignores
@@ -200,6 +227,14 @@ EXPECTED_CATALOG_IDS = [
     "cve-1992-pagina-5-2",
     "cve-1993-pagina-1-2",
     "cve-1993-pagina-1-1",
+]
+
+# The undated rows of ``catalog_rows_with_undated``, ordered among themselves by
+# (congreso, pagina, indice): A/6/9, A/7/1, B/7/2. They always come last.
+EXPECTED_UNDATED_IDS = [
+    "cve-sin-anio-pagina-6-9",
+    "cve-sin-anio-pagina-7-1",
+    "cve-sin-anio-pagina-7-2",
 ]
 
 
@@ -241,10 +276,12 @@ def granularity_document(**overrides: Any) -> dict[str, Any]:
     return document
 
 
-def build_test_catalog() -> tuple[dict[str, Any], dict[str, int]]:
-    """Run the real builder over the synthetic rows."""
+def build_catalog_from(
+    rows: list[dict[str, Any]],
+) -> tuple[dict[str, Any], dict[str, int]]:
+    """Run the real builder over the given synthetic rows."""
     return subject.build_catalog(
-        catalog_rows(),
+        rows,
         EXTENT,
         "testland",
         "data/raw/congresos/test.parquet",
@@ -252,6 +289,11 @@ def build_test_catalog() -> tuple[dict[str, Any], dict[str, int]]:
         "extent boundary note",
         SOURCE_IDENTITY,
     )
+
+
+def build_test_catalog() -> tuple[dict[str, Any], dict[str, int]]:
+    """Run the real builder over the synthetic rows."""
+    return build_catalog_from(catalog_rows())
 
 
 def load_shipped_catalog() -> dict[str, Any]:
@@ -1601,6 +1643,33 @@ class MakeStudyIdTests(unittest.TestCase):
             )
         )
 
+    def test_a_null_year_uses_the_literal_sin_anio_segment(self) -> None:
+        self.assertEqual(
+            subject.make_study_id(None, "data/raw/congresos/pagina_607_1.pdf"),
+            "cve-sin-anio-pagina-607-1",
+        )
+
+    def test_control_the_null_year_id_matches_the_slug_alphabet(self) -> None:
+        self.assertTrue(
+            STUDY_ID_RE.match(
+                subject.make_study_id(None, "data/raw/congresos/pagina_607_1.pdf")
+            )
+        )
+
+    def test_control_the_null_year_id_differs_from_a_dated_sibling(self) -> None:
+        self.assertNotEqual(
+            subject.make_study_id(None, "data/raw/congresos/pagina_607_1.pdf"),
+            subject.make_study_id(1991, "data/raw/congresos/pagina_607_1.pdf"),
+        )
+
+    def test_control_the_null_year_branch_is_not_the_string_of_none(self) -> None:
+        # ``str(None)`` is ``None``, which is uppercase and would fail the shape
+        # check; the branch must substitute the literal instead.
+        self.assertNotIn(
+            "none",
+            subject.make_study_id(None, "data/raw/congresos/pagina_607_1.pdf"),
+        )
+
 
 # ---------------------------------------------------------------------------
 # Classification.
@@ -2086,6 +2155,17 @@ class BuildStudyTests(unittest.TestCase):
             (1991, 5, 2, 1),
         )
 
+    def test_a_null_year_survives_as_none_and_keys_the_id(self) -> None:
+        row = make_row(anio=None)
+        study = subject.build_study(row, EXTENT, {INSIDE: 1})
+        self.assertIsNone(study["anio"])
+        self.assertEqual(study["study_id"], "cve-sin-anio-pagina-5-2")
+
+    def test_control_a_dated_row_still_carries_an_int_year(self) -> None:
+        study = subject.build_study(make_row(), EXTENT, {INSIDE: 1})
+        self.assertEqual(study["anio"], 1991)
+        self.assertEqual(study["study_id"], "cve-1991-pagina-5-2")
+
     def test_control_a_source_path_with_an_empty_slug_aborts_the_study(self) -> None:
         row = make_row(source_path="data/raw/congresos/___.pdf")
         with self.assertRaisesRegex(
@@ -2106,6 +2186,45 @@ class BuildCatalogTests(unittest.TestCase):
         catalog, _ = build_test_catalog()
         self.assertEqual(
             [study["study_id"] for study in catalog["studies"]], EXPECTED_CATALOG_IDS
+        )
+
+    def test_undated_studies_sort_last_and_dated_studies_keep_their_order(self) -> None:
+        catalog, _ = build_catalog_from(catalog_rows_with_undated())
+        studies = catalog["studies"]
+        self.assertEqual(
+            [study["study_id"] for study in studies],
+            EXPECTED_CATALOG_IDS + EXPECTED_UNDATED_IDS,
+        )
+        self.assertTrue(all(study["anio"] is None for study in studies[-3:]))
+        self.assertTrue(all(study["anio"] is not None for study in studies[:-3]))
+
+    def test_control_repeated_builds_produce_the_same_total_order(self) -> None:
+        first, _ = build_catalog_from(catalog_rows_with_undated())
+        second, _ = build_catalog_from(catalog_rows_with_undated())
+        self.assertEqual(
+            [study["study_id"] for study in first["studies"]],
+            [study["study_id"] for study in second["studies"]],
+        )
+
+    def test_control_the_undated_rows_do_not_keep_their_insertion_order(self) -> None:
+        rows = catalog_rows_with_undated()
+        inserted = [
+            subject.make_study_id(
+                None if row["anio"] is None else int(row["anio"]),
+                row["source_path"],
+            )
+            for row in rows
+        ]
+        catalog, _ = build_catalog_from(rows)
+        self.assertNotEqual(
+            [study["study_id"] for study in catalog["studies"]], inserted
+        )
+
+    def test_control_undated_studies_sort_last_even_when_inserted_first(self) -> None:
+        catalog, _ = build_catalog_from(undated_rows() + catalog_rows())
+        self.assertEqual(
+            [study["study_id"] for study in catalog["studies"]],
+            EXPECTED_CATALOG_IDS + EXPECTED_UNDATED_IDS,
         )
 
     def test_class_counts_and_the_display_contract_agree(self) -> None:

@@ -23,6 +23,16 @@ read, so the artifact cannot describe a different revision of the file than
 the one it was built from. The CSV stays a flat per-study table: provenance
 is document-level and lives only in the JSON.
 
+IDENTITY
+--------
+Every study gets a ``study_id`` of the shape ``cve-{anio}-{slug of the
+source_path stem}``, e.g. ``cve-1991-pagina-5-2``. A null ``anio`` (the legacy
+Vol XI rows carry none) uses the literal year segment ``sin-anio``, giving
+``cve-sin-anio-pagina-607-1``. The volume does not enter the id: ``congreso``
+already carries it and ``build_catalog`` hard-fails on a duplicate. The artifact
+sorts dated studies by ``(anio, congreso, pagina, indice)`` and undated studies
+last by ``(congreso, pagina, indice)``, so the order is total and deterministic.
+
 CURATED TAXONOMY
 ----------------
 Coarseness, not collision of coordinates, decides what the map may draw. The
@@ -584,11 +594,15 @@ def slugify(text: str) -> str:
     return text.strip("-")
 
 
-def make_study_id(anio: int, source_path: str) -> str:
+def make_study_id(anio: int | None, source_path: str) -> str:
     """``cve-{anio}-{slug of the source_path stem}``, e.g. ``cve-1991-pagina-5-2``.
 
     The ``anio`` is part of the identity so the same stem in two editions cannot
-    collide. ``slugify`` already drops ``<``, ``>``, ``_`` and ``.``, so the
+    collide. A null ``anio`` (the legacy Vol XI rows have none) uses the literal
+    year segment ``sin-anio``, giving ``cve-sin-anio-pagina-607-1``: the volume
+    does not enter the id because ``congreso`` already carries it, and
+    ``build_catalog`` hard-fails on a duplicate, so ambiguity cannot pass
+    silently. ``slugify`` already drops ``<``, ``>``, ``_`` and ``.``, so the
     result matches ``^[a-z0-9-]+$``. No collision suffix is ever invented here:
     a duplicate is a hard error in ``build_catalog``.
     """
@@ -598,7 +612,8 @@ def make_study_id(anio: int, source_path: str) -> str:
         raise StudyCatalogError(
             f"source_path {source_path!r} has an empty slug; cannot build a study_id"
         )
-    study_id = f"cve-{anio}-{stem_slug}"
+    year_segment = "sin-anio" if anio is None else str(anio)
+    study_id = f"cve-{year_segment}-{stem_slug}"
     if not re.fullmatch(r"[a-z0-9-]+", study_id):
         raise StudyCatalogError(
             f"study_id {study_id!r} from source_path {source_path!r} does not "
@@ -676,7 +691,8 @@ def build_study(
     extent: dict[str, float],
     coord_counts: dict[tuple, int],
 ) -> dict[str, Any]:
-    study_id = make_study_id(int(row["anio"]), row["source_path"])
+    anio = None if row["anio"] is None else int(row["anio"])
+    study_id = make_study_id(anio, row["source_path"])
     display_class = display_class_for(row, extent, coord_counts)
     on_map = display_class == "placeable"
     return {
@@ -689,7 +705,7 @@ def build_study(
         "ubicaciontemporal": row["ubicaciontemporal"],
         "especiesmencionadas": row["especiesmencionadas"],
         "source_path": row["source_path"],
-        "anio": int(row["anio"]),
+        "anio": anio,
         "congreso": row["congreso"],
         "ciudad": row["ciudad"],
         "pagina": int(row["pagina"]),
@@ -704,6 +720,20 @@ def build_study(
             row, display_class, extent, coord_counts
         ),
     }
+
+
+def study_sort_key(study: dict[str, Any]) -> tuple[Any, ...]:
+    """Total order for the artifact's studies.
+
+    Dated studies keep exactly the order ``(anio, congreso, pagina, indice)``
+    produced. Undated studies sort last, ordered among themselves by
+    ``(congreso, pagina, indice)``. The leading flag separates the two groups
+    and the literal ``0`` fills the year slot of the undated group, so no key
+    ever compares ``None`` with an ``int`` and the order stays deterministic.
+    """
+    if study["anio"] is None:
+        return (1, 0, study["congreso"], study["pagina"], study["indice"])
+    return (0, study["anio"], study["congreso"], study["pagina"], study["indice"])
 
 
 def build_catalog(
@@ -723,7 +753,7 @@ def build_catalog(
     """
     coord_counts = classify(rows, extent)
     studies = [build_study(row, extent, coord_counts) for row in rows]
-    studies.sort(key=lambda s: (s["anio"], s["congreso"], s["pagina"], s["indice"]))
+    studies.sort(key=study_sort_key)
 
     seen: set[str] = set()
     for study in studies:

@@ -392,11 +392,26 @@ Whatever the review changes lands as a **data-only commit** on top of this one.
 
 Three work-unit commits inside one task, in this order:
 
-**T3.1 — Undated studies (D14).** `make_study_id` handles a null `anio` (`cve-sin-anio-…`) and the
-artifact sort key becomes total instead of raising on `None`. Builder and tests only: the committed
-artifact is still not regenerated, so the pinned contract tests stay green. Evidence: a control for
-each branch (null year, and a null-year row interleaved with dated ones proving the order is total
-and deterministic), plus the suite green.
+**T3.1 — Undated studies (D14). — DONE.** `make_study_id` handles a null `anio`
+(`cve-sin-anio-pagina-5-1`) and the artifact order became a total `study_sort_key` instead of a
+lambda that raised on `None`; dated studies keep their existing relative order and undated ones sort
+last. Builder and tests only: the committed artifact was **not** regenerated, so the pinned contract
+tests stayed green.
+
+- **Evidence, run end to end by the parent with the rebuild interpreter** (the writer could not: no
+  `pyarrow`, and the artifact must not move in this commit): the builder now completes over the real
+  202-row corpus, twice in a row. `study_count` 202; **16 studies with `anio` null and 16 ids carrying
+  the `sin-anio` segment**, all ids unique; **the last 16 studies are exactly the undated ones**; the
+  two runs differ **only** in `generated_utc` and the **CSV is byte-identical**.
+- **T1's deferred proof is closed here**: the emitted `source_sha256` equals the real
+  `sha256` of the input (`111a0d05…`), with `source_rows` 202 and `source_bytes` 295 581.
+- **Cross-validation**: this run, still on the **old** contract, produced exactly
+  `107 placeable / 69 shared_coordinate / 17 outside_extent / 9 no_coordinate` — the same numbers
+  measured independently by hand in 4.2, reproduced this time by the builder itself.
+- Suite 222 → **232 tests OK**; zero bare `assertRaises` (79 `assertRaisesRegex`); two mutations
+  reverted byte-identically, one showing that `str(None)` in the id is caught by the `^[a-z0-9-]+$`
+  guard (`cve-None-pagina-607-1`), the other showing that flipping the sort flag breaks the order
+  tests. The artifact's bytes are unchanged (`fee40a59…` JSON, `a8955935…` CSV).
 
 **T3.2 — Regenerated artifact (data commit).** The artifact is regenerated in its **own commit
 before** the tool commit, per the project rule that the review candidate is the tool and never
@@ -405,6 +420,9 @@ generated data.
 **T3.3 — Tool and contract.** Taxonomy replaces the collision classification; collision attributes;
 reasons naming the level; class labels; `palabrasclaves` added; `schema_version` bumped; provenance
 fields populated; and the freshness assertion that consumes T1's plumbing.
+
+Also owed here: the module docstring's opening line still says "the 31 human-reviewed abstracts of
+the Congreso Venezolano de Ecologia" — stale since the corpus is 202 rows across **twelve** editions.
 - Tests: pinned constants at `tests/test_study_catalog_contract.py:73-82` recomputed; the six
   mutation controls at `:512-513, :578, :641-642, :657-658, :662-663` re-anchored;
   `EXPECTED_ESPECIES_NON_NULL` 21 → 162; new controls for every new branch; a `schema_version`
@@ -431,6 +449,9 @@ fields populated; and the freshness assertion that consumes T1's plumbing.
   in the detail view (today the full text is printed inline on every excluded row); selection without
   re-querying every row; and a text search over title, author names and `palabrasclaves`.
 - The edition filter is already derived from the data and needs no change (12 values).
+- **Undated studies (D14) must render, not break.** 16 Vol XI rows carry `anio: null` in the artifact,
+  and the panel sorts and filters by year: an undated row must appear in the list and must not fall
+  through a `null` comparison into a wrong position or an empty filter bucket.
 - Evidence: 202 rows rendered, search narrows the list, selection works, no document-level scroll
   trap; measured in a real browser.
 
