@@ -410,7 +410,15 @@ document).
   shipping`.
 - The loader was verified **by mutation and reverted byte-identically** (sha256 before and after):
   removing the missing-`texto` guard, and neutralising the text comparison each make the intended
-  control fail. Zero bare `assertRaises` remain (79 `assertRaisesRegex` sites).
+  control fail. At that point the file carried **zero bare `assertRaises`** and 79 `assertRaisesRegex`
+  sites.
+  - **Correction, at close.** The file now has **87 `assertRaisesRegex`** sites and **exactly one**
+    bare `assertRaises`, added by T3.3 in
+    `test_control_a_missing_required_argument_is_a_usage_error`. It is deliberate and not a vacuous
+    check: it captures the `SystemExit` object in order to assert `caught.exception.code == 2`, which
+    is the branch's pin, and a mutation that made `--granularidad` optional would fail it. The T2
+    sentence above is left as it was written and correct **for that moment**; the claim about the
+    file as a whole is no longer true, which is why it is corrected here rather than silently.
 - **Deviations the writer reported and the parent accepted**: `tmp_path` is a pytest fixture and
   this file is pure `unittest`, so temp files come from `tempfile`; `diff -q` would have required
   writing outside the allowed edit surfaces, so byte-identical restoration is proven by `sha256sum`
@@ -677,6 +685,8 @@ tests stayed green.
 | C5 | **New**: decide whether the raw parquet is versioned in this repository or the sync from `Congresos_CVE_V2` becomes a documented, hash-checked mandatory step | A fresh clone's rebuild. A decision, not a task |
 | C6 | **New**: 16 Vol XI rows have `anio` null (legacy CSV ETL) | Any per-year study layer (stage E2) will have 16 undated studies |
 | C7 | **New**: the map overlays carry no collision tally, so the ring note explains the ring without a number | A builder-side `display_contract` field (a coordinate count and a marker count) plus its API invariant would make the number visible. Recorded, not scheduled: it reopens the artifact, the validator and the pinned expectations for a figure of modest value |
+| C8 | **New, measured**: the panel's search covers title, author names and `palabrasclaves` **only**, so a query by **place** or by **species** silently misses rows. Measured against the artifact: adding `ubicaciongeografica` and `especiesmencionadas` to the haystack finds far more — across 346 genera sampled from the 162 studies that carry a species list, **288 improve**, gaining **355 study matches** in total (`Reptiles` 0 → 4, `Atelopus` 0 → 3, `Aves` 8 → 14, `Peces` 6 → 12), and place names too (`morrocoy` 1 → 4, `merida` 10 → 14, `orinoco` 7 → 10). The artifact already carries both fields, so the fix is a two-field change in the panel plus its label copy | A product decision on what the search covers. **Recommended**, because a species query returning zero is the query an ecologist is most likely to make |
+| C9 | **New**: `data/curated/congresos/granularidad-ubicaciones.json` was pre-filled by a **one-off script that is not committed**. The file states its own rules in section 6 and every T0/T1 row carries its reason, and the recorded text is verified against the corpus, so the artifact itself is sound — but the next corpus growth would have to redo the pre-fill by hand | Nothing today. A committed helper that only *proposes* entries for unclassified rows, never overwriting a reviewed one, would close it |
 
 ## 9. Rebuild environment
 
