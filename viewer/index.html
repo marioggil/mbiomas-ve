@@ -68,6 +68,16 @@
     <p class="catalog-search-help" id="catalog-search-help">
       Filtra por título, nombres de autores, palabras clave, ubicación geográfica y especies mencionadas; no distingue mayúsculas ni acentos. Se combina con el filtro de edición.
     </p>
+    <div
+      class="catalog-point-filter"
+      id="catalog-point-filter"
+      role="group"
+      aria-label="Filtro por punto seleccionado"
+      aria-live="polite"
+      hidden
+    >
+      <!-- populated by catalog.js when a map marker click narrows the list -->
+    </div>
     <div class="catalog-body">
       <ul class="catalog-list" id="catalog-list" aria-label="Lista de estudios">
         <li class="catalog-empty">Cargando catálogo de estudios&hellip;</li>

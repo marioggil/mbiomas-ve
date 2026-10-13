@@ -318,14 +318,17 @@
   // -------------------------------------------------------------------------
   // The catalog panel is the authoritative view; the map points are an
   // index into it. One marker represents exactly one study, and a marker
-  // click selects that study in the panel. Selecting a study highlights
-  // the matching marker and eases the camera to it when the study has a
-  // coordinate.
+  // click selects that study in the panel AND tells the panel which point
+  // was clicked, so the list narrows to the studies the map draws at that
+  // exact coordinate (C10). Selecting a study highlights the matching
+  // marker and eases the camera to it when the study has a coordinate.
   //
   // A marker is still one study: the ring layer below only ANNOTATES the
   // coordinates where markers coincide (one ring per coordinate, derived
   // from the markers actually drawn), so the panel keeps listing studies
   // the map never draws and the map keeps asserting nothing about them.
+  // The point filter follows those DRAWN markers, so a coarse_location
+  // study that shares the coordinate text is never pulled onto the map.
   //
   // Every MapLibre source/filter mutation triggered by a map event is
   // deferred onto a coalesced requestAnimationFrame tick. The T8a record
@@ -396,6 +399,66 @@
   function onCatalogSelectionChanged(study) {
     selectedStudyId = study && study.study_id ? study.study_id : null;
     requestStudiesRefresh(selectedStudyId);
+  }
+
+  /**
+   * The number of markers the map really draws at the clicked coordinate,
+   * read from the ``studies-halos`` feature that sits at that coordinate:
+   * its ``marker_count`` comes from the same pass that builds the marker
+   * collection, so the count cannot describe a different set of markers
+   * than the ones on screen. The frontend never counts marker features
+   * (D9): this only reads a property the ring source already carries.
+   *
+   * A coordinate with no halo feature is not a collision by construction —
+   * the halo collection holds one feature per coordinate with two or more
+   * drawn markers — so the count is 1.
+   *
+   * The halo feature is matched on the CLICKED feature's own coordinates,
+   * not on the catalogue numbers, because both are decoded from identically
+   * tiled GeoJSON sources: the same coordinate decodes to the same values in
+   * both, while a tolerance would swallow a distinct coordinate that sits
+   * close to a collision (a drawn marker at 8.5164975, -71.272354 is 0.0128°
+   * from the Mérida ring).
+   *
+   * @param {Array<number>} markerCoordinates [lon, lat] of the click.
+   * @param {object|undefined} point the click's pixel point, if available.
+   * @returns {number}
+   */
+  function drawnMarkerCountAt(markerCoordinates, point) {
+    if (!map || !markerCoordinates) {
+      return 1;
+    }
+    var features = [];
+    try {
+      if (point && typeof map.queryRenderedFeatures === "function") {
+        features =
+          map.queryRenderedFeatures(point, {
+            layers: [STUDIES_HALO_LAYER_ID],
+          }) || [];
+      }
+      if (!features.length && typeof map.querySourceFeatures === "function") {
+        features = map.querySourceFeatures(STUDIES_HALO_SOURCE_ID) || [];
+      }
+    } catch (err) {
+      return 1;
+    }
+    for (var i = 0; i < features.length; i++) {
+      var geometry = features[i].geometry;
+      if (!geometry || !geometry.coordinates) {
+        continue;
+      }
+      var c = geometry.coordinates;
+      if (c[0] !== markerCoordinates[0] || c[1] !== markerCoordinates[1]) {
+        continue;
+      }
+      var count = features[i].properties
+        ? features[i].properties.marker_count
+        : null;
+      if (Number.isFinite(count) && count > 0) {
+        return count;
+      }
+    }
+    return 1;
   }
 
   function installStudiesLayer() {
@@ -493,12 +556,35 @@
       // that coordinate. Which member of a stack MapLibre reports first
       // is its own pick order, so the contract here is "one of the
       // studies drawn there", not "a specific one".
-      var props = e.features[0].properties || {};
+      var clicked = e.features[0];
+      var props = clicked.properties || {};
       var id = props.study_id;
       var catalog = window.MapBiomasCatalog;
-      if (id && catalog && typeof catalog.selectStudy === "function") {
-        catalog.selectStudy(id);
+      if (!id || !catalog || typeof catalog.selectStudy !== "function") {
+        return;
       }
+      // The panel is also told WHICH point was clicked, so it can narrow
+      // its list to the studies drawn there, and HOW MANY markers the map
+      // draws there, taken from the halo feature that draws the ring. The
+      // coordinate handed to the panel is the catalogue one (exact), not
+      // the rendered feature's, so the panel's own exact-coordinate match
+      // never has to survive MapLibre's tile quantisation. A lone marker
+      // reports 1 because no halo feature exists for it.
+      var study = studiesById[id];
+      var markerCoordinates =
+        clicked.geometry && clicked.geometry.coordinates
+          ? clicked.geometry.coordinates
+          : null;
+      var coordinates =
+        study &&
+        Number.isFinite(study.longitud) &&
+        Number.isFinite(study.latitud)
+          ? [study.longitud, study.latitud]
+          : markerCoordinates;
+      catalog.selectStudy(id, {
+        coordinates: coordinates,
+        markerCount: drawnMarkerCountAt(markerCoordinates, e.point),
+      });
     });
     studiesLayerInstalled = true;
   }

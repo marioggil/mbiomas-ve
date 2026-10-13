@@ -116,10 +116,13 @@ Ecología, 1991–2019, shown as a panel and as a secondary map layer. **82** of
 **The panel is the authoritative view; the map is secondary.** The panel lists every study,
 including the ones the map does not draw, and states the class the catalog assigns to each. It
 filters by edition and searches, accent-insensitively, over the title, the author names, the
-keywords, the location text and the species the abstract mentions. The map can only place a study
-that has a usable coordinate. The catalog list is capped and scrolls internally — deliberately
-unlike the composition panel, which grows to its content and lets the document scroll (see
-"Behaviours that look like bugs but are not").
+keywords, the location text and the species the abstract mentions. Clicking a point on the map
+filters the list to the studies **drawn** there, behind a dismissible chip: the filter follows the
+markers, not the coordinate, so a coordinate that carries coarse mentions in the catalog but one
+marker on the map shows one study. The map can only place a study that has a usable coordinate. The
+catalog list is capped and scrolls internally — deliberately unlike the composition panel, which
+grows to its content and lets the document scroll (see "Behaviours that look like bugs but are
+not").
 
 The artifact carries `schema_version` **3**, and `on_map` is true exactly for `placeable`, so the
 four classes partition the corpus and only the first is drawn:

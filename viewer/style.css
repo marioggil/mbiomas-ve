@@ -1013,6 +1013,67 @@ body {
   font-size: 12px;
 }
 
+/* ------- Point filter chip (C10) -------
+ *
+ * A marker click narrows the list to the studies the map draws at the
+ * clicked coordinate. The chip names that filter and how many drawn studies
+ * the halo feature reports for it, and carries its own dismissal. The row is
+ * hidden when no point filter is active, so it costs no space in the full
+ * list. */
+.catalog-point-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ``display: flex`` above would otherwise beat the UA stylesheet's
+ * ``[hidden] { display: none }``, so the hidden state is restated. */
+.catalog-point-filter[hidden] {
+  display: none;
+}
+
+.catalog-point-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  background: #eff6ff;
+  color: #1e3a8a;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: 2px 4px 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Tabular figures so the count does not shift the text when another point
+ * with a different marker count is clicked. */
+.catalog-point-chip-text {
+  font-variant-numeric: tabular-nums;
+}
+
+.catalog-point-chip-dismiss {
+  background: transparent;
+  color: #1e3a8a;
+  border: 0;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.catalog-point-chip-dismiss:hover {
+  background: #dbeafe;
+}
+
+.catalog-point-chip-dismiss:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .catalog-body {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);

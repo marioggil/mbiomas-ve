@@ -11,9 +11,22 @@
  *
  * The map point layer in app.js is secondary and one marker represents
  * exactly one study. This module owns the selected-study state; a marker
- * click calls ``selectStudy(study_id)`` and every selection change notifies
- * the host through the ``onSelect`` callback so the map can highlight the
- * matching point.
+ * click calls ``selectStudy(study_id, point)`` and every selection change
+ * notifies the host through the ``onSelect`` callback so the map can
+ * highlight the matching point.
+ *
+ * A marker click also narrows the list to the studies the map DRAWS at the
+ * clicked coordinate (C10), because otherwise a click on a stacked point
+ * silently resolves a collision the ring had just announced. ``app.js``
+ * passes the catalogue coordinate and the drawn-marker count it read from
+ * the ``studies-halos`` feature (``marker_count``); this module builds the
+ * membership from ``on_map`` plus that exact coordinate, so a study whose
+ * text names the coordinate but which the map does not place (a
+ * ``coarse_location`` row) is never pulled onto the map by the click. The
+ * chip states the point and the drawn count and dismisses the filter, and
+ * it replaces the previous point filter on a new click. The point filter
+ * composes with the edition filter and the search as an AND; the search
+ * counter keeps its ``N de <total>`` denominator either way.
  *
  * The list is the panel's only scroll container: it has a viewport-derived
  * max-height plus ``overflow-y`` (see style.css), so 202 rows cannot make
@@ -72,6 +85,17 @@
   var selectedId = null;
   /** @type {string} the active edition filter ("all" or a congreso value). */
   var activeCongress = "all";
+  /**
+   * @type {string|null} "lat|lon" of the active point filter, or null when
+   * no marker click has narrowed the list.
+   */
+  var activePointKey = null;
+  /**
+   * @type {number} drawn markers the halo feature reports for the active
+   * point. Displayed by the chip only; membership is decided from
+   * ``on_map`` plus ``activePointKey``.
+   */
+  var activePointCount = 0;
   /** @type {function(object|null):void} host callback on selection change. */
   var onSelect = function () {};
 
@@ -84,6 +108,7 @@
   // ``init`` never ran (the fetch failed before it could cache them).
   var summaryEl = null;
   var filtersEl = null;
+  var pointFilterEl = null;
   var searchInputEl = null;
   var searchCountEl = null;
   var listEl = null;
@@ -156,10 +181,18 @@
    * layer on a marker click and by the panel rows. An unknown id is a
    * no-op so a stale click can never blank the detail.
    *
+   * ``point`` is present only on a marker click and carries the clicked
+   * coordinate plus the drawn-marker count the halo feature reports for
+   * it; a row click omits it, so a row never adds or removes a point
+   * filter. The selection itself is always the study MapLibre reported, so
+   * the detail keeps showing something even when the point filter narrows
+   * the list.
+   *
    * @param {string|null} studyId
+   * @param {{coordinates: Array<number>, markerCount: number}|null} [point]
    * @returns {void}
    */
-  function selectStudy(studyId) {
+  function selectStudy(studyId, point) {
     if (!catalog) {
       return;
     }
@@ -168,6 +201,9 @@
       return;
     }
     selectedId = study.study_id;
+    // A marker click replaces any previous point filter with the clicked
+    // point; a row click leaves the filter as it is.
+    var pointChanged = point ? applyPointFilter(point, study) : false;
     // A map marker click is not filtered by the panel's edition filter: if
     // the selected study is hidden by the active filter, reset the filter
     // so the authoritative list reveals the row the map just pointed at.
@@ -177,6 +213,8 @@
     if (activeCongress !== "all" && study.congreso !== activeCongress) {
       activeCongress = "all";
       updateFilterButtons();
+      renderList();
+    } else if (pointChanged) {
       renderList();
     } else {
       markSelectedRow();
@@ -418,8 +456,57 @@
     return (searchIndex[study.study_id] || "").indexOf(searchQuery) !== -1;
   }
 
+  /**
+   * The exact catalogue coordinate of a study the map draws, as the same
+   * "lat|lon" string ``app.js`` groups markers by. A study the map does not
+   * draw — an excluded class, or one whose coordinate is not finite — has no
+   * key, so it can never join a point filter: the filter follows the drawn
+   * markers, not the coordinate text, and a ``coarse_location`` row is not
+   * on the map (Mérida: six rows on one coordinate, four drawn).
+   *
+   * @param {object} study
+   * @returns {string|null}
+   */
+  function drawnCoordinateKey(study) {
+    if (!study || !study.on_map) {
+      return null;
+    }
+    if (!Number.isFinite(study.latitud) || !Number.isFinite(study.longitud)) {
+      return null;
+    }
+    return study.latitud + "|" + study.longitud;
+  }
+
+  /**
+   * The key for a click coordinate, in the same "lat|lon" form.
+   *
+   * @param {Array<number>} coordinates [longitude, latitude]
+   * @returns {string|null}
+   */
+  function pointKeyFromCoordinates(coordinates) {
+    if (
+      !coordinates ||
+      !Number.isFinite(coordinates[0]) ||
+      !Number.isFinite(coordinates[1])
+    ) {
+      return null;
+    }
+    return coordinates[1] + "|" + coordinates[0];
+  }
+
+  function matchesPointFilter(study) {
+    if (!activePointKey) {
+      return true;
+    }
+    return drawnCoordinateKey(study) === activePointKey;
+  }
+
   function isStudyVisible(study) {
-    return matchesCongress(study) && matchesQuery(study);
+    return (
+      matchesCongress(study) &&
+      matchesQuery(study) &&
+      matchesPointFilter(study)
+    );
   }
 
   // The list keeps the artifact's own order: the builder sorts dated studies
@@ -428,10 +515,115 @@
   // is deterministic without the panel re-sorting anything.
   function visibleStudies() {
     var studies = (catalog && catalog.studies) || [];
-    if (activeCongress === "all" && !searchQuery) {
+    if (activeCongress === "all" && !searchQuery && !activePointKey) {
       return studies.slice();
     }
     return studies.filter(isStudyVisible);
+  }
+
+  // -------------------------------------------------------------------------
+  // Point filter (C10): the chip and the drawn-marker membership
+  // -------------------------------------------------------------------------
+
+  /**
+   * Apply (or replace) the point filter from a marker click. ``point``
+   * carries the clicked catalogue coordinate and the drawn-marker count
+   * ``app.js`` read from the ``studies-halos`` feature. The count is only
+   * displayed: membership is decided by ``matchesPointFilter``, which keeps
+   * exactly the studies the map draws at that coordinate, so the chip can
+   * never say "5" while the list shows a coarse row the map never placed.
+   *
+   * @param {{coordinates: Array<number>, markerCount: number}} point
+   * @param {object} [study] the selected study, used as the coordinate
+   * source when the caller could not supply one.
+   * @returns {boolean} true when the active point changed.
+   */
+  function applyPointFilter(point, study) {
+    var key = pointKeyFromCoordinates(point && point.coordinates);
+    if (!key && study) {
+      // The clicked marker's own coordinate, in the same drawn form: the
+      // list still narrows to the studies the map draws there.
+      key = drawnCoordinateKey(study);
+    }
+    if (!key) {
+      return false;
+    }
+    var changed = key !== activePointKey;
+    activePointKey = key;
+    activePointCount =
+      point && Number.isFinite(point.markerCount) && point.markerCount > 0
+        ? point.markerCount
+        : 1;
+    renderPointFilter();
+    return changed;
+  }
+
+  /**
+   * Drop the point filter. The selection is deliberately kept: the detail
+   * keeps showing the study MapLibre picked and the map keeps highlighting
+   * it, while the list goes back to every study the edition filter and the
+   * search allow.
+   */
+  function clearPointFilter() {
+    if (!activePointKey) {
+      return;
+    }
+    activePointKey = null;
+    activePointCount = 0;
+    renderPointFilter();
+    renderList();
+  }
+
+  /**
+   * The chip's text: what it filters and how many drawn studies the halo
+   * feature reported for that coordinate. The number is the halo's own
+   * ``marker_count``, never a count this module derives, so the chip and the
+   * ring cannot disagree.
+   */
+  function pointFilterLabel(count) {
+    var n = Number.isFinite(count) && count > 0 ? count : 1;
+    return (
+      "Punto seleccionado: " + String(n) + (n === 1 ? " estudio" : " estudios")
+    );
+  }
+
+  /**
+   * Render (or hide) the dismissible chip that names the active point
+   * filter. The dismissal is a real button, so it is reachable by keyboard
+   * and carries its own accessible name; the container's name says what the
+   * chip filters.
+   */
+  function renderPointFilter() {
+    if (!pointFilterEl) {
+      return;
+    }
+    pointFilterEl.innerHTML = "";
+    if (!activePointKey) {
+      pointFilterEl.hidden = true;
+      return;
+    }
+    pointFilterEl.hidden = false;
+
+    var chip = document.createElement("span");
+    chip.className = "catalog-point-chip";
+
+    var text = document.createElement("span");
+    text.className = "catalog-point-chip-text";
+    text.textContent = pointFilterLabel(activePointCount);
+    chip.appendChild(text);
+
+    var dismiss = document.createElement("button");
+    dismiss.type = "button";
+    dismiss.className = "catalog-point-chip-dismiss";
+    dismiss.textContent = "Quitar";
+    dismiss.setAttribute(
+      "aria-label",
+      "Quitar el filtro del punto seleccionado y volver a mostrar todos los estudios"
+    );
+    dismiss.addEventListener("click", clearPointFilter);
+    chip.appendChild(dismiss);
+
+    pointFilterEl.appendChild(chip);
   }
 
   function renderList() {
@@ -446,9 +638,7 @@
     if (!studies.length) {
       var empty = document.createElement("li");
       empty.className = "catalog-empty";
-      empty.textContent = searchQuery
-        ? "Ningún estudio coincide con la búsqueda. Pruebe con otro término o quite el filtro de edición."
-        : "No hay estudios para esta edición.";
+      empty.textContent = emptyStateMessage();
       listEl.appendChild(empty);
       updateSelectionNotice();
       return;
@@ -458,6 +648,27 @@
     });
     markSelectedRow();
     updateSelectionNotice();
+  }
+
+  /**
+   * Why the list is empty, stated in the panel instead of a blank column.
+   * The point filter is named first because it is the most recent and the
+   * least obvious of the filters: the chip states it, but the list can still
+   * be empty because the edition filter or the search excludes every study
+   * at that point.
+   */
+  function emptyStateMessage() {
+    if (activePointKey) {
+      return (
+        "Ningún estudio ubicado en el punto seleccionado coincide con la " +
+        "búsqueda o el filtro de edición. Quite el filtro de punto para ver " +
+        "el catálogo completo."
+      );
+    }
+    if (searchQuery) {
+      return "Ningún estudio coincide con la búsqueda. Pruebe con otro término o quite el filtro de edición.";
+    }
+    return "No hay estudios para esta edición.";
   }
 
   function updateSearchCount(matched) {
@@ -733,8 +944,9 @@
     detailEl.insertBefore(notice, detailEl.firstChild);
   }
 
-  /** Clear only what hides the selection: the search text and the edition
-   * filter. The selection itself and the map highlight are untouched. */
+  /** Clear every filter that hides the selection — the search text, the
+   * edition filter and the point filter. The selection itself and the map
+   * highlight are untouched. */
   function revealSelectedStudy() {
     var study = selectedId ? studiesById[selectedId] : null;
     if (!study) {
@@ -745,6 +957,11 @@
       updateFilterButtons();
     }
     clearSearch();
+    if (activePointKey) {
+      activePointKey = null;
+      activePointCount = 0;
+      renderPointFilter();
+    }
     renderList();
   }
 
@@ -877,6 +1094,10 @@
     if (filtersEl) {
       filtersEl.innerHTML = "";
     }
+    if (pointFilterEl) {
+      pointFilterEl.innerHTML = "";
+      pointFilterEl.hidden = true;
+    }
     if (searchCountEl) {
       searchCountEl.textContent = "";
     }
@@ -898,6 +1119,9 @@
     }
     if (!filtersEl) {
       filtersEl = document.getElementById("catalog-filters");
+    }
+    if (!pointFilterEl) {
+      pointFilterEl = document.getElementById("catalog-point-filter");
     }
     if (!searchInputEl) {
       searchInputEl = document.getElementById("catalog-search-input");
