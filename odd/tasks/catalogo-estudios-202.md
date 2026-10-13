@@ -1,6 +1,7 @@
 # Feature: the CVE study catalog at the real corpus size (202 studies)
 
-**Status**: implementation authorized — T1 **DONE**, T2 next
+**Status**: **CLOSED** — T1–T7 done, each with its commit recorded below; open items C1–C7 remain,
+with their blockers stated and nothing left implicit.
 **Branch**: `feat/catalogo-estudios-202`, **stacked on `feat/catalogo-estudios-cve`** (F4, not merged;
 `tools/build_study_catalog.py` exists only there)
 **Parent record**: [`catalogo-estudios-cve.md`](catalogo-estudios-cve.md) — F4, decisions D9–D11,
@@ -642,16 +643,28 @@ tests stayed green.
   instruction and refused to improvise. D12's wording is corrected above and the missing count is
   item **C7**.
 
-### T7 — Closing
-- `README.md`: the new contract and the standing `study_gap` warning.
-- **The runner matrix**, which no single documented command covers today: the system interpreter runs
-  the suite but skips the 27 `fastapi`-gated viewer cases and the `pyarrow`-gated row-count check; the
-  repository `.venv` runs those 27 and cannot run the `osgeo`-dependent composition test; and only an
-  interpreter carrying GDAL **and** `pyarrow` **and** `fastapi` runs all 308 with zero skips. T7 states
-  which command a contributor should run for which change, so nobody believes a green suite covered
-  something it skipped.
-- Open items C1–C6 below brought up to date, including C3's reversal.
-- This document's evidence sections filled with the observed results.
+### T7 — Closing — **DONE**
+
+**Commit**: recorded below.
+
+- **`README.md` gained what F4 never wrote.** A **"The study catalog"** section: the corpus, the panel
+  as the authoritative view with the map secondary, the contract and its four classes with counts,
+  the ring, the provenance chain, the curated taxonomy and its text-verification rule, and the
+  `study_gap` warning. Plus a bullet in "What the viewer shows", a ring bullet in "Behaviours that
+  look like bugs but are not", the studies stage in "Rebuilding the data" with the `pyarrow`
+  refusal, and three bullets in "Limitations": the **runner matrix**, the panel's missing automated
+  test, and the `study_gap` pointer.
+- **One stale enumeration fixed**: "What *is* versioned" listed the codebook, the composition CSVs and
+  the manifests but not the study catalog, which is tracked.
+- **One bullet checked and deliberately *not* changed**: "The page scrolls instead of the panel" is
+  about the **composition** panel and is still true — T5 capped the *catalog list*, a different panel.
+  The distinction is now stated once, in the catalog section, so a reader cannot conflate them.
+- **Every number in the new prose traces to a measured value.** The writer was told not to compute or
+  round anything and reported the source of each figure; it declined to add a row to the stage table
+  because no cost had been measured for the studies stage, and said so instead of inventing one.
+- `docs/` holds only `.gitkeep`, so nothing else in the repository described the viewer.
+- **Open items are current**: C1–C7, including C3's reversal (the keywords exist) and C7 (the ring
+  note carries no count, because no builder tally exists).
 
 ## 8. Open items
 

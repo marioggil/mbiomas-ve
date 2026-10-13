@@ -31,8 +31,8 @@ it is too large to version:
 | `data/tiles/<country>/collection-<n>/` | The XYZ tile pyramid used by the viewer | 6.1 GB |
 
 What *is* versioned is the code and the small derived metadata: the codebook, the composition
-CSVs and summary, and the manifests with their checksums. A fresh clone therefore has the code
-and no data, and there are two ways forward:
+CSVs and summary, the study catalog, and the manifests with their checksums. A fresh clone therefore
+has the code and no data, and there are two ways forward:
 
 1. **Rebuild it** from the raw rasters with `./run.sh pipeline`. This is honest work, not a
    quick step: see the measured costs below.
@@ -81,6 +81,16 @@ missing item.
 `tools/class_change_probe.py` is a diagnostic on top of the composition outputs and is not part
 of the pipeline.
 
+The **studies** stage (`tools/build_study_catalog.py`) is not in the table above: no measured cost is
+stated here for it. It is the one stage whose interpreter needs **both** `pyarrow` (to read the
+congress Parquet) and GDAL (to read the COG geotransform), and both are **rebuild-only** — they stay
+out of the service, out of the image and out of any requirements file. The system `python3` has GDAL
+but no `pyarrow`, so `./run.sh pipeline` **refuses that stage with the actionable recipe** — a
+`--system-site-packages` venv plus `uv pip install pyarrow` — instead of dying later inside the tool
+with a traceback. `./run.sh check` splits the two paths: the **studies catalog is `[serve]`** (the
+committed artifact, required to serve) and the **congress Parquet is `[rebuild]`** (the raw,
+gitignored input, needed only to regenerate it).
+
 ## What the viewer shows
 
 - **The annual map**, on a year slider over 1985–2024, with the official MapBiomas palette and a
@@ -93,6 +103,56 @@ of the pipeline.
   the visible year, computed from the COG window at native resolution. The window is bounded at
   36 million pixels, roughly 180 × 180 km, which keeps the worst case around 250 ms; for a whole
   region use the composition panel instead.
+- **The study catalog**: 202 reviewed congress abstracts as a panel and a secondary map layer, with
+  its own section below.
+
+## The study catalog
+
+**202 human-reviewed abstracts** from the **twelve** editions of the Congreso Venezolano de
+Ecología, 1991–2019, shown as a panel and as a secondary map layer. **82** of them carry
+`palabrasclaves`; **16** have no year in the source (Vol XI came from a legacy CSV) and are shown as
+"sin año".
+
+**The panel is the authoritative view; the map is secondary.** The panel lists every study,
+including the ones the map does not draw, and states the class the catalog assigns to each. The map
+can only place a study that has a usable coordinate. The catalog list is capped and scrolls
+internally — deliberately unlike the composition panel, which grows to its content and lets the
+document scroll (see "Behaviours that look like bugs but are not").
+
+The artifact carries `schema_version` **2**, and `on_map` is true exactly for `placeable`, so the
+four classes partition the corpus and only the first is drawn:
+
+| Class | Count | On the map |
+|---|---|---|
+| `placeable` | **103** | yes — one marker each |
+| `coarse_location` | **80** | no |
+| `outside_extent` | **10** | no |
+| `no_coordinate` | **9** | no |
+
+**Coordinates are shown as they are**, with no re-geocoding and no precision warnings. They are a
+geocoder's output, not sampling sites, so they collide: **23 coordinates are shared by more than one
+study**, and the largest is shared by **11**. Where two or more markers coincide the map draws a
+**ring**, so the overlap is visible instead of hidden.
+
+**Where it comes from.** `data/raw/congresos/congresos_revisados.parquet` (gitignored, unversioned —
+a copy of the export produced upstream in `Congresos_CVE_V2`) → `tools/build_study_catalog.py` →
+`data/derived/venezuela/congresos/catalogo-estudios.{json,csv}`. The artifact is versioned and lives
+inside `data/derived/`, so it ships in the image with **no new mount** and **no runtime dependency**.
+The service validates it at import and **refuses to start** on an inconsistent one, naming the
+study, and it parses it once per process.
+
+**What decides the exclusion.** `data/curated/congresos/granularidad-ubicaciones.json` carries one
+entry per `source_path` with the location granularity level — **T0** (country or region), **T1**
+(administrative or state-scale) or **T2** (named place) — the location text it classifies, and, for
+T0 and T1, the reason. The levels are a human review decision. The recorded text is verified against
+the corpus, so if an upstream extraction fixes a location text the build **stops** until someone
+re-judges that level.
+
+**The catalog does not unlock the `study_gap` term of the F3 priority index.** 202 studies across
+twelve editions over three decades cannot populate an H3 res 8–9 gap index: almost every hexagon has
+zero studies, and "zero studies" there would mean "nobody published about it in these twelve
+congresses", not "nobody studied it". `tools/priority_schema.py` ships the term disabled at weight
+**0.0**, and it must stay that way.
 
 ## Deploying on a server with Dokploy
 
@@ -137,6 +197,12 @@ the clip endpoint.
   seleccionada" because they are of the drawn area, while the year breakdown labels them "de la
   extensión válida" because they are of the whole mapped extent. Both are correct; they are not
   the same denominator.
+- **Several studies sit on one pixel, and the ring around it is not a second marker.** Coordinates are
+  a geocoder's output, not sampling sites, so different studies share them and their markers stack
+  invisibly. Where two or more markers coincide the map draws a **ring**, so the overlap is visible
+  instead of hidden. The ring is an **annotation, not an aggregate**: no study is merged, the panel
+  still lists every study — including the ones the map does not draw — and "un punto = un estudio"
+  still holds.
 
 ## Multi-country
 
@@ -179,6 +245,20 @@ and recorded. The intent is to state them here once they are confirmed.
 - The schema anchor test runs with the **system** interpreter, not the pinned `.venv`, because
   `tools/composition_stats.py` imports `from osgeo import gdal` at module level and the `.venv`
   carries no GDAL: `python3 -m unittest discover -s tests -v`. It reads no raster.
+- **A green suite does not mean the whole suite ran, and no single documented command covers it.**
+  The interpreters cover different parts, because they can import different modules:
+  - the **system interpreter** (`python3 -m unittest discover -s tests -v`) finishes green with
+    **28 skips**: the **27 viewer tests that need `fastapi`** and **one freshness row-count check
+    that needs `pyarrow`**. A green run here **did not cover the viewer tests**, and must not be
+    reported as if it did.
+  - the repository **`.venv`** runs those 27 viewer tests, but cannot run the composition schema
+    test, because it carries no `osgeo`.
+  - only an interpreter carrying GDAL **and** `pyarrow` **and** `fastapi` runs all **308** with zero
+    skips.
+- **The study catalog panel has no persisted automated test.** Its logic was checked with a throwaway
+  headless DOM stub, and its layout with a browser pass; **neither is reproducible by a CI run**.
+- **The study catalog does not feed the priority index.** The `study_gap` term stays disabled at
+  weight **0.0**; see "The study catalog" for why 202 studies cannot populate an H3 res 8–9 gap index.
 - The composition summary JSON carries per-class pixel counts and presence but not per-class
   **areas**; those live in the CSV.
 - Class 33 (water) grows 4.42 % over the series. Two step changes are externally corroborated as
