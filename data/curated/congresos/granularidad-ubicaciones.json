@@ -1,0 +1,957 @@
+{
+  "schema_version": 1,
+  "levels": {
+    "T0": "Mención que no identifica un lugar: país, región supra-nacional, región natural amplia (multi-estado), o enumeración de dos o más lugares distintos.",
+    "T1": "Unidad administrativa sin localidad nombrada dentro, o accidente/región de escala estadal o regional sin localidad.",
+    "T2": "Localidad, sitio, parque, cuenca, isla o cuerpo de agua con nombre propio."
+  },
+  "levels_excluded_from_map": [
+    "T0",
+    "T1"
+  ],
+  "entries": {
+    "I/curatedwithgeo/pagina_10_1.json": {
+      "nivel": "T0",
+      "texto": "Barinas, Turen y Yaritagua",
+      "razon": "enumera tres lugares distintos"
+    },
+    "I/curatedwithgeo/pagina_10_2.json": {
+      "nivel": "T0",
+      "texto": "Páramos venezolanos",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "I/curatedwithgeo/pagina_11_1.json": {
+      "nivel": "T1",
+      "texto": "estado Barinas",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "I/curatedwithgeo/pagina_12_1.json": {
+      "nivel": "T2",
+      "texto": "Hacienda Fe, cerca de Palmarito y en el Río. Yaracuy"
+    },
+    "I/curatedwithgeo/pagina_5_2.json": {
+      "nivel": "T2",
+      "texto": "Bosque Nacional del Caribe",
+      "nota": "bosque con nombre propio (El Yunque, Puerto Rico); 'del Caribe' es parte del nombre"
+    },
+    "I/curatedwithgeo/pagina_64_1.json": {
+      "nivel": "T0",
+      "texto": "Llanos de Venezuela, Estado Guárico",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "I/curatedwithgeo/pagina_6_1.json": {
+      "nivel": "T0",
+      "texto": "",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "I/curatedwithgeo/pagina_6_2.json": {
+      "nivel": "T0",
+      "texto": "Territorio Amazonas, Edo. Bolívar, Edo. Apure, Edo. Lara",
+      "razon": "enumera estados separados, sin lugar (agujero conocido de D14)"
+    },
+    "I/curatedwithgeo/pagina_6_3.json": {
+      "nivel": "T0",
+      "texto": "",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "I/curatedwithgeo/pagina_7_1.json": {
+      "nivel": "T2",
+      "texto": "Páramo de Gavidia dentro del Parque Nacional Sierra Nevada"
+    },
+    "I/curatedwithgeo/pagina_8_1.json": {
+      "nivel": "T2",
+      "texto": "TUREN, EDO. PORTUGUESA, VENEZUELA"
+    },
+    "I/curatedwithgeo/pagina_8_2.json": {
+      "nivel": "T2",
+      "texto": "Jardín Botánico de la ULA, Barinas"
+    },
+    "I/curatedwithgeo/pagina_9_1.json": {
+      "nivel": "T2",
+      "texto": "TUREN, EDO. PORTUGUESA, VENEZUELA"
+    },
+    "I/curatedwithgeo/pagina_9_2.json": {
+      "nivel": "T2",
+      "texto": "Barinas"
+    },
+    "II/curatedwithgeo/pagina_25_1.json": {
+      "nivel": "T0",
+      "texto": "Región Guayana, Estado Delta Amacuro, Venezuela (8°-10° N, 60°-63° W)",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "II/curatedwithgeo/pagina_25_2.json": {
+      "nivel": "T0",
+      "texto": "Región de los Andes, Sur del Lago de Maracaibo, Mérida, Venezuela",
+      "razon": "región natural amplia encabezando la mención"
+    },
+    "II/curatedwithgeo/pagina_26_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional 'El Ávila', Caracas, Venezuela"
+    },
+    "II/curatedwithgeo/pagina_26_2.json": {
+      "nivel": "T2",
+      "texto": "Parque Recreacional Morros de La Guarita, Urbanización el Cafetal, estado Miranda, Venezuela"
+    },
+    "II/curatedwithgeo/pagina_27_1.json": {
+      "nivel": "T2",
+      "texto": "P. N. \"EL AVILA\""
+    },
+    "II/curatedwithgeo/pagina_27_2.json": {
+      "nivel": "T2",
+      "texto": "Piritu- Pto. Píritu (Edo. Anzoátegui, Vzla)"
+    },
+    "II/curatedwithgeo/pagina_28_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Falcón, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "II/curatedwithgeo/pagina_29_1.json": {
+      "nivel": "T1",
+      "texto": "Golfo Triste, Edo. Carabobo, Venezuela",
+      "razon": "accidente geográfico de escala regional",
+      "nota": "¿T1 por escala o T2 por bahía concreta?"
+    },
+    "II/curatedwithgeo/pagina_29_2.json": {
+      "nivel": "T2",
+      "texto": "Río Acarigua, Venezuela"
+    },
+    "II/curatedwithgeo/pagina_30_1.json": {
+      "nivel": "T2",
+      "texto": "Sierra Nevada de los Andes venezolanos, Estado Mérida, quebrada El Oro y Mucunuútan",
+      "nota": "nombra dos quebradas: ¿multi-sitio (T0) o un mismo macizo (T2)?"
+    },
+    "II/curatedwithgeo/pagina_31_2.json": {
+      "nivel": "T0",
+      "texto": "Llanos Altos Centrales, Estado Guárico, Venezuela",
+      "razon": "región natural amplia, no un lugar",
+      "nota": "región amplia: ¿T0 o T1 (escala estadal)? afecta 1 estudio"
+    },
+    "II/curatedwithgeo/pagina_32_1.json": {
+      "nivel": "T0",
+      "texto": "Región Centro-Oriental de Venezuela, cuencas del Lago de Valencia y del Río Tuy",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "II/curatedwithgeo/pagina_92_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Archipiélago de Los Roques, Venezuela"
+    },
+    "II/curatedwithgeo/pagina_92_2.json": {
+      "nivel": "T1",
+      "texto": "Programa Colorido (CVG-PROFORCA, Edo. Anzoátegui, Venezuela",
+      "razon": "un programa, no un lugar; solo lo ancla el estado"
+    },
+    "II/curatedwithgeo/pagina_93_1.json": {
+      "nivel": "T1",
+      "texto": "Sur del Estado Monagas, Venezuela",
+      "razon": "área dentro del estado, sin localidad"
+    },
+    "II/curatedwithgeo/pagina_94_1.json": {
+      "nivel": "T2",
+      "texto": "Alto Barinas (Edo. Barinas), Venezuela"
+    },
+    "III/curatedwithgeo/pagina_104_1.json": {
+      "nivel": "T2",
+      "texto": "Isla Redonda, Embalse de Guri, Edo. Bolívar, Venezuela"
+    },
+    "III/curatedwithgeo/pagina_104_4.json": {
+      "nivel": "T2",
+      "texto": "Laguna Castillero, Rio Orinoco, Venezuela"
+    },
+    "III/curatedwithgeo/pagina_114_2.json": {
+      "nivel": "T1",
+      "texto": "Estado Bolívar, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "III/curatedwithgeo/pagina_115_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Sucre, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "III/curatedwithgeo/pagina_115_2.json": {
+      "nivel": "T2",
+      "texto": "Península de Araya, Edo Sucre, Venezuela"
+    },
+    "III/curatedwithgeo/pagina_55_2.json": {
+      "nivel": "T2",
+      "texto": "Kwakwani, Guyana"
+    },
+    "III/curatedwithgeo/pagina_56_3.json": {
+      "nivel": "T0",
+      "texto": "Mar Caribe, Venezuela",
+      "razon": "cuerpo marino, sin lugar",
+      "nota": "¿T0 por cuerpo marino o T2 por cuerpo concreto?"
+    },
+    "III/curatedwithgeo/pagina_60_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "III/curatedwithgeo/pagina_61_1.json": {
+      "nivel": "T2",
+      "texto": "Aguas Calientes, Municipio Miranda, estado Trujillo, Venezuela",
+      "nota": "hay varios lugares con ese nombre en el país"
+    },
+    "III/curatedwithgeo/pagina_61_2.json": {
+      "nivel": "T2",
+      "texto": "Embalse de Guri, Edo. Bolívar, Venezuela"
+    },
+    "III/curatedwithgeo/pagina_90_2.json": {
+      "nivel": "T2",
+      "texto": "Río Lozoya, Cuenca río Tajo, España"
+    },
+    "III/curatedwithgeo/pagina_92_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Mochima, Estado Sucre, Venezuela"
+    },
+    "IV/curatedwithgeo/pagina_132_2.json": {
+      "nivel": "T0",
+      "texto": "Llanos del Orinoco, Venezuela; El Frío, Edo. Apure, Venezuela",
+      "razon": "enumera dos lugares distintos"
+    },
+    "IV/curatedwithgeo/pagina_133_1.json": {
+      "nivel": "T0",
+      "texto": "Cordillera de Mérida, Venezuela",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "IV/curatedwithgeo/pagina_167_1.json": {
+      "nivel": "T2",
+      "texto": "Río Caura, Venezuela"
+    },
+    "IV/curatedwithgeo/pagina_167_2.json": {
+      "nivel": "T2",
+      "texto": "Río Chama, Venezuela"
+    },
+    "IV/curatedwithgeo/pagina_170_1.json": {
+      "nivel": "T2",
+      "texto": "Península de Paria, Estado Sucre, Venezuela"
+    },
+    "IV/curatedwithgeo/pagina_175_2.json": {
+      "nivel": "T0",
+      "texto": "Maracay (Estado Aragua), Cúpira (Estado Miranda), Guatire (Estado Miranda), Caracas (Distrito Capital), Carabobo (Estado Guarico) y Campo de Carabobo (Estado Carabobo), Venezuela",
+      "razon": "enumera seis lugares distintos"
+    },
+    "IV/curatedwithgeo/pagina_177_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "IV/curatedwithgeo/pagina_177_2.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "IV/curatedwithgeo/pagina_178_2.json": {
+      "nivel": "T1",
+      "texto": "Estado Amazonas, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "IV/curatedwithgeo/pagina_179_2.json": {
+      "nivel": "T2",
+      "texto": "Cuenca alta del Río Tigre, Estado Anzoátegui"
+    },
+    "IV/curatedwithgeo/pagina_180_1.json": {
+      "nivel": "T2",
+      "texto": "Los Pijiguaos, Edo. Bolívar, Venezuela"
+    },
+    "IV/curatedwithgeo/pagina_180_2.json": {
+      "nivel": "T2",
+      "texto": "Isla de Margarita, Venezuela",
+      "nota": "isla que coincide con el territorio del estado: ¿T1 como 'Nueva Esparta' o T2 como isla? afecta 5 estudios"
+    },
+    "IV/curatedwithgeo/pagina_181_1.json": {
+      "nivel": "T1",
+      "texto": "Municipio Caroní, sector urbano, Venezuela",
+      "razon": "unidad administrativa, sector urbano sin nombrar"
+    },
+    "IV/curatedwithgeo/pagina_99_1.json": {
+      "nivel": "T2",
+      "texto": "Bahía del Tablazo, Estado Zulia, Venezuela"
+    },
+    "IV/curatedwithgeo/pagina_99_2.json": {
+      "nivel": "T0",
+      "texto": "Río de aguas negras del sureste de la Guayana venezolana",
+      "razon": "río sin nombre, región amplia, no un lugar"
+    },
+    "IX/curatedwithgeo/pagina_631_1.json": {
+      "nivel": "T2",
+      "texto": "Cabo Codera, estado Miranda, Venezuela"
+    },
+    "IX/curatedwithgeo/pagina_632_1.json": {
+      "nivel": "T2",
+      "texto": "Isla la Tortuga, Los Tortuguillos, Cayo Herradura, Los Palanquines, Venezuela",
+      "nota": "archipiélago: enumera cayos, pero es un mismo conjunto"
+    },
+    "IX/curatedwithgeo/pagina_633_1.json": {
+      "nivel": "T2",
+      "texto": "Golfo de Venezuela, estado Zulia, Punta de Palma, Puertos de Altagracia"
+    },
+    "IX/curatedwithgeo/pagina_710_1.json": {
+      "nivel": "T2",
+      "texto": "Lagunillas, Mérida, Venezuela"
+    },
+    "IX/curatedwithgeo/pagina_712_1.json": {
+      "nivel": "T2",
+      "texto": "Cuenca del río Chama, Cordillera de Mérida, Venezuela"
+    },
+    "IX/curatedwithgeo/pagina_714_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Waraira Repano, Distrito Capital, Venezuela"
+    },
+    "IX/curatedwithgeo/pagina_715_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Portuguesa, municipio Ospino, Venezuela",
+      "razon": "unidad administrativa, sin localidad nombrada"
+    },
+    "IX/curatedwithgeo/pagina_716_1.json": {
+      "nivel": "T0",
+      "texto": "Ríos San Juan y La Asunción, Estado Nueva Esparta, Venezuela",
+      "razon": "enumera dos ríos distintos"
+    },
+    "IX/curatedwithgeo/pagina_717_1.json": {
+      "nivel": "T2",
+      "texto": "La Lagunillas, Mérida, Venezuela"
+    },
+    "IX/curatedwithgeo/pagina_718_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Laguna de La Restinga, bosques de manglar"
+    },
+    "IX/curatedwithgeo/pagina_71_1.json": {
+      "nivel": "T1",
+      "texto": "Delta del río Orinoco, Venezuela",
+      "razon": "región natural de escala estadal",
+      "nota": "¿T1 por escala o T2 por accidente concreto?"
+    },
+    "IX/curatedwithgeo/pagina_778_1.json": {
+      "nivel": "T2",
+      "texto": "Páramos de Gavidia y Mixteque, Estado Mérida, Venezuela",
+      "nota": "enumera dos páramos contiguos: ¿T0 o T2?"
+    },
+    "IX/curatedwithgeo/pagina_784_1.json": {
+      "nivel": "T1",
+      "texto": "Venezuela, estado Carabobo",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "IX/curatedwithgeo/pagina_785_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Carabobo, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "IX/curatedwithgeo/pagina_786_1.json": {
+      "nivel": "T2",
+      "texto": "Sector Los Cocos, Porlamar, Estado Nueva Esparta, Venezuela"
+    },
+    "IX/curatedwithgeo/pagina_787_1.json": {
+      "nivel": "T2",
+      "texto": "Municipio Campo Elías, Parroquia Jají, Estado Mérida, Venezuela",
+      "nota": "quedó T2 porque Jají es una localidad nombrada; ¿o T1 por ser administración?"
+    },
+    "V/curatedwithgeo/pagina_182_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Morrocoy, Cayo Sombrero, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_195_1.json": {
+      "nivel": "T2",
+      "texto": "Sistema lagunar Las Peonías, Municipio Maracaibo, Estado Zulia, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_195_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Estado Bolívar, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_196_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Morrocoy, Estado Falcón, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_201_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Mérida, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "V/curatedwithgeo/pagina_201_2.json": {
+      "nivel": "T2",
+      "texto": "Cuenca alta del Río Tigre, Estado Anzoátegui, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_206_1.json": {
+      "nivel": "T1",
+      "texto": "Sistema de Riego del Río Guárico, Estado Guárico, Venezuela",
+      "razon": "sistema de riego, extensión regional, no un punto"
+    },
+    "V/curatedwithgeo/pagina_207_1.json": {
+      "nivel": "T2",
+      "texto": "Cuenca baja de los ríos Socuy, Guasare y Cachirí, Estado Zulia, Venezuela",
+      "nota": "enumera tres ríos, pero son una misma cuenca: ¿T0 o T2?"
+    },
+    "V/curatedwithgeo/pagina_207_2.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Morrocoy, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_210_1.json": {
+      "nivel": "T2",
+      "texto": "Golfo de Venezuela, costa occidental, Islas San Bernardo, San Carlos y Zapara, estado Zulia"
+    },
+    "V/curatedwithgeo/pagina_212_1.json": {
+      "nivel": "T0",
+      "texto": "Trópicos, Venezuela",
+      "razon": "región climática, no un lugar"
+    },
+    "V/curatedwithgeo/pagina_212_2.json": {
+      "nivel": "T2",
+      "texto": "Laguna de Asfalto Guanoco, Sucre, Estados Mérida y Lara, Venezuela",
+      "nota": "quedó T2: el sitio nombrado manda sobre los estados ajenos que la extracción arrastró"
+    },
+    "V/curatedwithgeo/pagina_241_1.json": {
+      "nivel": "T2",
+      "texto": "Región sur de Brasil, Lagoa dos Patos, Laguna",
+      "nota": "región amplia + lugar nombrado: ganó el lugar (T2)"
+    },
+    "V/curatedwithgeo/pagina_241_2.json": {
+      "nivel": "T0",
+      "texto": "Estado Monagas, El Tejero, Caripito",
+      "razon": "enumera dos localidades distintas"
+    },
+    "V/curatedwithgeo/pagina_270_2.json": {
+      "nivel": "T1",
+      "texto": "Nueva Esparta, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "V/curatedwithgeo/pagina_271_2.json": {
+      "nivel": "T0",
+      "texto": "Atlántico Tropical Norte, Mar Caribe, Delta del Orinoco, Isla de Trinidad",
+      "razon": "cubre varios países, no un lugar"
+    },
+    "VI/curatedwithgeo/pagina_115_1.json": {
+      "nivel": "T0",
+      "texto": "Caribbean",
+      "razon": "región supra-nacional"
+    },
+    "VI/curatedwithgeo/pagina_116_1.json": {
+      "nivel": "T2",
+      "texto": "Lago de Maracaibo, Venezuela",
+      "nota": "quedó T2: D14 upstream lo trató como lugar y es el 4.º hotspot. ¿Debe ser T1 por escala?"
+    },
+    "VI/curatedwithgeo/pagina_117_1.json": {
+      "nivel": "T2",
+      "texto": "Lago de Maracaibo, Venezuela",
+      "nota": "quedó T2: D14 upstream lo trató como lugar y es el 4.º hotspot. ¿Debe ser T1 por escala?"
+    },
+    "VI/curatedwithgeo/pagina_118_1.json": {
+      "nivel": "T2",
+      "texto": "Lago de Maracaibo, Venezuela",
+      "nota": "quedó T2: D14 upstream lo trató como lugar y es el 4.º hotspot. ¿Debe ser T1 por escala?"
+    },
+    "VI/curatedwithgeo/pagina_120_2.json": {
+      "nivel": "T2",
+      "texto": "Terrenos del IVIC, Venezuela",
+      "nota": "campus concreto, aunque el texto suene general"
+    },
+    "VI/curatedwithgeo/pagina_121_1.json": {
+      "nivel": "T2",
+      "texto": "Páramo de Piedras Blancas, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_124_1.json": {
+      "nivel": "T2",
+      "texto": "Península de Paraguaná, Edo. Falcón, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_125_1.json": {
+      "nivel": "T0",
+      "texto": "Laguna de Tacarigua y Parque Nacional Morrocoy, Venezuela",
+      "razon": "enumera dos lugares distintos"
+    },
+    "VI/curatedwithgeo/pagina_126_1.json": {
+      "nivel": "T1",
+      "texto": "Desembocadura del estuario de Maracaibo, Venezuela",
+      "razon": "tramo de costa, sin localidad puntual",
+      "nota": "¿T1 por tramo de costa o T2 por accidente concreto?"
+    },
+    "VI/curatedwithgeo/pagina_130_1.json": {
+      "nivel": "T0",
+      "texto": "Costa de Brasil",
+      "razon": "región amplia, no un lugar"
+    },
+    "VI/curatedwithgeo/pagina_133_1.json": {
+      "nivel": "T2",
+      "texto": "Lago de Maracaibo, Venezuela",
+      "nota": "quedó T2: D14 upstream lo trató como lugar y es el 4.º hotspot. ¿Debe ser T1 por escala?"
+    },
+    "VI/curatedwithgeo/pagina_134_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "VI/curatedwithgeo/pagina_134_2.json": {
+      "nivel": "T0",
+      "texto": "Región Andina",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "VI/curatedwithgeo/pagina_135_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "VI/curatedwithgeo/pagina_136_1.json": {
+      "nivel": "T0",
+      "texto": "N/A",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "VI/curatedwithgeo/pagina_136_2.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "VI/curatedwithgeo/pagina_137_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "VI/curatedwithgeo/pagina_138_1.json": {
+      "nivel": "T2",
+      "texto": "Guanare, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_163_1.json": {
+      "nivel": "T1",
+      "texto": "Norte del estado Amazonas, Venezuela",
+      "razon": "área dentro del estado, sin localidad"
+    },
+    "VI/curatedwithgeo/pagina_165_1.json": {
+      "nivel": "T0",
+      "texto": "",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "VI/curatedwithgeo/pagina_170_1.json": {
+      "nivel": "T1",
+      "texto": "Municipio El Hatillo, Estado Miranda, Venezuela",
+      "razon": "unidad administrativa, sin localidad nombrada"
+    },
+    "VI/curatedwithgeo/pagina_171_1.json": {
+      "nivel": "T0",
+      "texto": "Gran Sabana, Venezuela",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "VI/curatedwithgeo/pagina_172_1.json": {
+      "nivel": "T0",
+      "texto": "Gran Sabana, Venezuela",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "VI/curatedwithgeo/pagina_173_1.json": {
+      "nivel": "T0",
+      "texto": "Gran Sabana, Estado Bolívar, Venezuela",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "VI/curatedwithgeo/pagina_174_1.json": {
+      "nivel": "T0",
+      "texto": "La Gran Sabana, Venezuela",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "VI/curatedwithgeo/pagina_175_1.json": {
+      "nivel": "T0",
+      "texto": "",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "VI/curatedwithgeo/pagina_176_1.json": {
+      "nivel": "T2",
+      "texto": "Carmen de Uria, Estado Vargas, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_353_2.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Henri Pittier, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_355_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Zulia, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "VI/curatedwithgeo/pagina_356_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Guárico, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "VI/curatedwithgeo/pagina_357_1.json": {
+      "nivel": "T0",
+      "texto": "Sabanas, Venezuela",
+      "razon": "tipo de vegetación, no un lugar"
+    },
+    "VII/curatedwithgeo/pagina_536_1.json": {
+      "nivel": "T1",
+      "texto": "Golfo de Venezuela",
+      "razon": "accidente geográfico de escala regional",
+      "nota": "¿T1 por escala o T2 por cuerpo concreto?"
+    },
+    "VII/curatedwithgeo/pagina_55_1.json": {
+      "nivel": "T0",
+      "texto": "Chile central, entre los 35° y 55° S",
+      "razon": "región natural amplia, no un lugar"
+    },
+    "VII/curatedwithgeo/pagina_560_1.json": {
+      "nivel": "T0",
+      "texto": "Los Andes venezolanos",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "VII/curatedwithgeo/pagina_562_1.json": {
+      "nivel": "T0",
+      "texto": "Gran Sabana, Edo. Bolívar, Venezuela",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "VII/curatedwithgeo/pagina_563_1.json": {
+      "nivel": "T0",
+      "texto": "",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "VII/curatedwithgeo/pagina_564_1.json": {
+      "nivel": "T2",
+      "texto": "Río Mapire, Estado Anzoátegui, Venezuela"
+    },
+    "VII/curatedwithgeo/pagina_565_1.json": {
+      "nivel": "T1",
+      "texto": "Planicie de Maracaibo, Estado Zulia, Venezuela",
+      "razon": "región natural de escala estadal",
+      "nota": "¿T1 por escala o T2 por región concreta?"
+    },
+    "VII/curatedwithgeo/pagina_566_1.json": {
+      "nivel": "T2",
+      "texto": "Río Cabriales, Parque San Esteban, Estado Carabobo, Venezuela"
+    },
+    "VII/curatedwithgeo/pagina_56_1.json": {
+      "nivel": "T2",
+      "texto": "Sierra Maigualida, Guayana venezolana",
+      "nota": "sierra nombrada dentro de la Guayana: ¿T2 o región amplia (T0)?"
+    },
+    "VII/curatedwithgeo/pagina_570_1.json": {
+      "nivel": "T2",
+      "texto": "Laguna Castillero, Caicara del Orinoco, Estado Bolívar, Venezuela"
+    },
+    "VII/curatedwithgeo/pagina_571_1.json": {
+      "nivel": "T2",
+      "texto": "Quebrada Tócome (Parque Nacional El Ávila, Caracas), vertiente sur de la Cordillera de la Costa"
+    },
+    "VII/curatedwithgeo/pagina_573_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Canaima, Venezuela"
+    },
+    "VII/curatedwithgeo/pagina_574_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Henri Pittier, Caracas, Maracay, Estación Biológica Rancho Grande",
+      "nota": "un solo parque, con la estación dentro y dos ciudades de referencia: quedó T2"
+    },
+    "VII/curatedwithgeo/pagina_575_1.json": {
+      "nivel": "T2",
+      "texto": "Riberas del Orinoco, Comunidad Las Galderas"
+    },
+    "VII/curatedwithgeo/pagina_576_1.json": {
+      "nivel": "T1",
+      "texto": "Municipio Libertador del Distrito Capital, Venezuela",
+      "razon": "unidad administrativa, sin localidad nombrada"
+    },
+    "VII/curatedwithgeo/pagina_577_1.json": {
+      "nivel": "T1",
+      "texto": "Amazonas venezolano",
+      "razon": "referencia de escala estadal",
+      "nota": "¿región amplia (T0) o escala estadal (T1)?"
+    },
+    "VII/curatedwithgeo/pagina_578_1.json": {
+      "nivel": "T2",
+      "texto": "Venezuela, Cordillera de la Costa, Valle de Caracas",
+      "nota": "quedó T2 por el valle de Caracas; ¿o T0 por enumerar la cordillera?"
+    },
+    "VIII/curatedwithgeo/pagina_119_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "VIII/curatedwithgeo/pagina_121_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Falcón, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "VIII/curatedwithgeo/pagina_122_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela, Cordillera de la Costa, Los Andes, Lago de Maracaibo, Delta del Orinoco",
+      "razon": "enumera regiones separadas del país, sin un lugar"
+    },
+    "VIII/curatedwithgeo/pagina_123_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Nueva Esparta, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "VIII/curatedwithgeo/pagina_125_1.json": {
+      "nivel": "T0",
+      "texto": "Andes de Venezuela",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "VIII/curatedwithgeo/pagina_508_1.json": {
+      "nivel": "T2",
+      "texto": "Lima, Perú"
+    },
+    "VIII/curatedwithgeo/pagina_509_1.json": {
+      "nivel": "T2",
+      "texto": "Maracay, Estado Aragua, Venezuela",
+      "nota": "ciudad + estado: quedó T2"
+    },
+    "VIII/curatedwithgeo/pagina_510_1.json": {
+      "nivel": "T2",
+      "texto": "Andes Venezolanos, La Carbonera, estado Mérida, Venezuela"
+    },
+    "VIII/curatedwithgeo/pagina_511_1.json": {
+      "nivel": "T2",
+      "texto": "Cuenca del Lago de Valencia, Carabobo, Venezuela"
+    },
+    "VIII/curatedwithgeo/pagina_512_1.json": {
+      "nivel": "T2",
+      "texto": "San Diego de los Altos, Parroquia Cecilio Acosta del Municipio Guaicaipuro, Municipio Los Salias"
+    },
+    "VIII/curatedwithgeo/pagina_513_1.json": {
+      "nivel": "T2",
+      "texto": "Laguna de las Peonias, Estado Zulia, Venezuela"
+    },
+    "VIII/curatedwithgeo/pagina_606_1.json": {
+      "nivel": "T2",
+      "texto": "Municipio Sucre del estado Sucre, Venezuela, Bahía de Mochima, Río Manzanares"
+    },
+    "VIII/curatedwithgeo/pagina_607_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Bolívar, Venezuela, Escudo de Guayana",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "VIII/curatedwithgeo/pagina_608_1.json": {
+      "nivel": "T2",
+      "texto": "Hoyo de la Cumbre, cuenca alta del río Piedra Azul, estado Vargas, Venezuela"
+    },
+    "VIII/curatedwithgeo/pagina_609_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Laguna de Tacarigua, Distrito Páez, estado Miranda, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_736_1.json": {
+      "nivel": "T2",
+      "texto": "Laguna El Morro de Porlamar, Nueva Esparta, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_737_1.json": {
+      "nivel": "T2",
+      "texto": "Laguna El Morro, Isla de Margarita, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_738_1.json": {
+      "nivel": "T2",
+      "texto": "Lago de Maracaibo, playas La Rosita y Nazaret, estado Zulia, Venezuela",
+      "nota": "mismo caso: ¿escala del lago o playas puntuales?"
+    },
+    "X/curatedwithgeo/pagina_739_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Mochima, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_73_1.json": {
+      "nivel": "T0",
+      "texto": "Orinoquia venezolana, planicies y altiplanicies antiguas centrales, meridionales y orientales de Venezuela",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "X/curatedwithgeo/pagina_740_1.json": {
+      "nivel": "T2",
+      "texto": "Sierra de Neiba, República Dominicana"
+    },
+    "X/curatedwithgeo/pagina_742_1.json": {
+      "nivel": "T2",
+      "texto": "Laguna de Bocaripo, Sucre, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_743_1.json": {
+      "nivel": "T2",
+      "texto": "Capitán Chico, Edo. Zulia, Venezuela",
+      "nota": "topónimo muy local, sin referencia mayor"
+    },
+    "X/curatedwithgeo/pagina_744_1.json": {
+      "nivel": "T2",
+      "texto": "Cuenca del río Capaz, Estado Mérida, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_745_1.json": {
+      "nivel": "T2",
+      "texto": "Península de Araya, estado Sucre, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_747_1.json": {
+      "nivel": "T2",
+      "texto": "Caracas, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_750_1.json": {
+      "nivel": "T2",
+      "texto": "Quebrada de Sabaneta, municipio El Hatillo, estado Miranda, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_751_1.json": {
+      "nivel": "T2",
+      "texto": "Hato Masaguaral, Estado Guárico, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_752_1.json": {
+      "nivel": "T2",
+      "texto": "Sector El Morado, Caripe, Estado Monagas, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_829_1.json": {
+      "nivel": "T2",
+      "texto": "El Breal de Orocual, estado Monagas, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_82_1.json": {
+      "nivel": "T2",
+      "texto": "Laguna de Tacarigua, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_830_1.json": {
+      "nivel": "T1",
+      "texto": "Occidente de Venezuela, estado Zulia",
+      "razon": "referencia de escala estadal"
+    },
+    "XI/curatedwithgeo/pagina_19_1.json": {
+      "nivel": "T0",
+      "texto": "",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "XI/curatedwithgeo/pagina_5_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela, océano Índico, Pacífico, Atlántico",
+      "razon": "enumera océanos, no un lugar"
+    },
+    "XI/curatedwithgeo/pagina_601_1.json": {
+      "nivel": "T2",
+      "texto": "Parque Nacional Canaima, Venezuela"
+    },
+    "XI/curatedwithgeo/pagina_602_1.json": {
+      "nivel": "T0",
+      "texto": "Orinoquia Venezolano-Colombiana, río Orinoco, Corredor Orinoco",
+      "razon": "región binacional, no un lugar"
+    },
+    "XI/curatedwithgeo/pagina_603_1.json": {
+      "nivel": "T0",
+      "texto": "",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "XI/curatedwithgeo/pagina_605_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "XI/curatedwithgeo/pagina_606_1.json": {
+      "nivel": "T0",
+      "texto": "",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "XI/curatedwithgeo/pagina_607_1.json": {
+      "nivel": "T2",
+      "texto": "Refugio de Fauna Silvestre Isla de Aves (RFSIA)"
+    },
+    "XI/curatedwithgeo/pagina_608_1.json": {
+      "nivel": "T2",
+      "texto": "Sierra Nevada de Santa Marta, Colombia"
+    },
+    "XI/curatedwithgeo/pagina_60_1.json": {
+      "nivel": "T0",
+      "texto": "Neotrópico",
+      "razon": "región supra-nacional"
+    },
+    "XI/curatedwithgeo/pagina_610_1.json": {
+      "nivel": "T2",
+      "texto": "PNALR, arrecife de Dos Mosquises Sur, Venezuela",
+      "nota": "sigla + arrecife concreto"
+    },
+    "XI/curatedwithgeo/pagina_611_1.json": {
+      "nivel": "T2",
+      "texto": "Carora, Lara, Venezuela",
+      "nota": "¿localidad o referencia al estado? quedó T2"
+    },
+    "XI/curatedwithgeo/pagina_612_1.json": {
+      "nivel": "T0",
+      "texto": "Sanare, Quibor, Río Claro, Las Lajitas, Eneal, El Palenque",
+      "razon": "enumera seis localidades distintas"
+    },
+    "XI/curatedwithgeo/pagina_613_1.json": {
+      "nivel": "T2",
+      "texto": "Sierra Nevada de Santa Marta, Colombia"
+    },
+    "XI/curatedwithgeo/pagina_614_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela",
+      "razon": "menciona el país entero, sin lugar"
+    },
+    "XI/curatedwithgeo/pagina_615_1.json": {
+      "nivel": "T2",
+      "texto": "Guayabal, Estado Guárico"
+    },
+    "XII/curatedwithgeo/pagina_219_1.json": {
+      "nivel": "T2",
+      "texto": "Guaranache, Estado Sucre, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_219_2.json": {
+      "nivel": "T2",
+      "texto": "Cuenca del Río Capaz, Estado Mérida, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_220_1.json": {
+      "nivel": "T1",
+      "texto": "Estado Mérida, Venezuela",
+      "razon": "unidad administrativa de primer nivel"
+    },
+    "XII/curatedwithgeo/pagina_221_1.json": {
+      "nivel": "T2",
+      "texto": "La Restinga, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_222_1.json": {
+      "nivel": "T1",
+      "texto": "Bosques periurbanos del sur de la Gran Caracas, estado Miranda, Venezuela",
+      "razon": "área metropolitana, no un punto"
+    },
+    "XII/curatedwithgeo/pagina_223_1.json": {
+      "nivel": "T0",
+      "texto": "Bosques urbanos, Venezuela, América Latina",
+      "razon": "mención genérica multi-escala, sin lugar (agujero conocido de D14)"
+    },
+    "XII/curatedwithgeo/pagina_226_1.json": {
+      "nivel": "T2",
+      "texto": "Venezuela, Edo. Aragua y Carabobo, Parroquia Canoabo",
+      "nota": "quedó T2: la parroquia es el ancla, los estados no"
+    },
+    "XII/curatedwithgeo/pagina_226_2.json": {
+      "nivel": "T0",
+      "texto": "Piedra de Cachimbo y La Florida, Edo. Vargas",
+      "razon": "enumera dos parajes distintos"
+    },
+    "XII/curatedwithgeo/pagina_227_1.json": {
+      "nivel": "T2",
+      "texto": "La Florida, Piedra de Cachimbo, Colonia Tovar, Edo. Aragua, Venezuela",
+      "nota": "nombra dos parajes; además su coordenada está mal geocodificada (D11: no se toca)"
+    },
+    "XII/curatedwithgeo/pagina_229_1.json": {
+      "nivel": "T0",
+      "texto": "Pan-Amazonía",
+      "razon": "región supra-nacional"
+    },
+    "XII/curatedwithgeo/pagina_231_1.json": {
+      "nivel": "T0",
+      "texto": "Amazonía Venezolana, Río Orinoco (Bolívar)",
+      "razon": "región natural amplia; el río nombrado atraviesa el país"
+    },
+    "XII/curatedwithgeo/pagina_234_1.json": {
+      "nivel": "T2",
+      "texto": "Isla de Aves, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_234_2.json": {
+      "nivel": "T2",
+      "texto": "Playa Puipuy, Estado Sucre, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_237_1.json": {
+      "nivel": "T0",
+      "texto": "América Latina",
+      "razon": "región supra-nacional"
+    },
+    "XII/curatedwithgeo/pagina_239_1.json": {
+      "nivel": "T2",
+      "texto": "Península de Macanao, Isla de Margarita, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_245_1.json": {
+      "nivel": "T2",
+      "texto": "Península de Araya, Estado Sucre, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_248_1.json": {
+      "nivel": "T0",
+      "texto": "",
+      "razon": "sin texto de ubicación utilizable",
+      "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    }
+  }
+}
