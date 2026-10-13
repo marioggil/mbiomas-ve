@@ -235,10 +235,36 @@ row, the real per-class tally) and does not know the four class names. Adding a 
 `source_path`, each `{nivel, razon?, nota?}`. Complete: all 202 rows. `razon` is required for T0 and
 T1 — those are assertions that need justification in the diff — and optional for T2.
 
-**Pre-fill**: mechanical, from declared rules, not from improvisation: country / multi-national
-region / enumeration of separate regions → T0; first-level administrative unit or state-scale
-natural region without a locality → T1; locality, site, park or named watershed → T2. Doubtful cases
-carry a `nota` and are listed separately for human review — never silently guessed.
+**Pre-fill, and the result.** Mechanical, from the rules below applied to the corpus's own location
+texts, with every T0/T1 decision written out in the file next to its reason:
+
+| Rule | Level |
+|---|---|
+| **A** no usable location text | T0 |
+| **B** supra-national or multi-country mention | T0 |
+| **C** enumeration of two or more named *sites* with no name that subsumes them | T0 |
+| **D** country-only, an enumeration of regions, or a broad natural region spanning several states (an appended state name does not localize it) | T0 |
+| **E** an enumeration of states with no named site | T0 |
+| **F** an administrative unit with no locality, site or natural feature named inside it (state, municipio) | T1 |
+| **G** a regional-scale feature with no locality (gulf, delta, plain, coastline stretch) | T1 |
+| **H** otherwise: a named locality, site, park, watershed, island or water body | T2 |
+
+A named site wins over an appended list of states: the states are not the anchor.
+
+Result over the 202-row corpus: **T0 61, T1 31, T2 110**, which under the D12 evaluation order
+leaves **100 placeable / 83 coarse_location / 10 outside_extent / 9 no_coordinate**. The F4 contract
+on the same rows gave 107 placeable — a similar *number*, for entirely different reasons: it
+excluded studies for sharing a coordinate, including the Mérida and Lago de Maracaibo clusters,
+while the taxonomy excludes the mentions that name no place and keeps those clusters on the map.
+
+**Every entry records the location text it classifies** (`texto`). Without it the file would be a
+list of opaque `source_path` keys that no reviewer could judge from the diff, which would defeat the
+whole point of a curated file. The text is not decoration: `check_granularity_coverage` fails when
+the recorded text no longer matches the corpus row, so an upstream extraction fix stops the build
+until a human re-judges the level.
+
+**43 entries carry a `nota`** recording a boundary call and the alternative; **27 of them would move
+at least one study on or off the map**. They are grouped into five decisions in T2's evidence below.
 
 **Fail-loud**: a parquet row with no entry aborts the build; an entry matching no row aborts; a level
 outside T0/T1/T2 aborts; a T0/T1 entry without `razon` aborts.
@@ -279,11 +305,56 @@ Each task closes with one work-unit commit carrying code, its tests and its docu
   suite at 178 tests and confirmed the diff parses the bytes it hashes. The **real-artifact proof of
   the provenance block moves to T3**, since the JSON cannot be written until the corpus builds.
 
-### T2 — Curated granularity taxonomy
-- The file of section 6, pre-filled and complete, plus `load_granularity` and its hard validation.
-- Tests for the loader and every failure branch, each with a control that proves it can fire, plus a
-  coverage test asserting the file classifies **every** row of the real parquet exactly once.
-- Evidence: coverage test output; the doubt list handed to the user.
+### T2 — Curated granularity taxonomy — **DONE**
+
+**Commit**: recorded below.
+
+- Lands the file of section 6 (202 entries), `load_granularity`, `row_location_text` and
+  `check_granularity_coverage`. It deliberately does **not** wire the taxonomy into the
+  classification or into `main`: that is T3.3.
+- **Evidence**: suite **178 → 222 tests, OK** on the bare interpreter. Verified by the parent with
+  the rebuild interpreter, because the tests cannot read Parquet: the curated file covers the real
+  corpus exactly — **202 rows ↔ 202 entries, no orphans, every T0/T1 entry justified, every recorded
+  text equal to its corpus row** — and a deliberately corrupted text makes the coverage check fire
+  with `... location text no longer matches the parquet row it classifies; re-judge the level before
+  shipping`.
+- The loader was verified **by mutation and reverted byte-identically** (sha256 before and after):
+  removing the missing-`texto` guard, and neutralising the text comparison each make the intended
+  control fail. Zero bare `assertRaises` remain (79 `assertRaisesRegex` sites).
+- **Deviations the writer reported and the parent accepted**: `tmp_path` is a pytest fixture and
+  this file is pure `unittest`, so temp files come from `tempfile`; `diff -q` would have required
+  writing outside the allowed edit surfaces, so byte-identical restoration is proven by `sha256sum`
+  equality instead (strictly stronger); and it added a dependency-free test that loads the real
+  curated document and pins its 202 entries.
+- **The contract change, measured study by study** (F4 class → D12 class over the 202 rows):
+
+| F4 | D12 | Studies |
+|---|---|---|
+| placeable | placeable | 64 |
+| placeable | coarse_location | **43** |
+| shared_coordinate | placeable | **36** |
+| shared_coordinate | coarse_location | 33 |
+| outside_extent | outside_extent | 10 |
+| outside_extent | coarse_location | 7 |
+| no_coordinate | no_coordinate | 9 |
+
+  The two bold cells are the whole argument: **36 studies come back to the map** that the collision
+  rule was deleting, and **43 leave it** that the old rule admitted although they name no place. The
+  three clusters that matter: Mérida keeps **4 of 6** (the other two are `Estado Mérida, Venezuela`,
+  which names a state and nothing inside it), the Lago de Maracaibo group keeps **all 5**, and the
+  original Barinas collision of F4 keeps **2 of 4** (`Barinas` and `Jardín Botánico de la ULA,
+  Barinas`; the multi-site mention and `estado Barinas` correctly lose their marker).
+- **Human review is the gate before T3**, owed on five grouped decisions:
+
+| Group | Mentions | Effect if flipped |
+|---|---|---|
+| Regional-scale features held as T1 (Golfo de Venezuela, Golfo Triste, Delta del Orinoco, Planicie de Maracaibo, desembocadura del estuario, Mar Caribe) | 6 | +1 each back onto the map |
+| `Lago de Maracaibo, Venezuela` (+ the beaches variant) held as T2 | 2 | **−4** if moved to T1; it is D14's 4th hotspot |
+| Administrative apparatus beside a named site (Municipio Campo Elías/Jají, parroquia Canoabo, Valle de Caracas, Maracay + estado, Carora, Aguas Calientes, Capitán Chico, IVIC, PNALR, laguna de Guanoco) | 10 | ±1 each |
+| Multi-site mentions holding a name that subsumes them (3-river basin, 2 páramos, Henri Pittier + 2 cities, Isla la Tortuga archipelago, Sierra Nevada + 2 quebradas, Sierra Maigualida) | 6 | ±1 each |
+| `Isla de Margarita, Venezuela` held as T2 while `Nueva Esparta` is T1 | 1 | −1; the Margarita/Porlamar cluster is 5 studies |
+
+Whatever the review changes lands as a **data-only commit** on top of this one.
 
 ### T3 — Builder at 202, new contract, artifact regenerated
 

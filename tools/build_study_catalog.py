@@ -23,6 +23,23 @@ read, so the artifact cannot describe a different revision of the file than
 the one it was built from. The CSV stays a flat per-study table: provenance
 is document-level and lives only in the JSON.
 
+CURATED TAXONOMY
+----------------
+Coarseness, not collision of coordinates, decides what the map may draw. The
+per-study level comes from ``data/curated/congresos/granularidad-ubicaciones.json``,
+one entry per ``source_path``: T0 (country, supra-national region, or an
+enumeration of separate places) and T1 (first-level administrative unit, or a
+state-scale natural region without a locality) are not placeable; T2 (locality,
+named site, park or watershed) is. ``load_granularity`` reads that file and
+``check_granularity_coverage`` closes it against the rows. Each entry also
+records the corpus location ``texto``, and ``check_granularity_coverage``
+verifies that recorded text against ``row_location_text(row)`` so an upstream
+re-extraction that changes a location text stops the build until a human
+re-judges the level. The file is hand-edited and shipped complete, so the
+loader fails loudly on a missing or unreadable file, malformed JSON, a
+duplicate key anywhere in the document, an unknown level, a missing or
+non-string ``texto``, or a T0/T1 entry without a ``razon``.
+
 REBUILD-ONLY DEPENDENCY
 -----------------------
 ``pyarrow`` (to read Parquet) and ``osgeo``/GDAL (to read the COG geotransform)
@@ -113,6 +130,12 @@ REQUIRED_COLUMNS = [
 
 CLASS_ORDER = ["placeable", "shared_coordinate", "outside_extent", "no_coordinate"]
 
+# The curated location-granularity levels. T0 and T1 are excluded from the map;
+# the file repeats that exclusion list and ``load_granularity`` cross-checks it,
+# so the taxonomy and the code cannot drift apart silently.
+GRANULARITY_LEVELS = ("T0", "T1", "T2")
+GRANULARITY_EXCLUDED_FROM_MAP = ["T0", "T1"]
+
 CLASS_LABELS = {
     "placeable": "Ubicable",
     "shared_coordinate": "Coordenada compartida",
@@ -190,6 +213,173 @@ def load_labelling(path: Path) -> tuple[str, str]:
             f"{', '.join(missing)}"
         )
     return str(payload["extent_label"]), str(payload["extent_boundary_note"])
+
+
+def load_granularity(path: Path) -> dict[str, dict[str, Any]]:
+    """Load the curated location-granularity taxonomy.
+
+    Returns ``source_path -> {"nivel", "texto", "razon", "nota"}``, with
+    ``razon`` and ``nota`` normalised to ``None`` when absent. ``texto`` is the
+    location text as it appears in the corpus: it is required, must be a string
+    (an empty string is valid, for rows with no usable location text), and
+    ``check_granularity_coverage`` later verifies it against the row. Every
+    failure names the offending key or the file: this is a hand-edited document,
+    so a duplicated key (which ``json`` would otherwise resolve by keeping the
+    last value), an unknown level or a T0/T1 entry without a justification would
+    reach the map unless it is rejected here.
+    """
+    if not path.is_file():
+        raise StudyCatalogError(f"granularity file not found: {path}")
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise StudyCatalogError(
+            f"could not read granularity file {path}: {exc}"
+        ) from exc
+
+    def reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        # ``object_pairs_hook`` runs for every object in the document, so a
+        # repeated key anywhere is caught before the last value silently wins.
+        seen: set[str] = set()
+        for key, _ in pairs:
+            if key in seen:
+                raise StudyCatalogError(
+                    f"granularity file {path} has a duplicate key {key!r}; a "
+                    f"repeated entry would silently overwrite the first"
+                )
+            seen.add(key)
+        return dict(pairs)
+
+    try:
+        payload = json.loads(text, object_pairs_hook=reject_duplicate_keys)
+    except json.JSONDecodeError as exc:
+        raise StudyCatalogError(
+            f"granularity file {path} is not valid JSON: {exc}"
+        ) from exc
+
+    if not isinstance(payload, dict):
+        raise StudyCatalogError(
+            f"granularity file {path} must be a JSON object, got "
+            f"{type(payload).__name__}"
+        )
+    if "entries" not in payload:
+        raise StudyCatalogError(f"granularity file {path} is missing 'entries'")
+    entries = payload["entries"]
+    if not isinstance(entries, dict):
+        raise StudyCatalogError(
+            f"granularity file {path} 'entries' must be a JSON object, got "
+            f"{type(entries).__name__}"
+        )
+    if not entries:
+        raise StudyCatalogError(
+            f"granularity file {path} has an empty 'entries' object; a taxonomy "
+            f"that classifies nothing cannot cover the corpus"
+        )
+    excluded = payload.get("levels_excluded_from_map")
+    if excluded != GRANULARITY_EXCLUDED_FROM_MAP:
+        raise StudyCatalogError(
+            f"granularity file {path} must declare levels_excluded_from_map as "
+            f"exactly {GRANULARITY_EXCLUDED_FROM_MAP!r}, got {excluded!r}"
+        )
+
+    granularity: dict[str, dict[str, Any]] = {}
+    for source_path, entry in entries.items():
+        where = f"granularity entry {source_path!r}"
+        if not isinstance(entry, dict):
+            raise StudyCatalogError(
+                f"{where} must be a JSON object, got {type(entry).__name__}"
+            )
+        if "nivel" not in entry:
+            raise StudyCatalogError(f"{where} is missing 'nivel'")
+        nivel = entry["nivel"]
+        if nivel not in GRANULARITY_LEVELS:
+            raise StudyCatalogError(
+                f"{where} has nivel {nivel!r}; expected one of "
+                f"{', '.join(GRANULARITY_LEVELS)}"
+            )
+        if "texto" not in entry:
+            raise StudyCatalogError(
+                f"{where} is missing 'texto'; every entry records the corpus "
+                f"location text it classifies"
+            )
+        texto = entry["texto"]
+        if not isinstance(texto, str):
+            raise StudyCatalogError(
+                f"{where} has a 'texto' that is not a string: {texto!r}"
+            )
+        for field in ("razon", "nota"):
+            if field in entry:
+                value = entry[field]
+                if not isinstance(value, str) or not value.strip():
+                    raise StudyCatalogError(
+                        f"{where} has a {field!r} that is not a non-empty "
+                        f"string: {value!r}"
+                    )
+        if nivel in ("T0", "T1") and "razon" not in entry:
+            raise StudyCatalogError(
+                f"{where} is level {nivel} and must carry a 'razon'"
+            )
+        granularity[source_path] = {
+            "nivel": nivel,
+            "texto": texto,
+            "razon": entry.get("razon"),
+            "nota": entry.get("nota"),
+        }
+    return granularity
+
+
+def row_location_text(row: dict[str, Any]) -> str:
+    """Return the location text the corpus carries for one row.
+
+    It prefers ``ubicaciongeografica`` and falls back to ``direccion``, then to
+    the empty string, always stripped. This is the single derivation of the
+    corpus side of the taxonomy's recorded ``texto``, so the loader and the
+    coverage check cannot drift apart.
+    """
+    return (row.get("ubicaciongeografica") or row.get("direccion") or "").strip()
+
+
+def check_granularity_coverage(
+    granularity: dict[str, dict[str, Any]], rows: list[dict[str, Any]]
+) -> None:
+    """Fail unless the taxonomy and the rows cover each other exactly once.
+
+    Both directions are checked: a row with no entry would be classified by
+    accident, and an entry with no row is a taxonomy that has drifted away from
+    the corpus it describes. The recorded ``texto`` is then checked against
+    :func:`row_location_text` of its row, so a re-extraction that corrects a
+    location text stops the build instead of shipping a stale judgement.
+    ``rows`` is a parameter so the check stays dependency-free and testable
+    without the Parquet.
+    """
+    row_paths = {row["source_path"] for row in rows}
+    missing = sorted(path for path in row_paths if path not in granularity)
+    if missing:
+        raise StudyCatalogError(
+            "granularity file has no entry for parquet source_path(s): "
+            + ", ".join(repr(path) for path in missing)
+        )
+    orphans = sorted(key for key in granularity if key not in row_paths)
+    if orphans:
+        raise StudyCatalogError(
+            "granularity entry matches no parquet row: "
+            + ", ".join(repr(key) for key in orphans)
+        )
+    rows_by_path = {row["source_path"]: row for row in rows}
+    mismatched = [
+        (source_path, entry["texto"], row_location_text(rows_by_path[source_path]))
+        for source_path, entry in sorted(granularity.items())
+        if entry["texto"] != row_location_text(rows_by_path[source_path])
+    ]
+    if mismatched:
+        detail = "; ".join(
+            f"{source_path!r} records {recorded!r} but the row has {actual!r}"
+            for source_path, recorded, actual in mismatched
+        )
+        raise StudyCatalogError(
+            "granularity entry location text no longer matches the parquet row "
+            "it classifies; re-judge the level before shipping: " + detail
+        )
 
 
 def cog_extent(path: Path) -> dict[str, float]:

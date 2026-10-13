@@ -66,6 +66,9 @@ import build_study_catalog as subject  # noqa: E402
 CATALOG_PATH = (
     REPO_ROOT / "data" / "derived" / "venezuela" / "congresos" / "catalogo-estudios.json"
 )
+GRANULARITY_PATH = (
+    REPO_ROOT / "data" / "curated" / "congresos" / "granularidad-ubicaciones.json"
+)
 
 # ---------------------------------------------------------------------------
 # Pinned numbers. These describe the committed artifact; they are asserted
@@ -81,6 +84,9 @@ EXPECTED_CLASS_COUNTS = {
 EXPECTED_MAP_VISIBLE = 24
 EXPECTED_EXCLUDED = 7
 EXPECTED_ESPECIES_NON_NULL = 21
+
+# The curated taxonomy is complete: one entry per row of the 202-study corpus.
+EXPECTED_GRANULARITY_ENTRIES = 202
 
 # The author object shape, spelled out here so a rename of a source field fails.
 AUTHOR_FIELDS = ["nombre", "afiliacion", "ror", "pais", "orcid"]
@@ -197,6 +203,44 @@ EXPECTED_CATALOG_IDS = [
 ]
 
 
+# The curated granularity taxonomy. One entry per ``source_path``; every entry
+# records the corpus ``texto`` it classifies, a T0/T1 entry must justify itself
+# with a ``razon`` because it removes the study from the map, and a T2 entry may
+# carry an optional ``nota``.
+VALID_GRANULARITY_ENTRIES = {
+    "a/pagina_1_1.json": {
+        "nivel": "T0",
+        "texto": "Venezuela",
+        "razon": "mentions the whole country, not a place",
+    },
+    "a/pagina_2_1.json": {
+        "nivel": "T1",
+        "texto": "Estado Miranda",
+        "razon": "first-level administrative unit",
+    },
+    "a/pagina_3_1.json": {"nivel": "T2", "texto": "Merida"},
+    "a/pagina_4_1.json": {
+        "nivel": "T2",
+        "texto": "Parque Nacional",
+        "nota": "two named sites of the same massif",
+    },
+}
+
+
+def granularity_document(**overrides: Any) -> dict[str, Any]:
+    """Return a valid taxonomy document; overrides replace one top-level key."""
+    document: dict[str, Any] = {
+        "schema_version": 1,
+        "levels": {"T0": "no place", "T1": "administrative unit", "T2": "locality"},
+        "levels_excluded_from_map": ["T0", "T1"],
+        "entries": {
+            key: dict(entry) for key, entry in VALID_GRANULARITY_ENTRIES.items()
+        },
+    }
+    document.update(overrides)
+    return document
+
+
 def build_test_catalog() -> tuple[dict[str, Any], dict[str, int]]:
     """Run the real builder over the synthetic rows."""
     return subject.build_catalog(
@@ -306,6 +350,32 @@ def write_source_file(test: unittest.TestCase, payload: bytes) -> Path:
     test.addCleanup(directory.cleanup)
     path = Path(directory.name) / "source.parquet"
     path.write_bytes(payload)
+    return path
+
+
+def write_granularity(
+    test: unittest.TestCase,
+    document: dict[str, Any] | None = None,
+    text: str | None = None,
+    payload: bytes | None = None,
+) -> Path:
+    """Write a taxonomy fixture that lives only as long as the test.
+
+    ``text`` writes raw JSON, which a Python dict cannot express (duplicate
+    keys); ``payload`` writes raw bytes (a file that is not valid UTF-8).
+    """
+    directory = tempfile.TemporaryDirectory()
+    test.addCleanup(directory.cleanup)
+    path = Path(directory.name) / "granularidad.json"
+    if payload is not None:
+        path.write_bytes(payload)
+    elif text is not None:
+        path.write_text(text, encoding="utf-8")
+    else:
+        path.write_text(
+            json.dumps(document or granularity_document(), ensure_ascii=False),
+            encoding="utf-8",
+        )
     return path
 
 
@@ -980,6 +1050,505 @@ class CogExtentTests(unittest.TestCase):
                 subject.StudyCatalogError, re.escape("--cog not found")
             ):
                 subject.cog_extent(REPO_ROOT / "no-such.tif")
+
+
+# ---------------------------------------------------------------------------
+# Curated granularity taxonomy.
+# ---------------------------------------------------------------------------
+
+
+class RowLocationTextTests(unittest.TestCase):
+    """``row_location_text`` derives the corpus side of the recorded text."""
+
+    def test_prefers_ubicaciongeografica(self) -> None:
+        row = {"ubicaciongeografica": "Merida", "direccion": "Calle 1"}
+        self.assertEqual(subject.row_location_text(row), "Merida")
+
+    def test_control_ubicaciongeografica_wins_over_direccion(self) -> None:
+        row = {"ubicaciongeografica": "Merida", "direccion": "Calle 1"}
+        self.assertNotEqual(subject.row_location_text(row), "Calle 1")
+
+    def test_falls_back_to_direccion(self) -> None:
+        self.assertEqual(subject.row_location_text({"direccion": "Calle 1"}), "Calle 1")
+
+    def test_control_an_empty_ubicaciongeografica_falls_through_to_direccion(self) -> None:
+        row = {"ubicaciongeografica": "", "direccion": "Calle 1"}
+        self.assertEqual(subject.row_location_text(row), "Calle 1")
+
+    def test_falls_back_to_the_empty_string(self) -> None:
+        self.assertEqual(subject.row_location_text({}), "")
+
+    def test_control_a_null_pair_is_not_fabricated_into_text(self) -> None:
+        row = {"ubicaciongeografica": None, "direccion": None}
+        self.assertEqual(subject.row_location_text(row), "")
+
+    def test_strips_surrounding_whitespace(self) -> None:
+        self.assertEqual(subject.row_location_text({"ubicaciongeografica": "  Merida  "}), "Merida")
+
+    def test_control_a_whitespace_only_value_is_not_the_text(self) -> None:
+        self.assertNotEqual(subject.row_location_text({"ubicaciongeografica": "   "}), "   ")
+
+
+class LoadGranularityTests(unittest.TestCase):
+    """``load_granularity`` turns the curated file into the build's taxonomy."""
+
+    def test_a_valid_file_loads_into_the_exact_entry_shape(self) -> None:
+        path = write_granularity(self, granularity_document())
+        self.assertEqual(
+            subject.load_granularity(path),
+            {
+                "a/pagina_1_1.json": {
+                    "nivel": "T0",
+                    "texto": "Venezuela",
+                    "razon": "mentions the whole country, not a place",
+                    "nota": None,
+                },
+                "a/pagina_2_1.json": {
+                    "nivel": "T1",
+                    "texto": "Estado Miranda",
+                    "razon": "first-level administrative unit",
+                    "nota": None,
+                },
+                "a/pagina_3_1.json": {
+                    "nivel": "T2",
+                    "texto": "Merida",
+                    "razon": None,
+                    "nota": None,
+                },
+                "a/pagina_4_1.json": {
+                    "nivel": "T2",
+                    "texto": "Parque Nacional",
+                    "razon": None,
+                    "nota": "two named sites of the same massif",
+                },
+            },
+        )
+
+    def test_control_the_result_is_not_a_constant_document(self) -> None:
+        # The shape test above would also pass a loader that ignored its input.
+        # This fixture has one entry, not the four of the shared document.
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={"only/pagina_9_9.json": {"nivel": "T2", "texto": "Merida"}}
+            ),
+        )
+        self.assertEqual(
+            subject.load_granularity(path),
+            {
+                "only/pagina_9_9.json": {
+                    "nivel": "T2",
+                    "texto": "Merida",
+                    "razon": None,
+                    "nota": None,
+                }
+            },
+        )
+
+    def test_control_rejects_an_entry_without_a_texto(self) -> None:
+        path = write_granularity(
+            self, granularity_document(entries={"a/pagina_1_1.json": {"nivel": "T2"}})
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape(
+                "granularity entry 'a/pagina_1_1.json' is missing 'texto'"
+            ),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_non_string_texto(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={"a/pagina_1_1.json": {"nivel": "T2", "texto": 7}}
+            ),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("'texto' that is not a string")
+        ):
+            subject.load_granularity(path)
+
+    def test_an_empty_texto_is_accepted(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={"a/pagina_1_1.json": {"nivel": "T2", "texto": ""}}
+            ),
+        )
+        self.assertEqual(
+            subject.load_granularity(path),
+            {
+                "a/pagina_1_1.json": {
+                    "nivel": "T2",
+                    "texto": "",
+                    "razon": None,
+                    "nota": None,
+                }
+            },
+        )
+
+    def test_control_rejects_a_missing_file(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("granularity file not found")
+        ):
+            subject.load_granularity(REPO_ROOT / "no-such-granularidad.json")
+
+    def test_control_rejects_a_file_that_cannot_be_decoded(self) -> None:
+        # The bytes on disk are not UTF-8, so reading fails before parsing.
+        path = write_granularity(self, payload=b'{"entries": {"a": "\xff\xfe"}}')
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("could not read granularity file")
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_file_that_is_not_valid_json(self) -> None:
+        path = write_granularity(self, text='{"entries": {')
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("is not valid JSON")
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_duplicate_entry_key(self) -> None:
+        path = write_granularity(
+            self,
+            text=(
+                '{"schema_version": 1,'
+                ' "levels": {},'
+                ' "levels_excluded_from_map": ["T0", "T1"],'
+                ' "entries": {'
+                '"a/pagina_1_1.json": {"nivel": "T2"},'
+                '"a/pagina_1_1.json": {"nivel": "T0", "razon": "duplicated"}'
+                "}}"
+            ),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("duplicate key 'a/pagina_1_1.json'")
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_duplicate_key_inside_an_entry(self) -> None:
+        path = write_granularity(
+            self,
+            text=(
+                '{"levels_excluded_from_map": ["T0", "T1"],'
+                ' "entries": {"a/pagina_1_1.json": '
+                '{"nivel": "T2", "nivel": "T0"}}}'
+            ),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("duplicate key 'nivel'")
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_root_that_is_not_an_object(self) -> None:
+        path = write_granularity(self, text='["not", "an", "object"]')
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("must be a JSON object, got list")
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_document_without_entries(self) -> None:
+        document = granularity_document()
+        del document["entries"]
+        path = write_granularity(self, document)
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("is missing 'entries'")
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_entries_that_is_not_an_object(self) -> None:
+        path = write_granularity(
+            self, granularity_document(entries=["a/pagina_1_1.json"])
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("'entries' must be a JSON object, got list"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_an_empty_entries_object(self) -> None:
+        path = write_granularity(self, granularity_document(entries={}))
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("has an empty 'entries' object")
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_an_entry_that_is_not_an_object(self) -> None:
+        path = write_granularity(
+            self, granularity_document(entries={"a/pagina_1_1.json": "T2"})
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("granularity entry 'a/pagina_1_1.json' must be a JSON object"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_an_entry_without_a_nivel(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(entries={"a/pagina_1_1.json": {"razon": "a reason"}}),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("granularity entry 'a/pagina_1_1.json' is missing 'nivel'"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_nivel_outside_the_three_levels(self) -> None:
+        path = write_granularity(
+            self, granularity_document(entries={"a/pagina_1_1.json": {"nivel": "T3"}})
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("has nivel 'T3'; expected one of T0, T1, T2"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_t0_entry_without_a_razon(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={"a/pagina_1_1.json": {"nivel": "T0", "texto": "Venezuela"}}
+            ),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("is level T0 and must carry a 'razon'"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_t1_entry_without_a_razon(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={"a/pagina_1_1.json": {"nivel": "T1", "texto": "Venezuela"}}
+            ),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("is level T1 and must carry a 'razon'"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_non_string_razon(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={
+                    "a/pagina_1_1.json": {"nivel": "T2", "texto": "Merida", "razon": 7}
+                }
+            ),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("'razon' that is not a non-empty string"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_an_empty_razon(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={
+                    "a/pagina_1_1.json": {"nivel": "T2", "texto": "Merida", "razon": ""}
+                }
+            ),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("'razon' that is not a non-empty string"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_non_string_nota(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={
+                    "a/pagina_1_1.json": {"nivel": "T2", "texto": "Merida", "nota": ["a"]}
+                }
+            ),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("'nota' that is not a non-empty string"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_whitespace_only_nota(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={
+                    "a/pagina_1_1.json": {"nivel": "T2", "texto": "Merida", "nota": "   "}
+                }
+            ),
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("'nota' that is not a non-empty string"),
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_wrong_excluded_levels(self) -> None:
+        path = write_granularity(
+            self, granularity_document(levels_excluded_from_map=["T0"])
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("levels_excluded_from_map as exactly")
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_reversed_excluded_levels(self) -> None:
+        path = write_granularity(
+            self, granularity_document(levels_excluded_from_map=["T1", "T0"])
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("levels_excluded_from_map as exactly")
+        ):
+            subject.load_granularity(path)
+
+    def test_control_rejects_a_document_without_excluded_levels(self) -> None:
+        document = granularity_document()
+        del document["levels_excluded_from_map"]
+        path = write_granularity(self, document)
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("levels_excluded_from_map as exactly")
+        ):
+            subject.load_granularity(path)
+
+
+class GranularityCoverageTests(unittest.TestCase):
+    """``check_granularity_coverage`` closes the taxonomy against the row set."""
+
+    def coverage(
+        self, granularity_keys: list[str], row_paths: list[str]
+    ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        granularity = {
+            key: {
+                "nivel": "T2",
+                "texto": "Merida",
+                "razon": None,
+                "nota": None,
+            }
+            for key in granularity_keys
+        }
+        rows = [make_row(source_path=path) for path in row_paths]
+        return granularity, rows
+
+    def test_coverage_passes_when_both_sides_match(self) -> None:
+        granularity, rows = self.coverage(
+            ["a/pagina_1_1.json", "a/pagina_2_1.json"],
+            ["a/pagina_2_1.json", "a/pagina_1_1.json"],
+        )
+        subject.check_granularity_coverage(granularity, rows)
+
+    def test_coverage_passes_when_the_recorded_text_matches_the_row(self) -> None:
+        granularity, rows = self.coverage(
+            ["a/pagina_1_1.json"], ["a/pagina_1_1.json"]
+        )
+        self.assertEqual(granularity["a/pagina_1_1.json"]["texto"], "Merida")
+        subject.check_granularity_coverage(granularity, rows)
+
+    def test_control_coverage_rejects_a_text_that_disagrees_with_the_row(self) -> None:
+        granularity, rows = self.coverage(
+            ["a/pagina_1_1.json"], ["a/pagina_1_1.json"]
+        )
+        granularity["a/pagina_1_1.json"]["texto"] = "Merida, Venezuela"
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("'a/pagina_1_1.json'")
+            + ".*"
+            + re.escape("'Merida, Venezuela'")
+            + ".*"
+            + re.escape("'Merida'"),
+        ):
+            subject.check_granularity_coverage(granularity, rows)
+
+    def test_control_coverage_reads_the_direccion_fallback(self) -> None:
+        granularity = {
+            "a/pagina_1_1.json": {
+                "nivel": "T2",
+                "texto": "Calle 1",
+                "razon": None,
+                "nota": None,
+            }
+        }
+        rows = [
+            make_row(
+                source_path="a/pagina_1_1.json",
+                ubicaciongeografica=None,
+                direccion="Calle 1",
+            )
+        ]
+        subject.check_granularity_coverage(granularity, rows)
+
+    def test_control_coverage_is_not_vacuous_for_rows_without_an_entry(self) -> None:
+        # An empty taxonomy against a non-empty row list must fail: a coverage
+        # check that only walked the taxonomy would pass this silently.
+        granularity, rows = self.coverage([], ["a/pagina_1_1.json"])
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("'a/pagina_1_1.json'")
+        ):
+            subject.check_granularity_coverage(granularity, rows)
+
+    def test_control_coverage_rejects_a_row_without_an_entry(self) -> None:
+        granularity, rows = self.coverage(
+            ["a/pagina_1_1.json"], ["a/pagina_1_1.json", "a/missing.json"]
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("has no entry for parquet source_path")
+            + ".*"
+            + re.escape("'a/missing.json'"),
+        ):
+            subject.check_granularity_coverage(granularity, rows)
+
+    def test_control_coverage_is_not_vacuous_for_entries_without_a_row(self) -> None:
+        granularity, rows = self.coverage(["a/orphan.json"], [])
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("'a/orphan.json'")
+        ):
+            subject.check_granularity_coverage(granularity, rows)
+
+    def test_control_coverage_rejects_an_orphan_entry(self) -> None:
+        granularity, rows = self.coverage(
+            ["a/pagina_1_1.json", "a/orphan.json"], ["a/pagina_1_1.json"]
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("matches no parquet row") + ".*" + re.escape("'a/orphan.json'"),
+        ):
+            subject.check_granularity_coverage(granularity, rows)
+
+
+class ShippedGranularityTaxonomyTests(unittest.TestCase):
+    """The curated file the rebuild consumes must satisfy the loader's contract."""
+
+    def test_the_shipped_taxonomy_loads_with_the_full_entry_count(self) -> None:
+        granularity = subject.load_granularity(GRANULARITY_PATH)
+        self.assertEqual(len(granularity), EXPECTED_GRANULARITY_ENTRIES)
+        for source_path, entry in granularity.items():
+            self.assertRegex(source_path, re.compile(r"\.json$"))
+            self.assertEqual(set(entry), {"nivel", "texto", "razon", "nota"})
+            self.assertIsInstance(entry["texto"], str)
+            self.assertIn(entry["nivel"], ("T0", "T1", "T2"))
+            if entry["nivel"] in ("T0", "T1"):
+                self.assertIsInstance(entry["razon"], str)
+                self.assertTrue(entry["razon"].strip())
+
+    def test_control_the_entry_count_comes_from_the_file(self) -> None:
+        path = write_granularity(
+            self,
+            granularity_document(
+                entries={"only/pagina_9_9.json": {"nivel": "T2", "texto": "Merida"}}
+            ),
+        )
+        self.assertEqual(len(subject.load_granularity(path)), 1)
+        self.assertNotEqual(
+            len(subject.load_granularity(path)), EXPECTED_GRANULARITY_ENTRIES
+        )
 
 
 # ---------------------------------------------------------------------------
