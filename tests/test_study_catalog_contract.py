@@ -88,23 +88,25 @@ PARQUET_PATH = (
 # against the file, never re-derived from the Parquet.
 # ---------------------------------------------------------------------------
 EXPECTED_SCHEMA_VERSION = 3
-EXPECTED_STUDY_COUNT = 202
+EXPECTED_STUDY_COUNT = 255
 EXPECTED_CLASS_COUNTS = {
-    "placeable": 103,
-    "coarse_location": 80,
-    "outside_extent": 10,
-    "no_coordinate": 9,
+    "placeable": 145,
+    "coarse_location": 87,
+    "outside_extent": 13,
+    "no_coordinate": 10,
 }
-EXPECTED_MAP_VISIBLE = 103
-EXPECTED_EXCLUDED = 99
-# The builder's collision tallies, describing what the map draws: 12 exact
-# coordinates carry two or more of the 103 placed studies, and those
-# coordinates gather 32 markers. The catalog-wide collision is 23 coordinates
-# because it also counts coordinates whose extra studies the map does not
-# draw, so these two numbers must come from the ``placeable`` studies alone.
-EXPECTED_COLLISION_COORDINATE_COUNT = 12
-EXPECTED_COLLISION_MARKER_COUNT = 32
-EXPECTED_ESPECIES_NON_NULL = 162
+EXPECTED_MAP_VISIBLE = 145
+EXPECTED_EXCLUDED = 110
+# The builder's collision tallies, describing what the map draws: 15 exact
+# coordinates carry two or more of the 145 placed studies, and those
+# coordinates gather 69 markers. The catalog-wide collision is larger because it
+# also counts coordinates whose extra studies the map does not draw, so these two
+# numbers must come from the ``placeable`` studies alone. 28 of the 69 sit on the
+# Imataca reserve centroid alone: the reserve is ``T2``, a decision the review
+# kept, so the ring has to declare that pile rather than the map hide it.
+EXPECTED_COLLISION_COORDINATE_COUNT = 15
+EXPECTED_COLLISION_MARKER_COUNT = 69
+EXPECTED_ESPECIES_NON_NULL = 194
 
 # The curated taxonomy is complete: one entry per row of the 202-study corpus.
 EXPECTED_GRANULARITY_ENTRIES = 255

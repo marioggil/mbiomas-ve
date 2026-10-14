@@ -956,10 +956,9 @@
       "nota": "la sigla «R.F.» se resolvió como la misma reserva que ya está curada como T2"
     },
     "II/curatedwithgeo/pagina_44_1.json": {
-      "nivel": "T0",
+      "nivel": "T2",
       "texto": "Estado Bolívar, Venezuela (06º-08º N, 60º-63º W)",
-      "razon": "unidad administrativa de primer nivel; las coordenadas no la vuelven un lugar",
-      "nota": "el título del estudio dice «región Imataca-Guri»: ¿T1 por el estado o T2 por la región nombrada?"
+      "nota": "revisado: queda T2. El estudio nombra la región Imataca-Guri, y el estado es su ancla dentro del país."
     },
     "II/curatedwithgeo/pagina_54_1.json": {
       "nivel": "T2",
@@ -997,10 +996,9 @@
       "razon": "región natural amplia que enumera tres estados, sin lugar"
     },
     "IX/curatedwithgeo/pagina_258_1.json": {
-      "nivel": "T0",
+      "nivel": "T2",
       "texto": "Venezuela, Estación Experimental Caparo y Reserva Forestal Imataca",
-      "razon": "enumera dos lugares distintos, sin nombre que los englobe",
-      "nota": "quedó T0 por enumerar dos lugares; ¿o T2 eligiendo uno de los dos?"
+      "nota": "revisado: queda T2. Los dos lugares nombrados están en la misma zona de Guayana; el geocoder eligió uno."
     },
     "IX/curatedwithgeo/pagina_348_1.json": {
       "nivel": "T2",
@@ -1118,10 +1116,9 @@
       "texto": "Reserva Forestal Imataca, Venezuela"
     },
     "VIII/curatedwithgeo/pagina_110_1.json": {
-      "nivel": "T0",
+      "nivel": "T2",
       "texto": "Parque Nacional Canaima, Reserva Forestal de Imataca, Venezuela",
-      "razon": "enumera dos áreas protegidas separadas, sin nombre que las englobe",
-      "nota": "quedó T0 por enumerar dos áreas protegidas que están lejos entre sí; ¿o T2?"
+      "nota": "revisado: queda T2. Dos áreas protegidas nombradas; el punto cae en una de ellas y el anillo lo declara."
     },
     "X/curatedwithgeo/pagina_283_1.json": {
       "nivel": "T2",
@@ -1193,7 +1190,7 @@
     "note_convention": "una 'nota' marca un caso que se discutió; el 'nivel' es la decisión"
   },
   "prefilled_2026-10-14": {
-    "status": "pendiente de revisión humana",
+    "status": "revisado por el usuario el 2026-10-14",
     "paths": 53,
     "why": "el export creció de 202 a 255 filas (10 revisadas a mano + 43 marcadas por IA); la granularidad de estas 53 no fue juzgada todavía",
     "rules": "las reglas declaradas en la sección 6 del doc de la feature, espejando los niveles ya curados para textos equivalentes",
@@ -1204,6 +1201,15 @@
       "Sureste de la Reserva Forestal Imataca, Estado Bolívar, Venezuela",
       "Unidad V de la Reserva Forestal de Imataca, Edo. Bolívar, Venezuela",
       "Venezuela, Estación Experimental Caparo y Reserva Forestal Imataca"
-    ]
+    ],
+    "review": {
+      "decision": "las 6 dudosas quedan en T2; la Reserva Forestal Imataca se mantiene en T2",
+      "changed": [
+        "Estado Bolívar, Venezuela (06º-08º N, 60º-63º W)",
+        "Parque Nacional Canaima, Reserva Forestal de Imataca, Venezuela",
+        "Venezuela, Estación Experimental Caparo y Reserva Forestal Imataca"
+      ],
+      "reserve_decision": "T2 se mantiene: los ~28 estudios del centroide de la reserva siguen en el mapa y el anillo los declara"
+    }
   }
 }

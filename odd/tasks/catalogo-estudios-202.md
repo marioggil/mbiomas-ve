@@ -688,7 +688,10 @@ tests stayed green.
   live DOM while the live sources report 103 markers and 12 rings summing 32. D12's wording was
   corrected in the meantime and the counts are no longer missing.
 
-### T9 — The corpus grew to 255 studies: the 53 new taxonomy entries — **PREFILLED, AWAITING REVIEW**
+### T9 — The corpus grew to 255 studies: the 53 new taxonomy entries — **DONE**
+
+**Commit**: the prefill is `692d511`, the pin re-anchor `0163277`, and the reviewed artifact and its
+re-anchored expectations landed together in the commit that closes this entry.
 
 **Context.** The export in `Congresos_CVE_V2` went from 202 to 255 rows: 10 studies the user had
 reviewed by hand plus 43 marked as reviewed by a machine, at the user's explicit decision, so the
@@ -740,6 +743,36 @@ curated file's entry count at 202, and the prefill took it to 255, so a second t
 purpose — the dependency-free suite cannot read the Parquet, so the real coverage check is the
 builder's `check_granularity_coverage`, which runs where `pyarrow` exists and refuses on any missing
 row.
+
+**The review, applied.** The user decided that **all six doubtful rows become `T2`** and that the
+**Imataca reserve stays `T2`**. Three rows moved `T0 → T2` (`Estado Bolívar, Venezuela (06º-08º N…)`,
+`Venezuela, Estación Experimental Caparo y Reserva Forestal Imataca`,
+`Parque Nacional Canaima, Reserva Forestal de Imataca, Venezuela`); the other three were already
+`T2`. Each carries its decision as a `nota`, and the file's `prefilled_2026-10-14` block records the
+outcome. Levels are now **T0 66 · T1 31 · T2 158**.
+
+**The artifact regenerated, and its pins with it.** Two consecutive rebuilds differ only in
+`generated_utc` and the CSV is byte-identical. The artifact now serves **255 studies**:
+`placeable` **145**, `coarse_location` **87**, `outside_extent` **13**, `no_coordinate` **10**, with
+`display_contract` **145 / 110** and collision counts **15 / 69**; 98 rows carry keywords and 194
+carry species. Re-anchored in the same commit, because the artifact and its expectations move
+together (D15): the five pinned constants in `tests/test_study_catalog_contract.py` and the four
+stale numbers in `tests/test_serve_viewer_studies.py`, including the control whose mutation no longer
+reached its branch once `map_visible_count` grew.
+
+**Green, on every runner**: 322 tests OK on the system interpreter (36 skips), **322 OK with zero
+skips** on the one carrying GDAL + `pyarrow` + `fastapi`, and 35 OK for the viewer under the
+repository `.venv`. The **freshness alarm is green again**, which is the point: the artifact and the
+Parquet are the same generation once more.
+
+**What the review kept, stated plainly.** The Imataca reserve stays `T2`, so **28 studies sit on its
+centroid** — 20 % of the map's 145 markers on one pixel, the largest collision group in the corpus
+and the one the ring exists to declare. That was the user's call, made with the number in front of
+them.
+
+**One thing this entry does not cover**: the map's ring note and the panel now render the new
+counts from the artifact, but nobody has looked at the viewer in a browser since the corpus tripled.
+The 145 markers, the 15 rings and the 28-study pile at the reserve have never been seen on screen.
 
 ### T8 — Collapsible map chrome — **DONE**
 

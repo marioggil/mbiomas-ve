@@ -107,15 +107,20 @@ gitignored input, needed only to regenerate it).
   collapsed from the header, which returns the legend's 320 px to the map (945 → 1265 px at 1280, and
   707 → 1027 at 1042) and clears up to 57 % of the map's height at the short viewport. The choice is
   remembered across reloads. The MapLibre attribution is never part of the collapsible set.
-- **The study catalog**: 202 reviewed congress abstracts as a panel and a secondary map layer, with
+- **The study catalog**: 255 reviewed congress abstracts as a panel and a secondary map layer, with
   its own section below.
 
 ## The study catalog
 
-**202 human-reviewed abstracts** from the **twelve** editions of the Congreso Venezolano de
-Ecología, 1991–2019, shown as a panel and as a secondary map layer. **82** of them carry
-`palabrasclaves`; **16** have no year in the source (Vol XI came from a legacy CSV) and are shown as
+**255 abstracts** from the **twelve** editions of the Congreso Venezolano de
+Ecología, 1991–2019, shown as a panel and as a secondary map layer. **98** of them carry
+`palabrasclaves`; **19** have no year in the source (Vol XI came from a legacy CSV) and are shown as
 "sin año".
+
+> **212 of the 255 were reviewed by a human; 43 were marked as reviewed by a machine**, at the
+> project owner's decision, so the Imataca works could be published. The distinction lives in the
+> export's `human_reviewer` column (`mario` vs `IA`), and anything treating `human_verified` as a
+> quality guarantee must filter on it. The upstream contract documents this.
 
 **The panel is the authoritative view; the map is secondary.** The panel lists every study,
 including the ones the map does not draw, and states the class the catalog assigns to each. It
@@ -133,16 +138,17 @@ four classes partition the corpus and only the first is drawn:
 
 | Class | Count | On the map |
 |---|---|---|
-| `placeable` | **103** | yes — one marker each |
-| `coarse_location` | **80** | no |
-| `outside_extent` | **10** | no |
-| `no_coordinate` | **9** | no |
+| `placeable` | **145** | yes — one marker each |
+| `coarse_location` | **87** | no |
+| `outside_extent` | **13** | no |
+| `no_coordinate` | **10** | no |
 
 **Coordinates are shown as they are**, with no re-geocoding and no precision warnings. They are a
-geocoder's output, not sampling sites, so they collide: **23 coordinates are shared by more than one
-study**, and the largest is shared by **11**. Where two or more markers coincide the map draws a
-**ring**, so the overlap is visible instead of hidden: **12** coordinates carry more than one of the
-**103** plottable markers, gathering **32** of them. Those three figures come from the artifact's
+geocoder's output, not sampling sites, so they collide: **26 coordinates are shared by more than one
+study**, and the largest is shared by **28** — the Imataca reserve centroid, because the reserve is a
+named place and the taxonomy keeps it that way. Where two or more markers coincide the map draws a
+**ring**, so the overlap is visible instead of hidden: **15** coordinates carry more than one of the
+**145** plottable markers, gathering **69** of them. Those three figures come from the artifact's
 `display_contract`, not from counting in the browser.
 
 **Where it comes from.** `data/raw/congresos/congresos_revisados.parquet` (gitignored, unversioned —
@@ -159,7 +165,7 @@ T0 and T1, the reason. The levels are a human review decision. The recorded text
 the corpus, so if an upstream extraction fixes a location text the build **stops** until someone
 re-judges that level.
 
-**The catalog does not unlock the `study_gap` term of the F3 priority index.** 202 studies across
+**The catalog does not unlock the `study_gap` term of the F3 priority index.** 255 studies across
 twelve editions over three decades cannot populate an H3 res 8–9 gap index: almost every hexagon has
 zero studies, and "zero studies" there would mean "nobody published about it in these twelve
 congresses", not "nobody studied it". `tools/priority_schema.py` ships the term disabled at weight
