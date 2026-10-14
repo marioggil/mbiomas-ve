@@ -949,6 +949,235 @@
       "texto": "",
       "razon": "sin texto de ubicación utilizable",
       "nota": "sin texto: granularidad no juzgable, se excluye por precaución"
+    },
+    "I/curatedwithgeo/pagina_39_2.json": {
+      "nivel": "T2",
+      "texto": "R.F. Imataca, Edo. Bolívar, Venezuela",
+      "nota": "la sigla «R.F.» se resolvió como la misma reserva que ya está curada como T2"
+    },
+    "II/curatedwithgeo/pagina_44_1.json": {
+      "nivel": "T0",
+      "texto": "Estado Bolívar, Venezuela (06º-08º N, 60º-63º W)",
+      "razon": "unidad administrativa de primer nivel; las coordenadas no la vuelven un lugar",
+      "nota": "el título del estudio dice «región Imataca-Guri»: ¿T1 por el estado o T2 por la región nombrada?"
+    },
+    "II/curatedwithgeo/pagina_54_1.json": {
+      "nivel": "T2",
+      "texto": "Unidad V de la Reserva Forestal de Imataca, Edo. Bolívar, Venezuela",
+      "nota": "una unidad nombrada dentro de la reserva: ¿T2, o T1 por ser una división administrativa de la reserva?"
+    },
+    "III/curatedwithgeo/pagina_73_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal de Imataca, Venezuela"
+    },
+    "III/curatedwithgeo/pagina_83_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "III/curatedwithgeo/pagina_87_2.json": {
+      "nivel": "T0",
+      "texto": "Guayana Venezolana",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "IV/curatedwithgeo/pagina_110_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal de Imataca, Venezuela"
+    },
+    "IV/curatedwithgeo/pagina_131_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "IV/curatedwithgeo/pagina_136_1.json": {
+      "nivel": "T2",
+      "texto": "Campamento El Buey, Reserva Forestal Imataca, Venezuela"
+    },
+    "IV/curatedwithgeo/pagina_19_1.json": {
+      "nivel": "T0",
+      "texto": "Sur del Orinoco, Guayana Venezolana, Estados Amazonas, Bolívar y Delta Amacuro",
+      "razon": "región natural amplia que enumera tres estados, sin lugar"
+    },
+    "IX/curatedwithgeo/pagina_258_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela, Estación Experimental Caparo y Reserva Forestal Imataca",
+      "razon": "enumera dos lugares distintos, sin nombre que los englobe",
+      "nota": "quedó T0 por enumerar dos lugares; ¿o T2 eligiendo uno de los dos?"
+    },
+    "IX/curatedwithgeo/pagina_348_1.json": {
+      "nivel": "T2",
+      "texto": "Cuenca alta del río San José, Complejo Imataca, Venezuela"
+    },
+    "IX/curatedwithgeo/pagina_366_1.json": {
+      "nivel": "T1",
+      "texto": "Delta del Orinoco, Venezuela",
+      "razon": "región natural de escala estadal"
+    },
+    "V/curatedwithgeo/pagina_123_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_123_5.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_125_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_133_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Estado Bolívar, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_161_2.json": {
+      "nivel": "T2",
+      "texto": "Quebrada San José, Imataca, Estado Bolívar, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_164_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, estado Bolívar, Venezuela"
+    },
+    "V/curatedwithgeo/pagina_78_3.json": {
+      "nivel": "T0",
+      "texto": "Llanos Centrales Venezolanos",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "VI/curatedwithgeo/pagina_163_2.json": {
+      "nivel": "T2",
+      "texto": "Sierra Imataca, Valle intramomerio del Río San José"
+    },
+    "VI/curatedwithgeo/pagina_197_2.json": {
+      "nivel": "T2",
+      "texto": "Cuenca alta del río Botanamo, Reserva Forestal Imataca, Estado Bolívar, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_201_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal de Imataca y área de influencia, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_231_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal de Imataca, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_232_2.json": {
+      "nivel": "T2",
+      "texto": "Cuenca alta del río Botanamo, Reserva Forestal Imataca, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_258_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_258_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_258_3.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_308_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_314_3.json": {
+      "nivel": "T2",
+      "texto": "Arboretum del Campamento El Buey, Concesión Forestal C.V.G., Reserva Forestal Imataca, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_315_3.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Edo Bolívar, Venezuela"
+    },
+    "VI/curatedwithgeo/pagina_326_3.json": {
+      "nivel": "T2",
+      "texto": "Río San José, Campamento El Buey, Reserva Forestal Imataca, Venezuela"
+    },
+    "VII/curatedwithgeo/pagina_129_1.json": {
+      "nivel": "T2",
+      "texto": "Cuenca del río Botanamo, Reserva Forestal Imataca, Venezuela"
+    },
+    "VII/curatedwithgeo/pagina_358_1.json": {
+      "nivel": "T2",
+      "texto": "Estado Bolívar, Reserva Forestal Imataca, Venezuela"
+    },
+    "VII/curatedwithgeo/pagina_398_1.json": {
+      "nivel": "T2",
+      "texto": "Cuenca alta del río Botanamo, Venezuela"
+    },
+    "VII/curatedwithgeo/pagina_430_1.json": {
+      "nivel": "T2",
+      "texto": "Sureste de la Reserva Forestal Imataca, Estado Bolívar, Venezuela",
+      "nota": "sub-área de una reserva de ~37.000 km²: ¿T2 como el resto de la reserva, o T1 por escala?"
+    },
+    "VII/curatedwithgeo/pagina_517_1.json": {
+      "nivel": "T2",
+      "texto": "Estado Bolívar, Reserva Forestal Imataca, Venezuela"
+    },
+    "VII/curatedwithgeo/pagina_584_1.json": {
+      "nivel": "T2",
+      "texto": "Cuenca del Río Botanamo, Estado Bolívar, Reserva Forestal de Imataca, Serrania de Nuria"
+    },
+    "VII/curatedwithgeo/pagina_586_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "VIII/curatedwithgeo/pagina_110_1.json": {
+      "nivel": "T0",
+      "texto": "Parque Nacional Canaima, Reserva Forestal de Imataca, Venezuela",
+      "razon": "enumera dos áreas protegidas separadas, sin nombre que las englobe",
+      "nota": "quedó T0 por enumerar dos áreas protegidas que están lejos entre sí; ¿o T2?"
+    },
+    "X/curatedwithgeo/pagina_283_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal de Imataca, entre los estados Delta Amacuro y Bolívar, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_303_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "X/curatedwithgeo/pagina_405_1.json": {
+      "nivel": "T0",
+      "texto": "Venezuela, río Orinoco",
+      "razon": "el país entero; el río lo atraviesa"
+    },
+    "XI/curatedwithgeo/pagina_261_1.json": {
+      "nivel": "T1",
+      "texto": "Delta del Orinoco, Venezuela",
+      "razon": "región natural de escala estadal"
+    },
+    "XI/curatedwithgeo/pagina_473_1.json": {
+      "nivel": "T2",
+      "texto": "Puerto Ordaz, parroquia Cachamay, Municipio Caroní, Edo Bolívar, Venezuela"
+    },
+    "XI/curatedwithgeo/pagina_489_1.json": {
+      "nivel": "T2",
+      "texto": "Sur de Venezuela, Reserva Forestal Imataca, cuenca alta del río Botanamo"
+    },
+    "XII/curatedwithgeo/pagina_101_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, estado Bolívar, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_171_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_191_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal de Imataca, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_229_2.json": {
+      "nivel": "T0",
+      "texto": "Amazonas, Bolívar y Delta Amacuro",
+      "razon": "enumera estados separados, sin lugar"
+    },
+    "XII/curatedwithgeo/pagina_231_2.json": {
+      "nivel": "T0",
+      "texto": "Gran Sabana, Venezuela",
+      "razon": "región natural amplia (multi-estado)"
+    },
+    "XII/curatedwithgeo/pagina_99_1.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Estados Bolívar y Delta Amacuro, Venezuela"
+    },
+    "XII/curatedwithgeo/pagina_99_2.json": {
+      "nivel": "T2",
+      "texto": "Reserva Forestal Imataca, Estado Bolivar, Venezuela"
     }
   },
   "reviewed": {
@@ -962,5 +1191,19 @@
       "Mar Caribe, Venezuela"
     ],
     "note_convention": "una 'nota' marca un caso que se discutió; el 'nivel' es la decisión"
+  },
+  "prefilled_2026-10-14": {
+    "status": "pendiente de revisión humana",
+    "paths": 53,
+    "why": "el export creció de 202 a 255 filas (10 revisadas a mano + 43 marcadas por IA); la granularidad de estas 53 no fue juzgada todavía",
+    "rules": "las reglas declaradas en la sección 6 del doc de la feature, espejando los niveles ya curados para textos equivalentes",
+    "flagged": [
+      "Estado Bolívar, Venezuela (06º-08º N, 60º-63º W)",
+      "Parque Nacional Canaima, Reserva Forestal de Imataca, Venezuela",
+      "R.F. Imataca, Edo. Bolívar, Venezuela",
+      "Sureste de la Reserva Forestal Imataca, Estado Bolívar, Venezuela",
+      "Unidad V de la Reserva Forestal de Imataca, Edo. Bolívar, Venezuela",
+      "Venezuela, Estación Experimental Caparo y Reserva Forestal Imataca"
+    ]
   }
 }

@@ -688,6 +688,52 @@ tests stayed green.
   live DOM while the live sources report 103 markers and 12 rings summing 32. D12's wording was
   corrected in the meantime and the counts are no longer missing.
 
+### T9 — The corpus grew to 255 studies: the 53 new taxonomy entries — **PREFILLED, AWAITING REVIEW**
+
+**Context.** The export in `Congresos_CVE_V2` went from 202 to 255 rows: 10 studies the user had
+reviewed by hand plus 43 marked as reviewed by a machine, at the user's explicit decision, so the
+Imataca works could be published. The raw Parquet was then copied into this repository, byte-identical
+to the upstream export (`576b6fe0…`, 255 rows; the point table `f2e8d7a7…`, 256 points).
+
+**Both alarms fired, exactly as designed.**
+
+- The **freshness test failed**: `test_the_committed_artifact_records_the_digest_and_size_of_the_parquet`
+  compares the committed artifact's recorded `source_sha256` with the Parquet on disk, and the input
+  changed. One failure out of 322 tests, and it is the drift that was invisible before T1/T3.
+- The **rebuild refused**, naming all 53 rows with no taxonomy entry. `check_granularity_coverage`
+  will not let a study be published without a human judging its granularity.
+
+**What was prefilled.** `data/curated/congresos/granularidad-ubicaciones.json` now has **255 entries**
+(53 added, **none of the 202 existing ones modified**), mirroring the levels already curated for
+equivalent texts — the anchors being that the Imataca reserve is `T2`, a bare state is `T1`, the
+Orinoco delta is `T1`, and `Gran Sabana, Venezuela` is `T0`. Coverage closes: 255 rows ↔ 255 entries,
+no orphans, every recorded text equal to its corpus row.
+
+| Level | Proposed | Effect |
+|---|---|---|
+| `T2` | 42 | on the map |
+| `T0` | 9 | excluded: the country, `Guayana Venezolana`, `Llanos Centrales Venezolanos`, three state enumerations, two two-site enumerations, `Gran Sabana` |
+| `T1` | 2 | excluded: `Delta del Orinoco, Venezuela` |
+
+Six rows carry a `nota` for human arbitration: the state mention whose study is titled «región
+Imataca-Guri», the two-site enumerations (`Caparo + Imataca`, `Canaima + Imataca`), the sub-area of the
+reserve, the reserve's «Unidad V», and the `R.F.` abbreviation.
+
+**A rebuild into a temporary directory — the committed artifact was deliberately left at 202 — gives**
+`255 studies / 142 placeable / 90 coarse_location / 13 outside_extent / 10 no_coordinate`, with
+collision counts `15 / 67` (they were `12 / 32`).
+
+**The systemic finding the review has to settle.** **28 studies now sit on one pixel**: the Imataca
+reserve centroid `(7.3010295, -60.9963138)`, which is 20 % of the map's 142 markers at a single point.
+That follows from the reserve being `T2`, which is the decision **already curated** for
+`Reserva Forestal Imataca, Estado Bolívar, Venezuela` among the 202. The ring will show it and the panel
+lists all 28, but the claim is strong for a reserve of ~37,000 km². Two options, and the second touches
+the already-curated set: keep `T2` (consistent, ring explains it), or move the reserve to `T1` (out of
+the map, listed in the panel), which moves ~28 rows and changes one entry of the reviewed 202.
+
+**Not done, on purpose**: the committed artifact is **not** regenerated. Section 6's rule is that the
+rebuild is not treated as truth until the review happens, and the artifact is what the viewer serves.
+
 ### T8 — Collapsible map chrome — **DONE**
 
 **Requested by the user after the PRs were opened**: the map should let you minimise the legend and the
