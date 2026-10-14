@@ -770,9 +770,21 @@ centroid** — 20 % of the map's 145 markers on one pixel, the largest collision
 and the one the ring exists to declare. That was the user's call, made with the number in front of
 them.
 
-**One thing this entry does not cover**: the map's ring note and the panel now render the new
-counts from the artifact, but nobody has looked at the viewer in a browser since the corpus tripled.
-The 145 markers, the 15 rings and the 28-study pile at the reserve have never been seen on screen.
+**Seen in a browser, which was the gap this entry had flagged.** With the corpus at 255 the viewer
+serves it correctly: the panel renders **255 rows** with the summary `255 estudios · 145 en el mapa ·
+110 no ubicables` and the four class counts, **110 badges** on the excluded rows, 13 edition filters
+and a `255 de 255` counter; the list shows ~9.7 rows in its 665 px window at 64 px each. The map's
+live sources report **145 markers and 15 rings summing 69**, and the note renders the artifact's own
+figures — `15 puntos reúnen 69 de los 145 estudios ubicables`. Clicking the Imataca reserve centroid
+filters the panel to **28 rows** with the chip `Punto seleccionado: 28 estudios` and selects one of
+them. No overlap between the legend, the ring note, the D7 note and the attribution, and the console
+shows only the documented tile 404s.
+
+**One measurement worth keeping.** At zoom 9, `queryRenderedFeatures` at the reserve centroid returns
+**58** features, not 28: the hit test uses the marker circle's radius, so it catches every marker
+within a few pixels. The click still filters to exactly **28**, because the panel matches the clicked
+feature's **exact coordinate** rather than the pixel's hits. Both numbers are right and they measure
+different things — the cluster around the reserve centroid is denser than its own pile.
 
 ### T8 — Collapsible map chrome — **DONE**
 
