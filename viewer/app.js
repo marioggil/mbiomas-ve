@@ -53,6 +53,23 @@
   var clipClearBtn = document.getElementById("clip-clear");
   var clipStatus = document.getElementById("clip-status");
   var studyLegendCount = document.getElementById("study-map-legend-count");
+  var studyHaloCoordinateCount = document.getElementById(
+    "study-map-halo-coordinate-count"
+  );
+  var studyHaloMarkerCount = document.getElementById(
+    "study-map-halo-marker-count"
+  );
+  var studyHaloVisibleCount = document.getElementById(
+    "study-map-halo-visible-count"
+  );
+  // T8 collapse controls. They live in the header, outside both panels
+  // they hide, so they stay reachable while their content is collapsed.
+  var legendCollapseToggle = document.getElementById(
+    "legend-collapse-toggle"
+  );
+  var overlaysCollapseToggle = document.getElementById(
+    "overlays-collapse-toggle"
+  );
 
   // State.
   /** @type {object|null} */
@@ -87,6 +104,24 @@
   var STUDIES_LAYER_ID = "studies-points-circle";
   var STUDIES_SELECTED_LAYER_ID = "studies-points-selected";
   var STUDIES_NO_SELECTION = "__none__";
+  // Collision annotation (T6 / D12 point 4). The ring source holds one
+  // feature per distinct coordinate where two or more markers are really
+  // drawn, and its single layer sits UNDER the marker layer. It is an
+  // annotation, not an aggregation: the marker layer keeps exactly one
+  // point per study (D9 rule 1), and one ring per coordinate — never one
+  // per study — is what keeps the rings from stacking like the markers.
+  var STUDIES_HALO_SOURCE_ID = "studies-halos";
+  var STUDIES_HALO_LAYER_ID = "studies-halos-ring";
+
+  // Persisted collapse state for the map chrome (T8). These two MUST be
+  // assigned before ``initChromeCollapse()`` runs below: a ``var`` is hoisted
+  // but undefined until its own line executes, so declaring them further down
+  // would make the restore read ``getItem(undefined)`` and silently come back
+  // expanded on every reload, while the click handlers — which close over the
+  // variable and only run later — would still persist correctly. That exact
+  // mismatch is what the browser pass caught; keep them here.
+  var LEGEND_COLLAPSED_KEY = "mapbiomas.viewer.legendCollapsed";
+  var OVERLAYS_COLLAPSED_KEY = "mapbiomas.viewer.overlaysCollapsed";
 
   api
     .fetchMeta()
@@ -105,6 +140,12 @@
   // isolated: the map, slider, legend, composition panel and clip drawing
   // keep working.
   initCatalogPanel();
+
+  // Collapsible map chrome (slice F4 / T8). Wired before the metadata
+  // resolves so the persisted state is applied to the body class on the
+  // first paint, which is what lets the collapsed legend hand its grid
+  // column back to the map before the map is even constructed.
+  initChromeCollapse();
 
   // -------------------------------------------------------------------------
   // Meta → UI
@@ -301,9 +342,17 @@
   // -------------------------------------------------------------------------
   // The catalog panel is the authoritative view; the map points are an
   // index into it. One marker represents exactly one study, and a marker
-  // click selects that study in the panel. Selecting a study highlights
-  // the matching marker and eases the camera to it when the study has a
-  // coordinate.
+  // click selects that study in the panel AND tells the panel which point
+  // was clicked, so the list narrows to the studies the map draws at that
+  // exact coordinate (C10). Selecting a study highlights the matching
+  // marker and eases the camera to it when the study has a coordinate.
+  //
+  // A marker is still one study: the ring layer below only ANNOTATES the
+  // coordinates where markers coincide (one ring per coordinate, derived
+  // from the markers actually drawn), so the panel keeps listing studies
+  // the map never draws and the map keeps asserting nothing about them.
+  // The point filter follows those DRAWN markers, so a coarse_location
+  // study that shares the coordinate text is never pulled onto the map.
   //
   // Every MapLibre source/filter mutation triggered by a map event is
   // deferred onto a coalesced requestAnimationFrame tick. The T8a record
@@ -344,6 +393,26 @@
     if (studyLegendCount && Number.isFinite(contract.map_visible_count)) {
       studyLegendCount.textContent = String(contract.map_visible_count);
     }
+    // The ring note renders the builder's collision tallies for the same
+    // reason: the frontend never counts markers (D9), it only prints the
+    // numbers the artifact already carries.
+    if (
+      studyHaloCoordinateCount &&
+      Number.isFinite(contract.collision_coordinate_count)
+    ) {
+      studyHaloCoordinateCount.textContent = String(
+        contract.collision_coordinate_count
+      );
+    }
+    if (
+      studyHaloMarkerCount &&
+      Number.isFinite(contract.collision_marker_count)
+    ) {
+      studyHaloMarkerCount.textContent = String(contract.collision_marker_count);
+    }
+    if (studyHaloVisibleCount && Number.isFinite(contract.map_visible_count)) {
+      studyHaloVisibleCount.textContent = String(contract.map_visible_count);
+    }
     if (studiesLayerInstalled) {
       requestStudiesRefresh();
     } else {
@@ -356,13 +425,99 @@
     requestStudiesRefresh(selectedStudyId);
   }
 
+  /**
+   * The number of markers the map really draws at the clicked coordinate,
+   * read from the ``studies-halos`` feature that sits at that coordinate:
+   * its ``marker_count`` comes from the same pass that builds the marker
+   * collection, so the count cannot describe a different set of markers
+   * than the ones on screen. The frontend never counts marker features
+   * (D9): this only reads a property the ring source already carries.
+   *
+   * A coordinate with no halo feature is not a collision by construction —
+   * the halo collection holds one feature per coordinate with two or more
+   * drawn markers — so the count is 1.
+   *
+   * The halo feature is matched on the CLICKED feature's own coordinates,
+   * not on the catalogue numbers, because both are decoded from identically
+   * tiled GeoJSON sources: the same coordinate decodes to the same values in
+   * both, while a tolerance would swallow a distinct coordinate that sits
+   * close to a collision (a drawn marker at 8.5164975, -71.272354 is 0.0128°
+   * from the Mérida ring).
+   *
+   * @param {Array<number>} markerCoordinates [lon, lat] of the click.
+   * @param {object|undefined} point the click's pixel point, if available.
+   * @returns {number}
+   */
+  function drawnMarkerCountAt(markerCoordinates, point) {
+    if (!map || !markerCoordinates) {
+      return 1;
+    }
+    var features = [];
+    try {
+      if (point && typeof map.queryRenderedFeatures === "function") {
+        features =
+          map.queryRenderedFeatures(point, {
+            layers: [STUDIES_HALO_LAYER_ID],
+          }) || [];
+      }
+      if (!features.length && typeof map.querySourceFeatures === "function") {
+        features = map.querySourceFeatures(STUDIES_HALO_SOURCE_ID) || [];
+      }
+    } catch (err) {
+      return 1;
+    }
+    for (var i = 0; i < features.length; i++) {
+      var geometry = features[i].geometry;
+      if (!geometry || !geometry.coordinates) {
+        continue;
+      }
+      var c = geometry.coordinates;
+      if (c[0] !== markerCoordinates[0] || c[1] !== markerCoordinates[1]) {
+        continue;
+      }
+      var count = features[i].properties
+        ? features[i].properties.marker_count
+        : null;
+      if (Number.isFinite(count) && count > 0) {
+        return count;
+      }
+    }
+    return 1;
+  }
+
   function installStudiesLayer() {
     if (!map || studiesLayerInstalled || !mapLoaded) {
       return;
     }
+    var draw = studiesDrawData();
     map.addSource(STUDIES_SOURCE_ID, {
       type: "geojson",
-      data: studiesFeatureCollection(),
+      data: draw.points,
+    });
+    map.addSource(STUDIES_HALO_SOURCE_ID, {
+      type: "geojson",
+      data: draw.halos,
+    });
+    // Added before the marker layer so it paints behind it: a larger
+    // circle under a stacked marker reads as a ring around it. MapLibre
+    // paints layers in the order they were added, so this position is the
+    // whole "behind" guarantee.
+    map.addLayer({
+      id: STUDIES_HALO_LAYER_ID,
+      type: "circle",
+      source: STUDIES_HALO_SOURCE_ID,
+      paint: {
+        // Always larger than STUDIES_LAYER_ID at the same zoom, so the
+        // marker never swallows the ring entirely.
+        "circle-radius": [
+          "interpolate", ["linear"], ["zoom"],
+          4, 9,
+          10, 18,
+        ],
+        "circle-color": "rgba(190, 18, 60, 0.16)",
+        "circle-stroke-color": "rgba(190, 18, 60, 0.55)",
+        "circle-stroke-width": 1.5,
+      },
     });
     map.addLayer({
       id: STUDIES_LAYER_ID,
@@ -419,24 +574,83 @@
       if (!e || !e.features || !e.features.length) {
         return;
       }
-      var props = e.features[0].properties || {};
+      // A marker at a shared coordinate still selects a study: the
+      // handler is bound to the marker layer only (the ring layer has no
+      // handler), and the study it picks is one of the studies drawn at
+      // that coordinate. Which member of a stack MapLibre reports first
+      // is its own pick order, so the contract here is "one of the
+      // studies drawn there", not "a specific one".
+      var clicked = e.features[0];
+      var props = clicked.properties || {};
       var id = props.study_id;
       var catalog = window.MapBiomasCatalog;
-      if (id && catalog && typeof catalog.selectStudy === "function") {
-        catalog.selectStudy(id);
+      if (!id || !catalog || typeof catalog.selectStudy !== "function") {
+        return;
       }
+      // The panel is also told WHICH point was clicked, so it can narrow
+      // its list to the studies drawn there, and HOW MANY markers the map
+      // draws there, taken from the halo feature that draws the ring. The
+      // coordinate handed to the panel is the catalogue one (exact), not
+      // the rendered feature's, so the panel's own exact-coordinate match
+      // never has to survive MapLibre's tile quantisation. A lone marker
+      // reports 1 because no halo feature exists for it.
+      var study = studiesById[id];
+      var markerCoordinates =
+        clicked.geometry && clicked.geometry.coordinates
+          ? clicked.geometry.coordinates
+          : null;
+      var coordinates =
+        study &&
+        Number.isFinite(study.longitud) &&
+        Number.isFinite(study.latitud)
+          ? [study.longitud, study.latitud]
+          : markerCoordinates;
+      catalog.selectStudy(id, {
+        coordinates: coordinates,
+        markerCount: drawnMarkerCountAt(markerCoordinates, e.point),
+      });
     });
     studiesLayerInstalled = true;
   }
 
   /**
-   * Build the GeoJSON FeatureCollection for the map source: exactly one
-   * Point feature per study with ``on_map`` true. No clustering and no
-   * per-coordinate counters: the four studies that share one coordinate
-   * are excluded upstream and never reach this collection.
+   * Build both collections the study layers draw, in ONE pass over the
+   * catalog, so the ring can never describe a set of markers other than
+   * the one the marker layer receives.
+   *
+   * ``points``: exactly one Point feature per study with ``on_map`` true.
+   * No clustering and no per-coordinate counters — D12 replaced the old
+   * collision exclusion, so studies that share a coordinate DO reach this
+   * collection, and the map declares the collision through the ring
+   * instead of hiding it.
+   *
+   * ``halos``: one feature per distinct coordinate where the markers
+   * actually drawn number two or more. Each carries both facts, so the UI
+   * never has to choose between them silently:
+   *
+   *   ``marker_count``          markers drawn at this coordinate. This is
+   *                             the number anything the map asserts must
+   *                             use; every ring the layer draws has 2 or
+   *                             more, because a coordinate with one drawn
+   *                             marker is not a collision.
+   *   ``coordinate_group_size`` the builder's ``coordinate_group_size``
+   *                             for the group, which counts every study at
+   *                             that coordinate regardless of display
+   *                             class. The two disagree wherever the group
+   *                             holds a study the map does not draw
+   *                             (Mérida: 6 in the artifact, 4 drawn;
+   *                             Barinas: 4 in the artifact, 2 drawn), so
+   *                             the ring must never be labelled with this
+   *                             one.
+   *
+   * The two collections are derived from the SAME coordinate predicate
+   * (``on_map`` and finite ``latitud``/``longitud``) that MapLibre draws,
+   * which is why the ring count is not the artifact's tally of collision
+   * groups.
    */
-  function studiesFeatureCollection() {
+  function studiesDrawData() {
     var features = [];
+    var groups = {};
     Object.keys(studiesById).forEach(function (id) {
       var study = studiesById[id];
       if (!study || !study.on_map) {
@@ -459,8 +673,51 @@
           coordinates: [study.longitud, study.latitud],
         },
       });
+      // Exact-coordinate grouping, the same equality the builder uses for
+      // ``coordinate_group_size``. The key is a string because two studies
+      // at one coordinate carry the same parsed number, so the key is
+      // exact and never a rounded bucket.
+      var key = study.latitud + "|" + study.longitud;
+      var group = groups[key];
+      if (group) {
+        group.marker_count += 1;
+      } else {
+        groups[key] = {
+          latitud: study.latitud,
+          longitud: study.longitud,
+          marker_count: 1,
+          coordinate_group_size:
+            typeof study.coordinate_group_size === "number"
+              ? study.coordinate_group_size
+              : null,
+        };
+      }
     });
-    return { type: "FeatureCollection", features: features };
+    // Sorted keys keep the ring source deterministic: the catalog order is
+    // not a contract, and an unstable source order would churn the layer.
+    var haloFeatures = Object.keys(groups)
+      .sort()
+      .map(function (key) {
+        var group = groups[key];
+        return {
+          type: "Feature",
+          properties: {
+            marker_count: group.marker_count,
+            coordinate_group_size: group.coordinate_group_size,
+          },
+          geometry: {
+            type: "Point",
+            coordinates: [group.longitud, group.latitud],
+          },
+        };
+      })
+      .filter(function (feature) {
+        return feature.properties.marker_count > 1;
+      });
+    return {
+      points: { type: "FeatureCollection", features: features },
+      halos: { type: "FeatureCollection", features: haloFeatures },
+    };
   }
 
   function requestStudiesRefresh(recenterId) {
@@ -480,9 +737,16 @@
     if (!map || !studiesLayerInstalled) {
       return;
     }
+    // One derivation feeds both sources, so a refresh can never leave the
+    // rings describing the previous set of markers.
+    var draw = studiesDrawData();
     var src = map.getSource(STUDIES_SOURCE_ID);
     if (src && typeof src.setData === "function") {
-      src.setData(studiesFeatureCollection());
+      src.setData(draw.points);
+    }
+    var haloSrc = map.getSource(STUDIES_HALO_SOURCE_ID);
+    if (haloSrc && typeof haloSrc.setData === "function") {
+      haloSrc.setData(draw.halos);
     }
     if (
       typeof map.getLayer === "function" &&
@@ -509,6 +773,132 @@
           duration: 600,
         });
       }
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Collapsible map chrome (slice F4 / T8)
+  // -------------------------------------------------------------------------
+  // Two controls, each collapsing and restoring its own block:
+  //
+  //   * the legend panel (``.legend-panel``, the 320px grid column beside
+  //     the map), and
+  //   * the on-map information column (``.map-overlays``: the studies
+  //     legend, the ring note and the D7 boundary note, together).
+  //
+  // Both are real <button>s with ``aria-expanded`` + ``aria-controls``,
+  // which is the disclosure pattern ``renderLegend`` already uses for the
+  // legend's class groups. They live in the header — never inside the
+  // content they hide — because a control nested in its own collapsible
+  // block would be unreachable as soon as the block was collapsed.
+  //
+  // The collapsed flag is mirrored on ``document.body`` as a class, so the
+  // CSS decides what hides (``.legend-panel`` / ``.map-overlays``) and the
+  // grid column returns to the map. No text is ever moved or rewritten:
+  // the D7 note and the MapLibre attribution are untouched by construction.
+  // The two storage keys are declared near the top of the module on purpose:
+  // see the note there about the hoisting trap that made the restore silent.
+
+  function initChromeCollapse() {
+    // Apply the persisted state before wiring the click handlers. The
+    // initial calls do not persist: they are a restore, not a user action.
+    applyLegendCollapsed(readCollapsedFlag(LEGEND_COLLAPSED_KEY));
+    applyOverlaysCollapsed(readCollapsedFlag(OVERLAYS_COLLAPSED_KEY));
+    if (legendCollapseToggle) {
+      legendCollapseToggle.addEventListener("click", function () {
+        var collapsed = !document.body.classList.contains(
+          "is-legend-collapsed"
+        );
+        applyLegendCollapsed(collapsed);
+        writeCollapsedFlag(LEGEND_COLLAPSED_KEY, collapsed);
+      });
+    }
+    if (overlaysCollapseToggle) {
+      overlaysCollapseToggle.addEventListener("click", function () {
+        var collapsed = !document.body.classList.contains(
+          "is-overlays-collapsed"
+        );
+        applyOverlaysCollapsed(collapsed);
+        writeCollapsedFlag(OVERLAYS_COLLAPSED_KEY, collapsed);
+      });
+    }
+  }
+
+  function applyLegendCollapsed(collapsed) {
+    var on = !!collapsed;
+    document.body.classList.toggle("is-legend-collapsed", on);
+    setDisclosureState(legendCollapseToggle, !on);
+    resizeMapForChromeChange();
+  }
+
+  function applyOverlaysCollapsed(collapsed) {
+    var on = !!collapsed;
+    document.body.classList.toggle("is-overlays-collapsed", on);
+    setDisclosureState(overlaysCollapseToggle, !on);
+    resizeMapForChromeChange();
+  }
+
+  // The disclosure arrow is the visual half of ``aria-expanded``; the
+  // button's label stays constant so the control never depends on the
+  // reader noticing that its text changed.
+  function setDisclosureState(button, expanded) {
+    if (!button) {
+      return;
+    }
+    button.setAttribute("aria-expanded", expanded ? "true" : "false");
+    var arrow = button.querySelector(".map-chrome-disclosure");
+    if (arrow) {
+      arrow.textContent = expanded ? "▾" : "▸";
+    }
+  }
+
+  /**
+   * MapLibre measures the canvas when the map is constructed and again on
+   * window resize events only — it does not watch its container. Collapsing
+   * the legend changes the map panel's width without any window event, so
+   * the canvas would keep the old width and paint a blank strip over the
+   * 320px the legend gave back. Every toggle therefore asks MapLibre to
+   * re-measure explicitly, in both directions.
+   *
+   * The call is made twice on purpose: once synchronously, after the body
+   * class switch has already been applied (``map.resize`` reads the
+   * container through a forced layout, so it sees the new track), and once
+   * on the next frame, in case the first read raced the style
+   * recalculation. Both are silent no-ops before the map exists: a toggle
+   * pressed while the metadata is still loading is honoured by the map's
+   * own ``load`` handler, which resizes before its first paint.
+   */
+  function resizeMapForChromeChange() {
+    if (!map || typeof map.resize !== "function") {
+      return;
+    }
+    map.resize();
+    requestAnimationFrame(function () {
+      if (map && typeof map.resize === "function") {
+        map.resize();
+      }
+    });
+  }
+
+  // Storage access is guarded on BOTH sides. Reading ``window.localStorage``
+  // itself can throw a SecurityError (storage disabled by policy, some
+  // private modes) before ``getItem`` is ever reached, and ``setItem``
+  // throws in others (quota, some private modes). Either failure degrades to
+  // the expanded default and the toggles keep working for the session; it
+  // can never stop the viewer from loading.
+  function readCollapsedFlag(key) {
+    try {
+      return window.localStorage.getItem(key) === "1";
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function writeCollapsedFlag(key, collapsed) {
+    try {
+      window.localStorage.setItem(key, collapsed ? "1" : "0");
+    } catch (err) {
+      /* No storage available: the state simply does not persist. */
     }
   }
 

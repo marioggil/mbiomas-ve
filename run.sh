@@ -63,6 +63,16 @@ COMPOSITION_L1="$COMPOSITION_DIR/composition-level1-${COUNTRY}-collection-${COLL
 COMPOSITION_L2="$COMPOSITION_DIR/composition-level2-${COUNTRY}-collection-${COLLECTION}.csv"
 COMPOSITION_SUMMARY="$COMPOSITION_DIR/composition-summary-${COUNTRY}-collection-${COLLECTION}.json"
 
+# Study catalog (Congreso Venezolano de Ecología). The derived JSON/CSV are
+# versioned under data/derived and ship with the repository; the raw Parquet,
+# the curated taxonomy and the 2024 COG are rebuild-only prerequisites.
+STUDIES_DIR="$DATA_DIR/derived/$COUNTRY/congresos"
+STUDIES_JSON="$STUDIES_DIR/catalogo-estudios.json"
+STUDIES_CSV="$STUDIES_DIR/catalogo-estudios.csv"
+CONGRESOS_RAW="$DATA_DIR/raw/congresos/congresos_revisados.parquet"
+CONGRESOS_CURATED="$DATA_DIR/curated/congresos/granularidad-ubicaciones.json"
+STUDIES_COG="$COG_DIR/coverage-${COUNTRY}_classification_2024.tif"
+
 VIEWER_DIR="$REPO_ROOT/viewer"
 REQUIREMENTS_FILE="$VIEWER_DIR/requirements.txt"
 VENV_DIR="$REPO_ROOT/.venv"
@@ -72,6 +82,7 @@ PY_CODEBOOK="$TOOLS_DIR/build_codebook.py"
 PY_COG="$TOOLS_DIR/normalize_to_cog.py"
 PY_COMPOSITION="$TOOLS_DIR/composition_stats.py"
 PY_TILES="$TOOLS_DIR/build_tiles.py"
+PY_STUDY_CATALOG="$TOOLS_DIR/build_study_catalog.py"
 PY_SERVE="$TOOLS_DIR/serve_viewer.py"
 
 # ---------------------------------------------------------------------------
@@ -234,6 +245,15 @@ cmd_check() {
         record_serve_missing
     fi
 
+    # --- Study catalog: needed to serve (the studies panel/map read the JSON) ---
+    if [ -f "$STUDIES_JSON" ]; then
+        log "  [serve] studies catalog $STUDIES_JSON   OK"
+    else
+        log "  [serve] studies catalog $STUDIES_JSON   MISSING"
+        log "             rebuild:  ./run.sh pipeline    (stage: studies; needs pyarrow + GDAL)"
+        record_serve_missing
+    fi
+
     # --- Tiles pyramid + manifest: needed to serve ---
     if [ -d "$TILES_DIR" ] && dir_has_files "$TILES_DIR"; then
         local n
@@ -291,6 +311,13 @@ cmd_check() {
     else
         log "  [rebuild] QGIS legend   $CODEBOOK_QML   MISSING (only needed as a codebook cross-check)"
         log "             rebuild:  drop QGIS_Leyenda_col3.qml under data/legend/source/"
+        record_rebuild_missing
+    fi
+    if [ -f "$CONGRESOS_RAW" ]; then
+        log "  [rebuild] congress Parquet  $CONGRESOS_RAW   OK"
+    else
+        log "  [rebuild] congress Parquet  $CONGRESOS_RAW   MISSING (only needed to rebuild the study catalog)"
+        log "             rebuild:  sync congresos_revisados.parquet from Congresos_CVE_V2 into data/raw/congresos/ and rerun check"
         record_rebuild_missing
     fi
 
@@ -472,6 +499,84 @@ stage_tiles() {
     "${cmd[@]}"
 }
 
+stage_studies() {
+    # Study catalog: rebuild-only. Needs the raw Parquet, the curated granularity
+    # taxonomy, the 2024 classification COG and the tiles manifest; produces
+    # catalogo-estudios.json + .csv under data/derived/<country>/congresos/.
+    #
+    # pyarrow (Parquet) and GDAL (COG geotransform) are rebuild-only and are
+    # deliberately absent from the service image and the repository .venv. The
+    # stage refuses with an actionable hint instead of dying later inside the
+    # tool with an ImportError traceback.
+    if [ -f "$STUDIES_JSON" ] && [ -f "$STUDIES_CSV" ] && [ "${FORCE:-0}" -eq 0 ]; then
+        log "  studies: outputs exist, skipping"
+        return 0
+    fi
+    if ! python3 -c "import pyarrow, osgeo" >/dev/null 2>&1; then
+        if [ "${DRY_RUN:-0}" -eq 1 ]; then
+            log "  studies: NOTE pyarrow/GDAL absent right now; printing the command anyway"
+        else
+            err "  studies: the rebuild needs an interpreter with BOTH pyarrow (to read Parquet) and GDAL (to read the COG geotransform); 'python3' does not have both"
+            err "           create one and activate it so 'python3' resolves there, then rerun this stage:"
+            err "             uv venv --python 3.13 --system-site-packages .venv-rebuild"
+            err "             uv pip install --python .venv-rebuild/bin/python pyarrow"
+            err "             source .venv-rebuild/bin/activate"
+            return 1
+        fi
+    fi
+    if [ ! -f "$CONGRESOS_RAW" ]; then
+        if [ "${DRY_RUN:-0}" -eq 1 ]; then
+            log "  studies: NOTE raw Parquet absent right now; printing the command anyway"
+        else
+            err "  studies: raw Parquet missing at $CONGRESOS_RAW — data/raw is gitignored and a fresh clone does not carry it"
+            err "           sync congresos_revisados.parquet from Congresos_CVE_V2 into data/raw/congresos/"
+            return 1
+        fi
+    fi
+    if [ ! -f "$CONGRESOS_CURATED" ]; then
+        if [ "${DRY_RUN:-0}" -eq 1 ]; then
+            log "  studies: NOTE curated taxonomy absent right now; printing the command anyway"
+        else
+            err "  studies: curated granularity taxonomy missing at $CONGRESOS_CURATED"
+            return 1
+        fi
+    fi
+    if [ ! -f "$STUDIES_COG" ]; then
+        if [ "${DRY_RUN:-0}" -eq 1 ]; then
+            log "  studies: NOTE 2024 COG absent right now; printing the command anyway"
+        else
+            err "  studies: 2024 classification COG missing at $STUDIES_COG — run stage 2 first"
+            return 1
+        fi
+    fi
+    if [ ! -f "$TILES_MANIFEST" ]; then
+        if [ "${DRY_RUN:-0}" -eq 1 ]; then
+            log "  studies: NOTE tiles manifest absent right now; printing the command anyway"
+        else
+            err "  studies: tiles manifest missing at $TILES_MANIFEST — run the tiles stage first (the catalog carries its extent labels)"
+            return 1
+        fi
+    fi
+    log "  studies: measured cost ~seconds"
+    log "  studies: running tools/build_study_catalog.py"
+    local cmd=(
+        python3 "$PY_STUDY_CATALOG"
+        --parquet "$CONGRESOS_RAW"
+        --granularidad "$CONGRESOS_CURATED"
+        --cog "$STUDIES_COG"
+        --outdir "$STUDIES_DIR"
+        --country "$COUNTRY"
+        --labelling-json "$TILES_MANIFEST"
+    )
+    if [ "${DRY_RUN:-0}" -eq 1 ]; then
+        printf '  studies would run:'
+        printf ' %q' "${cmd[@]}"
+        printf '\n'
+        return 0
+    fi
+    "${cmd[@]}"
+}
+
 cmd_pipeline() {
     FORCE=0
     DRY_RUN=0
@@ -508,6 +613,7 @@ cmd_pipeline() {
     stage_cog
     stage_composition
     stage_tiles
+    stage_studies
     t1=$(date +%s)
     log ""
     log "pipeline: done in $(format_seconds $((t1 - t0)))"

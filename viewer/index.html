@@ -10,13 +10,49 @@
 </head>
 <body>
   <header class="viewer-header" role="banner">
-    <h1 class="viewer-title">Visor de cobertura MapBiomas Venezuela — Colección 3</h1>
-    <p class="viewer-subtitle" id="viewer-subtitle">
-      Cargando metadatos del visor&hellip;
-    </p>
+    <div class="viewer-header-text">
+      <h1 class="viewer-title">Visor de cobertura MapBiomas Venezuela — Colección 3</h1>
+      <p class="viewer-subtitle" id="viewer-subtitle">
+        Cargando metadatos del visor&hellip;
+      </p>
+    </div>
+    <!-- T8: the two collapse controls live in the header, which is a grid
+         row of its own, never inside the panels they hide. A control that
+         lived inside its own collapsible content would be unreachable the
+         moment that content was collapsed. -->
+    <div
+      class="map-chrome"
+      role="group"
+      aria-label="Mostrar u ocultar elementos de la vista del mapa"
+    >
+      <button
+        id="legend-collapse-toggle"
+        class="map-chrome-toggle"
+        type="button"
+        aria-expanded="true"
+        aria-controls="legend-panel"
+      >
+        <span class="map-chrome-toggle-label">Leyenda</span>
+        <span class="map-chrome-disclosure" aria-hidden="true">▾</span>
+      </button>
+      <button
+        id="overlays-collapse-toggle"
+        class="map-chrome-toggle"
+        type="button"
+        aria-expanded="true"
+        aria-controls="map-overlays"
+      >
+        <span class="map-chrome-toggle-label">Información sobre el mapa</span>
+        <span class="map-chrome-disclosure" aria-hidden="true">▾</span>
+      </button>
+    </div>
   </header>
 
-  <aside class="legend-panel" aria-label="Leyenda jerárquica de clases">
+  <aside
+    class="legend-panel"
+    id="legend-panel"
+    aria-label="Leyenda jerárquica de clases"
+  >
     <h2 class="legend-title">Leyenda</h2>
     <p class="legend-help">
       Pulse un grupo para desplegar o replegar sus clases.
@@ -29,7 +65,7 @@
   <section class="catalog-panel" aria-label="Catálogo de estudios">
     <h2 class="catalog-title">Catálogo de estudios</h2>
     <p class="catalog-help">
-      Catálogo completo de los estudios revisados de las tres ediciones del Congreso Venezolano de Ecología. El panel lista todos los estudios; el mapa solo ubica los que tienen una coordenada utilizable, con un punto por estudio.
+      Catálogo completo de los estudios revisados de las doce ediciones del Congreso Venezolano de Ecología. El panel es la vista autoritativa: lista todos los estudios y muestra la clasificación que el catálogo les asigna. El mapa es una vista secundaria que solo ubica los estudios con una coordenada utilizable, con un punto por estudio.
     </p>
     <div
       class="catalog-summary"
@@ -45,6 +81,38 @@
       aria-label="Filtrar estudios por edición"
     >
       <!-- populated by catalog.js -->
+    </div>
+    <div class="catalog-search">
+      <label class="catalog-search-label" for="catalog-search-input">
+        Buscar estudios
+      </label>
+      <input
+        class="catalog-search-input"
+        id="catalog-search-input"
+        type="search"
+        autocomplete="off"
+        placeholder="Título, autor, palabra clave, lugar o especie"
+        aria-describedby="catalog-search-help"
+      />
+      <span
+        class="catalog-search-count"
+        id="catalog-search-count"
+        role="status"
+        aria-live="polite"
+      ></span>
+    </div>
+    <p class="catalog-search-help" id="catalog-search-help">
+      Filtra por título, nombres de autores, palabras clave, ubicación geográfica y especies mencionadas; no distingue mayúsculas ni acentos. Se combina con el filtro de edición.
+    </p>
+    <div
+      class="catalog-point-filter"
+      id="catalog-point-filter"
+      role="group"
+      aria-label="Filtro por punto seleccionado"
+      aria-live="polite"
+      hidden
+    >
+      <!-- populated by catalog.js when a map marker click narrows the list -->
     </div>
     <div class="catalog-body">
       <ul class="catalog-list" id="catalog-list" aria-label="Lista de estudios">
@@ -113,7 +181,7 @@
       </span>
       <span id="clip-status" class="map-tool-status" aria-live="polite"></span>
     </div>
-    <div class="map-overlays">
+    <div class="map-overlays" id="map-overlays">
       <div
         class="study-map-legend"
         id="study-map-legend"
@@ -122,6 +190,20 @@
         <span class="study-map-legend-dot" aria-hidden="true"></span>
         <span class="study-map-legend-text">
           Estudios ubicables: <span id="study-map-legend-count">&mdash;</span> · un punto = un estudio
+        </span>
+      </div>
+      <div
+        class="study-map-halo-note"
+        id="study-map-halo-note"
+        aria-label="Significado del anillo de estudios superpuestos"
+      >
+        <span class="study-map-halo-ring" aria-hidden="true"></span>
+        <span class="study-map-halo-text">
+          El anillo se&ntilde;ala un punto donde se superponen varios estudios:
+          <span id="study-map-halo-coordinate-count">&mdash;</span> puntos re&uacute;nen
+          <span id="study-map-halo-marker-count">&mdash;</span> de los
+          <span id="study-map-halo-visible-count">&mdash;</span> estudios ubicables; el panel
+          los lista todos, incluidos los que el mapa no ubica.
         </span>
       </div>
       <div class="labelling" id="d7-labelling" aria-live="polite">
