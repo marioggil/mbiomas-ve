@@ -114,8 +114,11 @@ gitignored input, needed only to regenerate it).
 
 **255 abstracts** from the **twelve** editions of the Congreso Venezolano de
 Ecología, 1991–2019, shown as a panel and as a secondary map layer. **98** of them carry
-`palabrasclaves`; **19** have no year in the source (Vol XI came from a legacy CSV) and are shown as
-"sin año".
+`palabrasclaves`, and all **255** carry a year. The 19 Vol XI rows that came from a legacy CSV once
+carried `anio: null` and were shown as "sin año"; the regenerated source export dates them **2015**,
+so no row has a null year today and nothing renders as "sin año". The builder still keeps the
+`sin-anio` `study_id` segment and the sort-last rule for a null year as a contract: the tests
+exercise both against synthetic fixtures, so neither is dead code.
 
 > **212 of the 255 were reviewed by a human; 43 were marked as reviewed by a machine**, at the
 > project owner's decision, so the Imataca works could be published. The distinction lives in the
@@ -264,18 +267,19 @@ and recorded. The intent is to state them here once they are confirmed.
   carries no GDAL: `python3 -m unittest discover -s tests -v`. It reads no raster.
 - **A green suite does not mean the whole suite ran, and no single documented command covers it.**
   The interpreters cover different parts, because they can import different modules:
-  - the **system interpreter** (`python3 -m unittest discover -s tests -v`) finishes green with
-    **28 skips**: the **27 viewer tests that need `fastapi`** and **one freshness row-count check
-    that needs `pyarrow`**. A green run here **did not cover the viewer tests**, and must not be
-    reported as if it did.
-  - the repository **`.venv`** runs those 27 viewer tests, but cannot run the composition schema
-    test, because it carries no `osgeo`.
-  - only an interpreter carrying GDAL **and** `pyarrow` **and** `fastapi` runs all **308** with zero
+  - the **system interpreter** (`python3 -m unittest discover -s tests -v`) runs **322 tests** and
+    finishes green with **36 skips**: the **35 viewer tests that need `fastapi`** and **one freshness
+    row-count check that needs `pyarrow`**. A green run here **did not cover the viewer tests**, and
+    must not be reported as if it did.
+  - the repository **`.venv`** runs those **35 viewer tests**, but cannot run the composition schema
+    test, because it carries no `osgeo`: it reports `Ran 301 tests` with one import error and one
+    `pyarrow` skip.
+  - only an interpreter carrying GDAL **and** `pyarrow` **and** `fastapi` runs all **322** with zero
     skips.
 - **The study catalog panel has no persisted automated test.** Its logic was checked with a throwaway
   headless DOM stub, and its layout with a browser pass; **neither is reproducible by a CI run**.
 - **The study catalog does not feed the priority index.** The `study_gap` term stays disabled at
-  weight **0.0**; see "The study catalog" for why 202 studies cannot populate an H3 res 8–9 gap index.
+  weight **0.0**; see "The study catalog" for why 255 studies cannot populate an H3 res 8–9 gap index.
 - The composition summary JSON carries per-class pixel counts and presence but not per-class
   **areas**; those live in the CSV.
 - Class 33 (water) grows 4.42 % over the series. Two step changes are externally corroborated as
