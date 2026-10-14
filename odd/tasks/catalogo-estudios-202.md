@@ -688,6 +688,96 @@ tests stayed green.
   live DOM while the live sources report 103 markers and 12 rings summing 32. D12's wording was
   corrected in the meantime and the counts are no longer missing.
 
+### T8 — Collapsible map chrome — **DONE**
+
+**Requested by the user after the PRs were opened**: the map should let you minimise the legend and the
+information drawn over it, to see the map better.
+
+**Measured before the change** (this is what the request is worth):
+
+| Viewport | Legend column | Map | Overlays over the map |
+|---|---|---|---|
+| 1280x950 | **320 x 475** | 945 x 475 | **921 x 147** (studies legend 29 + ring note 29 + D7 note 72) |
+| 1042x569 | **320 x 285** | 707 x 285 | **683 x 163** (the ring note wraps to 45) |
+
+The overlays cover **31 %** of the map's height at the wide viewport and **57 %** at the narrow one. The
+legend is not over the map: it is a 320 px grid column beside it (`body` is the grid container,
+`grid-template-columns: 320px minmax(0, 1fr)`, areas `"legend map"`), so collapsing it returns that
+width to the map.
+
+**What to build**: a control for the legend panel and a control for the on-map information column
+(the studies legend, the ring note and the D7 note together), each collapsing and restoring its own
+content, following the disclosure pattern already used by the legend's class groups
+(`aria-expanded` + `aria-controls`).
+
+**Constraints, each of which is an acceptance criterion**:
+
+1. **The user can never get stuck.** A toggle stays reachable while its content is collapsed, so the
+   control cannot live only inside what it hides.
+2. **The map must actually resize.** MapLibre observes the window, not the container, so collapsing
+   the legend leaves the canvas at its old width and paints a blank strip unless the map is resized
+   explicitly. The canvas width must match its container after every toggle, in both directions.
+3. **The state persists across reloads**, and storage access is guarded: a browser where
+   `localStorage` throws must still load the viewer and keep both toggles working in-session.
+4. **No new overlaps.** The toggles must not collide with the drawing toolbar, the zoom controls,
+   the attribution or the overlay column at either viewport, and the F4 no-overlap guarantee for the
+   expanded overlays must be unchanged.
+5. **Nothing else changes**: the D7 note's text stays byte-identical, the MapLibre attribution stays
+   permanently visible (it is not part of the collapsible set), the map keeps its deterministic
+   height, and the composition panel and the catalog panel are untouched.
+6. Keyboard reachable with a visible focus ring.
+
+**Expected measurements after the change**: collapsing the legend at 1280x950 grows the map from
+**945** to about **1265** px wide; at 1042x569 from **707** to about **1027**. Collapsing the
+overlays leaves the canvas geometry untouched and the information boxes not visible.
+
+**Not in scope**: the drawing toolbar (it is a control, not information), the composition panel and
+the catalog panel (neither is over the map).
+
+**What was built**: two disclosure controls in the header row — never inside what they hide, which is
+the only placement that satisfies "the user can never get stuck" and the expected measurements at the
+same time — each with `aria-expanded`/`aria-controls` following the pattern the legend's class groups
+already use, and the state persisted under `mapbiomas.viewer.legendCollapsed` and
+`mapbiomas.viewer.overlaysCollapsed`.
+
+**Verified in a real browser, both viewports, in both directions**:
+
+| State | Legend | Map / canvas | Overlays |
+|---|---|---|---|
+| baseline 1280x950 | 320x475 | 945 / 945 | 921x147 visible |
+| legend collapsed | 0x0 hidden | **1265 / 1265** | 1241x130 visible |
+| both collapsed | 0x0 hidden | 1265 / 1265 | 0x0 hidden |
+| **after reload** | **stays collapsed** | 1265 / 1265 | **stays hidden** |
+| restored, then reloaded | 320x475 | 945 / 945 | visible again |
+| baseline 1042x569 | 320x285 | 707 / 707 | 683x163 |
+| legend collapsed 1042 | 0x0 hidden | **1027 / 1027** | 1003x130 |
+
+The **canvas width equals its container after every toggle**, which is the MapLibre resize the brief
+called out: without it the map paints a blank strip. Zero collisions between the two toggles and the
+zoom control or the attribution; the focus ring is a visible `solid 2px`; the D7 note text is
+unchanged. With `localStorage` throwing, the viewer still loads (202 rows, no fatal) and both toggles
+keep working for the session.
+
+**A defect the browser pass caught, and it is worth remembering.** The restore never worked: the
+writer called `initChromeCollapse()` early in the module but declared the two storage keys with `var`
+**below** that call. A `var` is hoisted but `undefined` until its own line runs, so the restore read
+`getItem(undefined)` — always `null` — and came back expanded on every reload, while the click
+handlers, which close over the variable and only run later, persisted correctly. Nothing threw, and
+no key named `undefined` appeared because reads do not create keys, so the only symptom was
+"persistence silently does not work". The keys moved above the call, and the comment there explains
+the trap. **The writer had flagged this exact criterion as unverifiable without a browser**, which is
+why it was the first thing checked.
+
+**A tension for the user to decide, recorded rather than resolved.** Collapsing the overlays hides the
+D7 boundary labelling — the note saying the pixel extent exceeds internationally recognised borders
+and that no boundary mask was applied. F4's decision was that this labelling stays on screen. The user
+asked for the information over the map to be minimisable, and that note is 72 of the 147 px the
+overlays occupy, so honouring the request means it collapses too. The mitigations are that the state
+is user-chosen, persists only because the user chose it, and the restore control is always visible and
+labelled. The MapLibre attribution is **not** in the collapsible set and never hides. If the labelling
+should be exempt, the fix is to move `#d7-labelling` out of `#map-overlays` into its own always-visible
+box.
+
 ### T7 — Closing — **DONE**
 
 **Commit**: `1a57427`.

@@ -10,13 +10,49 @@
 </head>
 <body>
   <header class="viewer-header" role="banner">
-    <h1 class="viewer-title">Visor de cobertura MapBiomas Venezuela — Colección 3</h1>
-    <p class="viewer-subtitle" id="viewer-subtitle">
-      Cargando metadatos del visor&hellip;
-    </p>
+    <div class="viewer-header-text">
+      <h1 class="viewer-title">Visor de cobertura MapBiomas Venezuela — Colección 3</h1>
+      <p class="viewer-subtitle" id="viewer-subtitle">
+        Cargando metadatos del visor&hellip;
+      </p>
+    </div>
+    <!-- T8: the two collapse controls live in the header, which is a grid
+         row of its own, never inside the panels they hide. A control that
+         lived inside its own collapsible content would be unreachable the
+         moment that content was collapsed. -->
+    <div
+      class="map-chrome"
+      role="group"
+      aria-label="Mostrar u ocultar elementos de la vista del mapa"
+    >
+      <button
+        id="legend-collapse-toggle"
+        class="map-chrome-toggle"
+        type="button"
+        aria-expanded="true"
+        aria-controls="legend-panel"
+      >
+        <span class="map-chrome-toggle-label">Leyenda</span>
+        <span class="map-chrome-disclosure" aria-hidden="true">▾</span>
+      </button>
+      <button
+        id="overlays-collapse-toggle"
+        class="map-chrome-toggle"
+        type="button"
+        aria-expanded="true"
+        aria-controls="map-overlays"
+      >
+        <span class="map-chrome-toggle-label">Información sobre el mapa</span>
+        <span class="map-chrome-disclosure" aria-hidden="true">▾</span>
+      </button>
+    </div>
   </header>
 
-  <aside class="legend-panel" aria-label="Leyenda jerárquica de clases">
+  <aside
+    class="legend-panel"
+    id="legend-panel"
+    aria-label="Leyenda jerárquica de clases"
+  >
     <h2 class="legend-title">Leyenda</h2>
     <p class="legend-help">
       Pulse un grupo para desplegar o replegar sus clases.
@@ -145,7 +181,7 @@
       </span>
       <span id="clip-status" class="map-tool-status" aria-live="polite"></span>
     </div>
-    <div class="map-overlays">
+    <div class="map-overlays" id="map-overlays">
       <div
         class="study-map-legend"
         id="study-map-legend"

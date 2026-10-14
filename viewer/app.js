@@ -62,6 +62,14 @@
   var studyHaloVisibleCount = document.getElementById(
     "study-map-halo-visible-count"
   );
+  // T8 collapse controls. They live in the header, outside both panels
+  // they hide, so they stay reachable while their content is collapsed.
+  var legendCollapseToggle = document.getElementById(
+    "legend-collapse-toggle"
+  );
+  var overlaysCollapseToggle = document.getElementById(
+    "overlays-collapse-toggle"
+  );
 
   // State.
   /** @type {object|null} */
@@ -105,6 +113,16 @@
   var STUDIES_HALO_SOURCE_ID = "studies-halos";
   var STUDIES_HALO_LAYER_ID = "studies-halos-ring";
 
+  // Persisted collapse state for the map chrome (T8). These two MUST be
+  // assigned before ``initChromeCollapse()`` runs below: a ``var`` is hoisted
+  // but undefined until its own line executes, so declaring them further down
+  // would make the restore read ``getItem(undefined)`` and silently come back
+  // expanded on every reload, while the click handlers — which close over the
+  // variable and only run later — would still persist correctly. That exact
+  // mismatch is what the browser pass caught; keep them here.
+  var LEGEND_COLLAPSED_KEY = "mapbiomas.viewer.legendCollapsed";
+  var OVERLAYS_COLLAPSED_KEY = "mapbiomas.viewer.overlaysCollapsed";
+
   api
     .fetchMeta()
     .then(function (m) {
@@ -122,6 +140,12 @@
   // isolated: the map, slider, legend, composition panel and clip drawing
   // keep working.
   initCatalogPanel();
+
+  // Collapsible map chrome (slice F4 / T8). Wired before the metadata
+  // resolves so the persisted state is applied to the body class on the
+  // first paint, which is what lets the collapsed legend hand its grid
+  // column back to the map before the map is even constructed.
+  initChromeCollapse();
 
   // -------------------------------------------------------------------------
   // Meta → UI
@@ -749,6 +773,132 @@
           duration: 600,
         });
       }
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Collapsible map chrome (slice F4 / T8)
+  // -------------------------------------------------------------------------
+  // Two controls, each collapsing and restoring its own block:
+  //
+  //   * the legend panel (``.legend-panel``, the 320px grid column beside
+  //     the map), and
+  //   * the on-map information column (``.map-overlays``: the studies
+  //     legend, the ring note and the D7 boundary note, together).
+  //
+  // Both are real <button>s with ``aria-expanded`` + ``aria-controls``,
+  // which is the disclosure pattern ``renderLegend`` already uses for the
+  // legend's class groups. They live in the header — never inside the
+  // content they hide — because a control nested in its own collapsible
+  // block would be unreachable as soon as the block was collapsed.
+  //
+  // The collapsed flag is mirrored on ``document.body`` as a class, so the
+  // CSS decides what hides (``.legend-panel`` / ``.map-overlays``) and the
+  // grid column returns to the map. No text is ever moved or rewritten:
+  // the D7 note and the MapLibre attribution are untouched by construction.
+  // The two storage keys are declared near the top of the module on purpose:
+  // see the note there about the hoisting trap that made the restore silent.
+
+  function initChromeCollapse() {
+    // Apply the persisted state before wiring the click handlers. The
+    // initial calls do not persist: they are a restore, not a user action.
+    applyLegendCollapsed(readCollapsedFlag(LEGEND_COLLAPSED_KEY));
+    applyOverlaysCollapsed(readCollapsedFlag(OVERLAYS_COLLAPSED_KEY));
+    if (legendCollapseToggle) {
+      legendCollapseToggle.addEventListener("click", function () {
+        var collapsed = !document.body.classList.contains(
+          "is-legend-collapsed"
+        );
+        applyLegendCollapsed(collapsed);
+        writeCollapsedFlag(LEGEND_COLLAPSED_KEY, collapsed);
+      });
+    }
+    if (overlaysCollapseToggle) {
+      overlaysCollapseToggle.addEventListener("click", function () {
+        var collapsed = !document.body.classList.contains(
+          "is-overlays-collapsed"
+        );
+        applyOverlaysCollapsed(collapsed);
+        writeCollapsedFlag(OVERLAYS_COLLAPSED_KEY, collapsed);
+      });
+    }
+  }
+
+  function applyLegendCollapsed(collapsed) {
+    var on = !!collapsed;
+    document.body.classList.toggle("is-legend-collapsed", on);
+    setDisclosureState(legendCollapseToggle, !on);
+    resizeMapForChromeChange();
+  }
+
+  function applyOverlaysCollapsed(collapsed) {
+    var on = !!collapsed;
+    document.body.classList.toggle("is-overlays-collapsed", on);
+    setDisclosureState(overlaysCollapseToggle, !on);
+    resizeMapForChromeChange();
+  }
+
+  // The disclosure arrow is the visual half of ``aria-expanded``; the
+  // button's label stays constant so the control never depends on the
+  // reader noticing that its text changed.
+  function setDisclosureState(button, expanded) {
+    if (!button) {
+      return;
+    }
+    button.setAttribute("aria-expanded", expanded ? "true" : "false");
+    var arrow = button.querySelector(".map-chrome-disclosure");
+    if (arrow) {
+      arrow.textContent = expanded ? "▾" : "▸";
+    }
+  }
+
+  /**
+   * MapLibre measures the canvas when the map is constructed and again on
+   * window resize events only — it does not watch its container. Collapsing
+   * the legend changes the map panel's width without any window event, so
+   * the canvas would keep the old width and paint a blank strip over the
+   * 320px the legend gave back. Every toggle therefore asks MapLibre to
+   * re-measure explicitly, in both directions.
+   *
+   * The call is made twice on purpose: once synchronously, after the body
+   * class switch has already been applied (``map.resize`` reads the
+   * container through a forced layout, so it sees the new track), and once
+   * on the next frame, in case the first read raced the style
+   * recalculation. Both are silent no-ops before the map exists: a toggle
+   * pressed while the metadata is still loading is honoured by the map's
+   * own ``load`` handler, which resizes before its first paint.
+   */
+  function resizeMapForChromeChange() {
+    if (!map || typeof map.resize !== "function") {
+      return;
+    }
+    map.resize();
+    requestAnimationFrame(function () {
+      if (map && typeof map.resize === "function") {
+        map.resize();
+      }
+    });
+  }
+
+  // Storage access is guarded on BOTH sides. Reading ``window.localStorage``
+  // itself can throw a SecurityError (storage disabled by policy, some
+  // private modes) before ``getItem`` is ever reached, and ``setItem``
+  // throws in others (quota, some private modes). Either failure degrades to
+  // the expanded default and the toggles keep working for the session; it
+  // can never stop the viewer from loading.
+  function readCollapsedFlag(key) {
+    try {
+      return window.localStorage.getItem(key) === "1";
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function writeCollapsedFlag(key, collapsed) {
+    try {
+      window.localStorage.setItem(key, collapsed ? "1" : "0");
+    } catch (err) {
+      /* No storage available: the state simply does not persist. */
     }
   }
 

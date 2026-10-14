@@ -103,6 +103,10 @@ gitignored input, needed only to regenerate it).
   the visible year, computed from the COG window at native resolution. The window is bounded at
   36 million pixels, roughly 180 × 180 km, which keeps the worst case around 250 ms; for a whole
   region use the composition panel instead.
+- **Collapsible map chrome**: the legend column and the information drawn over the map can each be
+  collapsed from the header, which returns the legend's 320 px to the map (945 → 1265 px at 1280, and
+  707 → 1027 at 1042) and clears up to 57 % of the map's height at the short viewport. The choice is
+  remembered across reloads. The MapLibre attribution is never part of the collapsible set.
 - **The study catalog**: 202 reviewed congress abstracts as a panel and a secondary map layer, with
   its own section below.
 
