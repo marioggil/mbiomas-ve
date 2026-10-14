@@ -768,15 +768,18 @@ no key named `undefined` appeared because reads do not create keys, so the only 
 the trap. **The writer had flagged this exact criterion as unverifiable without a browser**, which is
 why it was the first thing checked.
 
-**A tension for the user to decide, recorded rather than resolved.** Collapsing the overlays hides the
-D7 boundary labelling — the note saying the pixel extent exceeds internationally recognised borders
-and that no boundary mask was applied. F4's decision was that this labelling stays on screen. The user
-asked for the information over the map to be minimisable, and that note is 72 of the 147 px the
-overlays occupy, so honouring the request means it collapses too. The mitigations are that the state
-is user-chosen, persists only because the user chose it, and the restore control is always visible and
-labelled. The MapLibre attribution is **not** in the collapsible set and never hides. If the labelling
-should be exempt, the fix is to move `#d7-labelling` out of `#map-overlays` into its own always-visible
-box.
+**A tension that was raised, and then decided by the user.** Collapsing the overlays hides the D7
+boundary labelling — the note saying the pixel extent exceeds internationally recognised borders and
+that no boundary mask was applied. F4's decision was that this labelling stays on screen, and the user
+asked for the information over the map to be minimisable, where that note is 72 of the 147 px the
+overlays occupy. The tension was surfaced instead of resolved silently.
+
+**Decision, 2026-10-14: it collapses with the rest.** The labelling is hidden while the overlays are
+collapsed and returns with one click. The user owns the disclosure decision and chose the clean map.
+The mitigations stand: the state is user-chosen and is remembered only because the user chose it, the
+restore control is always visible and labelled, and the MapLibre attribution is **not** in the
+collapsible set and never hides. If this is ever revisited, the fix is to move `#d7-labelling` out of
+`#map-overlays` into its own always-visible box — one line of markup plus the CSS.
 
 ### T7 — Closing — **DONE**
 
