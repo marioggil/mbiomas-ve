@@ -14,8 +14,8 @@ records after an interaction: an absent coordinate outranks the taxonomy test
 (``display_class_for`` returns ``no_coordinate`` first), while the level is still
 recorded for those rows because rule A of the curated taxonomy classifies an
 unusable location text as T0. The shipped artifact reflects it — ``no_coordinate``
-9 (all T0), ``coarse_location`` 80 (51 T0 + 29 T1), ``outside_extent`` 10 (T2),
-``placeable`` 103 (T2) — and the positive case here asserts the whole catalog
+10 (all T0), ``coarse_location`` 87 (56 T0 + 31 T1), ``outside_extent`` 13 (T2),
+``placeable`` 145 (T2) — and the positive case here asserts the whole catalog
 passes the validator as committed.
 
 Interpreter. ``serve_viewer`` imports ``fastapi``, which the repository's bare
@@ -89,16 +89,18 @@ class CommittedStudiesCatalogTests(unittest.TestCase):
             _committed_catalog(), serve_viewer.STUDIES_CATALOG_PATH
         )
 
-    def test_committed_catalog_is_the_version_3_202_study_rebuild(self) -> None:
+    def test_committed_catalog_is_the_version_3_255_study_rebuild(self) -> None:
         catalog = _committed_catalog()
         self.assertEqual(catalog["schema_version"], 3)
-        self.assertEqual(catalog["study_count"], 202)
-        self.assertEqual(len(catalog["studies"]), 202)
+        self.assertEqual(catalog["study_count"], 255)
+        self.assertEqual(len(catalog["studies"]), 255)
         # The numbers the map note renders, pinned against the committed
-        # artifact as a whole rather than through the validator.
+        # artifact as a whole rather than through the validator. 28 of the 69
+        # markers sit on the Imataca reserve centroid alone: the reserve is T2,
+        # a decision the review kept.
         contract = catalog["display_contract"]
-        self.assertEqual(contract["collision_coordinate_count"], 12)
-        self.assertEqual(contract["collision_marker_count"], 32)
+        self.assertEqual(contract["collision_coordinate_count"], 15)
+        self.assertEqual(contract["collision_marker_count"], 69)
 
 
 @unittest.skipUnless(_HAVE_FASTAPI, SERVE_ONLY)
@@ -376,10 +378,10 @@ class StudiesCatalogInvariantControlTests(unittest.TestCase):
     def test_control_rejects_a_marker_count_above_the_map_visible_count(
         self,
     ) -> None:
-        self.catalog["display_contract"]["collision_marker_count"] = 104
+        self.catalog["display_contract"]["collision_marker_count"] = 146
         self._fail(
             self.catalog,
-            r"collision_marker_count' \(104\) exceeds 'map_visible_count' \(103\)",
+            r"collision_marker_count' \(146\) exceeds 'map_visible_count' \(145\)",
         )
 
     def test_control_rejects_a_marker_count_below_twice_the_coordinate_count(
@@ -397,12 +399,12 @@ class StudiesCatalogInvariantControlTests(unittest.TestCase):
 
     def test_control_rejects_a_fabricated_pair_that_passes_the_bounds(self) -> None:
         # 2 coordinates / 4 markers is a non-boolean int pair that satisfies
-        # both bounds (4 <= 103, 4 >= 2*2), so only the recount can reject it.
+        # both bounds (4 <= 145, 4 >= 2*2), so only the recount can reject it.
         self.catalog["display_contract"]["collision_coordinate_count"] = 2
         self.catalog["display_contract"]["collision_marker_count"] = 4
         self._fail(
             self.catalog,
-            r"collision_coordinate_count' \(2\) does not match the 12 "
+            r"collision_coordinate_count' \(2\) does not match the 15 "
             r"coordinates",
         )
 
@@ -414,7 +416,7 @@ class StudiesCatalogInvariantControlTests(unittest.TestCase):
         self.catalog["display_contract"]["collision_marker_count"] = 31
         self._fail(
             self.catalog,
-            r"collision_marker_count' \(31\) does not match the 32 placeable "
+            r"collision_marker_count' \(31\) does not match the 69 placeable "
             r"studies",
         )
 
