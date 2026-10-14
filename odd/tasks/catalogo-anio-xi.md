@@ -1,6 +1,6 @@
 # Fix: Vol XI no longer carries a null year (`anio = 2015`), derived artifact rebuilt
 
-**Status**: implemented — artifact regenerated, suite green, commit pending (section 6).
+**Status**: implemented — artifact regenerated, suite green, committed (`abaeeef`, plus the doc record that follows it).
 **Branch**: `fix/catalogo-anio-xi`, off `origin/main` at `876d9c0`.
 **Parent record**: [`catalogo-estudios-202.md`](catalogo-estudios-202.md) — decisions D12–D15, the
 display contract and its measured evidence. D14 still governs the undated path; this document
@@ -116,8 +116,7 @@ without claiming an undated shipped edition. Comments only; no behaviour change.
 
 ## 6. Commit
 
-**Commit**: `<pending — the parent commits the artifact + README + viewer/catalog.js + this
-document>`.
+**Commit**: `abaeeef` — `data(studies): rebuild the catalog after the Vol XI year backfill` (artifact + README + `viewer/catalog.js` + this document). Nothing pushed: `fix/catalogo-anio-xi` is local, off `origin/main` at `876d9c0`.
 
 ## 7. Open items
 
