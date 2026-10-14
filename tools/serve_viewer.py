@@ -11,6 +11,10 @@ This service is the read-only front door of the platform. It serves:
   * ``/api/composition/series`` and ``/api/composition/year/{year}`` for
     the composition panel (T8b), reading the committed CSVs once at
     import and serving them verbatim;
+  * ``/api/studies/catalog`` and ``/api/studies/{study_id}`` for the
+    study catalog, reading the committed JSON artifact once at import and
+    serving it verbatim, with ``/api/studies/_load_counters`` proving that
+    no per-request re-parsing happens;
   * ``/api/clip-stats`` for the clip-on-map tool (T8c): a user-drawn
     rectangle becomes a per-class composition of that area for the visible
     year, read from the source COG at native resolution with the same
@@ -122,6 +126,14 @@ COMPOSITION_LEVEL1_PATH: Final[Path] = (
 )
 COMPOSITION_LEVEL2_PATH: Final[Path] = (
     DERIVED_ROOT / "composition" / f"composition-level2-{COUNTRY}-collection-{COLLECTION}.csv"
+)
+
+# The study catalog is not collection-scoped: a study is a publication, not a
+# pixel product, so the artifact lives at ``data/derived/<country>/congresos/``
+# instead of under ``collection-<collection>/``. It therefore gets its own path
+# constant rather than reusing ``DERIVED_ROOT``.
+STUDIES_CATALOG_PATH: Final[Path] = (
+    DATA_ROOT / "derived" / COUNTRY / "congresos" / "catalogo-estudios.json"
 )
 
 # Schema version of the composition endpoints. Bumped on any breaking change
@@ -595,6 +607,274 @@ def _composition_year_payload(year: int) -> dict[str, Any]:
         "total_area_ha": total,
         "classes": classes,
     }
+
+
+# ---------------------------------------------------------------------------
+# Studies catalog
+# ---------------------------------------------------------------------------
+# The study catalog is a verified JSON artifact committed by the study catalog
+# pipeline (``data/derived/<country>/congresos/catalogo-estudios.json``). It
+# is not collection-scoped, so it gets its own path constant instead of
+# reusing ``DERIVED_ROOT``.
+#
+# Same fail-loudly-at-import discipline as the manifest, the codebook and the
+# composition CSVs: the artifact is parsed exactly once when the module loads,
+# the structural consistency check runs once, and the routes below read the
+# pre-parsed dict. A missing, unparseable or internally inconsistent artifact
+# stops the service instead of degrading per request.
+# ``/api/studies/_load_counters`` exposes the parse counter so the parse-once
+# invariant is measurable, exactly as the composition counters do it.
+#
+# The classification itself is never recomputed here: ``display_class``,
+# ``on_map`` and the class counts come from the artifact, which the import-time
+# check has already proved internally consistent.
+
+
+class StudiesCatalogError(RuntimeError):
+    """Raised when the study catalog is missing, malformed or inconsistent."""
+
+
+_STUDIES_CATALOG_LOAD_COUNTER: _LoadCounter = _LoadCounter()
+
+
+def _load_studies_catalog(path: Path) -> dict[str, Any]:
+    """Load the study catalog once and count the parse.
+
+    Counts the load so ``/api/studies/_load_counters`` can prove that no
+    per-request re-parsing happens (the CRITICAL review finding on this file
+    was a tile manifest re-parsed on every request). Raises
+    ``StudiesCatalogError`` with a specific message on a missing file, an
+    unreadable file, a JSON syntax error, or a root that is not an object.
+    """
+    _STUDIES_CATALOG_LOAD_COUNTER.bump()
+    if not path.is_file():
+        raise StudiesCatalogError(f"studies catalog not found: {path}")
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise StudiesCatalogError(
+            f"studies catalog is not readable: {path}: {exc}"
+        ) from exc
+    try:
+        catalog = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise StudiesCatalogError(
+            f"studies catalog is not valid JSON: {path}: {exc}"
+        ) from exc
+    if not isinstance(catalog, dict):
+        raise StudiesCatalogError(f"studies catalog root is not an object: {path}")
+    return catalog
+
+
+def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
+    """Cross-check the study catalog at import time.
+
+    The map must never claim a location the data does not establish, and an
+    exclusion must always travel with its reason. The rules, all fatal at
+    import:
+
+      1. ``study_count`` is an int and equals ``len(studies)``.
+      2. ``studies`` is a non-empty list of objects, each with a non-empty
+         string ``study_id``; the ids are unique.
+      3. For every study, ``on_map`` is a bool and agrees with
+         ``display_class == "placeable"``.
+      4. Every study with ``on_map`` false carries a non-empty
+         ``exclusion_reason``; every study with ``on_map`` true carries
+         ``exclusion_reason`` null.
+      5. Every study's ``display_class`` is one of the declared ``classes``,
+         and every class key is declared once.
+      6. The declared ``classes`` counts sum to ``study_count`` and match the
+         real per-class tally of the studies.
+      7. The declared counts agree with ``display_contract``: the placeable
+         class is ``map_visible_count``, the excluded classes sum to
+         ``excluded_count``, and the two counts sum to ``study_count``.
+
+    A violation stops the service. We never patch the artifact: a value the
+    map or the table would show that disagrees with the rest of the artifact
+    is a lie, so it must fail loudly instead.
+    """
+    studies = catalog.get("studies")
+    if not isinstance(studies, list) or not studies:
+        raise StudiesCatalogError(
+            f"studies catalog 'studies' is not a non-empty list: {path}"
+        )
+
+    study_count = catalog.get("study_count")
+    if not isinstance(study_count, int) or isinstance(study_count, bool):
+        raise StudiesCatalogError(
+            f"studies catalog 'study_count' is not an integer: {path}: {study_count!r}"
+        )
+    if study_count != len(studies):
+        raise StudiesCatalogError(
+            f"studies catalog 'study_count' ({study_count}) does not match "
+            f"len(studies) ({len(studies)}): {path}"
+        )
+
+    classes = catalog.get("classes")
+    if not isinstance(classes, list) or not classes:
+        raise StudiesCatalogError(
+            f"studies catalog 'classes' is not a non-empty list: {path}"
+        )
+    class_keys: set[str] = set()
+    for cls in classes:
+        if not isinstance(cls, dict) or not isinstance(cls.get("key"), str):
+            raise StudiesCatalogError(
+                f"studies catalog has a class entry without a string 'key': {path}: {cls!r}"
+            )
+        if cls["key"] in class_keys:
+            raise StudiesCatalogError(
+                f"studies catalog declares duplicate class key {cls['key']!r}: {path}"
+            )
+        class_keys.add(cls["key"])
+
+    seen_ids: set[str] = set()
+    tally: dict[str, int] = {}
+    for index, study in enumerate(studies):
+        if not isinstance(study, dict):
+            raise StudiesCatalogError(
+                f"studies catalog study #{index} is not an object: {path}"
+            )
+        study_id = study.get("study_id")
+        if not isinstance(study_id, str) or not study_id:
+            raise StudiesCatalogError(
+                f"studies catalog study #{index} has no non-empty string 'study_id': {path}"
+            )
+        if study_id in seen_ids:
+            raise StudiesCatalogError(
+                f"studies catalog declares duplicate study_id {study_id!r}: {path}"
+            )
+        seen_ids.add(study_id)
+
+        display_class = study.get("display_class")
+        if display_class not in class_keys:
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has display_class "
+                f"{display_class!r} which is not one of the declared classes "
+                f"{sorted(class_keys)}: {path}"
+            )
+        on_map = study.get("on_map")
+        if not isinstance(on_map, bool):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has a non-boolean 'on_map': {path}"
+            )
+        if on_map != (display_class == "placeable"):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} is inconsistent: "
+                f"on_map={on_map} but display_class={display_class!r} "
+                "(on_map must be true exactly for 'placeable'): "
+                f"{path}"
+            )
+        reason = study.get("exclusion_reason")
+        if not on_map:
+            if not isinstance(reason, str) or not reason.strip():
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} is not on the map "
+                    f"(display_class={display_class!r}) but has no "
+                    f"non-empty exclusion_reason: {path}"
+                )
+        elif reason is not None:
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} is on the map but carries "
+                f"exclusion_reason={reason!r}; it must be null: {path}"
+            )
+        tally[display_class] = tally.get(display_class, 0) + 1
+
+    declared_counts: dict[str, int] = {}
+    for cls in classes:
+        count = cls.get("count")
+        if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+            raise StudiesCatalogError(
+                f"studies catalog class {cls['key']!r} has a non-integer "
+                f"'count': {path}: {count!r}"
+            )
+        declared_counts[cls["key"]] = count
+
+    total = sum(declared_counts.values())
+    if total != study_count:
+        raise StudiesCatalogError(
+            f"studies catalog class counts sum to {total} but study_count is "
+            f"{study_count}: {path}"
+        )
+    for key in sorted(class_keys):
+        declared = declared_counts[key]
+        actual = tally.get(key, 0)
+        if declared != actual:
+            raise StudiesCatalogError(
+                f"studies catalog class {key!r} declares count {declared} but "
+                f"{actual} studies carry display_class={key!r}: {path}"
+            )
+
+    contract = catalog.get("display_contract")
+    if not isinstance(contract, dict):
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract' is not an object: {path}"
+        )
+    map_visible = contract.get("map_visible_count")
+    excluded = contract.get("excluded_count")
+    if (
+        not isinstance(map_visible, int)
+        or isinstance(map_visible, bool)
+        or not isinstance(excluded, int)
+        or isinstance(excluded, bool)
+    ):
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract' counts must be integers: "
+            f"{path}: {contract!r}"
+        )
+
+    visible_total = 0
+    excluded_total = 0
+    for cls in classes:
+        on_map = cls.get("on_map")
+        if not isinstance(on_map, bool):
+            raise StudiesCatalogError(
+                f"studies catalog class {cls['key']!r} has a non-boolean "
+                f"'on_map': {path}"
+            )
+        if on_map != (cls["key"] == "placeable"):
+            raise StudiesCatalogError(
+                f"studies catalog class {cls['key']!r} is inconsistent: "
+                f"on_map={on_map} (on_map must be true exactly for "
+                f"'placeable'): {path}"
+            )
+        if on_map:
+            visible_total += declared_counts[cls["key"]]
+        else:
+            excluded_total += declared_counts[cls["key"]]
+
+    if visible_total != map_visible:
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract.map_visible_count' ({map_visible}) "
+            f"does not match the placeable class count ({visible_total}): {path}"
+        )
+    if excluded_total != excluded:
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract.excluded_count' ({excluded}) "
+            f"does not match the sum of the excluded class counts "
+            f"({excluded_total}): {path}"
+        )
+    if map_visible + excluded != study_count:
+        raise StudiesCatalogError(
+            f"studies catalog 'display_contract' counts "
+            f"({map_visible} + {excluded}) do not sum to study_count "
+            f"({study_count}): {path}"
+        )
+
+
+# Studies catalog pre-parsed state. Same fail-loudly-at-import discipline as
+# the manifest, the codebook and the composition CSVs: a missing, unparseable
+# or inconsistent artifact stops the service with a specific message instead
+# of degrading per request.
+try:
+    _STUDIES_CATALOG_DATA: dict[str, Any] = _load_studies_catalog(STUDIES_CATALOG_PATH)
+    _validate_studies_catalog(_STUDIES_CATALOG_DATA, STUDIES_CATALOG_PATH)
+except StudiesCatalogError as exc:
+    raise SystemExit(f"viewer: studies catalog missing or malformed: {exc}") from exc
+
+# Index built from the same single parse; the per-study route is a dict lookup.
+_STUDIES_BY_ID: dict[str, dict[str, Any]] = {
+    study["study_id"]: study for study in _STUDIES_CATALOG_DATA["studies"]
+}
 
 
 # ---------------------------------------------------------------------------
@@ -1458,6 +1738,59 @@ def api_composition_load_counters() -> dict[str, Any]:
         "level1_calls": _COMPOSITION_L1_LOAD_COUNTER.calls,
         "level2_calls": _COMPOSITION_L2_LOAD_COUNTER.calls,
     }
+
+
+# ---------------------------------------------------------------------------
+# Studies catalog endpoints
+# ---------------------------------------------------------------------------
+# The catalog and the per-study routes read the pre-parsed catalog populated
+# at import. No file I/O or re-parsing happens on the request path, and
+# ``/api/studies/_load_counters`` proves it. The classification is served
+# verbatim from the artifact: this file never recomputes which study is
+# placeable.
+#
+# Route order matters. The literal ``catalog`` and ``_load_counters`` paths
+# are declared before the ``{study_id}`` route so they are never swallowed by
+# the catch-all.
+
+
+@app.get("/api/studies/catalog")
+def api_studies_catalog() -> JSONResponse:
+    """Return the whole study catalog the frontend needs.
+
+    The payload is the committed artifact served verbatim: the studies, the
+    class list with their counts, reasons and Spanish labels, and the display
+    contract. Nothing is recomputed here -- the import-time consistency check
+    has already proved the artifact agrees with itself.
+    """
+    return JSONResponse(
+        _STUDIES_CATALOG_DATA,
+        headers={"Cache-Control": "no-cache"},
+    )
+
+
+@app.get("/api/studies/_load_counters")
+def api_studies_load_counters() -> dict[str, Any]:
+    """Diagnostic: how many times the catalog has been parsed from disk.
+
+    Mirrors ``/api/composition/_load_counters``: the parse-once invariant is
+    only measurable if the counter is visible. The expected reading is 1
+    before and after any number of catalog requests.
+    """
+    return {"catalog_calls": _STUDIES_CATALOG_LOAD_COUNTER.calls}
+
+
+@app.get("/api/studies/{study_id}")
+def api_study_by_id(study_id: str) -> JSONResponse:
+    """Return one study by ``study_id``.
+
+    An unknown id is a 404 whose message names the id; the route never
+    raises a 500 for a missing study.
+    """
+    study = _STUDIES_BY_ID.get(study_id)
+    if study is None:
+        raise HTTPException(status_code=404, detail=f"study not found: {study_id}")
+    return JSONResponse(study, headers={"Cache-Control": "no-cache"})
 
 
 # ---------------------------------------------------------------------------

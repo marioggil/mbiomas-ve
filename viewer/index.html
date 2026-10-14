@@ -26,6 +26,42 @@
     </ul>
   </aside>
 
+  <section class="catalog-panel" aria-label="Catálogo de estudios">
+    <h2 class="catalog-title">Catálogo de estudios</h2>
+    <p class="catalog-help">
+      Catálogo completo de los estudios revisados de las tres ediciones del Congreso Venezolano de Ecología. El panel lista todos los estudios; el mapa solo ubica los que tienen una coordenada utilizable, con un punto por estudio.
+    </p>
+    <div
+      class="catalog-summary"
+      id="catalog-summary"
+      aria-label="Resumen de clases del catálogo"
+    >
+      <!-- populated by catalog.js from /api/studies/catalog -->
+    </div>
+    <div
+      class="catalog-filters"
+      id="catalog-filters"
+      role="group"
+      aria-label="Filtrar estudios por edición"
+    >
+      <!-- populated by catalog.js -->
+    </div>
+    <div class="catalog-body">
+      <ul class="catalog-list" id="catalog-list" aria-label="Lista de estudios">
+        <li class="catalog-empty">Cargando catálogo de estudios&hellip;</li>
+      </ul>
+      <section
+        class="catalog-detail"
+        id="catalog-detail"
+        aria-label="Detalle del estudio"
+        aria-live="polite"
+      >
+        <!-- populated by catalog.js -->
+      </section>
+    </div>
+    <p class="catalog-error" id="catalog-error" role="alert" style="display: none;"></p>
+  </section>
+
   <aside class="panel-panel" aria-label="Panel de composición por año">
     <h2 class="panel-title">Composición por año</h2>
     <p class="panel-help">
@@ -77,9 +113,21 @@
       </span>
       <span id="clip-status" class="map-tool-status" aria-live="polite"></span>
     </div>
-    <div class="labelling" id="d7-labelling" aria-live="polite">
-      <strong class="labelling-label" id="d7-extent-label">&hellip;</strong>
-      <span class="labelling-note" id="d7-boundary-note">&hellip;</span>
+    <div class="map-overlays">
+      <div
+        class="study-map-legend"
+        id="study-map-legend"
+        aria-label="Leyenda de estudios ubicables en el mapa"
+      >
+        <span class="study-map-legend-dot" aria-hidden="true"></span>
+        <span class="study-map-legend-text">
+          Estudios ubicables: <span id="study-map-legend-count">&mdash;</span> · un punto = un estudio
+        </span>
+      </div>
+      <div class="labelling" id="d7-labelling" aria-live="polite">
+        <strong class="labelling-label" id="d7-extent-label">&hellip;</strong>
+        <span class="labelling-note" id="d7-boundary-note">&hellip;</span>
+      </div>
     </div>
   </section>
 
@@ -109,6 +157,7 @@
   <script src="/static/vendor/maplibre-gl.js"></script>
   <script src="/static/api.js"></script>
   <script src="/static/panel.js"></script>
+  <script src="/static/catalog.js"></script>
   <script src="/static/app.js"></script>
 </body>
 </html>

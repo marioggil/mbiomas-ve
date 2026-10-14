@@ -82,6 +82,38 @@
   }
 
   /**
+   * Fetch the human-reviewed study catalog (slice F4).
+   *
+   * The catalog is the authoritative view of the CVE studies: it carries
+   * every study the platform knows about, including the ones the map cannot
+   * place, the per-class counts of the display contract, and the
+   * builder-produced exclusion reason for each study that is not on the
+   * map. The viewer renders those reasons verbatim; it never derives,
+   * translates or re-words them.
+   *
+   * @returns {Promise<object>}
+   */
+  function fetchStudyCatalog() {
+    return fetchJson("/api/studies/catalog");
+  }
+
+  /**
+   * Fetch one study by ``study_id``.
+   *
+   * An unknown id returns 404 and the promise rejects with a message that
+   * names the missing id. The catalog panel renders its detail from the
+   * single catalog document it already loaded, so this function exists to
+   * keep the single data-access module complete for the documented
+   * endpoint rather than being called on every selection.
+   *
+   * @param {string} studyId
+   * @returns {Promise<object>}
+   */
+  function fetchStudy(studyId) {
+    return fetchJson("/api/studies/" + encodeURIComponent(String(studyId)));
+  }
+
+  /**
    * Build the XYZ tile URL for a given year.
    *
    * The backend publishes the exact template via /api/meta, so we use
@@ -128,6 +160,8 @@
     fetchCompositionSeries: fetchCompositionSeries,
     fetchCompositionYear: fetchCompositionYear,
     fetchClipStats: fetchClipStats,
+    fetchStudyCatalog: fetchStudyCatalog,
+    fetchStudy: fetchStudy,
     tileUrl: tileUrl,
   };
 })(window);

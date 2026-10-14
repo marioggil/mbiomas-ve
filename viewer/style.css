@@ -51,12 +51,13 @@ body {
    * exceeds the viewport. The panel can therefore never steal
    * space from the map by construction. */
   grid-template-columns: 320px minmax(0, 1fr);
-  grid-template-rows: auto auto auto auto;
+  grid-template-rows: auto auto auto auto auto;
   grid-template-areas:
-    "header header"
-    "legend map"
-    "panel  panel"
-    "time   time";
+    "header  header"
+    "legend  map"
+    "catalog catalog"
+    "panel   panel"
+    "time    time";
   min-height: 100vh;
 }
 
@@ -387,10 +388,11 @@ body {
    * max-height cap — the document scrolls past it. */
   body {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto auto;
     grid-template-areas:
       "header"
       "legend"
+      "catalog"
       "map"
       "panel"
       "time";
@@ -408,10 +410,11 @@ body {
    * max-height cap (the document scrolls past it). */
   body {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto auto;
     grid-template-areas:
       "header"
       "legend"
+      "catalog"
       "map"
       "panel"
       "time";
@@ -696,4 +699,437 @@ body {
 
 .panel-boundary-note {
   color: var(--fg-muted);
+}
+
+/* ------- Study point layer legend (slice F4 / T4) -------
+ *
+ * The secondary point layer needs its own label: the reader must know the
+ * dots are studies and not the drawn-area clip rectangle. It is anchored
+ * bottom-right so it never collides with the D7 labelling (bottom-left) or
+ * the draw toolbar (top-left). */
+/* ------- Map bottom overlays: one column, so they cannot overlap -------
+ * The D7 labelling and the studies legend are both bottom-anchored, and
+ * they used to be positioned independently: ``.labelling`` at
+ * ``bottom: 12px`` and the legend at ``bottom: 34px``. Measured in a real
+ * browser that put the legend on top of the boundary note, 229 px wide by
+ * 3 px tall of overlap, and the note read as truncated even though it was
+ * not clipped by CSS at all.
+ *
+ * A fixed offset would only have made the collision less likely, because
+ * the note wraps to more lines at narrower viewports and the block grows
+ * upward. Stacking both in one content-sized column makes the overlap
+ * impossible at any viewport instead of tuning it away for one size.
+ * The D7 block stays closest to the map edge, where it was before. */
+.map-overlays {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  /* 40px clears the MapLibre attribution control, which owns the bottom
+   * strip of the map and is 24px tall plus its own margin. Measured: the
+   * boundary note ran from x 345 to 1240 while the attribution started at
+   * x 1023, so 217 x 13 px of the note was painted over and the last words
+   * were unreadable. That overlap predates the studies legend; it was
+   * found by measuring, not by looking. */
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  /* The column spans the map width, so it must not swallow pointer events
+   * outside its own boxes or it would break map dragging and the clip
+   * drawing tool along the bottom strip. The boxes keep their own events. */
+  pointer-events: none;
+}
+
+.map-overlays > .labelling,
+.map-overlays > .study-map-legend {
+  position: static;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  max-width: none;
+  pointer-events: auto;
+}
+
+/* The extent label keeps the full width it had; the legend stays a
+ * content-sized box aligned to the right edge. */
+.map-overlays > .labelling {
+  align-self: stretch;
+}
+
+.map-overlays > .study-map-legend {
+  align-self: flex-end;
+}
+
+.study-map-legend {
+  position: absolute;
+  right: 12px;
+  bottom: 34px;
+  max-width: calc(100% - 24px);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--fg-strong);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 1;
+}
+
+.study-map-legend-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #be123c;
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 0 0 1px #be123c;
+  flex-shrink: 0;
+}
+
+.study-map-legend-text {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------- Study catalog panel (slice F4 / T4) -------
+ *
+ * The catalog panel is the authoritative view: it lists every study the
+ * API returns, including the ones the map cannot place. It has NO
+ * max-height and no inner scroll region, so no study row and no exclusion
+ * reason can be trapped inside a fixed-height cap (the T8b defect). The
+ * document scrolls when the list grows, exactly like the composition
+ * panel. */
+.catalog-panel {
+  grid-area: catalog;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  padding: 14px 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.catalog-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.catalog-help {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.catalog-summary {
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.catalog-summary-totals {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.catalog-summary-total {
+  color: var(--fg-strong);
+}
+
+.catalog-summary-on-map {
+  color: #166534;
+  font-weight: 600;
+}
+
+.catalog-summary-excluded {
+  color: #991b1b;
+  font-weight: 600;
+}
+
+.catalog-summary-classes {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 12px;
+  color: var(--fg-text);
+}
+
+.catalog-summary-class {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.catalog-summary-class-excluded .catalog-summary-class-label {
+  color: #991b1b;
+}
+
+.catalog-summary-class-count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.catalog-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.catalog-filter-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.catalog-filter {
+  background: var(--bg-panel);
+  color: var(--fg-strong);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.catalog-filter:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.catalog-filter.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.catalog-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.catalog-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.catalog-empty {
+  font-size: 12px;
+  color: var(--fg-muted);
+  padding: 8px 2px;
+}
+
+.catalog-row {
+  margin: 0;
+}
+
+.catalog-row-button {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.catalog-row-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.catalog-row.is-selected .catalog-row-button {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.catalog-row-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--fg-strong);
+}
+
+.catalog-row-meta,
+.catalog-row-author {
+  font-size: 11px;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.catalog-row-badge {
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 3px;
+  padding: 1px 6px;
+}
+
+.catalog-row-reason {
+  font-size: 11px;
+  color: #7f1d1d;
+}
+
+.catalog-detail {
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.catalog-detail-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+
+.catalog-detail-title {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.catalog-detail-meta {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.catalog-detail-field {
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: var(--fg-text);
+}
+
+.catalog-detail-field-label {
+  color: var(--fg-strong);
+}
+
+.catalog-detail-block {
+  margin-top: 10px;
+}
+
+.catalog-detail-block-title {
+  display: block;
+  font-size: 12px;
+  color: var(--fg-strong);
+  margin-bottom: 4px;
+}
+
+.catalog-detail-authors,
+.catalog-detail-institutions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.catalog-detail-author {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 12px;
+  border-left: 2px solid var(--border);
+  padding-left: 8px;
+}
+
+.catalog-detail-author-name {
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.catalog-detail-author-affiliation {
+  color: var(--fg-muted);
+}
+
+.catalog-detail-author-extra {
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.catalog-detail-institution {
+  font-size: 12px;
+  color: var(--fg-text);
+  border-left: 2px solid var(--border);
+  padding-left: 8px;
+}
+
+.catalog-detail-empty {
+  margin: 0;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+
+.catalog-detail-exclusion {
+  margin-top: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #7f1d1d;
+}
+
+.catalog-detail-exclusion-label {
+  color: #991b1b;
+}
+
+.catalog-detail-resumen {
+  margin-top: 10px;
+}
+
+.catalog-detail-resumen-text {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--fg-text);
+  line-height: 1.5;
+}
+
+.catalog-error {
+  margin: 0;
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+@media (max-width: 960px) {
+  .catalog-body {
+    grid-template-columns: 1fr;
+  }
 }

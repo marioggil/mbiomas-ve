@@ -1,0 +1,1534 @@
+"""Anchor the CVE study-catalog builder's pure contract and the shipped artifact.
+
+WHY THIS FILE EXISTS
+--------------------
+``tools/build_study_catalog.py`` computed ``display_class``, ``on_map`` and
+``exclusion_reason`` for the 31 human-reviewed abstracts the viewer serves, and
+nothing asserted any of it. The builder also called ``raise SystemExit(1)`` at
+module import time when ``pyarrow`` or ``osgeo`` was missing, so importing it to
+test ``slugify`` killed the test process instead of reporting a failure. This
+file pins both: the pure logic through direct calls, and the artifact the viewer
+actually consumes.
+
+WHAT IT DOES NOT DO
+-------------------
+It re-derives nothing from the Parquet. The artifact check reads the committed
+``data/derived/venezuela/congresos/catalogo-estudios.json`` and asserts the
+pinned numbers against it, so a regenerated artifact that breaks the display
+contract fails a test here instead of reaching the viewer. The file needs
+neither ``pyarrow`` nor GDAL: the rebuild-only dependency messages are exercised
+by making the modules unimportable, not by depending on their absence.
+
+Run it with the system interpreter from the repository root::
+
+    python3 -m unittest discover -s tests -v
+
+DESIGN NOTE ON CONTROLS
+-----------------------
+Passing over the current state is not evidence. Every check in this file has a
+discriminating control that reaches *that* check: ``assert_catalog_contract``
+has one mutation per branch, and every negative path is pinned with
+``assertRaisesRegex`` rather than a bare ``assertRaises``. That is not
+decoration. The first version of ``test_composition_summary_schema.py`` used
+bare ``assertRaises``: its control for a flattened summary was rejected by the
+missing-version check long before reaching the year-leak check it claimed to
+exercise, so the regression the file existed for was never tested. Each control
+here was written to be rejected by the assertion it names and by nothing
+earlier.
+"""
+
+from __future__ import annotations
+
+import contextlib
+import copy
+import io
+import json
+import re
+import subprocess
+import sys
+import tempfile
+import types
+import unittest
+from collections import Counter
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any
+from unittest import mock
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+TOOLS_DIR = REPO_ROOT / "tools"
+if str(TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(TOOLS_DIR))
+
+import build_study_catalog as subject  # noqa: E402
+
+CATALOG_PATH = (
+    REPO_ROOT / "data" / "derived" / "venezuela" / "congresos" / "catalogo-estudios.json"
+)
+
+# ---------------------------------------------------------------------------
+# Pinned numbers. These describe the committed artifact; they are asserted
+# against the file, never re-derived from the Parquet.
+# ---------------------------------------------------------------------------
+EXPECTED_STUDY_COUNT = 31
+EXPECTED_CLASS_COUNTS = {
+    "placeable": 24,
+    "shared_coordinate": 4,
+    "outside_extent": 1,
+    "no_coordinate": 2,
+}
+EXPECTED_MAP_VISIBLE = 24
+EXPECTED_EXCLUDED = 7
+EXPECTED_ESPECIES_NON_NULL = 21
+
+# The author object shape, spelled out here so a rename of a source field fails.
+AUTHOR_FIELDS = ["nombre", "afiliacion", "ror", "pais", "orcid"]
+STUDY_ID_RE = re.compile(r"^[a-z0-9-]+$")
+
+# The exact wording of both rebuild-only dependency messages, transcribed from
+# the CLI output the module printed before the imports became lazy. Hard-coded
+# on purpose: a test that read the constant from the module under test could not
+# notice a rewrite of the message.
+PYARROW_MESSAGE = (
+    "pyarrow is required to REBUILD the study catalog. It is a "
+    "rebuild-only dependency: install it in a build environment (for "
+    "example `pip install 'pyarrow>=25'`), never in the viewer's "
+    "requirements or the image. Nothing else in this project reads Parquet."
+)
+GDAL_MESSAGE = (
+    "the GDAL Python bindings (osgeo) are required to REBUILD the "
+    "study catalog, because the extent comes from the COG's own "
+    "geotransform. They are a rebuild-only dependency: install GDAL in the "
+    "build environment, never in the viewer's requirements or the image."
+)
+
+# ---------------------------------------------------------------------------
+# Synthetic fixtures for the pure logic. Small and explicit: they never touch
+# the raw Parquet, so this file stays runnable on a bare interpreter.
+# ---------------------------------------------------------------------------
+EXTENT = {"west": -73.0, "south": 1.0, "east": -58.0, "north": 12.0}
+INSIDE = (8.5, -69.0)
+INSIDE_OTHER = (8.6, -70.0)
+OUTSIDE = (40.0, -69.0)
+
+AUTHOR = {
+    "nombre": "Ana Pérez",
+    "afiliacion": "Universidad de Los Andes",
+    "ror": "https://ror.org/01",
+    "pais": "VE",
+    "orcid": "0000-0001-0000-0000",
+}
+
+
+def make_row(**overrides: Any) -> dict[str, Any]:
+    """Return one source-shaped row; overrides replace a single column."""
+    row: dict[str, Any] = {
+        "source_path": "data/raw/congresos/pagina_5_2.pdf",
+        "congreso": "III Congreso Venezolano de Ecologia",
+        "anio": 1991,
+        "ciudad": "Merida",
+        "pagina": 5,
+        "indice": 2,
+        "titulo": "ECOFISIOLOGIA Y DASONIMIA TROPICAL",
+        "resumen": "Resumen del estudio.",
+        "latitud": INSIDE[0],
+        "longitud": INSIDE[1],
+        "human_verified": True,
+        "autores": json.dumps([dict(AUTHOR)]),
+        "instituciones": json.dumps(["Universidad de Los Andes"]),
+        "ubicaciongeografica": "Merida",
+        "ubicaciontemporal": "1991",
+        "especiesmencionadas": "Cedrela odorata",
+        "n_autores": 1,
+        "paises": json.dumps(["VE"]),
+    }
+    row.update(overrides)
+    return row
+
+
+# Six rows whose insertion order differs from every plausible sort order, so a
+# missing or partial sort key is visible in the result rather than coincidental.
+def catalog_rows() -> list[dict[str, Any]]:
+    return [
+        make_row(source_path="data/raw/congresos/pagina_5_2.pdf", anio=1992,
+                 pagina=5, indice=2, congreso="A", latitud=INSIDE[0],
+                 longitud=INSIDE[1]),                                   # shared
+        make_row(source_path="data/raw/congresos/pagina_5_1.pdf", anio=1992,
+                 pagina=5, indice=1, congreso="A", latitud=INSIDE[0],
+                 longitud=INSIDE[1]),                                   # shared
+        make_row(source_path="data/raw/congresos/pagina_3_9.pdf", anio=1992,
+                 pagina=3, indice=9, congreso="A", latitud=INSIDE_OTHER[0],
+                 longitud=INSIDE_OTHER[1]),                             # placeable
+        make_row(source_path="data/raw/congresos/pagina_9_1.pdf", anio=1991,
+                 pagina=9, indice=1, congreso="B", latitud=OUTSIDE[0],
+                 longitud=OUTSIDE[1]),                                  # outside
+        make_row(source_path="data/raw/congresos/pagina_1_1.pdf", anio=1993,
+                 pagina=1, indice=1, congreso="C", latitud=None,
+                 longitud=None),                                        # no coord
+        make_row(source_path="data/raw/congresos/pagina_1_2.pdf", anio=1993,
+                 pagina=1, indice=1, congreso="A", latitud=None,
+                 longitud=None),                                        # no coord
+    ]
+
+
+# (anio, congreso, pagina, indice) for the rows above, sorted:
+#   1991/B/9/1, 1992/A/3/9, 1992/A/5/1, 1992/A/5/2, 1993/A/1/2, 1993/C/1/1
+# The 1993 pair is inserted in the opposite order, so a sort that ignores
+# ``congreso`` cannot produce this list.
+EXPECTED_CATALOG_IDS = [
+    "cve-1991-pagina-9-1",
+    "cve-1992-pagina-3-9",
+    "cve-1992-pagina-5-1",
+    "cve-1992-pagina-5-2",
+    "cve-1993-pagina-1-2",
+    "cve-1993-pagina-1-1",
+]
+
+
+def build_test_catalog() -> tuple[dict[str, Any], dict[str, int]]:
+    """Run the real builder over the synthetic rows."""
+    return subject.build_catalog(
+        catalog_rows(),
+        EXTENT,
+        "testland",
+        "data/raw/congresos/test.parquet",
+        "extent label",
+        "extent boundary note",
+    )
+
+
+def load_shipped_catalog() -> dict[str, Any]:
+    """Read the committed artifact the viewer serves."""
+    return json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+
+
+# ---------------------------------------------------------------------------
+# Dependency injection helpers. The rebuild-only dependencies are simulated
+# rather than required, so this file needs neither pyarrow nor GDAL.
+# ---------------------------------------------------------------------------
+
+
+def module_swaps(
+    present: dict[str, Any] | None = None, absent: tuple[str, ...] = ()
+) -> Any:
+    """Patch ``sys.modules`` so ``import`` finds ``present`` and not ``absent``.
+
+    A name mapped to ``None`` makes ``import name`` raise ``ImportError``
+    exactly as on an interpreter without the package.
+    """
+    mapping: dict[str, Any] = dict(present or {})
+    for name in absent:
+        mapping[name] = None
+    return mock.patch.dict(sys.modules, mapping)
+
+
+class FakeTable:
+    def __init__(self, rows: list[dict[str, Any]]) -> None:
+        self._rows = rows
+
+    def to_pylist(self) -> list[dict[str, Any]]:
+        return self._rows
+
+
+def fake_pyarrow(read_table: Any) -> dict[str, Any]:
+    """Return sys.modules entries that satisfy ``import pyarrow.parquet as pq``."""
+    package = types.ModuleType("pyarrow")
+    parquet = types.ModuleType("pyarrow.parquet")
+    parquet.read_table = read_table
+    package.parquet = parquet
+    return {"pyarrow": package, "pyarrow.parquet": parquet}
+
+
+class FakeDataset:
+    def __init__(self, geotransform: tuple[float, ...], width: int, height: int) -> None:
+        self._geotransform = geotransform
+        self.RasterXSize = width
+        self.RasterYSize = height
+
+    def GetGeoTransform(self) -> tuple[float, ...]:
+        return self._geotransform
+
+
+def fake_osgeo(open_dataset: Any) -> tuple[dict[str, Any], list[str]]:
+    """Return sys.modules entries for ``from osgeo import gdal`` plus a call log."""
+    calls: list[str] = []
+    gdal = types.ModuleType("osgeo.gdal")
+    gdal.UseExceptions = lambda: calls.append("UseExceptions")
+    gdal.Open = open_dataset
+    osgeo = types.ModuleType("osgeo")
+    osgeo.gdal = gdal
+    return {"osgeo": osgeo, "osgeo.gdal": gdal}, calls
+
+
+def run_probe(body: str) -> subprocess.CompletedProcess:
+    """Run ``body`` in a fresh interpreter and capture its streams."""
+    return subprocess.run(
+        [sys.executable, "-c", body],
+        cwd=str(REPO_ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+BARE_INTERPRETER_PROBE = (
+    "import sys;"
+    f"sys.path.insert(0, {str(TOOLS_DIR)!r});"
+    "import build_study_catalog as m;"
+    "print(len(m.__doc__ or ''));"
+    "print(m.slugify('pagina_5_2'));"
+    "print('pyarrow' in sys.modules);"
+    "print('osgeo' in sys.modules)"
+)
+
+
+# ---------------------------------------------------------------------------
+# The shipped artifact's contract.
+# ---------------------------------------------------------------------------
+
+
+def assert_catalog_contract(catalog: dict[str, Any]) -> None:
+    """Raise ``AssertionError`` unless the shipped catalog can be displayed.
+
+    One ``assert`` per branch, each with a message that says what broke, so a
+    caller cannot pass by accident and a failure names the property. The
+    matching controls live in ``ShippedCatalogControlTests``, one per branch.
+    """
+    assert catalog.get("schema_version") == 1, (
+        f"schema_version is {catalog.get('schema_version')!r}, expected 1"
+    )
+    assert catalog.get("study_count") == EXPECTED_STUDY_COUNT, (
+        f"study_count is {catalog.get('study_count')!r}, expected {EXPECTED_STUDY_COUNT}"
+    )
+
+    studies = catalog.get("studies")
+    assert isinstance(studies, list), (
+        f"studies is {type(studies).__name__}, expected a list"
+    )
+    assert len(studies) == EXPECTED_STUDY_COUNT, (
+        f"len(studies) is {len(studies)}, expected {EXPECTED_STUDY_COUNT}"
+    )
+
+    contract = catalog.get("display_contract")
+    assert isinstance(contract, dict), (
+        f"display_contract is {type(contract).__name__}, expected an object"
+    )
+    assert set(contract) == {"map_visible_count", "excluded_count"}, (
+        f"display_contract fields are {sorted(contract)}, expected exactly "
+        f"['excluded_count', 'map_visible_count']"
+    )
+
+    # --- identity ---------------------------------------------------------
+    seen: set[str] = set()
+    duplicates: list[str] = []
+    for study in studies:
+        study_id = str(study["study_id"])
+        if study_id in seen:
+            duplicates.append(study_id)
+        seen.add(study_id)
+    assert not duplicates, f"duplicate study_id: {sorted(set(duplicates))}"
+
+    malformed = [
+        study["study_id"]
+        for study in studies
+        if not STUDY_ID_RE.match(str(study["study_id"]))
+    ]
+    assert not malformed, (
+        f"study_id(s) that do not match ^[a-z0-9-]+$: {malformed[:3]}"
+    )
+
+    # --- authors ----------------------------------------------------------
+    for study in studies:
+        autores = study["autores"]
+        assert isinstance(autores, list), (
+            f"{study['study_id']}: autores is {type(autores).__name__}, expected a list"
+        )
+        assert len(autores) == study["n_autores"], (
+            f"{study['study_id']}: autores has {len(autores)} entries but n_autores "
+            f"is {study['n_autores']}"
+        )
+
+    for study in studies:
+        for index, author in enumerate(study["autores"]):
+            assert isinstance(author, dict), (
+                f"{study['study_id']}: autores[{index}] is "
+                f"{type(author).__name__}, expected an object"
+            )
+            missing = [field for field in AUTHOR_FIELDS if field not in author]
+            assert not missing, (
+                f"{study['study_id']}: autores[{index}] is missing field(s) "
+                f"{', '.join(missing)}"
+            )
+            extra = [field for field in author if field not in AUTHOR_FIELDS]
+            assert not extra, (
+                f"{study['study_id']}: autores[{index}] carries unexpected field(s) "
+                f"{', '.join(extra)}"
+            )
+
+    # --- species ----------------------------------------------------------
+    with_species = [
+        study for study in studies if study["especiesmencionadas"] is not None
+    ]
+    assert len(with_species) == EXPECTED_ESPECIES_NON_NULL, (
+        f"especiesmencionadas is non-null in {len(with_species)} studies, expected "
+        f"{EXPECTED_ESPECIES_NON_NULL}"
+    )
+    not_a_string = [
+        study["study_id"]
+        for study in with_species
+        if not isinstance(study["especiesmencionadas"], str)
+    ]
+    assert not not_a_string, (
+        f"non-null especiesmencionadas is not a string in {not_a_string[:3]}"
+    )
+
+    # --- per-study display consistency ------------------------------------
+    for study in studies:
+        study_id = study["study_id"]
+        if study["on_map"]:
+            assert study["display_class"] == "placeable", (
+                f"{study_id}: on_map is true but display_class is "
+                f"{study['display_class']!r}"
+            )
+            assert study["exclusion_reason"] is None, (
+                f"{study_id}: on_map is true but exclusion_reason is "
+                f"{study['exclusion_reason']!r}"
+            )
+        else:
+            assert study["display_class"] != "placeable", (
+                f"{study_id}: on_map is false but display_class is placeable"
+            )
+            reason = study["exclusion_reason"]
+            assert isinstance(reason, str) and reason.strip(), (
+                f"{study_id}: on_map is false but exclusion_reason is {reason!r}"
+            )
+
+    # --- aggregate class counts -------------------------------------------
+    counts = Counter(study["display_class"] for study in studies)
+    assert dict(counts) == EXPECTED_CLASS_COUNTS, (
+        f"class counts {dict(counts)} do not equal {EXPECTED_CLASS_COUNTS}"
+    )
+
+    classes = catalog.get("classes")
+    assert isinstance(classes, list), (
+        f"classes is {type(classes).__name__}, expected a list"
+    )
+    assert [entry["key"] for entry in classes] == subject.CLASS_ORDER, (
+        f"classes keys are {[entry['key'] for entry in classes]}, expected "
+        f"{subject.CLASS_ORDER}"
+    )
+    for entry in classes:
+        key = entry["key"]
+        assert entry["count"] == counts[key], (
+            f"classes[{key!r}].count is {entry['count']}, but {counts[key]} studies "
+            f"have that class"
+        )
+        assert entry["on_map"] == (key == "placeable"), (
+            f"classes[{key!r}].on_map is {entry['on_map']!r}, expected "
+            f"{key == 'placeable'}"
+        )
+        assert (entry["reason"] is None) == (key == "placeable"), (
+            f"classes[{key!r}].reason is {entry['reason']!r}, but only the placeable "
+            f"class may have no reason"
+        )
+
+    # --- the display contract agrees with those counts ---------------------
+    assert contract["map_visible_count"] == EXPECTED_MAP_VISIBLE == counts["placeable"], (
+        f"display_contract.map_visible_count is {contract['map_visible_count']!r}, "
+        f"expected {EXPECTED_MAP_VISIBLE} and {counts['placeable']} placeable studies"
+    )
+    assert (
+        contract["excluded_count"]
+        == EXPECTED_EXCLUDED
+        == EXPECTED_STUDY_COUNT - counts["placeable"]
+    ), (
+        f"display_contract.excluded_count is {contract['excluded_count']!r}, expected "
+        f"{EXPECTED_EXCLUDED} and "
+        f"{EXPECTED_STUDY_COUNT - counts['placeable']} excluded studies"
+    )
+
+
+class ShippedCatalogContractTests(unittest.TestCase):
+    """The committed artifact satisfies the contract the viewer relies on."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.catalog = load_shipped_catalog()
+
+    def test_the_committed_catalog_satisfies_the_whole_display_contract(self) -> None:
+        assert_catalog_contract(self.catalog)
+
+    def test_the_artifact_under_test_is_the_committed_one(self) -> None:
+        self.assertTrue(
+            CATALOG_PATH.is_file(), f"the committed artifact is missing: {CATALOG_PATH}"
+        )
+
+    def test_control_the_artifact_guard_rejects_a_missing_file(self) -> None:
+        absent = (
+            REPO_ROOT / "data" / "derived" / "venezuela" / "congresos" / "no-such.json"
+        )
+        self.assertFalse(absent.is_file())
+
+
+class ShippedCatalogControlTests(unittest.TestCase):
+    """One mutation per branch of ``assert_catalog_contract``.
+
+    Every control pins the branch it targets with ``assertRaisesRegex`` and
+    leaves every earlier branch satisfied, so the mutation cannot be rejected by
+    a check it was not written for.
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.catalog = load_shipped_catalog()
+
+    def _broken(self) -> dict[str, Any]:
+        return copy.deepcopy(self.catalog)
+
+    def _index_of(self, catalog: dict[str, Any], display_class: str, on_map: bool) -> int:
+        for index, study in enumerate(catalog["studies"]):
+            if study["display_class"] == display_class and study["on_map"] is on_map:
+                return index
+        raise AssertionError(f"fixture not found: {display_class} on_map={on_map}")
+
+    def _index_with_species(self, catalog: dict[str, Any]) -> int:
+        for index, study in enumerate(catalog["studies"]):
+            if study["especiesmencionadas"] is not None:
+                return index
+        raise AssertionError("no study carries especiesmencionadas")
+
+    def _fail(self, catalog: dict[str, Any], pattern: str) -> None:
+        with self.assertRaisesRegex(AssertionError, re.escape(pattern)):
+            assert_catalog_contract(catalog)
+
+    # --- the artifact is versioned, and is the study set that was reviewed --
+    def test_control_rejects_a_wrong_schema_version(self) -> None:
+        broken = self._broken()
+        broken["schema_version"] = 2
+        self._fail(broken, "schema_version is 2")
+
+    def test_control_rejects_a_wrong_study_count(self) -> None:
+        broken = self._broken()
+        broken["study_count"] = 30
+        self._fail(broken, "study_count is 30")
+
+    def test_control_rejects_a_non_list_studies_field(self) -> None:
+        broken = self._broken()
+        broken["studies"] = {}
+        self._fail(broken, "studies is dict")
+
+    def test_control_rejects_a_study_list_that_misses_a_study(self) -> None:
+        broken = self._broken()
+        broken["studies"] = broken["studies"][:1]
+        self._fail(broken, "len(studies) is 1")
+
+    # --- display_contract shape -------------------------------------------
+    def test_control_rejects_a_non_object_display_contract(self) -> None:
+        broken = self._broken()
+        broken["display_contract"] = ["map_visible_count", "excluded_count"]
+        self._fail(broken, "display_contract is list, expected an object")
+
+    def test_control_rejects_display_contract_that_lost_a_field(self) -> None:
+        broken = self._broken()
+        del broken["display_contract"]["excluded_count"]
+        self._fail(broken, "display_contract fields are")
+
+    # --- identity ---------------------------------------------------------
+    def test_control_rejects_a_duplicate_study_id(self) -> None:
+        broken = self._broken()
+        broken["studies"][1]["study_id"] = broken["studies"][0]["study_id"]
+        self._fail(broken, "duplicate study_id")
+
+    def test_control_rejects_a_study_id_outside_the_slug_alphabet(self) -> None:
+        broken = self._broken()
+        broken["studies"][0]["study_id"] = "CVE-1991_Pagina 5~2"
+        self._fail(broken, "do not match ^[a-z0-9-]+$")
+
+    # --- authors ----------------------------------------------------------
+    def test_control_rejects_n_autores_disagreeing_with_the_author_list(self) -> None:
+        broken = self._broken()
+        broken["studies"][0]["n_autores"] = broken["studies"][0]["n_autores"] + 1
+        self._fail(broken, "but n_autores is")
+
+    def test_control_rejects_a_non_list_autores_field(self) -> None:
+        broken = self._broken()
+        broken["studies"][0]["autores"] = "Ana"
+        self._fail(broken, "autores is str, expected a list")
+
+    def test_control_rejects_a_non_object_author_entry(self) -> None:
+        broken = self._broken()
+        broken["studies"][0]["autores"] = [42]
+        broken["studies"][0]["n_autores"] = 1
+        self._fail(broken, "autores[0] is int, expected an object")
+
+    def test_control_rejects_an_author_missing_a_required_field(self) -> None:
+        broken = self._broken()
+        del broken["studies"][0]["autores"][0]["orcid"]
+        self._fail(broken, "is missing field(s) orcid")
+
+    def test_control_rejects_an_author_carrying_an_unexpected_field(self) -> None:
+        broken = self._broken()
+        broken["studies"][0]["autores"][0]["telefono"] = "+58"
+        self._fail(broken, "carries unexpected field(s) telefono")
+
+    # --- species ----------------------------------------------------------
+    def test_control_rejects_a_lost_especiesmencionadas_value(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_with_species(broken)]["especiesmencionadas"] = None
+        self._fail(broken, "especiesmencionadas is non-null in 20 studies")
+
+    def test_control_rejects_a_non_string_especiesmencionadas(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_with_species(broken)]["especiesmencionadas"] = 42
+        self._fail(broken, "is not a string in")
+
+    # --- per-study display consistency ------------------------------------
+    def test_control_rejects_on_map_true_with_a_non_placeable_class(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_of(broken, "placeable", True)][
+            "display_class"
+        ] = "shared_coordinate"
+        self._fail(broken, "on_map is true but display_class is 'shared_coordinate'")
+
+    def test_control_rejects_on_map_true_with_an_exclusion_reason(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_of(broken, "placeable", True)][
+            "exclusion_reason"
+        ] = "no debería estar aquí"
+        self._fail(broken, "on_map is true but exclusion_reason is")
+
+    def test_control_rejects_on_map_false_with_the_placeable_class(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_of(broken, "no_coordinate", False)][
+            "display_class"
+        ] = "placeable"
+        self._fail(broken, "on_map is false but display_class is placeable")
+
+    def test_control_rejects_on_map_false_without_an_exclusion_reason(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_of(broken, "no_coordinate", False)][
+            "exclusion_reason"
+        ] = ""
+        self._fail(broken, "on_map is false but exclusion_reason is ''")
+
+    # --- aggregate class counts -------------------------------------------
+    def test_control_rejects_a_class_count_that_moved_between_classes(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_of(broken, "no_coordinate", False)][
+            "display_class"
+        ] = "shared_coordinate"
+        self._fail(broken, "class counts")
+
+    def test_control_rejects_an_unknown_display_class(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_of(broken, "no_coordinate", False)][
+            "display_class"
+        ] = "ghost"
+        self._fail(broken, "class counts")
+
+    def test_control_rejects_a_non_list_classes_block(self) -> None:
+        broken = self._broken()
+        broken["classes"] = {"placeable": {"count": 24}}
+        self._fail(broken, "classes is dict, expected a list")
+
+    def test_control_rejects_a_classes_block_in_the_wrong_order(self) -> None:
+        broken = self._broken()
+        broken["classes"] = list(reversed(broken["classes"]))
+        self._fail(broken, "classes keys are")
+
+    def test_control_rejects_a_class_entry_that_disagrees_with_the_studies(self) -> None:
+        broken = self._broken()
+        broken["classes"][0]["count"] = 23
+        self._fail(broken, "].count is 23")
+
+    def test_control_rejects_a_class_entry_with_the_wrong_on_map_flag(self) -> None:
+        broken = self._broken()
+        broken["classes"][0]["on_map"] = False
+        self._fail(broken, "].on_map is False")
+
+    def test_control_rejects_a_class_entry_with_the_wrong_reason(self) -> None:
+        broken = self._broken()
+        broken["classes"][0]["reason"] = "debería ser null"
+        self._fail(broken, "].reason is")
+
+    # --- the display contract agrees with the counts ----------------------
+    def test_control_rejects_a_map_visible_count_that_disagrees(self) -> None:
+        broken = self._broken()
+        broken["display_contract"]["map_visible_count"] = 23
+        self._fail(broken, "display_contract.map_visible_count is 23")
+
+    def test_control_rejects_an_excluded_count_that_disagrees(self) -> None:
+        broken = self._broken()
+        broken["display_contract"]["excluded_count"] = 6
+        self._fail(broken, "display_contract.excluded_count is 6")
+
+
+# ---------------------------------------------------------------------------
+# Import hygiene: a library module must not need the rebuild-only dependencies.
+# ---------------------------------------------------------------------------
+
+
+class BareInterpreterImportTests(unittest.TestCase):
+    """Importing the builder must not require pyarrow or GDAL, or exit."""
+
+    def test_the_module_imports_and_exposes_its_pure_logic(self) -> None:
+        done = run_probe(BARE_INTERPRETER_PROBE)
+        self.assertEqual(done.returncode, 0, done.stderr)
+        self.assertEqual(done.stderr, "")
+        lines = done.stdout.splitlines()
+        self.assertEqual(len(lines), 4, done.stdout)
+        self.assertGreater(int(lines[0]), 0, "the module docstring did not survive")
+        self.assertEqual(lines[1], "pagina-5-2")
+        self.assertEqual(lines[2], "False", "pyarrow was imported at module scope")
+        self.assertEqual(lines[3], "False", "osgeo was imported at module scope")
+
+    def test_control_the_probe_notices_a_module_that_exits_on_import(self) -> None:
+        done = run_probe("import sys; sys.exit(1)")
+        self.assertEqual(done.returncode, 1)
+
+    def test_control_the_probe_notices_a_module_that_imports_missing_packages(self) -> None:
+        done = run_probe("import build_study_catalog_does_not_exist")
+        self.assertNotEqual(done.returncode, 0)
+        self.assertIn("ModuleNotFoundError", done.stderr)
+
+    def test_control_the_laziness_check_can_report_true(self) -> None:
+        # The same predicate the real test asserts to be False, against an
+        # interpreter where both names are really in sys.modules.
+        done = run_probe(
+            "import sys, types;"
+            "sys.modules['pyarrow'] = types.ModuleType('pyarrow');"
+            "sys.modules['osgeo'] = types.ModuleType('osgeo');"
+            "print('pyarrow' in sys.modules, 'osgeo' in sys.modules)"
+        )
+        self.assertEqual(done.returncode, 0, done.stderr)
+        self.assertEqual(done.stdout.strip(), "True True")
+
+
+class MissingDependencyTests(unittest.TestCase):
+    """A missing rebuild-only dependency is an error, not a process exit."""
+
+    def test_control_the_swap_really_makes_imports_fail(self) -> None:
+        with module_swaps(absent=("pyarrow", "pyarrow.parquet", "osgeo", "osgeo.gdal")):
+            with self.assertRaisesRegex(ImportError, "halted"):
+                import pyarrow.parquet  # noqa: F401
+            with self.assertRaisesRegex(ImportError, "halted"):
+                from osgeo import gdal  # noqa: F401
+
+    def test_read_rows_reports_the_pyarrow_message_when_pyarrow_is_absent(self) -> None:
+        with module_swaps(absent=("pyarrow", "pyarrow.parquet")):
+            with self.assertRaisesRegex(
+                subject.StudyCatalogError, re.escape(PYARROW_MESSAGE)
+            ) as caught:
+                subject.read_rows(REPO_ROOT / "data" / "raw" / "no-such.parquet")
+        self.assertEqual(str(caught.exception), PYARROW_MESSAGE)
+
+    def test_control_the_pyarrow_error_precedes_the_path_check(self) -> None:
+        # The module-level import used to fail before any path was looked at, so
+        # a missing dependency still wins over a missing file.
+        with module_swaps(absent=("pyarrow", "pyarrow.parquet")):
+            with self.assertRaisesRegex(
+                subject.StudyCatalogError, re.escape("rebuild-only dependency")
+            ):
+                subject.read_rows(REPO_ROOT / "README.md")
+
+    def test_cog_extent_reports_the_gdal_message_when_osgeo_is_absent(self) -> None:
+        with module_swaps(absent=("osgeo", "osgeo.gdal")):
+            with self.assertRaisesRegex(
+                subject.StudyCatalogError, re.escape(GDAL_MESSAGE)
+            ) as caught:
+                subject.cog_extent(REPO_ROOT / "data" / "raw" / "no-such.tif")
+        self.assertEqual(str(caught.exception), GDAL_MESSAGE)
+
+    def test_main_prints_the_pyarrow_message_and_returns_one(self) -> None:
+        argv = [
+            "--parquet", str(REPO_ROOT / "no-such.parquet"),
+            "--cog", str(REPO_ROOT / "no-such.tif"),
+            "--outdir", "unused",
+            "--country", "venezuela",
+        ]
+        stderr = io.StringIO()
+        with tempfile.TemporaryDirectory() as outdir:
+            argv[5] = outdir
+            with module_swaps(absent=("pyarrow", "pyarrow.parquet")), mock.patch.object(
+                subject, "load_labelling", return_value=("label", "note")
+            ), mock.patch.object(subject, "cog_extent", return_value=EXTENT):
+                with contextlib.redirect_stderr(stderr):
+                    status = subject.main(argv)
+            leftovers = list(Path(outdir).iterdir())
+        self.assertEqual(status, 1)
+        self.assertEqual(stderr.getvalue(), f"error: {PYARROW_MESSAGE}\n")
+        self.assertEqual(leftovers, [], "a partial artifact was written")
+
+    def test_main_prints_the_gdal_message_and_returns_one(self) -> None:
+        argv = [
+            "--parquet", str(REPO_ROOT / "no-such.parquet"),
+            "--cog", str(REPO_ROOT / "no-such.tif"),
+            "--outdir", "unused",
+            "--country", "venezuela",
+        ]
+        stderr = io.StringIO()
+        with tempfile.TemporaryDirectory() as outdir:
+            argv[5] = outdir
+            with module_swaps(absent=("osgeo", "osgeo.gdal")), mock.patch.object(
+                subject, "load_labelling", return_value=("label", "note")
+            ):
+                with contextlib.redirect_stderr(stderr):
+                    status = subject.main(argv)
+        self.assertEqual(status, 1)
+        self.assertEqual(stderr.getvalue(), f"error: {GDAL_MESSAGE}\n")
+
+    def test_control_the_no_partial_artifact_check_can_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as outdir:
+            (Path(outdir) / "catalogo-estudios.json").write_text("{}", encoding="utf-8")
+            self.assertNotEqual(list(Path(outdir).iterdir()), [])
+
+
+class ReadRowsTests(unittest.TestCase):
+    """``read_rows`` reads through pyarrow and wraps its failures."""
+
+    def test_control_read_rows_uses_the_parquet_reader_it_imported(self) -> None:
+        reader = mock.Mock(return_value=FakeTable([{"anio": 1991}]))
+        with module_swaps(present=fake_pyarrow(reader)):
+            rows = subject.read_rows(REPO_ROOT / "README.md")
+        self.assertEqual(rows, [{"anio": 1991}])
+        reader.assert_called_once_with(str(REPO_ROOT / "README.md"))
+
+    def test_control_read_rows_rejects_a_missing_parquet_after_pyarrow_loads(self) -> None:
+        with module_swaps(present=fake_pyarrow(mock.Mock())):
+            with self.assertRaisesRegex(
+                subject.StudyCatalogError, re.escape("--parquet not found")
+            ):
+                subject.read_rows(REPO_ROOT / "no-such.parquet")
+
+    def test_control_read_rows_wraps_a_reader_failure(self) -> None:
+        def explode(path: str) -> Any:
+            raise ValueError("boom")
+
+        with module_swaps(present=fake_pyarrow(explode)):
+            with self.assertRaisesRegex(
+                subject.StudyCatalogError,
+                re.escape("could not read --parquet") + ".*boom",
+            ):
+                subject.read_rows(REPO_ROOT / "README.md")
+
+
+class CogExtentTests(unittest.TestCase):
+    """``cog_extent`` derives the extent from the geotransform, never a constant."""
+
+    def test_the_extent_comes_from_the_geotransform(self) -> None:
+        present, calls = fake_osgeo(
+            lambda name: FakeDataset((0.0, 2.0, 0.0, 10.0, 0.0, -3.0), 5, 4)
+        )
+        self.assertEqual(calls, [])
+        with module_swaps(present=present):
+            extent = subject.cog_extent(REPO_ROOT / "README.md")
+        self.assertEqual(extent, {"west": 0.0, "south": -2.0, "east": 10.0, "north": 10.0})
+        self.assertEqual(calls, ["UseExceptions"])
+
+    def test_control_a_different_geotransform_yields_a_different_extent(self) -> None:
+        present, _ = fake_osgeo(
+            lambda name: FakeDataset((100.0, 1.0, 0.0, 50.0, 0.0, -1.0), 10, 10)
+        )
+        with module_swaps(present=present):
+            extent = subject.cog_extent(REPO_ROOT / "README.md")
+        self.assertEqual(
+            extent, {"west": 100.0, "south": 40.0, "east": 110.0, "north": 50.0}
+        )
+        self.assertNotEqual(extent, {"west": 0.0, "south": -2.0, "east": 10.0, "north": 10.0})
+
+    def test_control_gdal_opening_nothing_is_an_error(self) -> None:
+        present, _ = fake_osgeo(lambda name: None)
+        with module_swaps(present=present):
+            with self.assertRaisesRegex(
+                subject.StudyCatalogError, re.escape("GDAL could not open --cog")
+            ):
+                subject.cog_extent(REPO_ROOT / "README.md")
+
+    def test_control_a_missing_cog_is_an_error_once_gdal_loads(self) -> None:
+        present, _ = fake_osgeo(lambda name: FakeDataset((0.0, 1.0, 0.0, 1.0, 0.0, -1.0), 1, 1))
+        with module_swaps(present=present):
+            with self.assertRaisesRegex(
+                subject.StudyCatalogError, re.escape("--cog not found")
+            ):
+                subject.cog_extent(REPO_ROOT / "no-such.tif")
+
+
+# ---------------------------------------------------------------------------
+# Identity.
+# ---------------------------------------------------------------------------
+
+
+class SlugifyTests(unittest.TestCase):
+    def test_lowercases_and_replaces_every_run_of_separators(self) -> None:
+        self.assertEqual(subject.slugify("Pagina_5_2"), "pagina-5-2")
+
+    def test_control_strips_leading_and_trailing_separators(self) -> None:
+        self.assertEqual(subject.slugify("__página 9__"), "p-gina-9")
+
+    def test_control_drops_characters_the_identifier_may_not_carry(self) -> None:
+        self.assertEqual(subject.slugify("Página 5 <2>.pdf"), "p-gina-5-2-pdf")
+
+
+class MakeStudyIdTests(unittest.TestCase):
+    def test_id_is_the_year_plus_the_slugged_stem(self) -> None:
+        self.assertEqual(
+            subject.make_study_id(1991, "data/raw/congresos/pagina_5_2.pdf"),
+            "cve-1991-pagina-5-2",
+        )
+
+    def test_control_the_year_is_part_of_the_identity(self) -> None:
+        self.assertNotEqual(
+            subject.make_study_id(1991, "data/raw/congresos/pagina_5_2.pdf"),
+            subject.make_study_id(1992, "data/raw/congresos/pagina_5_2.pdf"),
+        )
+
+    def test_control_rejects_a_source_path_with_an_empty_slug(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("has an empty slug")
+        ):
+            subject.make_study_id(1991, "data/raw/congresos/___.pdf")
+
+    def test_control_rejects_an_id_outside_the_slug_alphabet(self) -> None:
+        # int(row["anio"]) upstream makes this the only way to reach the shape
+        # check: a caller that hands over a value whose str() is not lowercase.
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("does not match ^[a-z0-9-]+$")
+        ):
+            subject.make_study_id(True, "data/raw/congresos/pagina_5_2.pdf")
+
+    def test_control_the_shape_check_accepts_a_well_formed_id(self) -> None:
+        self.assertTrue(
+            STUDY_ID_RE.match(
+                subject.make_study_id(1991, "data/raw/congresos/pagina_5_2.pdf")
+            )
+        )
+
+
+# ---------------------------------------------------------------------------
+# Classification.
+# ---------------------------------------------------------------------------
+
+
+class ClassifyTests(unittest.TestCase):
+    def test_counts_every_exact_coordinate_pair(self) -> None:
+        rows = [make_row(), make_row(source_path="data/raw/congresos/b.pdf")]
+        self.assertEqual(subject.classify(rows, EXTENT), {INSIDE: 2})
+
+    def test_control_ignores_rows_without_a_coordinate(self) -> None:
+        rows = [
+            make_row(),
+            make_row(source_path="data/raw/congresos/b.pdf", latitud=None, longitud=None),
+        ]
+        counts = subject.classify(rows, EXTENT)
+        self.assertEqual(counts, {INSIDE: 1})
+        self.assertNotIn((None, None), counts)
+
+    def test_control_keeps_distinct_coordinates_apart(self) -> None:
+        rows = [
+            make_row(),
+            make_row(source_path="data/raw/congresos/b.pdf",
+                     latitud=INSIDE_OTHER[0], longitud=INSIDE_OTHER[1]),
+        ]
+        self.assertEqual(len(subject.classify(rows, EXTENT)), 2)
+
+    def test_control_no_rows_is_no_count(self) -> None:
+        self.assertEqual(subject.classify([], EXTENT), {})
+
+
+class DisplayClassTests(unittest.TestCase):
+    def test_a_coordinate_inside_the_extent_is_placeable(self) -> None:
+        self.assertEqual(
+            subject.display_class_for(make_row(), EXTENT, {INSIDE: 1}), "placeable"
+        )
+
+    def test_shared_coordinate_when_two_rows_share_the_pair(self) -> None:
+        self.assertEqual(
+            subject.display_class_for(make_row(), EXTENT, {INSIDE: 2}),
+            "shared_coordinate",
+        )
+
+    def test_control_the_shared_branch_needs_a_multiplicity_above_one(self) -> None:
+        self.assertNotEqual(
+            subject.display_class_for(make_row(), EXTENT, {INSIDE: 1}), "shared_coordinate"
+        )
+
+    def test_control_a_coordinate_beyond_the_north_edge_is_outside_extent(self) -> None:
+        row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
+        self.assertEqual(
+            subject.display_class_for(row, EXTENT, {OUTSIDE: 1}), "outside_extent"
+        )
+
+    def test_control_a_coordinate_just_past_the_west_edge_is_outside_extent(self) -> None:
+        row = make_row(latitud=INSIDE[0], longitud=EXTENT["west"] - 0.001)
+        self.assertEqual(
+            subject.display_class_for(row, EXTENT, {}), "outside_extent"
+        )
+
+    def test_coordinates_on_the_extent_border_are_inside(self) -> None:
+        row = make_row(latitud=EXTENT["north"], longitud=EXTENT["west"])
+        self.assertEqual(subject.display_class_for(row, EXTENT, {}), "placeable")
+
+    def test_control_the_border_check_is_not_a_strict_inequality(self) -> None:
+        inside = make_row(latitud=EXTENT["north"], longitud=EXTENT["west"])
+        outside = make_row(latitud=EXTENT["north"] + 0.001, longitud=EXTENT["west"])
+        self.assertNotEqual(
+            subject.display_class_for(inside, EXTENT, {}),
+            subject.display_class_for(outside, EXTENT, {}),
+        )
+
+    def test_a_null_coordinate_is_no_coordinate(self) -> None:
+        row = make_row(latitud=None, longitud=None)
+        self.assertEqual(subject.display_class_for(row, EXTENT, {}), "no_coordinate")
+
+    def test_control_the_null_coordinate_branch_is_decided_before_the_extent(self) -> None:
+        # An empty extent would raise if it were read, so returning the class
+        # proves the null check runs first.
+        row = make_row(latitud=None, longitud=None)
+        self.assertEqual(subject.display_class_for(row, {}, {}), "no_coordinate")
+
+    def test_control_a_present_coordinate_does_consult_the_extent(self) -> None:
+        with self.assertRaisesRegex(KeyError, "west"):
+            subject.display_class_for(make_row(), {}, {})
+
+    def test_precedence_outside_extent_beats_shared_coordinate(self) -> None:
+        rows = [
+            make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1]),
+            make_row(source_path="data/raw/congresos/b.pdf",
+                     latitud=OUTSIDE[0], longitud=OUTSIDE[1]),
+        ]
+        counts = subject.classify(rows, EXTENT)
+        self.assertEqual(counts[OUTSIDE], 2)
+        self.assertEqual(subject.display_class_for(rows[0], EXTENT, counts), "outside_extent")
+        self.assertNotIn(
+            subject.display_class_for(rows[0], EXTENT, counts),
+            {"shared_coordinate", "placeable"},
+        )
+
+    def test_control_precedence_shared_coordinate_beats_placeable(self) -> None:
+        rows = [
+            make_row(),
+            make_row(source_path="data/raw/congresos/b.pdf"),
+        ]
+        counts = subject.classify(rows, EXTENT)
+        self.assertEqual(counts[INSIDE], 2)
+        self.assertEqual(
+            subject.display_class_for(rows[0], EXTENT, counts), "shared_coordinate"
+        )
+
+
+class ExclusionReasonTests(unittest.TestCase):
+    def test_a_placeable_study_has_no_reason(self) -> None:
+        self.assertIsNone(
+            subject.exclusion_reason_for(make_row(), "placeable", EXTENT, {INSIDE: 1})
+        )
+
+    def test_control_every_other_class_carries_a_reason(self) -> None:
+        row = make_row(latitud=None, longitud=None)
+        self.assertIsNotNone(
+            subject.exclusion_reason_for(row, "no_coordinate", EXTENT, {})
+        )
+
+    def test_the_no_coordinate_reason_says_why(self) -> None:
+        row = make_row(latitud=None, longitud=None)
+        reason = subject.exclusion_reason_for(row, "no_coordinate", EXTENT, {})
+        self.assertIn("no se puede situar en el mapa", reason)
+
+    def test_the_outside_extent_reason_names_the_offending_coordinate(self) -> None:
+        row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
+        reason = subject.exclusion_reason_for(row, "outside_extent", EXTENT, {})
+        self.assertIn("supera el límite norte", reason)
+        self.assertIn(repr(EXTENT["north"]), reason)
+        self.assertIn(repr(OUTSIDE[0]), reason)
+
+    def test_control_the_outside_reason_reads_the_extent_it_was_given(self) -> None:
+        row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
+        other = dict(EXTENT, north=99.5)
+        self.assertNotEqual(
+            subject.exclusion_reason_for(row, "outside_extent", EXTENT, {}),
+            subject.exclusion_reason_for(row, "outside_extent", other, {}),
+        )
+
+    def test_the_shared_reason_names_the_multiplicity(self) -> None:
+        reason = subject.exclusion_reason_for(make_row(), "shared_coordinate",
+                                               EXTENT, {INSIDE: 4})
+        self.assertIn("4 estudios comparten exactamente la misma coordenada", reason)
+
+    def test_control_the_shared_reason_reads_the_count_it_was_given(self) -> None:
+        reason = subject.exclusion_reason_for(make_row(), "shared_coordinate",
+                                              EXTENT, {INSIDE: 3})
+        self.assertIn("3 estudios comparten", reason)
+        self.assertNotIn("4 estudios comparten", reason)
+
+    def test_control_a_shared_reason_without_a_counted_pair_fails(self) -> None:
+        with self.assertRaisesRegex(KeyError, re.escape("(8.5, -69.0)")):
+            subject.exclusion_reason_for(make_row(), "shared_coordinate", EXTENT, {})
+
+
+# ---------------------------------------------------------------------------
+# Row parsing.
+# ---------------------------------------------------------------------------
+
+
+class AuthorParsingTests(unittest.TestCase):
+    def test_projects_the_five_source_fields_in_a_fixed_order(self) -> None:
+        row = make_row(autores=json.dumps([
+            {"orcid": "x", "nombre": "Ana", "extra": 1, "afiliacion": "ULA",
+             "pais": "VE", "ror": "r"},
+        ]))
+        self.assertEqual(
+            subject._parse_autores(row, "WHERE"),
+            [{"nombre": "Ana", "afiliacion": "ULA", "ror": "r", "pais": "VE",
+              "orcid": "x"}],
+        )
+        self.assertEqual(list(subject._parse_autores(row, "WHERE")[0]), AUTHOR_FIELDS)
+        self.assertNotIn("extra", subject._parse_autores(row, "WHERE")[0])
+        self.assertNotEqual(
+            subject._parse_autores(row, "WHERE"),
+            [{"nombre": "Ana", "afiliacion": "ULA", "ror": "r", "pais": "VE",
+              "orcid": "x", "extra": 1}],
+        )
+
+    def test_control_the_author_field_contract_is_the_five_source_fields(self) -> None:
+        self.assertEqual(subject.AUTOR_FIELDS, AUTHOR_FIELDS)
+        self.assertNotEqual(subject.AUTOR_FIELDS, list(reversed(AUTHOR_FIELDS)))
+
+    def test_control_rejects_a_non_object_author_and_names_its_position(self) -> None:
+        row = make_row(autores=json.dumps([dict(AUTHOR), "Ana"]))
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("autores[1] is not a JSON object (got str)"),
+        ):
+            subject._parse_autores(row, "WHERE")
+
+    def test_control_rejects_an_author_missing_one_required_field(self) -> None:
+        incomplete = {key: value for key, value in AUTHOR.items() if key != "orcid"}
+        row = make_row(autores=json.dumps([incomplete]))
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("is missing field(s) orcid")
+        ):
+            subject._parse_autores(row, "WHERE")
+
+    def test_control_names_every_missing_field_in_field_order(self) -> None:
+        incomplete = {"afiliacion": "ULA", "pais": "VE"}
+        row = make_row(autores=json.dumps([incomplete]))
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("is missing field(s) nombre, ror, orcid")
+        ):
+            subject._parse_autores(row, "WHERE")
+
+    def test_control_rejects_malformed_autores_json(self) -> None:
+        row = make_row(autores="[{'nombre': 'Ana'}")
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("autores does not parse as JSON")
+        ):
+            subject._parse_autores(row, "WHERE")
+
+    def test_control_rejects_autores_that_is_not_a_json_array(self) -> None:
+        row = make_row(autores=json.dumps({"nombre": "Ana"}))
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("autores must decode to a JSON array")
+        ):
+            subject._parse_autores(row, "WHERE")
+
+    def test_control_rejects_an_autores_column_that_is_not_a_string(self) -> None:
+        row = make_row(autores=[dict(AUTHOR)])
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("autores is not a JSON string")
+        ):
+            subject._parse_autores(row, "WHERE")
+
+    def test_control_the_failure_carries_the_row_tag(self) -> None:
+        row = make_row(autores="[", pagina=7, indice=3)
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("pagina=7 indice=3")
+        ):
+            subject._parse_autores(row, subject.row_name(row))
+
+
+class InstitutionParsingTests(unittest.TestCase):
+    def test_returns_the_decoded_strings(self) -> None:
+        row = make_row(instituciones=json.dumps(["ULA", "IVIC"]))
+        self.assertEqual(subject._parse_instituciones(row, "WHERE"), ["ULA", "IVIC"])
+
+    def test_control_rejects_a_non_string_institution_and_names_its_position(self) -> None:
+        row = make_row(instituciones=json.dumps(["ULA", 42]))
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("instituciones[1] is not a string")
+        ):
+            subject._parse_instituciones(row, "WHERE")
+
+    def test_control_rejects_malformed_instituciones_json(self) -> None:
+        row = make_row(instituciones="[ULA")
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("instituciones does not parse as JSON"),
+        ):
+            subject._parse_instituciones(row, "WHERE")
+
+    def test_control_rejects_instituciones_that_is_not_a_json_array(self) -> None:
+        row = make_row(instituciones=json.dumps("ULA"))
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("instituciones must decode to a JSON array"),
+        ):
+            subject._parse_instituciones(row, "WHERE")
+
+
+class NAutoresTests(unittest.TestCase):
+    def test_a_matching_row_is_counted_as_matched(self) -> None:
+        matched, mismatches = subject.check_n_autores([make_row()])
+        self.assertEqual(matched, 1)
+        self.assertEqual(mismatches, [])
+
+    def test_control_a_disagreeing_row_is_reported_with_both_numbers(self) -> None:
+        row = make_row(
+            autores=json.dumps([dict(AUTHOR), {**AUTHOR, "nombre": "Luis"}]),
+            n_autores=1,
+        )
+        matched, mismatches = subject.check_n_autores([row])
+        self.assertEqual(matched, 0)
+        self.assertEqual(len(mismatches), 1)
+        where, declared, actual = mismatches[0]
+        self.assertEqual((declared, actual), (1, 2))
+        self.assertEqual(where, subject.row_name(row))
+
+    def test_control_a_matching_row_with_several_authors_is_not_reported(self) -> None:
+        row = make_row(
+            autores=json.dumps([dict(AUTHOR), {**AUTHOR, "nombre": "Luis"}]),
+            n_autores=2,
+        )
+        matched, mismatches = subject.check_n_autores([row])
+        self.assertEqual(matched, 1)
+        self.assertEqual(mismatches, [])
+
+    def test_control_malformed_autores_raises_instead_of_being_counted(self) -> None:
+        row = make_row(autores="[")
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("autores does not parse as JSON")
+        ):
+            subject.check_n_autores([row])
+
+    def test_control_one_bad_row_hides_neither_the_others_nor_itself(self) -> None:
+        good = make_row()
+        bad = make_row(source_path="data/raw/congresos/b.pdf", n_autores=3)
+        matched, mismatches = subject.check_n_autores([good, bad])
+        self.assertEqual(matched, 1)
+        self.assertEqual([(declared, actual) for _, declared, actual in mismatches],
+                         [(3, 1)])
+
+
+class ValidateRowsTests(unittest.TestCase):
+    def test_accepts_a_well_formed_row(self) -> None:
+        subject.validate_rows([make_row()])
+
+    def test_control_rejects_an_empty_source(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("the source Parquet has no rows")
+        ):
+            subject.validate_rows([])
+
+    def test_control_rejects_a_missing_required_column(self) -> None:
+        row = make_row()
+        del row["latitud"]
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("source Parquet is missing required column(s): latitud"),
+        ):
+            subject.validate_rows([row])
+
+    def test_control_rejects_a_row_that_is_not_human_verified(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("row is not human-verified (False)")
+        ):
+            subject.validate_rows([make_row(human_verified=False)])
+
+    def test_control_rejects_latitud_without_longitud(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("latitud/longitud must both be null or both present"),
+        ):
+            subject.validate_rows([make_row(longitud=None)])
+
+    def test_control_rejects_longitud_without_latitud(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("latitud/longitud must both be null or both present"),
+        ):
+            subject.validate_rows([make_row(latitud=None)])
+
+    def test_control_rejects_an_implausible_latitude(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("latitud 91.5 is outside the plausible range [-90, 90]"),
+        ):
+            subject.validate_rows([make_row(latitud=91.5)])
+
+    def test_control_rejects_an_implausible_longitude(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("longitud 181.5 is outside the plausible range [-180, 180]"),
+        ):
+            subject.validate_rows([make_row(longitud=181.5)])
+
+    def test_control_accepts_the_plausible_range_borders(self) -> None:
+        subject.validate_rows([make_row(latitud=-90.0)])
+        subject.validate_rows([make_row(longitud=180.0)])
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("latitud -90.000001")
+        ):
+            subject.validate_rows([make_row(latitud=-90.000001)])
+
+    def test_control_rejects_paises_that_is_not_a_json_string(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("paises is not a JSON string")
+        ):
+            subject.validate_rows([make_row(paises=["VE"])])
+
+    def test_control_rejects_malformed_paises_json(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("paises does not parse as JSON")
+        ):
+            subject.validate_rows([make_row(paises="[VE")])
+
+    def test_control_rejects_paises_that_is_not_a_json_array(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("paises must decode to a JSON array")
+        ):
+            subject.validate_rows([make_row(paises=json.dumps({"VE": 1}))])
+
+    def test_control_rejects_malformed_autores_json_in_validate_rows(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("autores does not parse as JSON")
+        ):
+            subject.validate_rows([make_row(autores="[")])
+
+    def test_control_rejects_a_non_object_author_in_validate_rows(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("autores[0] is not a JSON object")
+        ):
+            subject.validate_rows([make_row(autores=json.dumps(["Ana"]))])
+
+    def test_control_rejects_an_author_missing_a_field_in_validate_rows(self) -> None:
+        incomplete = {key: value for key, value in AUTHOR.items() if key != "pais"}
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("autores[0] is missing field(s) pais")
+        ):
+            subject.validate_rows([make_row(autores=json.dumps([incomplete]))])
+
+    def test_control_rejects_malformed_instituciones_json_in_validate_rows(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("instituciones does not parse as JSON"),
+        ):
+            subject.validate_rows([make_row(instituciones="[")])
+
+    def test_control_rejects_a_non_string_institution_in_validate_rows(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("instituciones[0] is not a string")
+        ):
+            subject.validate_rows([make_row(instituciones=json.dumps([7]))])
+
+    def test_control_the_failure_names_the_offending_row(self) -> None:
+        row = make_row(human_verified=False)
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("source_path='data/raw/congresos/pagina_5_2.pdf'"),
+        ):
+            subject.validate_rows([row])
+
+
+# ---------------------------------------------------------------------------
+# Assembly.
+# ---------------------------------------------------------------------------
+
+
+class BuildStudyTests(unittest.TestCase):
+    def test_a_placeable_row_becomes_an_on_map_study(self) -> None:
+        row = make_row()
+        study = subject.build_study(row, EXTENT, {INSIDE: 1})
+        self.assertEqual(study["study_id"], "cve-1991-pagina-5-2")
+        self.assertEqual(study["display_class"], "placeable")
+        self.assertIs(study["on_map"], True)
+        self.assertIsNone(study["exclusion_reason"])
+        self.assertEqual(study["autores"], [dict(AUTHOR)])
+        self.assertEqual(study["instituciones"], ["Universidad de Los Andes"])
+        self.assertEqual(study["paises"], ["VE"])
+        self.assertEqual((study["latitud"], study["longitud"]), INSIDE)
+        self.assertEqual(study["titulo"], row["titulo"])
+        self.assertEqual(study["resumen"], row["resumen"])
+
+    def test_control_a_shared_coordinate_row_is_not_on_the_map(self) -> None:
+        row = make_row()
+        study = subject.build_study(row, EXTENT, {INSIDE: 2})
+        self.assertEqual(study["display_class"], "shared_coordinate")
+        self.assertIs(study["on_map"], False)
+        self.assertIn("2 estudios comparten", study["exclusion_reason"])
+
+    def test_control_an_outside_extent_row_is_not_on_the_map(self) -> None:
+        row = make_row(latitud=OUTSIDE[0], longitud=OUTSIDE[1])
+        study = subject.build_study(row, EXTENT, {OUTSIDE: 1})
+        self.assertEqual(study["display_class"], "outside_extent")
+        self.assertIs(study["on_map"], False)
+        self.assertIn("supera el límite norte", study["exclusion_reason"])
+
+    def test_control_a_row_without_coordinates_is_not_on_the_map(self) -> None:
+        row = make_row(latitud=None, longitud=None)
+        study = subject.build_study(row, EXTENT, {})
+        self.assertEqual(study["display_class"], "no_coordinate")
+        self.assertIs(study["on_map"], False)
+        self.assertIsNone(study["latitud"])
+        self.assertIsNone(study["longitud"])
+        self.assertTrue(study["exclusion_reason"])
+
+    def test_control_the_numeric_columns_are_cast_to_int(self) -> None:
+        row = make_row(anio="1991", pagina="5", indice="2", n_autores="1")
+        study = subject.build_study(row, EXTENT, {INSIDE: 1})
+        self.assertEqual(
+            (study["anio"], study["pagina"], study["indice"], study["n_autores"]),
+            (1991, 5, 2, 1),
+        )
+
+    def test_control_a_source_path_with_an_empty_slug_aborts_the_study(self) -> None:
+        row = make_row(source_path="data/raw/congresos/___.pdf")
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("has an empty slug")
+        ):
+            subject.build_study(row, EXTENT, {INSIDE: 1})
+
+    def test_control_a_broken_author_column_aborts_the_study(self) -> None:
+        row = make_row(autores="[")
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("autores does not parse as JSON")
+        ):
+            subject.build_study(row, EXTENT, {INSIDE: 1})
+
+
+class BuildCatalogTests(unittest.TestCase):
+    def test_studies_are_sorted_by_year_congress_page_and_index(self) -> None:
+        catalog, _ = build_test_catalog()
+        self.assertEqual(
+            [study["study_id"] for study in catalog["studies"]], EXPECTED_CATALOG_IDS
+        )
+
+    def test_class_counts_and_the_display_contract_agree(self) -> None:
+        catalog, counts = build_test_catalog()
+        self.assertEqual(catalog["study_count"], 6)
+        self.assertEqual(
+            counts,
+            {"placeable": 1, "shared_coordinate": 2, "outside_extent": 1,
+             "no_coordinate": 2},
+        )
+        self.assertEqual(
+            catalog["display_contract"], {"map_visible_count": 1, "excluded_count": 5}
+        )
+        self.assertEqual(sum(counts.values()), catalog["study_count"])
+        self.assertEqual(
+            catalog["display_contract"]["map_visible_count"], counts["placeable"]
+        )
+        self.assertEqual(
+            catalog["display_contract"]["excluded_count"],
+            catalog["study_count"] - counts["placeable"],
+        )
+
+    def test_control_a_catalog_without_excluded_studies_reports_zero(self) -> None:
+        catalog, counts = subject.build_catalog(
+            [make_row()], EXTENT, "testland", "p.parquet", "label", "note"
+        )
+        self.assertEqual(counts["placeable"], 1)
+        self.assertEqual(
+            catalog["display_contract"], {"map_visible_count": 1, "excluded_count": 0}
+        )
+
+    def test_the_classes_block_labels_every_class(self) -> None:
+        catalog, counts = build_test_catalog()
+        classes = catalog["classes"]
+        self.assertEqual([entry["key"] for entry in classes], subject.CLASS_ORDER)
+        for entry in classes:
+            self.assertEqual(entry["count"], counts[entry["key"]])
+            self.assertEqual(entry["on_map"], entry["key"] == "placeable")
+            self.assertEqual(entry["reason"] is None, entry["key"] == "placeable")
+        self.assertEqual(classes[0]["label_es"], "Ubicable")
+
+    def test_control_a_duplicate_study_id_is_a_hard_error(self) -> None:
+        first = make_row()
+        second = make_row(pagina=9, indice=9)
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError, re.escape("duplicate study_id 'cve-1991-pagina-5-2'")
+        ):
+            subject.build_catalog(
+                [first, second], EXTENT, "testland", "p.parquet", "label", "note"
+            )
+
+    def test_control_the_same_rows_with_distinct_stems_do_not_collide(self) -> None:
+        first = make_row()
+        second = make_row(source_path="data/raw/congresos/pagina_5_3.pdf",
+                          pagina=9, indice=9)
+        catalog, _ = subject.build_catalog(
+            [first, second], EXTENT, "testland", "p.parquet", "label", "note"
+        )
+        self.assertEqual(len({study["study_id"] for study in catalog["studies"]}), 2)
+
+    def test_the_catalog_records_what_it_was_built_from(self) -> None:
+        catalog, _ = build_test_catalog()
+        self.assertEqual(catalog["schema_version"], 1)
+        self.assertEqual(catalog["country"], "testland")
+        self.assertEqual(catalog["source_parquet"], "data/raw/congresos/test.parquet")
+        self.assertEqual(catalog["extent_label"], "extent label")
+        self.assertEqual(catalog["extent_boundary_note"], "extent boundary note")
+        self.assertEqual(catalog["extent"], EXTENT)
+
+    def test_control_the_recorded_country_is_the_argument(self) -> None:
+        catalog, _ = subject.build_catalog(
+            [make_row()], EXTENT, "otro-pais", "p.parquet", "l", "n"
+        )
+        self.assertEqual(catalog["country"], "otro-pais")
+        self.assertNotEqual(catalog["country"], "testland")
+
+    def test_generated_utc_is_a_utc_timestamp(self) -> None:
+        catalog, _ = build_test_catalog()
+        stamp = catalog["generated_utc"]
+        self.assertIsInstance(stamp, str)
+        self.assertEqual(datetime.fromisoformat(stamp).utcoffset(), timedelta(0))
+
+    def test_control_the_utc_offset_check_can_fail(self) -> None:
+        self.assertNotEqual(
+            datetime.fromisoformat("2026-10-09T03:10:50+02:00").utcoffset(), timedelta(0)
+        )
+
+
+# ---------------------------------------------------------------------------
+# CSV rendering.
+# ---------------------------------------------------------------------------
+
+
+class CsvValueTests(unittest.TestCase):
+    def test_autores_render_as_the_joined_author_names(self) -> None:
+        authors = [{"nombre": "Ana Pérez"}, {"nombre": "Luis Gómez"}]
+        self.assertEqual(subject._csv_value("autores", authors), "Ana Pérez; Luis Gómez")
+
+    def test_control_autores_read_the_nombre_field_specifically(self) -> None:
+        with self.assertRaisesRegex(KeyError, "nombre"):
+            subject._csv_value("autores", [{"afiliacion": "ULA"}])
+
+    def test_string_lists_render_as_a_joined_value(self) -> None:
+        self.assertEqual(subject._csv_value("paises", ["VE", "CO"]), "VE; CO")
+        self.assertEqual(subject._csv_value("instituciones", ["ULA"]), "ULA")
+
+    def test_control_a_string_list_is_not_rendered_as_its_repr(self) -> None:
+        self.assertNotEqual(subject._csv_value("paises", ["VE", "CO"]), "['VE', 'CO']")
+
+    def test_control_a_free_text_column_is_left_verbatim(self) -> None:
+        # A plain string is not a list, so it must not be split and rejoined.
+        value = "Cedrela odorata; Cedrela mexicana"
+        self.assertEqual(subject._csv_value("especiesmencionadas", value), value)
+        self.assertEqual(
+            subject._csv_value("especiesmencionadas", ["a", "b"]), "a; b"
+        )
+
+    def test_control_scalars_pass_through_unchanged(self) -> None:
+        self.assertEqual(subject._csv_value("pagina", 5), 5)
+        self.assertEqual(subject._csv_value("latitud", 8.5), 8.5)
+
+
+if __name__ == "__main__":
+    unittest.main()
