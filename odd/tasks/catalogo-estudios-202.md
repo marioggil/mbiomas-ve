@@ -734,6 +734,13 @@ the map, listed in the panel), which moves ~28 rows and changes one entry of the
 **Not done, on purpose**: the committed artifact is **not** regenerated. Section 6's rule is that the
 rebuild is not treated as truth until the review happens, and the artifact is what the viewer serves.
 
+**One thing the prefill broke, and it is my oversight.** `EXPECTED_GRANULARITY_ENTRIES` pinned the
+curated file's entry count at 202, and the prefill took it to 255, so a second test failed
+(`255 != 202`). The constant is re-anchored to 255 in the same commit. The count is a bare number on
+purpose — the dependency-free suite cannot read the Parquet, so the real coverage check is the
+builder's `check_granularity_coverage`, which runs where `pyarrow` exists and refuses on any missing
+row.
+
 ### T8 — Collapsible map chrome — **DONE**
 
 **Requested by the user after the PRs were opened**: the map should let you minimise the legend and the

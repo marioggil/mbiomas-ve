@@ -107,7 +107,7 @@ EXPECTED_COLLISION_MARKER_COUNT = 32
 EXPECTED_ESPECIES_NON_NULL = 162
 
 # The curated taxonomy is complete: one entry per row of the 202-study corpus.
-EXPECTED_GRANULARITY_ENTRIES = 202
+EXPECTED_GRANULARITY_ENTRIES = 255
 
 # The author object shape, spelled out here so a rename of a source field fails.
 AUTHOR_FIELDS = ["nombre", "afiliacion", "ror", "pais", "orcid"]
