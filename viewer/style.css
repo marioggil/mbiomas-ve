@@ -51,13 +51,12 @@ body {
    * exceeds the viewport. The panel can therefore never steal
    * space from the map by construction. */
   grid-template-columns: 320px minmax(0, 1fr);
-  grid-template-rows: auto auto auto auto auto;
+  grid-template-rows: auto auto auto auto;
   grid-template-areas:
     "header  header"
     "legend  map"
     "catalog catalog"
-    "panel   panel"
-    "time    time";
+    "panel   panel";
   min-height: 100vh;
 }
 
@@ -122,7 +121,10 @@ body {
 .panel-panel:focus,
 .time-bar:focus {
   outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  /* Inset, because the band now lives inside .map-panel, which clips: an
+   * outset ring would lose its left, right and bottom sides against the
+   * panel's edge and only the top line would survive. */
+  outline-offset: -3px;
 }
 
 /* Reading measure (craft floor). Prose stops at a comfortable line length
@@ -399,13 +401,34 @@ body.is-overlays-collapsed .map-overlays {
   position: relative;
   background: #dde3eb;
   overflow: hidden;
+  /* Column layout: the canvas region below grows (``flex: 1 1 auto``) and
+   * the year band keeps its own content height (``flex: 0 0 auto`` on
+   * .time-bar), so the band takes its height from the map and never the
+   * other way around. The panel still owns the height below. */
+  display: flex;
+  flex-direction: column;
   /* Deterministic viewport-derived height. The map row no longer
    * competes with the panel via ``1fr`` (see the body grid), so its
-   * size is independent of how tall the panel grows. Floor 260px
-   * keeps the map usable at very short viewports; ceiling 720px
+   * size is independent of how tall the panel grows. The floor carries the
+   * map's own 260px floor PLUS the year band (~58px in its row shape): the
+   * band lives inside this box, so a floor of 260 would have left the map
+   * 202px at 1280x500, where the top-anchored toolbar and the bottom-anchored
+   * overlays collided over the coordinate form. Ceiling 720px
    * stops the map from pushing the panel offscreen on tall
-   * displays. At 1280x800 → 400px (50vh); at 1042x569 → ~284px. */
-  height: clamp(260px, 50vh, 720px);
+   * displays. At 1280x800 → 400px (50vh); at 1042x569 → 318px. */
+  height: clamp(318px, 50vh, 720px);
+}
+
+/* The map's box inside the panel, and the containing block for the
+ * absolutely positioned chrome (.map-controls, .map-overlays) and for the
+ * MapLibre canvas itself. The panel is no longer that containing block: it
+ * also holds the year band, so chrome anchored to the panel would paint over
+ * the band. ``min-height: 0`` is what lets the box shrink to the room the
+ * panel actually has left once the band has taken its own. */
+.map-canvas {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .map {
@@ -568,9 +591,26 @@ body.is-overlays-collapsed .map-overlays {
   outline-offset: 2px;
 }
 
-/* ------- Time bar ------- */
+/* ------- Time bar -------
+ * The band lives under the map, inside the map panel: the control exists to
+ * scrub the year and watch the map change, and four screens apart it forced
+ * a choice between seeing one or the other. ``flex: 0 0 auto`` keeps the band
+ * at its content height inside the panel's column, so it is the map that
+ * cedes that height — the panel's own ``height`` (above) is unchanged and
+ * nothing below the map moves.
+ *
+ * One row wherever there is width for one: label and year, slider, then the
+ * min/max pair inline. Below 961px the map column narrows to the 320px
+ * legend's side and the older stacked shape comes back (see the max-width:
+ * 960px block below): a row there would either crush the label or wrap into
+ * a second line, which costs the map the same height the stacked shape
+ * does. */
 .time-bar {
-  grid-area: time;
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
   background: var(--bg-bar);
   color: var(--bg-bar-fg);
   padding: 12px 18px 14px;
@@ -582,7 +622,6 @@ body.is-overlays-collapsed .map-overlays {
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 6px;
 }
 
 .time-bar-label {
@@ -601,8 +640,13 @@ body.is-overlays-collapsed .map-overlays {
 }
 
 .time-bar-slider {
-  width: 100%;
-  margin: 4px 0 4px;
+  /* The one item that takes the row's slack. ``min-width: 0`` lets it shrink
+   * instead of pushing the row wider than the panel at a narrow width, the
+   * same reason .map-coords-input carries it. */
+  flex: 1 1 12ch;
+  min-width: 0;
+  width: auto;
+  margin: 0;
   accent-color: var(--accent);
 }
 
@@ -618,6 +662,10 @@ body.is-overlays-collapsed .map-overlays {
 .time-bar-range {
   display: flex;
   justify-content: space-between;
+  /* In the row shape both ends share one corner, so they need a gap; in the
+   * stacked shape ``space-between`` already separates them and the gap is
+   * inert. */
+  gap: 10px;
   font-size: 12px;
   color: var(--bg-bar-fg-muted);
   font-variant-numeric: tabular-nums;
@@ -642,7 +690,7 @@ body.is-overlays-collapsed .map-overlays {
    * max-height cap — the document scrolls past it. */
   body {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto;
     /* The order here is the document order, and the map comes third: a
      * stacked layout that put the catalogue before the map would make the
      * visual order contradict the keyboard one. */
@@ -651,13 +699,45 @@ body.is-overlays-collapsed .map-overlays {
       "legend"
       "map"
       "catalog"
-      "panel"
-      "time";
+      "panel";
   }
   .legend-panel {
     max-height: 220px;
     border-right: 0;
     border-bottom: 1px solid var(--border);
+  }
+}
+
+/* The year band keeps its row shape until the row genuinely stops fitting.
+ * The arithmetic: the label (~187px), the slider's 12ch basis (~200px), the
+ * range (~62px), the 13px gaps and the 18px side padding need ~509px, so the
+ * row is right for every band wider than that. The file's 960px single-column
+ * boundary is NOT that width: below it the map is still the full panel width
+ * (945px at 960), so stacking there cost the map 47px of height it did not
+ * have to give, and pushed the chrome into an overlap at 960x700 that the
+ * wider layout never had.
+ *
+ * The floor here is the stacked band's own price (~105px) on top of the map's
+ * 260px floor: at 390x844 the canvas would otherwise be 317px and the halo
+ * note would sit 47px into the coordinate form. 530 keeps the mobile canvas
+ * at the 422px that 6acc637 already had with the band as a page footer, so
+ * the pre-existing halo overlap there (17px) does not grow. */
+@media (max-width: 560px) {
+  .time-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .time-bar-row {
+    margin-bottom: 6px;
+  }
+  .time-bar-slider {
+    flex: 0 0 auto;
+    width: 100%;
+    margin: 4px 0;
+  }
+  .map-panel {
+    height: clamp(530px, 50vh, 720px);
   }
 }
 
@@ -667,14 +747,13 @@ body.is-overlays-collapsed .map-overlays {
    * max-height cap (the document scrolls past it). */
   body {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto;
     grid-template-areas:
       "header"
       "legend"
       "map"
       "catalog"
-      "panel"
-      "time";
+      "panel";
   }
   .legend-panel {
     max-height: 220px;

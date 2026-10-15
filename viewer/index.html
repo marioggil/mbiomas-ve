@@ -13,8 +13,8 @@
        container, so these anchors rely on the visually-hidden technique
        (.skip-link, absolute positioning) to stay out of the grid's flow.
        They must not take space or shift any panel while hidden. -->
-  <a class="skip-link" href="#panel-panel">Saltar al panel de composición</a>
   <a class="skip-link" href="#time-bar">Saltar al selector de año</a>
+  <a class="skip-link" href="#panel-panel">Saltar al panel de composición</a>
   <header class="viewer-header" role="banner">
     <div class="viewer-header-text">
       <h1 class="viewer-title">Visor de cobertura MapBiomas Venezuela — Colección 3</h1>
@@ -69,6 +69,11 @@
   </aside>
 
   <section class="map-panel" aria-label="Mapa de cobertura anual">
+    <!-- The canvas region is its own box: .map-controls and .map-overlays
+         are absolutely positioned, and they have to anchor to the map, not
+         to the whole panel — the panel now also holds the year band, which
+         they would cover. -->
+    <div class="map-canvas">
     <div id="map" class="map" role="application" aria-label="Mapa interactivo"></div>
     <div class="map-controls" role="toolbar" aria-label="Herramientas del mapa">
       <button
@@ -147,6 +152,29 @@
         <span class="labelling-note" id="d7-boundary-note">&hellip;</span>
       </div>
     </div>
+    </div>
+  <footer class="time-bar" id="time-bar" tabindex="-1" aria-label="Selector de año">
+    <div class="time-bar-row">
+      <label for="year-slider" class="time-bar-label">Año de cobertura</label>
+      <output class="time-bar-value" id="year-value" for="year-slider">&mdash;</output>
+    </div>
+    <input
+      id="year-slider"
+      class="time-bar-slider"
+      type="range"
+      min="0"
+      max="0"
+      step="1"
+      value="0"
+      aria-valuemin="0"
+      aria-valuemax="0"
+      aria-valuenow="0"
+    />
+    <div class="time-bar-range">
+      <span id="year-min">&mdash;</span>
+      <span id="year-max">&mdash;</span>
+    </div>
+  </footer>
   </section>
 
   <section class="catalog-panel" aria-label="Catálogo de estudios">
@@ -280,29 +308,6 @@
       <span class="panel-boundary-note" id="panel-boundary-note">&hellip;</span>
     </div>
   </aside>
-
-  <footer class="time-bar" id="time-bar" tabindex="-1" aria-label="Selector de año">
-    <div class="time-bar-row">
-      <label for="year-slider" class="time-bar-label">Año de cobertura</label>
-      <output class="time-bar-value" id="year-value" for="year-slider">&mdash;</output>
-    </div>
-    <input
-      id="year-slider"
-      class="time-bar-slider"
-      type="range"
-      min="0"
-      max="0"
-      step="1"
-      value="0"
-      aria-valuemin="0"
-      aria-valuemax="0"
-      aria-valuenow="0"
-    />
-    <div class="time-bar-range">
-      <span id="year-min">&mdash;</span>
-      <span id="year-max">&mdash;</span>
-    </div>
-  </footer>
 
   <script src="/static/vendor/maplibre-gl.js"></script>
   <script src="/static/api.js"></script>
