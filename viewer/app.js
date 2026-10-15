@@ -945,7 +945,13 @@
     map.addControl(
       new maplibregl.AttributionControl({
         compact: true,
-        customAttribution: "MapBiomas Venezuela · Colección 3",
+        // The attribution CC BY 4.0 requires, next to the data it covers and in
+        // the format the terms specify (NOTICE.md): the source, the collection,
+        // the licence with its deed, and the word that discharges the
+        // "indicate changes" obligation. No MapBiomas logo file is copied into
+        // this repository; the name and the URL are what the licence asks for.
+        customAttribution:
+          "Datos: <a href='https://venezuela.mapbiomas.org/terminos-de-uso/' target='_blank' rel='noopener'>MapBiomas Venezuela</a> · Colección 3 · <a href='https://creativecommons.org/licenses/by/4.0/' target='_blank' rel='noopener'>CC BY 4.0</a> · adaptado",
       }),
       "bottom-right"
     );
