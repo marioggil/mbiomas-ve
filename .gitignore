@@ -1,10 +1,12 @@
 # Local Pi runtime state
 .atl/
-# Impeccable, the design skill for coding agents, installed into the project by
-# `npx impeccable install --providers=pi --scope=project`. It is 23 MB, most of
-# it a static linux-x64 engine binary, and one command reinstalls it, so it does
-# not belong in the history.
+# Impeccable, the design skill for coding agents. `.pi/` is the install — 23 MB,
+# most of it a static linux-x64 engine binary, and one command reproduces it —
+# and `.impeccable/` is its per-project state: critique snapshots and the
+# live-mode config. PRODUCT.md is the product record and IS versioned; these two
+# are not.
 .pi/
+.impeccable/
 
 # Rasters are never versioned: raw, normalized and tiled all live outside Git.
 # 40 annual GeoTIFFs = 2.9 GB raw; COG outputs add ~3.8 GB.
