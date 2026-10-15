@@ -1,6 +1,6 @@
 # Fix: the catalog metrics charts were illegible (P1-1's second instance)
 
-**Status**: implemented and verified — see §3 · **Branch**: `fix/graficos-metricas-legibles` · **Commit**: `<pending>`
+**Status**: implemented and verified — see §3 · **Branch**: `fix/graficos-metricas-legibles` · **Commit**: `31731cf`
 **Opened by**: `.impeccable/critique/2026-10-15T05-25-10Z__viewer-index-html.md`, found while verifying the type scale.
 
 ## 1. The defect, measured
