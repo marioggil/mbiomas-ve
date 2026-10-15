@@ -48,6 +48,11 @@
   var chartCursor = null;
   var chartHitLayer = null;
   var chartDescEl = null;
+  // The chart, its legend and its description always read the WHOLE mapped
+  // extent; the clip only changes the breakdown below them. When an area is
+  // drawn the chart has to declare that, or it reads as if it were the area.
+  var chartSubtitleEl = null;
+  var chartScopeArea = false;
   var legendList = null;
   var breakdownEmpty = null;
   var breakdownList = null;
@@ -249,6 +254,18 @@
   // of --fg-strong (viewer/style.css).
   var CHART_LABEL_NEAR_BLACK_FALLBACK = "#0b1320";
 
+  // The chart's denominator, in words. The default state keeps the sentence the
+  // panel has always shown; the area variant exists because, with a clipped
+  // breakdown on the same panel, the top chart would otherwise be read as the
+  // area. Both are short on purpose: the subtitle lives inside a fixed 600-unit
+  // viewBox and a longer sentence would run past the drawing area.
+  var CHART_SCOPE_WHOLE =
+    "% de la extensión válida · cursor en el año seleccionado";
+  var CHART_SCOPE_WHOLE_WITH_AREA =
+    "% de la extensión válida del mapa · el área trazada no lo cambia";
+  var CHART_DESC_SCOPE_WITH_AREA =
+    "Extensión válida del mapa; el área trazada no lo cambia. ";
+
   function renderChart() {
     if (!chartRoot || !series) {
       return;
@@ -432,8 +449,10 @@
     subtitle.setAttribute("x", String(CHART_PAD_LEFT));
     subtitle.setAttribute("y", "38");
     subtitle.setAttribute("class", "panel-chart-subtitle");
-    subtitle.textContent =
-      "% de la extensión válida · cursor en el año seleccionado";
+    subtitle.textContent = CHART_SCOPE_WHOLE;
+    // Kept as a reference because this sentence is the chart's denominator, and
+    // it has to follow the clip state (see ``updateChartScope``).
+    chartSubtitleEl = subtitle;
     g.appendChild(subtitle);
     return g;
   }
@@ -609,6 +628,25 @@
   }
 
   /**
+   * The chart's scope, in words. The chart, its legend and its description are
+   * the whole map's; the clipped breakdown below is the drawn area's. With both
+   * on screen the chart must say which it is, or a screenshot of it beside the
+   * clipped bars is read as the area.
+   *
+   * @param {boolean} isArea true while a drawn area is applied to the panel.
+   */
+  function updateChartScope(isArea) {
+    chartScopeArea = !!isArea;
+    if (chartSubtitleEl) {
+      chartSubtitleEl.textContent = chartScopeArea
+        ? CHART_SCOPE_WHOLE_WITH_AREA
+        : CHART_SCOPE_WHOLE;
+    }
+    // The description says the same thing, so it moves with the scope.
+    updateChartDesc(currentYear);
+  }
+
+  /**
    * Write the chart's <desc>: the six level-1 groups with their share and
    * hectares for one year. Called from highlightLegendYear() so the chart
    * description and the legend values move together on a year change.
@@ -637,6 +675,7 @@
       })
       .join("; ");
     chartDescEl.textContent =
+      (chartScopeArea ? CHART_DESC_SCOPE_WITH_AREA : "") +
       (yearIdx < 0 ? "Sin datos para " + year + ". " : "Año " + year + ". ") +
       groups +
       ".";
@@ -944,6 +983,7 @@
     if (!doc || typeof doc !== "object") {
       return;
     }
+    updateChartScope(true);
     renderBreakdown(doc, {
       title: "Clases en la zona seleccionada (" + doc.year + ")",
       showWindowSummary: true,
@@ -966,6 +1006,7 @@
     if (!breakdownList || !breakdownTitle) {
       return;
     }
+    updateChartScope(false);
     breakdownTitle.textContent =
       "Clases (nivel 2) en " + (currentYear || "") + " — ordenadas por área";
     breakdownList.innerHTML = "";
