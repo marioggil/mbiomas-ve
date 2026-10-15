@@ -77,7 +77,12 @@ body {
 .catalog-search-help,
 .panel-help,
 .catalog-detail-resumen-text,
-.map-tool-help {
+.map-tool-help,
+/* The clip panel writes its error sentence here, and the sentence names the
+ * problem and the way out, so it is long by design. Uncapped it bled to the
+ * viewport edge (measured: the detector's body-text-viewport-edge fired on it
+ * after a rejected area). */
+.panel-breakdown-empty {
   max-width: 64ch;
 }
 
@@ -431,6 +436,60 @@ body.is-overlays-collapsed .map-overlays {
   color: var(--fg-text);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
+}
+
+/* ------- Clip coordinate field (P1-3) -------
+ *
+ * Keyboard route to the same committed bbox the rectangle produces. The
+ * form takes a full row inside the toolbar (``flex-basis: 100%``) and is
+ * capped at the help paragraph's 64ch measure, so the toolbar wraps onto
+ * another line instead of growing sideways: the form can never contribute
+ * more width than the help text already sets. The label gets its own row
+ * so the whole "oeste, sur, este, norte" wording stays readable and the
+ * input below it keeps the room the 26-character example needs. */
+.map-coords {
+  /* No ``flex-basis: 100%``, and no row of its own for the label: on its own
+   * line the form added ~38px of toolbar height at every width, and the
+   * toolbar is the tightest corner of the map. Measured at 1600, 1280 and 960,
+   * the toolbar's *box* overlaps the study legend's box while none of its
+   * children do — the legend sits in the container's empty right-hand space,
+   * which is why the honest check is child against legend, not box against
+   * box. At 1280x500, where the map is clamped to 260px, the form's box pokes
+   * 9x31px into the legend: accepted, and recorded in the task doc. It wraps on
+   * its own when it does not fit, which is what flex-wrap is for. */
+  max-width: 64ch;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-coords-label {
+  /* Inline with the input, not on its own row: the row is what makes the
+   * toolbar taller, and the toolbar is the tightest corner of the map. */
+  flex-basis: auto;
+  color: var(--fg-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.map-coords-input {
+  /* ``min-width: 0`` lets the field shrink with the toolbar instead of
+   * forcing the row wider than the toolbar's own box. */
+  flex: 1 1 12ch;
+  min-width: 0;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--fg-text);
+}
+
+.map-coords-input:focus-visible {
+  outline: 2px solid var(--fg-strong);
+  outline-offset: 2px;
 }
 
 /* ------- Time bar ------- */
