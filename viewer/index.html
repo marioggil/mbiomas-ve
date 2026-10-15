@@ -108,12 +108,45 @@
       class="catalog-point-filter"
       id="catalog-point-filter"
       role="group"
-      aria-label="Filtro por punto seleccionado"
+      aria-label="Filtro espacial activo: punto seleccionado o área trazada"
       aria-live="polite"
       hidden
     >
-      <!-- populated by catalog.js when a map marker click narrows the list -->
+      <!-- populated by catalog.js when a map marker click or a drawn rectangle narrows the list -->
     </div>
+    <section
+      class="catalog-metrics"
+      id="catalog-metrics"
+      aria-label="Métricas de los congresos para el área seleccionada"
+      hidden
+    >
+      <!-- The block's disclosure control, following the pattern the map chrome
+           already uses (see the two toggles above): a real button carrying
+           aria-expanded + aria-controls, sitting OUTSIDE the panel it hides
+           (``body.is-metrics-collapsed`` hides only ``.catalog-metrics-body``),
+           so the block can be collapsed and still be restored. The summary
+           line is the collapsed state's content: the denominator plus the
+           coverage numbers the block publishes, in one line, so the default
+           state stays informative without pushing the list below the fold. -->
+      <div class="catalog-metrics-disclosure-row">
+        <button
+          id="metrics-collapse-toggle"
+          class="catalog-metrics-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="catalog-metrics-body"
+        >
+          <span class="catalog-metrics-toggle-label">Métricas de los congresos</span>
+          <span class="catalog-metrics-disclosure" aria-hidden="true">&#9656;</span>
+        </button>
+        <p class="catalog-metrics-summary" id="catalog-metrics-summary">
+          <!-- populated by catalog.js: denominator + coverage, one line -->
+        </p>
+      </div>
+      <div class="catalog-metrics-body" id="catalog-metrics-body">
+        <!-- populated by catalog.js from the committed artifact: KPIs, species charts and institutions -->
+      </div>
+    </section>
     <div class="catalog-body">
       <ul class="catalog-list" id="catalog-list" aria-label="Lista de estudios">
         <li class="catalog-empty">Cargando catálogo de estudios&hellip;</li>
@@ -239,6 +272,7 @@
   <script src="/static/vendor/maplibre-gl.js"></script>
   <script src="/static/api.js"></script>
   <script src="/static/panel.js"></script>
+  <script src="/static/metrics.js"></script>
   <script src="/static/catalog.js"></script>
   <script src="/static/app.js"></script>
 </body>
