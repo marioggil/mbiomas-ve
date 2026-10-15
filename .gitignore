@@ -23,3 +23,7 @@ viewer/dist/
 # Local tool output: Playwright screenshots and snapshots from viewer verification
 data/**/*.log
 .playwright-mcp/
+
+# CodeGraph index: a coding agent's local index of this workspace. Rebuilt on
+# demand and different for every reader, so it is never versioned.
+.codegraph/
