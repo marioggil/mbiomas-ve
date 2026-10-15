@@ -167,6 +167,15 @@
    * by the toggle itself, so a manual collapse is never undone by a re-render.
    */
   var metricsCollapsed = true;
+  /**
+   * @type {boolean} whether the edition buttons are hidden. It starts
+   * COLLAPSED: 13 buttons at rest are decision overload, and the study list --
+   * this panel's primary content -- has to stay on the first screen. The
+   * toggle's label always names the active edition and its count, so a folded
+   * filter is never invisible, and choosing an edition folds the row back while
+   * the list below shows the choice in the same click.
+   */
+  var filtersCollapsed = true;
   /** @type {function(object|null):void} host callback on selection change. */
   var onSelect = function () {};
 
@@ -184,6 +193,8 @@
   var metricsBodyEl = null;
   var metricsSummaryEl = null;
   var metricsToggleEl = null;
+  var filtersToggleEl = null;
+  var filtersSummaryEl = null;
   var searchInputEl = null;
   var searchCountEl = null;
   var listEl = null;
@@ -363,11 +374,6 @@
     }
     filtersEl.innerHTML = "";
 
-    var label = document.createElement("span");
-    label.className = "catalog-filter-label";
-    label.textContent = "Edición:";
-    filtersEl.appendChild(label);
-
     var studies = (catalog && catalog.studies) || [];
 
     // The counts answer "how many studies will I see if I pick this". With an
@@ -422,6 +428,10 @@
         key + " · " + (Number.isFinite(entry.year) ? String(entry.year) : "sin año");
       filtersEl.appendChild(buildFilterButton(key, text, entry.count));
     });
+    // The buttons and their counts were just rebuilt, so the collapsed
+    // summary has to be re-read from them: a drawn area changes the counts
+    // without a click, and a summary that lagged one render would lie.
+    syncFiltersDisclosure();
   }
 
   function buildFilterButton(value, text, count) {
@@ -442,6 +452,9 @@
     }
     btn.addEventListener("click", function () {
       activeCongress = value;
+      // Choosing an edition folds the row back: the list below already shows
+      // the choice in this same click, and the toggle's label repeats it.
+      filtersCollapsed = true;
       updateFilterButtons();
       renderList();
     });
@@ -459,6 +472,11 @@
       buttons[i].setAttribute("aria-pressed", active ? "true" : "false");
       buttons[i].classList.toggle("is-active", active);
     }
+    // The active button just changed (a click, or one of the two resets that
+    // put the filter back to "all"), so the collapsed summary is re-read from
+    // it here too: the label can never name an edition the buttons no longer
+    // hold active.
+    syncFiltersDisclosure();
   }
 
   // -------------------------------------------------------------------------
@@ -1054,6 +1072,37 @@
     var arrow = metricsToggleEl.querySelector(".catalog-metrics-disclosure");
     if (arrow) {
       arrow.textContent = metricsCollapsed ? "▸" : "▾";
+    }
+  }
+
+  /**
+   * Put the current ``filtersCollapsed`` on the DOM, mirroring
+   * ``syncMetricsDisclosure``: the body class CSS reads, the button's
+   * ``aria-expanded`` and the ▾/▸ glyph the other disclosures use. The label is
+   * read from the ACTIVE ``.catalog-filter`` button -- the same element the
+   * reader pressed -- so the summary can never disagree with the buttons, and it
+   * always carries that edition's count, which is what makes folding the row
+   * safe.
+   */
+  function syncFiltersDisclosure() {
+    document.body.classList.toggle("is-filters-collapsed", filtersCollapsed);
+    if (filtersToggleEl) {
+      filtersToggleEl.setAttribute(
+        "aria-expanded",
+        filtersCollapsed ? "false" : "true"
+      );
+      var arrow = filtersToggleEl.querySelector(".catalog-filters-disclosure");
+      if (arrow) {
+        arrow.textContent = filtersCollapsed ? "▸" : "▾";
+      }
+    }
+    if (filtersSummaryEl) {
+      var active = filtersEl
+        ? filtersEl.querySelector('.catalog-filter[aria-pressed="true"]')
+        : null;
+      filtersSummaryEl.textContent = active
+        ? "Edición: " + active.textContent
+        : "Edición: —";
     }
   }
 
@@ -1758,6 +1807,21 @@
     }
     if (!metricsSummaryEl) {
       metricsSummaryEl = document.getElementById("catalog-metrics-summary");
+    }
+    if (!filtersToggleEl) {
+      filtersToggleEl = document.getElementById("catalog-filters-toggle");
+      if (filtersToggleEl) {
+        // The same plain flip as the metrics toggle: the buttons are already
+        // rendered, so the toggle never rebuilds them (focus stays where the
+        // reader put it) and never rewrites the counts a render published.
+        filtersToggleEl.addEventListener("click", function () {
+          filtersCollapsed = !filtersCollapsed;
+          syncFiltersDisclosure();
+        });
+      }
+    }
+    if (!filtersSummaryEl) {
+      filtersSummaryEl = document.getElementById("catalog-filters-summary");
     }
     if (!metricsToggleEl) {
       metricsToggleEl = document.getElementById("metrics-collapse-toggle");
