@@ -68,3 +68,29 @@ Two defensible answers, and it is a composition decision, not a defect:
 
 Either is a small change in `viewer/catalog.js` (or the SVG builders in `viewer/metrics.js`); the second touches the
 chart's geometry, the first does not.
+
+## 5. Post-merge regression (found by the integration pass, fixed here)
+
+Merging the four units and then **looking at the result ** on `main` — rather than trusting that four green PRs compose —
+found a regression this unit had introduced: **at 390px, with the block expanded, the page scrolled horizontally**. The
+metrics grid asked for a bare `minmax(600px, 1fr)`, and a column minimum the container cannot satisfy forces an
+overflow; the block is ~347px wide at 390.
+
+The unit's own verification covered 1600, 1280 and 960 — all wider than 600px — and skipped 390 on the reasoning that
+mobile is not a target. The defect lived exactly in the viewport that was skipped, which is the lesson: "not a target"
+excuses the design decision, not the measurement.
+
+**Fix**: `minmax(min(600px, 100%), 1fr)`. The column minimum is capped at the container's own width, so below 600px the
+grid collapses to one column and the SVG's `max-width: 100%` takes over.
+
+| Viewport (block expanded) | Horizontal scroll | Columns | Chart scale | Rendered label |
+|---|---|---:|---:|---:|
+| 1600 × 1000 | no | 2 | 1.0 | 13px |
+| 1280 × 800 | no | 2 | 1.0 | 13px |
+| 960 × 700 | no | 1 | 1.0 | 13px |
+| 700 × 900 | no | 1 | 1.0 | 13px |
+| 390 × 844 | **no** (was: yes) | 1 | 0.542 | 7px |
+
+On a phone the charts still shrink and their labels return to ~7px: that is the limitation this unit documented from
+the start, and it stands — the alternative was a horizontal scrollbar. Fixing it properly means a narrower viewBox for
+small screens, which is a redesign of the chart geometry, not a cap.
