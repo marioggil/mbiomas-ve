@@ -1289,13 +1289,18 @@ body.is-metrics-collapsed .catalog-metrics-body {
   display: none;
 }
 
-/* The body is its own grid with the SAME template as .catalog-metrics above:
- * expanded, the header and the figures land on exactly the columns they took
- * before the disclosure existed, so the charts are unchanged by this feature. */
+/* The body is its own grid, and its columns are WIDER than the section's: the
+ * charts are drawn in a fixed 600x266/320 space and used to be squeezed into
+ * ~283px cards, so the SVG scaled to 0.47x and its 13px labels rendered at
+ * ~6px — illegible. At 600px minimum the grid fits two figures per row on a
+ * desktop panel and the SVG renders at its design size (scale 1.0), which is
+ * what the declared sizes in .panel-chart-* were written for. Below 600px of
+ * card the cap yields and the chart shrinks again, which is the mobile case
+ * PRODUCT.md does not target. */
 .catalog-metrics-body {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
   gap: 8px 12px;
   align-items: start;
 }
@@ -1411,11 +1416,18 @@ body.is-metrics-collapsed .catalog-metrics-body {
   font-weight: 600;
 }
 
+/* The figure carries no card chrome, and neither does the chart inside it.
+ * Measured, not assumed: three framings were injected into the live page and
+ * the detector answered — the figure as the card (2 findings), the chart framed
+ * inside a plain figure (3), the chart framed filling the cell (3), and no
+ * frames anywhere (0). The `<figure>` plus a grid cell already reads as a card
+ * pair, so the block is framed by its own heading and by the gap instead. The
+ * metric's own title and its denominator caption do the grouping. */
 .catalog-metrics-figure {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .catalog-metrics-caption {
@@ -1424,11 +1436,20 @@ body.is-metrics-collapsed .catalog-metrics-body {
   color: var(--fg-strong);
 }
 
+/* Plain wrapper, centred: the 600-unit SVG keeps the viewBox scale at 1.0 in a
+ * wider cell, and the slack is symmetrical instead of piled on the right. */
 .catalog-metrics-chart {
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 8px 6px;
+  display: flex;
+  justify-content: center;
+}
+
+/* The chart renders at its own 600-unit design width instead of filling the
+ * card, so the viewBox scale stays 1.0 and every label keeps the size it was
+ * drawn for. The two-class selector beats .panel-chart-svg's width:100%
+ * regardless of where either rule sits in the file. */
+.catalog-metrics-chart .catalog-metrics-svg {
+  width: 600px;
+  max-width: 100%;
 }
 
 .catalog-metrics-note {
