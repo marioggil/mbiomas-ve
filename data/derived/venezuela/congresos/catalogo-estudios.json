@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "generated_utc": "2026-10-15T01:16:50.872569+00:00",
+  "generated_utc": "2026-10-15T04:18:01.203025+00:00",
   "country": "venezuela",
   "source_parquet": "data/raw/congresos/congresos_revisados.parquet",
   "source_sha256": "55cc3091d2d06353a48ee7d07edd1fc380da42ec00b365d4955c3eef8e3266d8",
@@ -54,171 +54,213 @@
   "ror_instituciones": {
     "https://ror.org/00dbx4k72": {
       "nombre": "Ministerio del Ambiente y de los Recursos Naturales",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/00fr68j09": {
       "nombre": "Universidad Nacional Experimental del Táchira",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/00qseeb08": {
       "nombre": "Universidad Nacional Experimental de Guayana",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/00sbcwg24": {
       "nombre": "Asociación Civil Fundación Esfera",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/00t4fvv78": {
       "nombre": "Instituto de Ciencias Ambientales y Ecológicas, Universidad de Los Andes",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/00z6hkq67": {
       "nombre": "Fundación Tierra Viva",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/0129z1n29": {
       "nombre": "Sociedad Venezolana de Ciencias Naturales",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/013meh722": {
       "nombre": "University of Cambridge",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/0143dvz59": {
       "nombre": "Instituto de Zoología y Ecología Tropical, Universidad Central de Venezuela",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/01ak5cj98": {
       "nombre": "Universidad Simón Bolívar",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/01f2hnj65": {
       "nombre": "Instituto Nacional de Parques",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/01zstgj41": {
       "nombre": "Universidad Nacional Experimental Rafael María Baralt",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/022b6wh61": {
       "nombre": "Laboratorio de Limnología, Facultad Experimental de Ciencias, Universidad del Zulia",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/023kaz366": {
       "nombre": "Provita",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/02bb0ey42": {
       "nombre": "Escuela de Ciencias Aplicadas del Mar, Universidad de Oriente (Núcleo Nueva Esparta)",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/02h1b1x27": {
       "nombre": "Universidad de Los Andes",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/02ntheh91": {
       "nombre": "Instituto Venezolano de Investigaciones Científicas",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/02r59nq91": {
       "nombre": "Fundación La Salle de Ciencias Naturales",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/02v75tb58": {
       "nombre": "Instituto Oceanográfico de Venezuela, Universidad de Oriente",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/030vkw561": {
       "nombre": "Instituto Alexander von Humboldt",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/0354nax61": {
       "nombre": "Escuela de Biología, Facultad de Ciencias, Universidad Central de Venezuela",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/037jqrk16": {
       "nombre": "Wataniba, Grupo de Trabajo Socioambiental",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/038ypnm26": {
       "nombre": "Ministerio del Poder Popular para el Ambiente",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/03951zg45": {
       "nombre": "Universidad Nacional Experimental Simón Rodríguez",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/03ewatc56": {
       "nombre": "Real Jardín Botánico de España",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/03mvpvm42": {
       "nombre": "Centro de Estudios Integrales del Ambiente, Universidad Central de Venezuela",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/03qgg3111": {
       "nombre": "Universidad Centroccidental Lisandro Alvarado",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/03re99q86": {
       "nombre": "Museo del Instituto de Zoología Agrícola Francisco Fernández Yépez, Universidad Central de Venezuela",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/03thbf157": {
       "nombre": "Comunidad Las Galderas y Escuela Bolivariana Los Negritos",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/03xygw105": {
       "nombre": "Universidad de Oriente",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/040tkk892": {
       "nombre": "Universidad Marítima del Caribe",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/04382kq29": {
       "nombre": "Universidad Nacional Experimental de los Llanos Occidentales Ezequiel Zamora",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/04h3gcf69": {
       "nombre": "Instituto Nacional de Investigaciones Agrícolas",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/04ks7cj51": {
       "nombre": "Petróleos de Venezuela (PDVSA)",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/04teayy65": {
       "nombre": "Pontificia Universidad Católica de Chile",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/04vy5s568": {
       "nombre": "Universidad del Zulia",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/05ak8xb62": {
       "nombre": "Instituto de Medicina Tropical, Universidad Central de Venezuela",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/05bv0r345": {
       "nombre": "Instituto Universitario de Tecnología de Yaracuy",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/05kacnm89": {
       "nombre": "Universidad Central de Venezuela",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/05sj7yp62": {
       "nombre": "Universidad de Carabobo",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     },
     "https://ror.org/05sx4sby0": {
       "nombre": "Universidad de Los Andes",
-      "estado": "dudoso"
+      "estado": "dudoso",
+      "grafica": true
     },
     "https://ror.org/05xc4qj60": {
       "nombre": "Universidad Pedagógica Experimental Libertador",
-      "estado": "ok"
+      "estado": "ok",
+      "grafica": true
     }
   },
   "studies": [

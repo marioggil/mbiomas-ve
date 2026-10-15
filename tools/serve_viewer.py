@@ -667,11 +667,12 @@ _GRANULARITY_EXCLUDED_FROM_MAP: Final = ("T0", "T1")
 # contract vocabulary the coordinate/level rule below is written against.
 _LEVEL_T2_CLASSES: Final = ("placeable", "outside_extent")
 
-# The curated ROR verdicts. ``ok`` is graphable; ``dudoso`` resolves to a
-# different institution than the free text names, so the client must be able to
-# tell them apart. A verdict outside this set is fatal rather than silently
-# charted. The ``ror_instituciones`` values are the display names the client
-# renders, so an entry without one is a broken legend.
+# The curated ROR verdict. ``ok`` is a verified assignment; ``dudoso`` resolves
+# to a different institution than the free text names. The verdict is the
+# watermark, not the decision: the curated ``grafica`` flag decides what is
+# charted, so the client must keep both, and a verdict outside this set is fatal
+# rather than silently charted. The ``ror_instituciones`` values are the display
+# names the client renders, so an entry without one is a broken legend.
 _ROR_ESTADOS: Final = ("ok", "dudoso")
 
 
@@ -767,6 +768,10 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
      21. Every study's ``rores`` is a sorted list of unique non-empty strings,
          each a key of ``ror_instituciones``.
      22. Every study's ``human_reviewer`` is a non-empty string.
+     23. Every ``ror_instituciones`` value also carries ``grafica`` as a real
+         boolean. It is the charting decision, independent of the ``estado``
+         verdict: an ``ok`` entry can be uncharted and a ``dudoso`` entry can
+         be charted, so the client must be able to read both.
 
     A violation stops the service. We never patch the artifact: a value the
     map or the table would show that disagrees with the rest of the artifact
@@ -831,6 +836,12 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
                 f"studies catalog 'ror_instituciones[{ror_id!r}]' has estado "
                 f"{entry.get('estado')!r} which is not one of "
                 f"{list(_ROR_ESTADOS)}: {path}"
+            )
+        grafica = entry.get("grafica")
+        if not isinstance(grafica, bool):
+            raise StudiesCatalogError(
+                f"studies catalog 'ror_instituciones[{ror_id!r}]' has grafica "
+                f"{grafica!r} which is not a boolean: {path}"
             )
 
     seen_ids: set[str] = set()

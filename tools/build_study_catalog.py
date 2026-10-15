@@ -68,8 +68,11 @@ values the curated table declares as ``ror_sentinels`` (the corpus carries the
 literal ``No disponible``), deduplicates and sorts them. The curated table
 ``data/curated/congresos/ror-instituciones.json`` (never an input of the service)
 is projected into the top-level ``ror_instituciones`` map
-``{ror url: {nombre, estado}}``, so the client reads display names and the
-``ok``/``dudoso`` verdict from the artifact alone. The build is hard-closed
+``{ror url: {nombre, estado, grafica}}``, so the client reads display names,
+the ``ok``/``dudoso`` verdict and the separate charting decision from the
+artifact alone. ``estado`` is what we know (the identifier is verified or
+doubtful); ``grafica`` is what we decided (the institution counts and is
+drawn), and the two are independent. The build is hard-closed
 against that table exactly as it is against the granularity taxonomy: a ROR id
 in the corpus that is neither a sentinel nor a curated key aborts and names the
 study, while a curated entry the corpus does not currently use is merely
@@ -213,10 +216,13 @@ CLASS_ORDER = ["placeable", "coarse_location", "outside_extent", "no_coordinate"
 GRANULARITY_LEVELS = ("T0", "T1", "T2")
 GRANULARITY_EXCLUDED_FROM_MAP = ["T0", "T1"]
 
-# The curated ROR verdicts. ``ok`` is graphable, ``dudoso`` resolves to a
-# different institution than the free text names, so it is declared beside the
-# chart instead of inside it. The set is pinned here so a curated file that
-# invents a third verdict stops the build rather than reaching the client.
+# The curated ROR verdict. ``ok`` is a verified assignment; ``dudoso`` resolves
+# to a different institution than the free text names. The verdict is the
+# watermark, not the decision: whether an institution is charted is the curated
+# ``grafica`` flag, so a doubtful assignment can be charted on purpose and the
+# chart declares how many of its pairs come from doubtful entries. The set is
+# pinned here so a curated file that invents a third verdict stops the build
+# rather than reaching the client.
 ROR_ESTADOS = ("ok", "dudoso")
 
 # The species answers that carry no name. They are compared lowercased, because
@@ -458,18 +464,22 @@ def load_granularity(path: Path) -> dict[str, dict[str, Any]]:
 
 def load_ror_instituciones(
     path: Path,
-) -> tuple[dict[str, dict[str, str]], tuple[str, ...]]:
+) -> tuple[dict[str, dict[str, Any]], tuple[str, ...]]:
     """Load the curated ROR table and project it for the artifact.
 
     Returns ``(entries, sentinels)``. ``entries`` is the projected map
-    ``ror url -> {"nombre", "estado"}`` (the review-only ``nota`` is dropped, it
-    never reaches the client) and ``sentinels`` are the values that look like an
-    id but mean "no answer", such as the corpus's literal ``No disponible``.
+    ``ror url -> {"nombre", "estado", "grafica"}`` (the review-only ``nota`` is
+    dropped, it never reaches the client) and ``sentinels`` are the values that
+    look like an id but mean "no answer", such as the corpus's literal ``No
+    disponible``. ``estado`` is the verdict (``ok``/``dudoso``); ``grafica`` is
+    the separate charting decision and must be a real boolean, because the
+    client charts on it.
 
     This is a hand-edited document, so the loader fails loudly on a missing or
     unreadable file, malformed JSON, a duplicate key anywhere in the document, a
-    missing ``entries`` / ``ror_sentinels`` block, an unknown ``estado``, or an
-    entry with no non-empty ``nombre``. An entry the current corpus does not use
+    missing ``entries`` / ``ror_sentinels`` block, an unknown ``estado``, a
+    non-boolean ``grafica``, or an entry with no non-empty ``nombre``. An entry
+    the current corpus does not use
     is NOT an error: the table curates the wider enrichment cache, and forcing it
     to shrink would delete review work every time the study set changes. ``main``
     reports those entries as a note instead.
@@ -525,7 +535,7 @@ def load_ror_instituciones(
             f"list of non-empty strings, got {sentinels!r}"
         )
 
-    projected: dict[str, dict[str, str]] = {}
+    projected: dict[str, dict[str, Any]] = {}
     for ror_id, entry in entries.items():
         where = f"ror-instituciones entry {ror_id!r}"
         if not isinstance(entry, dict):
@@ -544,7 +554,16 @@ def load_ror_instituciones(
                 f"{where} has estado {estado!r}; expected one of "
                 f"{', '.join(ROR_ESTADOS)}"
             )
-        projected[ror_id] = {"nombre": nombre, "estado": estado}
+        grafica = entry.get("grafica")
+        if not isinstance(grafica, bool):
+            raise StudyCatalogError(
+                f"{where} has grafica {grafica!r}; expected a boolean"
+            )
+        projected[ror_id] = {
+            "nombre": nombre,
+            "estado": estado,
+            "grafica": grafica,
+        }
     # Sorted so the artifact does not inherit the file's editorial order: two
     # builds from the same table are byte-identical whatever order it is in.
     return {key: projected[key] for key in sorted(projected)}, tuple(sentinels)
@@ -1175,7 +1194,7 @@ def build_catalog(
     extent_label: str,
     extent_boundary_note: str,
     source_identity: dict[str, Any],
-    ror_instituciones: dict[str, dict[str, str]] | None = None,
+    ror_instituciones: dict[str, dict[str, Any]] | None = None,
     ror_sentinels: tuple[str, ...] = (),
 ) -> tuple[dict[str, Any], dict[str, int]]:
     """Assemble the catalog document.

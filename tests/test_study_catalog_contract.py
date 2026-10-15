@@ -112,13 +112,17 @@ EXPECTED_ESPECIES_NON_NULL = 194
 # artifact, never re-derived from the Parquet.
 #
 # ``ror_instituciones`` is the curated ROR table projected for the client: 42
-# reviewed ids, 26 usable (``ok``) and 16 doubtful (``dudoso``). 226 of the 255
-# studies carry at least one usable ROR, and the 226 studies hold 282
-# talk-institution pairs. The parsed species list is non-empty in 189 studies;
+# reviewed ids. ``estado`` is the VERDICT and did not move with this decision:
+# 26 usable (``ok``) and 16 doubtful (``dudoso``). ``grafica`` is the separate
+# CHARTING decision and all 42 entries are drawn (``true``), including the 16
+# doubtful ones the owner accepted for the charts while the doubt stays recorded.
+# 226 of the 255 studies carry at least one usable ROR, and the 226 studies hold
+# 282 talk-institution pairs. The parsed species list is non-empty in 189 studies;
 # the 189 studies name 534 distinct species once lowercased (the artifact keeps
 # the first form it saw, the client lowercases for grouping).
 EXPECTED_ROR_ENTRIES = 42
 EXPECTED_ROR_ESTADOS = {"ok": 26, "dudoso": 16}
+EXPECTED_ROR_GRAFICA = {True: 42}
 EXPECTED_STUDIES_WITH_RORES = 226
 EXPECTED_ROR_TALK_PAIRS = 282
 EXPECTED_STUDIES_WITH_ESPECIES = 189
@@ -184,6 +188,7 @@ TEST_ROR_ENTRIES = {
     "https://ror.org/02h1b1x27": {
         "nombre": "Universidad de Los Andes",
         "estado": "ok",
+        "grafica": True,
     }
 }
 TEST_ROR_SENTINELS = ("No disponible",)
@@ -748,6 +753,10 @@ def assert_catalog_contract(catalog: dict[str, Any]) -> None:
             f"ror_instituciones[{ror_id!r}] has estado {entry.get('estado')!r}, "
             "expected 'ok' or 'dudoso'"
         )
+        assert isinstance(entry.get("grafica"), bool), (
+            f"ror_instituciones[{ror_id!r}] has a non-boolean grafica "
+            f"{entry.get('grafica')!r}"
+        )
     assert len(ror_instituciones) == EXPECTED_ROR_ENTRIES, (
         f"ror_instituciones has {len(ror_instituciones)} entries, expected "
         f"{EXPECTED_ROR_ENTRIES}"
@@ -758,6 +767,13 @@ def assert_catalog_contract(catalog: dict[str, Any]) -> None:
     assert dict(estado_counts) == EXPECTED_ROR_ESTADOS, (
         f"ror_instituciones estados are {dict(estado_counts)}, expected "
         f"{EXPECTED_ROR_ESTADOS}"
+    )
+    grafica_counts = Counter(
+        entry["grafica"] for entry in ror_instituciones.values()
+    )
+    assert dict(grafica_counts) == EXPECTED_ROR_GRAFICA, (
+        f"ror_instituciones grafica are {dict(grafica_counts)}, expected "
+        f"{EXPECTED_ROR_GRAFICA}"
     )
 
     for study in studies:
@@ -1087,6 +1103,20 @@ class ShippedCatalogControlTests(unittest.TestCase):
                 entry["estado"] = "dudoso"
                 break
         self._fail(broken, "ror_instituciones estados are")
+
+    def test_control_rejects_a_non_boolean_grafica(self) -> None:
+        broken = self._broken()
+        first = next(iter(broken["ror_instituciones"]))
+        broken["ror_instituciones"][first]["grafica"] = "sí"
+        self._fail(
+            broken, f"ror_instituciones[{first!r}] has a non-boolean grafica"
+        )
+
+    def test_control_rejects_ror_grafica_that_moved(self) -> None:
+        broken = self._broken()
+        first = next(iter(broken["ror_instituciones"]))
+        broken["ror_instituciones"][first]["grafica"] = False
+        self._fail(broken, "ror_instituciones grafica are")
 
     def test_control_rejects_a_non_list_especies(self) -> None:
         broken = self._broken()
@@ -1535,7 +1565,14 @@ class MainTaxonomyWiringTests(unittest.TestCase):
         )
         path = write_granularity(self, document)
         ror_path = write_ror_instituciones(
-            self, extra={"https://ror.org/unused": {"nombre": "Sin uso", "estado": "ok"}}
+            self,
+            extra={
+                "https://ror.org/unused": {
+                    "nombre": "Sin uso",
+                    "estado": "ok",
+                    "grafica": True,
+                }
+            },
         )
         with tempfile.TemporaryDirectory() as outdir:
             status, stderr, stdout = self.run_main(
@@ -1731,6 +1768,45 @@ class RowLocationTextTests(unittest.TestCase):
 
     def test_control_a_whitespace_only_value_is_not_the_text(self) -> None:
         self.assertNotEqual(subject.row_location_text({"ubicaciongeografica": "   "}), "   ")
+
+
+class LoadRorInstitucionesTests(unittest.TestCase):
+    """``load_ror_instituciones`` projects the curated table for the client."""
+
+    def test_a_valid_file_loads_into_the_exact_entry_shape(self) -> None:
+        path = write_ror_instituciones(self)
+        entries, sentinels = subject.load_ror_instituciones(path)
+        self.assertEqual(
+            entries,
+            {
+                "https://ror.org/02h1b1x27": {
+                    "nombre": "Universidad de Los Andes",
+                    "estado": "ok",
+                    "grafica": True,
+                }
+            },
+        )
+        self.assertEqual(sentinels, TEST_ROR_SENTINELS)
+
+    def test_control_rejects_a_non_boolean_grafica(self) -> None:
+        path = write_ror_instituciones(
+            self,
+            extra={
+                "https://ror.org/badgrafica": {
+                    "nombre": "Institución sin decisión",
+                    "estado": "ok",
+                    "grafica": "sí",
+                }
+            },
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape(
+                "ror-instituciones entry 'https://ror.org/badgrafica' has "
+                "grafica 'sí'; expected a boolean"
+            ),
+        ):
+            subject.load_ror_instituciones(path)
 
 
 class LoadGranularityTests(unittest.TestCase):

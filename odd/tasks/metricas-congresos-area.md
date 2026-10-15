@@ -83,10 +83,11 @@ says "Instituto Nacional de Parques"; `ror.org/0354nax61` is a writers' school w
 Biología, Facultad de Ciencias, U.C.V."; `ror.org/030vkw561` is a Venezuelan university while the text says
 "Instituto Alexander von Humboldt". And one author carries the literal string `No disponible` in the ROR column.
 
-Verdicts recorded in `data/curated/congresos/ror-instituciones.json` over the 42 real ids: **26 usable** and **16
+Verdicts recorded in `data/curated/congresos/ror-instituciones.json` over the 42 real ids: **26 verified** and **16
 doubtful**, plus one sentinel value. The doubtful ones carry **26 of the 282 talk-institution pairs (9.2%)**, and the
-top-15 institutions by talks are all in the usable set, so the charts keep their signal once the doubtful ones are
-declared instead of charted. Annex C1: this draft needs the owner's review.
+top-15 institutions by talks are all in the verified set. **The owner reviewed the table on 2026-10-15 and accepted the
+doubtful ones into the charts** (`grafica: true` on all 42): the verdict stays recorded as the watermark — the chart
+declares how many of its pairs come from doubtful entries — but it no longer excludes anything. F1-C1 is closed.
 
 ## 4. Risks and mitigations
 
@@ -111,16 +112,18 @@ declared instead of charted. Annex C1: this draft needs the owner's review.
    `s/d`, `s.a.`, `-`, `''`), bracketed serialised lists unwrapped, split on commas, trimmed, empty dropped.
 3. Per study, add `rores[]`: the ROR ids of its authors, deduplicated, sentinel values dropped, sorted.
 4. Add `human_reviewer` (`mario`/`IA`).
-5. Top-level `ror_instituciones`: the curated `ror → nombre` map, so the client never reads the curated file.
-6. The curated table declares each ROR's `estado` (`ok`/`dudoso`) and the sentinel list; **the build stops** if a
-   ROR id in the corpus has no curated entry — the same hard rule the granularity taxonomy already enforces.
+5. Top-level `ror_instituciones`: the curated map projected for the client as `ror → {nombre, estado, grafica}`, so
+the client never reads the curated file.
+6. The curated table declares each ROR's `estado` (the verdict: `ok`/`dudoso`), its `grafica` (the decision: does it
+count and get drawn) and the sentinel list; **the build stops** if a ROR id in the corpus has no curated entry — the
+same hard rule the granularity taxonomy already enforces.
 7. Contract tests: sentinel casing, a serialised list inside a string, `'[]'`, `None`, ROR dedup inside one study,
    the sentinel ROR value, the missing-curated-entry abort, and the pinned reference numbers of §3.1/§3.2.
 8. D9: `STUDIES_SCHEMA_VERSION` 3 → 4 with its explanatory comment moved to v4, and invariant checks for the new
    fields — every study's `especies` is a list of non-empty strings, every `rores` is a sorted list of unique ids each
-   present in `ror_instituciones`, every entry of `ror_instituciones` carries a non-empty `nombre` and an `estado` in
-   `{ok, dudoso}`, and `human_reviewer` is a non-empty string — so a malformed artifact still stops the service
-   instead of reaching the client. One control test per branch.
+   present in `ror_instituciones`, every entry of `ror_instituciones` carries a non-empty `nombre`, an `estado` in
+   `{ok, dudoso}` and a boolean `grafica`, and `human_reviewer` is a non-empty string — so a malformed artifact still
+   stops the service instead of reaching the client. One control test per branch.
 
 ### F2 — view and client aggregation
 
@@ -164,10 +167,12 @@ The centroid row is M1's case in the wild: **11 of 14 studies are T0**, so the T
 honest. The Barinas row is M2/M4's: 4 talks, the ranking and the KPIs, **no series**, and the sentence that says why.
 
 *Independent verification of the client code* (a separate verifier with its own harnesses): the pure functions
-reproduce 255 / 224 (COG extent) / 534 / 282-256-26 / Llanos 30-9-2-19 / Barinas 4 / cumulative 38-33-30-25-23 with
-`others[11] = 107`; 14 emitted SVGs parse as XML with `role="img"`, `viewBox`, `<title>` and `<desc>`; names carrying
+reproduce 255 / 224 (COG extent) / 534 / 282-256-26 / Llanos 30-9-2-19 / Barinas 4 / cumulative 38-33-30-25-23. Those
+figures are the **verdict** split, and they did not change when the owner accepted the doubtful entries into the
+charts: what changed is the charting, so `others[11]` went from 107 to **133** and the charted total from 256 to
+**282**. 14 emitted SVGs parse as XML with `role="img"`, `viewBox`, `<title>` and `<desc>`; names carrying
 `&`, `<` and `"` are escaped; malformed, NaN and inverted bboxes never throw and are contained at the `setArea`
-boundary; the Python suite stays at 382 OK.
+boundary; the Python suite stays green.
 
 *Two defects found by looking at the rendered page and fixed before the commit*: the block pushed the study list below
 the fold on every load (hence the collapsed default), and the Spanish counters read `1 tienen institución (ROR)` and
@@ -182,6 +187,6 @@ table, then the regenerated artifact, then the builder plus its tests and this d
 
 | # | Item | Blocks |
 |---|---|---|
-| F1-C1 | The 42 curated rows are a **draft**: the 16 `dudoso` verdicts and every display name need the owner's review, like the granularity taxonomy did | Nothing technically; the charts default to `ok` and declare the rest |
+| F1-C1 | ~~The 42 curated rows are a draft: the 16 `dudoso` verdicts and every display name need the owner's review~~ **closed 2026-10-15**: the owner reviewed the table and accepted the 16 doubtful assignments for the charts (`grafica: true` on all 42), with the verdict kept as the declared watermark | — |
 | F1-C2 | `data/enrichment-cache/ror.sqlite` lives in the sibling repo, so it is a **reference for curation**, never a build input | Curation only |
 | F2-C1 | ~~The `n` threshold below which the series are replaced by a ranking~~ **closed in F2**: `MIN_TALKS_FOR_SERIES = 5` | — |

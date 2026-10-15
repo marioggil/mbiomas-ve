@@ -69,7 +69,8 @@
  * denominators), the species ranking plus the per-edition richness series (M2:
  * the ``distinct`` line is drawn over bars of ``n``), and the cumulative
  * institution area (M4: every chart publishes its denominator, and the curated
- * doubtful pairs are declared next to the chart instead of inside it). Below
+ * charting decision and the doubtful pairs it still carries are declared next to
+ * the chart). Below
  * ``MIN_TALKS_FOR_SERIES`` talks there is no series to draw: the block shows the
  * KPIs, the ranking and a sentence that says so -- never a two-point line.
  *
@@ -972,18 +973,32 @@
           String(INSTITUTION_TOP_LIMIT) +
           " + otras",
         metrics.institutionsAreaSvg(accumulation),
-        count(
-          accumulation.declared.ok,
-          "par charla-institución de instituciones verificadas",
-          "pares charla-institución de instituciones verificadas"
-        ) +
-          " · " +
+        [
           count(
-            accumulation.declared.dudoso,
-            "par en instituciones dudosas",
-            "pares en instituciones dudosas"
-          ) +
-          ", declarados y no graficados."
+            accumulation.declared.charted,
+            "par charla-institución graficado",
+            "pares charla-institución graficados"
+          ),
+          accumulation.declared.doubtful > 0
+            ? "de ellos, " +
+              count(
+                accumulation.declared.doubtful,
+                "viene de asignaciones dudosas, incluidas por decisión del dueño",
+                "vienen de asignaciones dudosas, incluidas por decisión del dueño"
+              )
+            : null,
+          accumulation.declared.uncharted > 0
+            ? count(
+                accumulation.declared.uncharted,
+                "par queda fuera: su institución se declara y no se grafica",
+                "pares quedan fuera: su institución se declara y no se grafica"
+              )
+            : null,
+        ]
+          .filter(function (clause) {
+            return clause !== null;
+          })
+          .join(" · ")
       )
     );
   }

@@ -11,222 +11,265 @@
     "https://ror.org/05kacnm89": {
       "nombre": "Universidad Central de Venezuela",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/0143dvz59": {
       "nombre": "Instituto de Zoología y Ecología Tropical, Universidad Central de Venezuela",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/02ntheh91": {
       "nombre": "Instituto Venezolano de Investigaciones Científicas",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/02h1b1x27": {
       "nombre": "Universidad de Los Andes",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/00qseeb08": {
       "nombre": "Universidad Nacional Experimental de Guayana",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/03xygw105": {
       "nombre": "Universidad de Oriente",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/04vy5s568": {
       "nombre": "Universidad del Zulia",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/01ak5cj98": {
       "nombre": "Universidad Simón Bolívar",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/02r59nq91": {
       "nombre": "Fundación La Salle de Ciencias Naturales",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/00t4fvv78": {
       "nombre": "Instituto de Ciencias Ambientales y Ecológicas, Universidad de Los Andes",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/02v75tb58": {
       "nombre": "Instituto Oceanográfico de Venezuela, Universidad de Oriente",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/04382kq29": {
       "nombre": "Universidad Nacional Experimental de los Llanos Occidentales Ezequiel Zamora",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/04h3gcf69": {
       "nombre": "Instituto Nacional de Investigaciones Agrícolas",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/05sj7yp62": {
       "nombre": "Universidad de Carabobo",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/05xc4qj60": {
       "nombre": "Universidad Pedagógica Experimental Libertador",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/023kaz366": {
       "nombre": "Provita",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/03mvpvm42": {
       "nombre": "Centro de Estudios Integrales del Ambiente, Universidad Central de Venezuela",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a 'Center Technological University'; el texto libre es UCV"
+      "nota": "el ROR resuelve a 'Center Technological University'; el texto libre es UCV",
+      "grafica": true
     },
     "https://ror.org/04ks7cj51": {
       "nombre": "Petróleos de Venezuela (PDVSA)",
       "estado": "ok",
-      "nota": "el texto libre dice PDVSA-Intevep; el ROR es el corporativo"
+      "nota": "el texto libre dice PDVSA-Intevep; el ROR es el corporativo",
+      "grafica": true
     },
     "https://ror.org/00fr68j09": {
       "nombre": "Universidad Nacional Experimental del Táchira",
       "estado": "dudoso",
-      "nota": "el texto libre dice 'Universidad del Magdalena' (Colombia) y un departamento de agronomía sin país"
+      "nota": "el texto libre dice 'Universidad del Magdalena' (Colombia) y un departamento de agronomía sin país",
+      "grafica": true
     },
     "https://ror.org/038ypnm26": {
       "nombre": "Ministerio del Poder Popular para el Ambiente",
       "estado": "dudoso",
-      "nota": "el ROR resuelve al Ministerio de Educación; el texto libre dice 'Oficina de Análisis Estratégico' del ambiente"
+      "nota": "el ROR resuelve al Ministerio de Educación; el texto libre dice 'Oficina de Análisis Estratégico' del ambiente",
+      "grafica": true
     },
     "https://ror.org/03re99q86": {
       "nombre": "Museo del Instituto de Zoología Agrícola Francisco Fernández Yépez, Universidad Central de Venezuela",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/05ak8xb62": {
       "nombre": "Instituto de Medicina Tropical, Universidad Central de Venezuela",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a la Academia Nacional de Medicina; la misma fila mezcla 'Dirección de Vegetación, MARNR'"
+      "nota": "el ROR resuelve a la Academia Nacional de Medicina; la misma fila mezcla 'Dirección de Vegetación, MARNR'",
+      "grafica": true
     },
     "https://ror.org/02bb0ey42": {
       "nombre": "Escuela de Ciencias Aplicadas del Mar, Universidad de Oriente (Núcleo Nueva Esparta)",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a 'Universidad Nueva Esparta', que es otra institución"
+      "nota": "el ROR resuelve a 'Universidad Nueva Esparta', que es otra institución",
+      "grafica": true
     },
     "https://ror.org/03qgg3111": {
       "nombre": "Universidad Centroccidental Lisandro Alvarado",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/00dbx4k72": {
       "nombre": "Ministerio del Ambiente y de los Recursos Naturales",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a la Academia de Ciencias Físicas, Matemáticas y Naturales"
+      "nota": "el ROR resuelve a la Academia de Ciencias Físicas, Matemáticas y Naturales",
+      "grafica": true
     },
     "https://ror.org/00sbcwg24": {
       "nombre": "Asociación Civil Fundación Esfera",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a una fundación nacional para el desarrollo distinta"
+      "nota": "el ROR resuelve a una fundación nacional para el desarrollo distinta",
+      "grafica": true
     },
     "https://ror.org/00z6hkq67": {
       "nombre": "Fundación Tierra Viva",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/0129z1n29": {
       "nombre": "Sociedad Venezolana de Ciencias Naturales",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a la Sociedad Venezolana de Ecología, que es otra sociedad"
+      "nota": "el ROR resuelve a la Sociedad Venezolana de Ecología, que es otra sociedad",
+      "grafica": true
     },
     "https://ror.org/013meh722": {
       "nombre": "University of Cambridge",
       "estado": "ok",
-      "nota": "sin nombre en la caché ROR; el texto libre coincide"
+      "nota": "sin nombre en la caché ROR; el texto libre coincide",
+      "grafica": true
     },
     "https://ror.org/01f2hnj65": {
       "nombre": "Instituto Nacional de Parques",
       "estado": "dudoso",
-      "nota": "el ROR resuelve al Instituto Nacional de Cooperación Educativa (INCE)"
+      "nota": "el ROR resuelve al Instituto Nacional de Cooperación Educativa (INCE)",
+      "grafica": true
     },
     "https://ror.org/01zstgj41": {
       "nombre": "Universidad Nacional Experimental Rafael María Baralt",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/022b6wh61": {
       "nombre": "Laboratorio de Limnología, Facultad Experimental de Ciencias, Universidad del Zulia",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a 'Laboratorio Nacional de GeoInteligencia'"
+      "nota": "el ROR resuelve a 'Laboratorio Nacional de GeoInteligencia'",
+      "grafica": true
     },
     "https://ror.org/030vkw561": {
       "nombre": "Instituto Alexander von Humboldt",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a la Universidad Alejandro de Humboldt (Venezuela), que no es el instituto alemán"
+      "nota": "el ROR resuelve a la Universidad Alejandro de Humboldt (Venezuela), que no es el instituto alemán",
+      "grafica": true
     },
     "https://ror.org/0354nax61": {
       "nombre": "Escuela de Biología, Facultad de Ciencias, Universidad Central de Venezuela",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a 'Escriba. Escuela de Escritores'"
+      "nota": "el ROR resuelve a 'Escriba. Escuela de Escritores'",
+      "grafica": true
     },
     "https://ror.org/037jqrk16": {
       "nombre": "Wataniba, Grupo de Trabajo Socioambiental",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a 'Grupo Docente 2.0 C.A.'"
+      "nota": "el ROR resuelve a 'Grupo Docente 2.0 C.A.'",
+      "grafica": true
     },
     "https://ror.org/03951zg45": {
       "nombre": "Universidad Nacional Experimental Simón Rodríguez",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/03ewatc56": {
       "nombre": "Real Jardín Botánico de España",
       "estado": "ok",
-      "nota": "sin nombre en la caché ROR; el texto libre coincide"
+      "nota": "sin nombre en la caché ROR; el texto libre coincide",
+      "grafica": true
     },
     "https://ror.org/03thbf157": {
       "nombre": "Comunidad Las Galderas y Escuela Bolivariana Los Negritos",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a 'Bolivarian University of Venezuela'"
+      "nota": "el ROR resuelve a 'Bolivarian University of Venezuela'",
+      "grafica": true
     },
     "https://ror.org/040tkk892": {
       "nombre": "Universidad Marítima del Caribe",
       "estado": "ok",
-      "nota": null
+      "nota": null,
+      "grafica": true
     },
     "https://ror.org/04teayy65": {
       "nombre": "Pontificia Universidad Católica de Chile",
       "estado": "ok",
-      "nota": "sin nombre en la caché ROR; el texto libre coincide"
+      "nota": "sin nombre en la caché ROR; el texto libre coincide",
+      "grafica": true
     },
     "https://ror.org/05bv0r345": {
       "nombre": "Instituto Universitario de Tecnología de Yaracuy",
       "estado": "dudoso",
-      "nota": "el ROR resuelve a IUTIRLA"
+      "nota": "el ROR resuelve a IUTIRLA",
+      "grafica": true
     },
     "https://ror.org/05sx4sby0": {
       "nombre": "Universidad de Los Andes",
       "estado": "dudoso",
-      "nota": "sin nombre en la caché ROR; duplica el identificador ya usado para la ULA venezolana, probablemente es la ULA colombiana"
+      "nota": "sin nombre en la caché ROR; duplica el identificador ya usado para la ULA venezolana, probablemente es la ULA colombiana",
+      "grafica": true
     }
   },
   "reviewed": {
-    "date": null,
-    "by": null,
-    "scope": "43 identificadores ROR usados por las 255 charlas verificadas",
-    "pending": "revisión del usuario: los 16 'dudoso' y todos los nombres"
+    "date": "2026-10-15",
+    "by": "human review of the 42 institution identifiers, case by case",
+    "changed": [],
+    "decision": "las 42 se aceptan para los gráficos: 'grafica: true' en todas, incluidas las 16 con asignación 'dudoso'. El veredicto 'estado' no cambió: la duda sobre el identificador sigue siendo cierta y sigue registrada, y el gráfico de instituciones la declara junto a las series.",
+    "note_convention": "una 'nota' registra por qué el veredicto es 'dudoso'; 'nombre' y 'grafica' son las decisiones"
   },
   "prefilled_2026-10-15": {
-    "status": "borrador, sin revisar",
+    "status": "aceptado por el usuario el 2026-10-15; ninguno de los 42 nombres cambió",
     "method": "nombre propuesto desde el texto libre de afiliación de los autores con ese ROR (1 a 30 variantes por identificador); el veredicto compara ese texto contra el nombre de la caché ROR del repo hermano",
     "reference": "Congresos_CVE_V2/data/enrichment-cache/ror.sqlite (220 nombres) — referencia de curación, nunca insumo del build",
     "flagged": [
@@ -247,5 +290,9 @@
       "https://ror.org/00sbcwg24",
       "https://ror.org/037jqrk16"
     ]
+  },
+  "decision": {
+    "campo": "grafica",
+    "significado": "true: las charlas de ese identificador cuentan y se grafican. false: se declaran y no se grafican. Es independiente del veredicto 'estado': una asignación 'dudosa' puede graficarse, y es el caso de las 16 de este archivo, aceptadas por el dueño el 2026-10-15 con la duda registrada en la 'nota' de cada fila."
   }
 }
