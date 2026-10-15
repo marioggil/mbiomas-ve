@@ -419,8 +419,29 @@ body.is-overlays-collapsed .map-overlays {
    * 202px at 1280x500, where the top-anchored toolbar and the bottom-anchored
    * overlays collided over the coordinate form. Ceiling 720px
    * stops the map from pushing the panel offscreen on tall
-   * displays. At 1280x800 → 400px (50vh); at 1042x569 → 318px. */
+   * displays. At 1042x569 → 318px; the short-but-wide case, where the
+   * catalogue's fold takes precedence, is in the guarded block below. */
   height: clamp(318px, 50vh, 720px);
+}
+
+/* The map gives the catalogue its fold, but only where it can afford it.
+ *
+ * At 1280x800 the 50vh map (400px) left the catalogue's first row 40px below the
+ * fold. This box is constrained twice over: the fold needs it at most
+ * (100vh - 439px) — 373px of header and chrome plus a 66px row, all measured —
+ * and the map's own chrome needs a canvas of at least ~293px, because a shorter
+ * one makes the top-anchored toolbar overlap the bottom-anchored overlays
+ * (measured: a 260px canvas gives a 32px overlap, 282px gives 11px, 293px gives
+ * none). Both hold when 100vh >= 800px, and below that the fold is out of reach
+ * anyway, so the rule is guarded by height instead of shrinking the map into its
+ * own chrome. 449px is the reserve: 439px of budget plus 10px of slack.
+ *
+ * Inside the window it is a no-op wherever 50vh already fits: 1600x1000 stays at
+ * 500px and 1440x900 stays at 450px. */
+@media (min-width: 961px) and (min-height: 800px) {
+  .map-panel {
+    height: clamp(318px, min(50vh, 100vh - 449px), 720px);
+  }
 }
 
 /* The map's box inside the panel, and the containing block for the
