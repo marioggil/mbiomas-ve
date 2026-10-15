@@ -333,13 +333,14 @@ body {
   gap: 6px;
 }
 
-/* The metrics block's disclosure control is part of the same family on
- * purpose: one disclosure pattern in the viewer (a real button with
- * aria-expanded + aria-controls and a ▾/▸ glyph), not a second one. It only
- * differs in where it lives -- the catalogue panel instead of the map
- * chrome -- so it shares these rules and adds its own below. */
+/* The metrics block's and the edition filter's disclosure controls are part of
+ * the same family on purpose: one disclosure pattern in the viewer (a real
+ * button with aria-expanded + aria-controls and a ▾/▸ glyph), not a second one.
+ * They only differ in where they live -- the catalogue panel instead of the map
+ * chrome -- so they share these rules and add their own below. */
 .map-chrome-toggle,
-.catalog-metrics-toggle {
+.catalog-metrics-toggle,
+.catalog-filters-toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -354,18 +355,21 @@ body {
 }
 
 .map-chrome-toggle:hover,
-.catalog-metrics-toggle:hover {
+.catalog-metrics-toggle:hover,
+.catalog-filters-toggle:hover {
   background: var(--bg-panel-alt);
 }
 
 .map-chrome-toggle:focus-visible,
-.catalog-metrics-toggle:focus-visible {
+.catalog-metrics-toggle:focus-visible,
+.catalog-filters-toggle:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
 .map-chrome-disclosure,
-.catalog-metrics-disclosure {
+.catalog-metrics-disclosure,
+.catalog-filters-disclosure {
   width: 12px;
   text-align: center;
   color: var(--fg-muted);
@@ -1232,7 +1236,10 @@ body.is-overlays-collapsed .map-overlays {
   padding: 14px 14px 18px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  /* One consistent gap between the chrome blocks -- title, intro, summary,
+   * edition filters, search, its help and the metrics block. It was 8px; the
+   * panel's padding and every block's own padding are untouched. */
+  gap: 6px;
 }
 
 .catalog-title {
@@ -1308,17 +1315,37 @@ body.is-overlays-collapsed .map-overlays {
   color: var(--fg-muted);
 }
 
+/* The edition filter's disclosure row: the toggle. It sits immediately before
+ * ``#catalog-filters`` and, like the metrics block's row, it never hides --
+ * ``body.is-filters-collapsed`` hides only the buttons below, so the control
+ * and the active edition it names stay on screen. */
+.catalog-filters-disclosure-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+}
+
+/* The toggle's label carries the state: ``catalog.js`` writes the ACTIVE
+ * edition and its count here, read from the active button itself. Tabular
+ * figures keep the toggle from shifting as counts change. */
+.catalog-filters-toggle-label {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Collapsing hides the 13 buttons only: the toggle stays on screen, so a folded
+ * filter is always both readable and restorable. The class lives on the body
+ * for the same reason the metrics block's does: one CSS rule decides what
+ * hides, and no element is ever removed or rebuilt. */
+body.is-filters-collapsed .catalog-filters {
+  display: none;
+}
+
 .catalog-filters {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-}
-
-.catalog-filter-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--fg-muted);
 }
 
 .catalog-filter {

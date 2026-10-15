@@ -180,7 +180,7 @@
   <section class="catalog-panel" aria-label="Catálogo de estudios">
     <h2 class="catalog-title">Catálogo de estudios</h2>
     <p class="catalog-help">
-      Catálogo completo de los estudios revisados de las doce ediciones del Congreso Venezolano de Ecología. El panel es la vista autoritativa: lista todos los estudios y muestra la clasificación que el catálogo les asigna. El mapa es una vista secundaria que solo ubica los estudios con una coordenada utilizable, con un punto por estudio.
+      El panel es la vista autoritativa de los estudios revisados del Congreso Venezolano de Ecología; el mapa es secundario.
     </p>
     <div
       class="catalog-summary"
@@ -188,6 +188,25 @@
       aria-label="Resumen de clases del catálogo"
     >
       <!-- populated by catalog.js from /api/studies/catalog -->
+    </div>
+    <!-- The edition filter's disclosure control, the same pattern as the
+         metrics block below: a real button with aria-expanded + aria-controls,
+         sitting OUTSIDE the row it hides (``body.is-filters-collapsed`` hides
+         only ``#catalog-filters``), so the 13 buttons can be folded and the
+         row restored. The summary is the button's own label: it reads the
+         ACTIVE edition and its count from the active button itself, so a
+         folded filter can never be silently on. -->
+    <div class="catalog-filters-disclosure-row">
+      <button
+        id="catalog-filters-toggle"
+        class="catalog-filters-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="catalog-filters"
+      >
+        <span class="catalog-filters-toggle-label" id="catalog-filters-summary">Edición: &mdash;</span>
+        <span class="catalog-filters-disclosure" aria-hidden="true">&#9656;</span>
+      </button>
     </div>
     <div
       class="catalog-filters"
@@ -217,7 +236,7 @@
       ></span>
     </div>
     <p class="catalog-search-help" id="catalog-search-help">
-      Filtra por título, nombres de autores, palabras clave, ubicación geográfica y especies mencionadas; no distingue mayúsculas ni acentos. Se combina con el filtro de edición.
+      No distingue mayúsculas ni acentos; se combina con la edición.
     </p>
     <div
       class="catalog-point-filter"
