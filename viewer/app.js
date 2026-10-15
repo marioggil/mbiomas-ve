@@ -1385,7 +1385,11 @@
 
   /**
    * Persist the committed bbox, fire the endpoint, and route the response
-   * into the panel. Called on mouse-up.
+   * into the panel. The same rectangle is handed to the study catalog, which
+   * is its SECOND consumer (D5): one gesture filters the catalog list and adds
+   * the congress metrics for the area. That notification is synchronous and
+   * entirely client-side, so it is not tied to the endpoint's response and the
+   * panel request keeps its single in-flight guard (see ``requestClip``).
    */
   function commitClip(bbox) {
     clipBbox = bbox;
@@ -1400,6 +1404,10 @@
           return Number(n).toFixed(2);
         }).join(", ") +
         ". Solicitando composición...";
+    }
+    var catalog = window.MapBiomasCatalog;
+    if (catalog && typeof catalog.setArea === "function") {
+      catalog.setArea(bbox);
     }
     requestClip(bbox, currentYear);
   }
@@ -1471,6 +1479,13 @@
     }
     if (panel && typeof panel.clearClip === "function") {
       panel.clearClip();
+    }
+    // The catalog was the rectangle's second consumer, so clearing the zone
+    // clears its area filter too and the list goes back to every study the
+    // edition filter and the search allow.
+    var catalog = window.MapBiomasCatalog;
+    if (catalog && typeof catalog.clearArea === "function") {
+      catalog.clearArea();
     }
     // Restore the per-year breakdown for the current year. We re-fetch
     // because the panel's in-memory year doc is unchanged; the bar list

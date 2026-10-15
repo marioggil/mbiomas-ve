@@ -230,7 +230,13 @@ body {
   gap: 6px;
 }
 
-.map-chrome-toggle {
+/* The metrics block's disclosure control is part of the same family on
+ * purpose: one disclosure pattern in the viewer (a real button with
+ * aria-expanded + aria-controls and a ▾/▸ glyph), not a second one. It only
+ * differs in where it lives -- the catalogue panel instead of the map
+ * chrome -- so it shares these rules and adds its own below. */
+.map-chrome-toggle,
+.catalog-metrics-toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -244,16 +250,19 @@ body {
   cursor: pointer;
 }
 
-.map-chrome-toggle:hover {
+.map-chrome-toggle:hover,
+.catalog-metrics-toggle:hover {
   background: var(--bg-panel-alt);
 }
 
-.map-chrome-toggle:focus-visible {
+.map-chrome-toggle:focus-visible,
+.catalog-metrics-toggle:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-.map-chrome-disclosure {
+.map-chrome-disclosure,
+.catalog-metrics-disclosure {
   width: 12px;
   text-align: center;
   color: var(--fg-muted);
@@ -1040,6 +1049,12 @@ body.is-overlays-collapsed .map-overlays {
   outline-offset: 1px;
 }
 
+/* An edition the drawn area does not reach keeps its button so the row stays
+ * stable, but it must not look like it holds studies. */
+.catalog-filter.is-empty {
+  opacity: 0.55;
+}
+
 .catalog-filter.is-active {
   background: var(--accent);
   border-color: var(--accent);
@@ -1153,6 +1168,273 @@ body.is-overlays-collapsed .map-overlays {
 .catalog-point-chip-dismiss:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
+}
+
+/* ------- Congress metrics of the area (F2) -------
+ *
+ * The block answers the AREA (or the whole catalogue when no rectangle is
+ * drawn): the KPI header, the species charts and the institution area. It sits
+ * between the spatial chip and the catalogue body and sizes itself: it is a grid
+ * whose columns reflow, with no max-height and no overflow of its own, so the
+ * document grows by its content and the list stays the panel's only scroll
+ * container (.catalog-list keeps min-height == max-height + overflow-y).
+ *
+ * The block is DISCLOSABLE (same pattern as the map chrome: a real button with
+ * aria-expanded + aria-controls, the collapsed flag mirrored on document.body).
+ * Its default state -- no area drawn -- is collapsed, because the study list is
+ * this panel's primary content and the three charts cannot open the panel: the
+ * collapsed row keeps the toggle and the one-line summary (denominator plus
+ * coverage), and only the body below it hides. Drawing an area opens it; see
+ * catalog.js.
+ *
+ * The charts are the panel's own visual language: the SVG strings carry the
+ * .panel-chart-* classes (see panel.js / the .panel-chart rules above) and only
+ * the marks this block introduces are styled here. */
+.catalog-metrics {
+  --metrics-level-t2: #2563eb;
+  --metrics-level-t1: #0f766e;
+  --metrics-level-t0: #b45309;
+  --metrics-level-unknown: #6b7280;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 8px 12px;
+  align-items: start;
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+/* ``display: grid`` above would otherwise beat the UA stylesheet's
+ * ``[hidden] { display: none }``, so the hidden state is restated. */
+.catalog-metrics[hidden] {
+  display: none;
+}
+
+/* The disclosure row: the toggle and, while collapsed, the summary line. It
+ * spans every column of the metrics grid, like the header and the empty note.
+ * The name says "disclosure" and not "bar" because ``.catalog-metrics-bar`` is
+ * already the species bars INSIDE the charts (see metrics.js); one class name
+ * per thing. */
+.catalog-metrics-disclosure-row {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+}
+
+/* The collapsed state's one line. It is hidden once the body is open because
+ * the KPI header inside it already publishes the same denominator and the same
+ * coverage numbers: repeating them would be noise, not information. */
+.catalog-metrics-summary {
+  margin: 0;
+  font-size: 12px;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+body:not(.is-metrics-collapsed) .catalog-metrics-summary {
+  display: none;
+}
+
+/* Collapsing hides the charts only: the block, its toggle and its summary line
+ * stay on screen, so a collapsed block is always both readable and restorable.
+ * The class lives on the body for the same reason the map chrome's two do: one
+ * CSS rule decides what hides, and no element is ever removed or rebuilt. */
+body.is-metrics-collapsed .catalog-metrics-body {
+  display: none;
+}
+
+/* The body is its own grid with the SAME template as .catalog-metrics above:
+ * expanded, the header and the figures land on exactly the columns they took
+ * before the disclosure existed, so the charts are unchanged by this feature. */
+.catalog-metrics-body {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 8px 12px;
+  align-items: start;
+}
+
+/* The header and the "no series to draw" sentence own the full width: they are
+ * about the block, not about one chart. */
+.catalog-metrics-header,
+.catalog-metrics-empty {
+  grid-column: 1 / -1;
+}
+
+.catalog-metrics-denominator {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  font-size: 13px;
+}
+
+.catalog-metrics-denominator-value {
+  color: var(--fg-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.catalog-metrics-scope {
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.catalog-metrics-coverage {
+  margin: 4px 0 0;
+  color: var(--fg-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The granularity stack (M1). The bar is a proportion of the header's n, and
+ * the legend below it carries the same numbers as text, so the bands are never
+ * the only carrier of the split. */
+.catalog-metrics-levels {
+  display: flex;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.catalog-metrics-level {
+  display: block;
+  height: 100%;
+}
+
+.catalog-metrics-level-t2 {
+  background: var(--metrics-level-t2);
+}
+
+.catalog-metrics-level-t1 {
+  background: var(--metrics-level-t1);
+}
+
+.catalog-metrics-level-t0 {
+  background: var(--metrics-level-t0);
+}
+
+.catalog-metrics-level-unknown {
+  background: var(--metrics-level-unknown);
+}
+
+.catalog-metrics-level-legend {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  font-size: 11px;
+  color: var(--fg-muted);
+}
+
+.catalog-metrics-level-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.catalog-metrics-level-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+.catalog-metrics-level-item-t2 .catalog-metrics-level-swatch {
+  background: var(--metrics-level-t2);
+}
+
+.catalog-metrics-level-item-t1 .catalog-metrics-level-swatch {
+  background: var(--metrics-level-t1);
+}
+
+.catalog-metrics-level-item-t0 .catalog-metrics-level-swatch {
+  background: var(--metrics-level-t0);
+}
+
+.catalog-metrics-level-item-unknown .catalog-metrics-level-swatch {
+  background: var(--metrics-level-unknown);
+}
+
+.catalog-metrics-level-value {
+  color: var(--fg-text);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.catalog-metrics-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.catalog-metrics-caption {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-strong);
+}
+
+.catalog-metrics-chart {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 6px;
+}
+
+.catalog-metrics-note {
+  margin: 0;
+  font-size: 11px;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.catalog-metrics-empty {
+  margin: 0;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+
+/* Chart marks the metrics charts add to the .panel-chart-* language: the
+ * species track/bar, the richness bars and line, and the institutions legend
+ * figures. The six institution band colours travel as SVG ``fill`` attributes
+ * (the fixed palette in metrics.js), so only the shared marks live here. */
+.catalog-metrics-track {
+  fill: rgba(15, 23, 42, 0.06);
+}
+
+.catalog-metrics-bar {
+  fill: var(--accent);
+}
+
+.catalog-metrics-richness-bar {
+  fill: #bfdbfe;
+}
+
+.catalog-metrics-richness-line {
+  fill: none;
+  stroke: #1d4ed8;
+  stroke-width: 2;
+}
+
+.catalog-metrics-richness-point {
+  fill: #1d4ed8;
+}
+
+.catalog-metrics-value {
+  font-variant-numeric: tabular-nums;
+  fill: var(--fg-text);
+}
+
+.catalog-metrics-series {
+  stroke: rgba(255, 255, 255, 0.6);
+  stroke-width: 0.5;
 }
 
 .catalog-body {

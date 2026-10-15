@@ -67,8 +67,10 @@ columns are the location granularity of those studies, which is not the same par
 | no rectangle (no spatial filter) | 255 | 158 | 31 | 66 | 189 | 534 | 42 |
 | for reference, `placeable` only | 145 | 145 | 0 | 0 | 110 | 353 | 30 |
 
-With no rectangle nothing is filtered, so the universe is all 255; a rectangle covering the whole map would keep 245, the
-reachable ceiling, because the 10 `no_coordinate` studies can never be inside one.
+With no rectangle nothing is filtered, so the universe is all 255. A rectangle equal to the COG extent — the largest
+one the map can draw — keeps **224**: 245 studies carry a coordinate, minus the 21 whose coordinate falls outside the
+extent (13 `outside_extent` and 8 coarse T0 mentions that geocoded abroad). The 10 `no_coordinate` studies can never
+be inside any rectangle, and 224 — not 245 — is the number a full-extent rectangle must return.
 
 The institution line chart the requester imagined works over the whole corpus (the top five are active in 7–11 of 12
 editions) and empties out inside an area: Mérida's richest institution has 6 talks spread over 3 editions.
@@ -125,13 +127,51 @@ declared instead of charted. Annex C1: this draft needs the owner's review.
 `viewer/metrics.js` (new, pure functions, no DOM), `viewer/catalog.js` (list filter + metrics block),
 `viewer/app.js` (generalise `commitClip` at `:1390` to a second consumer), `viewer/index.html`, `viewer/style.css`.
 One shared predicate decides both the list filter and the metrics, so they cannot disagree. Hand-rolled SVG (no CDN,
-per `viewer/vendor/VERSION.txt`). `tools/serve_viewer.py` is **not** touched.
+per `viewer/vendor/VERSION.txt`). `tools/serve_viewer.py` is **not** touched by F2.
+
+Settled while building it:
+
+| Point | Decision |
+|---|---|
+| Metrics universe | The **area**, not the list: the edition filter and the search narrow the list only, or the 12-edition series would collapse to one point. The block shows its own denominator |
+| Spatial filters | Mutually exclusive in the catalog: the most recent gesture wins, and one chip declares which is active |
+| The rectangle on the map | A marker click replaces the catalog's area filter but does **not** erase the drawing, so the composition panel keeps its clip stats and re-drawing is not the price of a click |
+| `MIN_TALKS_FOR_SERIES` | **5** (F2-C1 closed). Barinas, at 4 talks, is the empty-state case |
+| Tie-breaks | Count desc, then lowercased name asc — with string comparison, never `localeCompare`, so two renders cannot disagree |
+| The block's default | **Collapsed**, with a one-line summary (`255 charlas · 245 con coordenada · 226 con institución · 534 nombres`), because the study list is the panel's primary content and three charts were pushing it off the first screen. Drawing an area expands it; clearing it folds it back; a manual fold is respected until the next area gesture |
+| The edition buttons | They **count inside the area** once one is drawn (`Todas (14)`, and `(0)` for an edition the area does not reach), because a button that promises 15 studies and shows none is the same defect as a chart that hides its granularity |
 
 ### F3 — verification
 
-Python-pinned reference numbers against the committed artifact (Llanos `30/9/2/19`; Mérida 2013 `n=1, 11`; 2019
-cumulative 283 with the top five at 38/33/30/25/23), a real browser pass on `./run.sh serve` recording the same
-numbers, and the full suite green on the combined interpreter.
+**Done, and this is the record.**
+
+*Independent Python recomputation versus the real browser.* Four rectangles were drawn in a Playwright pass over
+`tools.serve_viewer` on `127.0.0.1:8017`, the rectangle the browser actually committed was captured by wrapping
+`MapBiomasCatalog.setArea`, and the DOM numbers were compared against a separate Python implementation over that same
+rectangle. Every field matched, four times: `n`, the T2/T1/T0 split, with-species, with-ROR, the ok/doubtful pair
+split, the reviewer split, the distinct species count and the whole top-8 ranking **including its display forms and
+its tie order**.
+
+| Rectangle (as the browser committed it) | n | T2/T1/T0 | species | pairs ok/dudoso | top |
+|---|---:|---|---|---|---|
+| no rectangle | 255 | 158/31/66 | 189 · 534 distinct | 282 (256/26) | peces 8, Aves 7, mamíferos 5 |
+| Mérida `-71.533,8.275,-71.046,8.784` | 14 | 9/2/3 | 13 · 36 | 19 (18/1) | Pheidole fallax 2, then 1s |
+| Venezuela centroid `-66.365,7.766,-65.878,8.275` | 14 | **3/0/11** | 9 · 27 | 16 (14/2) | anfibios 2, aves 2, mamíferos 2 |
+| Barinas `-70.11,7.90,-69.61,8.40` | 4 | 2/1/1 | 2 · 2 | 1 (1/0) | Panicum maximum 1, Zea mays 1 |
+| Llanos `-68.015,7.015,-64.010,9.024` | 29 | 9/2/18 | 21 · 47 | 34 (30/4) | six-way tie at 3, resolved by name |
+
+The centroid row is M1's case in the wild: **11 of 14 studies are T0**, so the T0 count is what keeps that area
+honest. The Barinas row is M2/M4's: 4 talks, the ranking and the KPIs, **no series**, and the sentence that says why.
+
+*Independent verification of the client code* (a separate verifier with its own harnesses): the pure functions
+reproduce 255 / 224 (COG extent) / 534 / 282-256-26 / Llanos 30-9-2-19 / Barinas 4 / cumulative 38-33-30-25-23 with
+`others[11] = 107`; 14 emitted SVGs parse as XML with `role="img"`, `viewBox`, `<title>` and `<desc>`; names carrying
+`&`, `<` and `"` are escaped; malformed, NaN and inverted bboxes never throw and are contained at the `setArea`
+boundary; the Python suite stays at 382 OK.
+
+*Two defects found by looking at the rendered page and fixed before the commit*: the block pushed the study list below
+the fold on every load (hence the collapsed default), and the Spanish counters read `1 tienen institución (ROR)` and
+`1 pares charla-institución` on a one-study area (hence the number-agreement helper).
 
 ## 6. Commits
 
@@ -144,4 +184,4 @@ table, then the regenerated artifact, then the builder plus its tests and this d
 |---|---|---|
 | F1-C1 | The 42 curated rows are a **draft**: the 16 `dudoso` verdicts and every display name need the owner's review, like the granularity taxonomy did | Nothing technically; the charts default to `ok` and declare the rest |
 | F1-C2 | `data/enrichment-cache/ror.sqlite` lives in the sibling repo, so it is a **reference for curation**, never a build input | Curation only |
-| F2-C1 | The `n` threshold below which the series are replaced by a ranking is not fixed yet (proposal: `n < 5`) | F2 acceptance |
+| F2-C1 | ~~The `n` threshold below which the series are replaced by a ranking~~ **closed in F2**: `MIN_TALKS_FOR_SERIES = 5` | — |
