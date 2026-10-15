@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
+  <!-- Skip links, the first two tab stops of the page. The body is the grid
+       container, so these anchors rely on the visually-hidden technique
+       (.skip-link, absolute positioning) to stay out of the grid's flow.
+       They must not take space or shift any panel while hidden. -->
+  <a class="skip-link" href="#panel-panel">Saltar al panel de composición</a>
+  <a class="skip-link" href="#time-bar">Saltar al selector de año</a>
   <header class="viewer-header" role="banner">
     <div class="viewer-header-text">
       <h1 class="viewer-title">Visor de cobertura MapBiomas Venezuela — Colección 3</h1>
@@ -244,7 +250,12 @@
     <p class="catalog-error" id="catalog-error" role="alert" style="display: none;"></p>
   </section>
 
-  <aside class="panel-panel" aria-label="Panel de composición por año">
+  <aside
+    class="panel-panel"
+    id="panel-panel"
+    tabindex="-1"
+    aria-label="Panel de composición por año"
+  >
     <h2 class="panel-title">Composición por año</h2>
     <p class="panel-help">
       Porcentaje de la extensión válida por grupo (nivel 1) y clases del año seleccionado (nivel 2). Pulse el gráfico para cambiar de año.
@@ -270,7 +281,7 @@
     </div>
   </aside>
 
-  <footer class="time-bar" aria-label="Selector de año">
+  <footer class="time-bar" id="time-bar" tabindex="-1" aria-label="Selector de año">
     <div class="time-bar-row">
       <label for="year-slider" class="time-bar-label">Año de cobertura</label>
       <output class="time-bar-value" id="year-value" for="year-slider">&mdash;</output>
