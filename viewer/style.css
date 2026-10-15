@@ -61,6 +61,70 @@ body {
   min-height: 100vh;
 }
 
+/* ------- Skip links -------
+ * The composition panel and the year control sit behind 285 tab stops (the
+ * header, the legend, the map, the 13 edition filters and 255 row buttons),
+ * so the two links below move the focus there in one keystroke each.
+ *
+ * They are hidden with the visually-hidden technique rather than kept in
+ * flow, because the body IS the grid container: an in-flow child would
+ * become a grid item and add a row, shifting every panel. `position:
+ * absolute` takes them out of flow, so they are painted but never laid out
+ * as grid items, and the 1px clipped box occupies no space. No ancestor is
+ * positioned (body is not), so the links resolve against the initial
+ * containing block: top/left below are viewport coordinates. */
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* On focus the link becomes a real control at the top-left, above every
+ * panel. It keeps `position: absolute` (inherited from the hidden rule), so
+ * it still never enters the grid. The ring is the controls' one: 2px accent
+ * at 1px offset. */
+.skip-link:focus {
+  width: auto;
+  height: auto;
+  padding: 8px 12px;
+  margin: 0;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  overflow: visible;
+  white-space: normal;
+  clip: auto;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  background: var(--bg-panel);
+  color: var(--fg-strong);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Making the landing visible. The targets carry `tabindex="-1"`, so they are
+ * focusable programmatically but never join the tab order; that is the same
+ * `:focus` (not `:focus-visible`) hook the jump needs, because support for
+ * `:focus-visible` on a programmatically focused, non-input container is
+ * inconsistent across browsers and a ring that sometimes does not appear
+ * defeats the jump. Ring matches the controls' `:focus-visible` rule
+ * (`.legend-group-toggle:focus-visible` and siblings: 2px accent, 1px
+ * offset). */
+.panel-panel:focus,
+.time-bar:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 /* Reading measure (craft floor). Prose stops at a comfortable line length
  * instead of running to the panel edge: the catalogue intro and the help
  * paragraphs are children of a full-width panel whose text line used to
@@ -152,6 +216,18 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+/* app.js writes this item when there is no legend to render
+ * ("La leyenda está vacía."). It is a `li` inside .legend-groups, a flex
+ * column with no padding, so it is styled like the sibling empty states:
+ * .catalog-empty's `font-size: 12px; color: var(--fg-muted); padding: 8px
+ * 2px;` (the house style; .panel-breakdown-empty drops the padding but keeps
+ * the 12px muted size). */
+.legend-empty {
+  font-size: 12px;
+  color: var(--fg-muted);
+  padding: 8px 2px;
 }
 
 .legend-group {
@@ -528,6 +604,15 @@ body.is-overlays-collapsed .map-overlays {
   width: 100%;
   margin: 4px 0 4px;
   accent-color: var(--accent);
+}
+
+/* The slider was the only control still on the browser outline (1px). It
+ * joins the house convention: 2px accent at 1px offset, like
+ * .catalog-filter:focus-visible or .catalog-row-button:focus-visible. No rule
+ * anywhere removes the outline, so the focus indicator is never suppressed. */
+.time-bar-slider:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .time-bar-range {
