@@ -87,14 +87,25 @@ congress Parquet) and GDAL (to read the COG geotransform), and both are **rebuil
 out of the service, out of the image and out of any requirements file. The system `python3` has GDAL
 but no `pyarrow`, so `./run.sh pipeline` **refuses that stage with the actionable recipe** — a
 `--system-site-packages` venv plus `uv pip install pyarrow` — instead of dying later inside the tool
-with a traceback. `./run.sh check` splits the two paths: the **studies catalog is `[serve]`** (the
-committed artifact, required to serve) and the **congress Parquet is `[rebuild]`** (the raw,
-gitignored input, needed only to regenerate it).
+with a traceback. It also needs `data/curated/congresos/ror-instituciones.json`, a **versioned,
+hand-curated** table of the 42 institution ids the corpus mentions — 26 verified, 16 doubtful, all
+charted by the owner's decision — and the build **stops** on an id that is not in it, naming the
+study, so a new ROR cannot be charted without someone deciding what to call it.
+
+`./run.sh check` splits the two paths: the **studies catalog is `[serve]`** (the committed artifact,
+required to serve) and the **congress Parquet is `[rebuild]`** (the raw, gitignored input, needed only
+to regenerate it).
 
 ## What the viewer shows
 
 - **The annual map**, on a year slider over 1985–2024, with the official MapBiomas palette and a
-  hierarchical legend whose groups expand to their classes.
+  hierarchical legend whose groups expand to their classes. The first group opens by default and the
+  rest stay folded; below 961 px the legend panel has a height of its own and scrolls inside it,
+  instead of collapsing to its padding as it did while the panel was capped but never sized.
+- **The year control sits in a band under the map**, inside the map panel's own height budget. It
+  used to be the page's last row, four screens below the map it drives, and the point of the control
+  is to scrub the year and watch the map change: four screens apart, those two cannot be seen
+  together. The band is one row on wide viewports and stacks below 561 px.
 - **The composition panel**: the 40-year level-1 series as a stacked area chart whose cursor
   follows the slider, and the level-2 breakdown for the selected year, sorted by area. Both read
   the committed composition CSVs verbatim, so the panel cannot disagree with the published
@@ -103,6 +114,23 @@ gitignored input, needed only to regenerate it).
   the visible year, computed from the COG window at native resolution. The window is bounded at
   36 million pixels, roughly 180 × 180 km, which keeps the worst case around 250 ms; for a whole
   region use the composition panel instead.
+- **Congress metrics for the drawn area**: the same rectangle also filters the study panel and feeds
+  a metrics block — the species the abstracts mention, the richness per edition over the number of
+  talks, and the institutions accumulated by year from the curated ROR ids. It starts **folded** and
+  unfolds when an area is drawn, because three charts open by default pushed the list off the first
+  screen. Its universe is the **drawn area, not the filtered list**: the edition filter and the
+  search do not move it, or the twelve-edition series would collapse to a single point. Institution
+  pairs carry the review watermark — **282** charted, of which **26** come from doubtful ROR
+  assignments the owner chose to include, each keeping the institution its ROR actually resolves to
+  — and below five talks no series is drawn at all: the block says so instead of plotting two points.
+- **A keyboard route to the same window**: the coordinate field in the map toolbar takes
+  `oeste, sur, este, norte` and commits through the same path a drag does, so a keyboard user gets
+  the identical bbox, clip and metrics. It is the 17th tab stop on the page.
+- **Two skip links**, the first two tab stops of the page: the year control and the composition
+  panel sit behind the header, the legend, the map chrome, the edition filter and 255 row buttons.
+  The page has **277 tab stops** and the year slider is the **19th** of them where it used to be the
+  285th; the panel's own controls sit behind those 255 rows. The links are visually hidden until
+  focused and shift no panel while hidden.
 - **Collapsible map chrome**: the legend column and the information drawn over the map can each be
   collapsed from the header, which returns the legend's 320 px to the map (945 → 1265 px at 1280, and
   707 → 1027 at 1042) and clears up to 57 % of the map's height at the short viewport. The choice is
@@ -128,7 +156,10 @@ exercise both against synthetic fixtures, so neither is dead code.
 **The panel is the authoritative view; the map is secondary.** The panel lists every study,
 including the ones the map does not draw, and states the class the catalog assigns to each. It
 filters by edition and searches, accent-insensitively, over the title, the author names, the
-keywords, the location text and the species the abstract mentions. Clicking a point on the map
+keywords, the location text and the species the abstract mentions. The edition filter is a
+**disclosure whose summary always carries the active edition and its count** (`Edición: Todas
+(255)`), so a folded filter is readable and cannot be mistaken for no filter at all; choosing an
+edition folds it back and returns the fold to the list. Clicking a point on the map
 filters the list to the studies **drawn** there, behind a dismissible chip: the filter follows the
 markers, not the coordinate, so a coordinate that carries coarse mentions in the catalog but one
 marker on the map shows one study. The map can only place a study that has a usable coordinate. The
@@ -219,6 +250,17 @@ the clip endpoint.
   seleccionada" because they are of the drawn area, while the year breakdown labels them "de la
   extensión válida" because they are of the whole mapped extent. Both are correct; they are not
   the same denominator.
+- **The edition buttons are not on screen.** The 13 edition filters sit behind a disclosure whose
+  summary names the active edition and its count, and it folds back as soon as one is chosen. The
+  state is never hidden: whichever filter is in force is always readable in the toggle.
+- **The first catalogue row can sit below the fold, and the legend scrolls inside its own box.**
+  The map row is bounded twice — the catalogue's fold wants it small, while the map's own chrome
+  needs a canvas of at least ~293 px before the top-anchored toolbar overlaps the bottom-anchored
+  overlays — and both hold only from an 800 px-tall viewport up. Below that the fold loses,
+  deliberately, instead of trading a text overlap for it. The legend is the same story from the other
+  side: a grid item with `overflow: auto` contributes a minimum of 0 to its row, so a cap alone left
+  the panel 33 px tall with 443 px of content in a zero-height box; it now has a definite height.
+  Both are recorded in `odd/tasks/` with their measurements.
 - **Several studies sit on one pixel, and the ring around it is not a second marker.** Coordinates are
   a geocoder's output, not sampling sites, so different studies share them and their markers stack
   invisibly. Where two or more markers coincide the map draws a **ring**, so the overlap is visible
@@ -284,17 +326,25 @@ does not claim one.
   carries no GDAL: `python3 -m unittest discover -s tests -v`. It reads no raster.
 - **A green suite does not mean the whole suite ran, and no single documented command covers it.**
   The interpreters cover different parts, because they can import different modules:
-  - the **system interpreter** (`python3 -m unittest discover -s tests -v`) runs **382 tests** and
-    finishes green with **48 skips**: the **47 viewer tests that need `fastapi`** and **one freshness
+  - the **system interpreter** (`python3 -m unittest discover -s tests -v`) runs **387 tests** and
+    finishes green with **49 skips**: the **48 viewer tests that need `fastapi`** and **one freshness
     row-count check that needs `pyarrow`**. A green run here **did not cover the viewer tests**, and
     must not be reported as if it did.
-  - the repository **`.venv`** runs those **47 viewer tests**, but cannot run the composition schema
-    test, because it carries no `osgeo`: it reports `Ran 361 tests` with one import error and one
+  - the repository **`.venv`** runs those **48 viewer tests**, but cannot run the composition schema
+    test, because it carries no `osgeo`: it reports `Ran 366 tests` with one import error and one
     `pyarrow` skip.
-  - only an interpreter carrying GDAL **and** `pyarrow` **and** `fastapi` runs all **382** with zero
+  - only an interpreter carrying GDAL **and** `pyarrow` **and** `fastapi` runs all **387** with zero
     skips.
 - **The study catalog panel has no persisted automated test.** Its logic was checked with a throwaway
   headless DOM stub, and its layout with a browser pass; **neither is reproducible by a CI run**.
+- **The metrics block has no persisted automated test either.** Its aggregation lives in
+  `viewer/metrics.js` as pure functions with no runner. Its numbers were verified by recomputing the
+  same rectangle independently in Python and comparing field by field against the DOM — a pass that
+  is not reproducible by a CI run, like the panel's.
+- **The composition chart's series is the whole mapped extent even when an area is drawn.** Once a
+  clip is active the chart says so in its own subtitle rather than silently keeping the wider
+  denominator; recomputing those 40 years for the window is a separate piece of work, not a
+  labelling fix.
 - **The study catalog does not feed the priority index.** The `study_gap` term stays disabled at
   weight **0.0**; see "The study catalog" for why 255 studies cannot populate an H3 res 8–9 gap index.
 - The composition summary JSON carries per-class pixel counts and presence but not per-class

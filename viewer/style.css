@@ -61,9 +61,10 @@ body {
 }
 
 /* ------- Skip links -------
- * The composition panel and the year control sit behind 285 tab stops (the
- * header, the legend, the map, the 13 edition filters and 255 row buttons),
- * so the two links below move the focus there in one keystroke each.
+ * The composition panel and the year control sit behind 277 tab stops (the
+ * header, the legend, the map chrome, the edition filter's toggle and 255 row
+ * buttons), so the two links below move the focus there in one keystroke each.
+ * The year slider is the 19th stop on the page where it used to be the 285th.
  *
  * They are hidden with the visually-hidden technique rather than kept in
  * flow, because the body IS the grid container: an in-flow child would
