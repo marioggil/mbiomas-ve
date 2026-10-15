@@ -62,6 +62,63 @@
     </ul>
   </aside>
 
+  <section class="map-panel" aria-label="Mapa de cobertura anual">
+    <div id="map" class="map" role="application" aria-label="Mapa interactivo"></div>
+    <div class="map-controls" role="toolbar" aria-label="Herramientas del mapa">
+      <button
+        id="clip-draw-toggle"
+        class="map-tool"
+        type="button"
+        aria-pressed="false"
+        aria-describedby="clip-help"
+      >
+        Dibujar zona
+      </button>
+      <button
+        id="clip-clear"
+        class="map-tool map-tool-secondary"
+        type="button"
+        disabled
+      >
+        Limpiar zona
+      </button>
+      <span id="clip-help" class="map-tool-help">
+        Trace un rectángulo sobre el mapa para obtener la composición de esa área en el año seleccionado.
+      </span>
+      <span id="clip-status" class="map-tool-status" aria-live="polite"></span>
+    </div>
+    <div class="map-overlays" id="map-overlays">
+      <div
+        class="study-map-legend"
+        id="study-map-legend"
+        aria-label="Leyenda de estudios ubicables en el mapa"
+      >
+        <span class="study-map-legend-dot" aria-hidden="true"></span>
+        <span class="study-map-legend-text">
+          Estudios ubicables: <span id="study-map-legend-count">&mdash;</span> · un punto = un estudio
+        </span>
+      </div>
+      <div
+        class="study-map-halo-note"
+        id="study-map-halo-note"
+        aria-label="Significado del anillo de estudios superpuestos"
+      >
+        <span class="study-map-halo-ring" aria-hidden="true"></span>
+        <span class="study-map-halo-text">
+          El anillo se&ntilde;ala un punto donde se superponen varios estudios:
+          <span id="study-map-halo-coordinate-count">&mdash;</span> puntos re&uacute;nen
+          <span id="study-map-halo-marker-count">&mdash;</span> de los
+          <span id="study-map-halo-visible-count">&mdash;</span> estudios ubicables; el panel
+          los lista todos, incluidos los que el mapa no ubica.
+        </span>
+      </div>
+      <div class="labelling" id="d7-labelling" aria-live="polite">
+        <strong class="labelling-label" id="d7-extent-label">&hellip;</strong>
+        <span class="labelling-note" id="d7-boundary-note">&hellip;</span>
+      </div>
+    </div>
+  </section>
+
   <section class="catalog-panel" aria-label="Catálogo de estudios">
     <h2 class="catalog-title">Catálogo de estudios</h2>
     <p class="catalog-help">
@@ -188,63 +245,6 @@
       <span class="panel-boundary-note" id="panel-boundary-note">&hellip;</span>
     </div>
   </aside>
-
-  <section class="map-panel" aria-label="Mapa de cobertura anual">
-    <div id="map" class="map" role="application" aria-label="Mapa interactivo"></div>
-    <div class="map-controls" role="toolbar" aria-label="Herramientas del mapa">
-      <button
-        id="clip-draw-toggle"
-        class="map-tool"
-        type="button"
-        aria-pressed="false"
-        aria-describedby="clip-help"
-      >
-        Dibujar zona
-      </button>
-      <button
-        id="clip-clear"
-        class="map-tool map-tool-secondary"
-        type="button"
-        disabled
-      >
-        Limpiar zona
-      </button>
-      <span id="clip-help" class="map-tool-help">
-        Trace un rectángulo sobre el mapa para obtener la composición de esa área en el año seleccionado.
-      </span>
-      <span id="clip-status" class="map-tool-status" aria-live="polite"></span>
-    </div>
-    <div class="map-overlays" id="map-overlays">
-      <div
-        class="study-map-legend"
-        id="study-map-legend"
-        aria-label="Leyenda de estudios ubicables en el mapa"
-      >
-        <span class="study-map-legend-dot" aria-hidden="true"></span>
-        <span class="study-map-legend-text">
-          Estudios ubicables: <span id="study-map-legend-count">&mdash;</span> · un punto = un estudio
-        </span>
-      </div>
-      <div
-        class="study-map-halo-note"
-        id="study-map-halo-note"
-        aria-label="Significado del anillo de estudios superpuestos"
-      >
-        <span class="study-map-halo-ring" aria-hidden="true"></span>
-        <span class="study-map-halo-text">
-          El anillo se&ntilde;ala un punto donde se superponen varios estudios:
-          <span id="study-map-halo-coordinate-count">&mdash;</span> puntos re&uacute;nen
-          <span id="study-map-halo-marker-count">&mdash;</span> de los
-          <span id="study-map-halo-visible-count">&mdash;</span> estudios ubicables; el panel
-          los lista todos, incluidos los que el mapa no ubica.
-        </span>
-      </div>
-      <div class="labelling" id="d7-labelling" aria-live="polite">
-        <strong class="labelling-label" id="d7-extent-label">&hellip;</strong>
-        <span class="labelling-note" id="d7-boundary-note">&hellip;</span>
-      </div>
-    </div>
-  </section>
 
   <footer class="time-bar" aria-label="Selector de año">
     <div class="time-bar-row">
