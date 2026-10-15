@@ -82,8 +82,32 @@
       >
         Limpiar zona
       </button>
+      <!-- Keyboard route to the same committed bbox the drag produces:
+           one form, one submit, and the submission goes through
+           commitClip. The label names the order because the input is
+           normalised the same way a two-corner drag is. -->
+      <form id="clip-coords-form" class="map-coords">
+        <label class="map-coords-label" for="clip-coords-input">
+          Coordenadas con punto decimal (oeste, sur, este, norte)
+        </label>
+        <input
+          id="clip-coords-input"
+          class="map-coords-input"
+          type="text"
+          name="coords"
+          autocomplete="off"
+          placeholder="-71.51, 8.26, -71.02, 8.76"
+          aria-describedby="clip-help"
+        />
+        <button
+          class="map-tool map-tool-secondary map-coords-submit"
+          type="submit"
+        >
+          Ver composición
+        </button>
+      </form>
       <span id="clip-help" class="map-tool-help">
-        Trace un rectángulo sobre el mapa para obtener la composición de esa área en el año seleccionado.
+        Trace un rectángulo sobre el mapa, o escriba las coordenadas del área, para obtener su composición en el año seleccionado.
       </span>
       <span id="clip-status" class="map-tool-status" aria-live="polite"></span>
     </div>

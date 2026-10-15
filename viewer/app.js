@@ -52,6 +52,8 @@
   var clipToggleBtn = document.getElementById("clip-draw-toggle");
   var clipClearBtn = document.getElementById("clip-clear");
   var clipStatus = document.getElementById("clip-status");
+  var clipCoordsForm = document.getElementById("clip-coords-form");
+  var clipCoordsInput = document.getElementById("clip-coords-input");
   var studyLegendCount = document.getElementById("study-map-legend-count");
   var studyHaloCoordinateCount = document.getElementById(
     "study-map-halo-coordinate-count"
@@ -140,6 +142,11 @@
   // isolated: the map, slider, legend, composition panel and clip drawing
   // keep working.
   initCatalogPanel();
+
+  // Coordinate field (slice P1-3). Wired here rather than in the map's
+  // load handler: the field needs no map, only ``commitClip``, which is a
+  // module-scope function declaration.
+  initClipCoordsField();
 
   // Collapsible map chrome (slice F4 / T8). Wired before the metadata
   // resolves so the persisted state is applied to the body class on the
@@ -1390,6 +1397,126 @@
   }
 
   /**
+   * Format a bbox the way the toolbar publishes it: two decimals, in
+   * west/south/east/north order. The status line and the coordinate field
+   * both call this, so the numbers a drag shows and the numbers a typed
+   * area shows agree by construction instead of by discipline.
+   */
+  function formatBbox(bbox) {
+    return bbox
+      .map(function (n) {
+        // Two-decimal precision keeps the status line readable.
+        return Number(n).toFixed(2);
+      })
+      .join(", ");
+  }
+
+  /**
+   * Read the coordinate field and return a bbox, or write a Spanish
+   * message into the toolbar's live region and return null.
+   *
+   * The four numbers are read in the order the label names (oeste, sur,
+   * este, norte) but accepted in ANY corner order: like the two dragged
+   * corners, they go through ``bboxFromCorners``, which normalises
+   * west/south/east/north. Nothing is committed on a rejection, so a
+   * previously committed area, its rectangle, its catalog filter and its
+   * panel stay exactly as they were.
+   */
+  function bboxFromCoordinateField(raw) {
+    function reject(message) {
+      if (clipStatus) {
+        clipStatus.textContent = message;
+      }
+      if (clipCoordsInput) {
+        // Leave the focus in the field so correcting the value is one
+        // keystroke away.
+        clipCoordsInput.focus();
+      }
+      return null;
+    }
+
+    // Commas, semicolons and whitespace all separate values; an empty
+    // token ("1,,2") is dropped rather than counted.
+    var tokens = String(raw == null ? "" : raw)
+      .split(/[\s,;]+/)
+      .filter(function (token) {
+        return token !== "";
+      });
+    if (tokens.length !== 4) {
+      return reject(
+        "Escriba cuatro números separados por comas, en el orden oeste, sur, este, norte."
+      );
+    }
+    var numbers = [];
+    for (var i = 0; i < tokens.length; i++) {
+      var value = Number(tokens[i]);
+      if (!Number.isFinite(value)) {
+        return reject(
+          "Alguno de los valores no es un número válido: escriba cuatro números separados por comas, por ejemplo -71.51, 8.26, -71.02, 8.76."
+        );
+      }
+      numbers.push(value);
+    }
+    // Positions 0 and 2 are the longitudes, 1 and 3 the latitudes, per
+    // the order the label names.
+    var badLongitudes = [numbers[0], numbers[2]].filter(function (n) {
+      return n < -180 || n > 180;
+    });
+    if (badLongitudes.length) {
+      return reject(
+        "Longitud fuera de rango (" +
+          badLongitudes.join(", ") +
+          "): debe estar entre -180 y 180."
+      );
+    }
+    var badLatitudes = [numbers[1], numbers[3]].filter(function (n) {
+      return n < -90 || n > 90;
+    });
+    if (badLatitudes.length) {
+      return reject(
+        "Latitud fuera de rango (" +
+          badLatitudes.join(", ") +
+          "): debe estar entre -90 y 90."
+      );
+    }
+    var bbox = bboxFromCorners(
+      [numbers[0], numbers[1]],
+      [numbers[2], numbers[3]]
+    );
+    if (!bbox) {
+      return reject(
+        "El área no tiene extensión: el ancho o el alto es cero."
+      );
+    }
+    return bbox;
+  }
+
+  /**
+   * Wire the coordinate field. One submit per Enter or button press, and
+   * that submit goes through ``commitClip`` — the same single commit path
+   * the drag uses. There is deliberately no keydown handler and no request
+   * on keystroke, so typing never fires the endpoint.
+   */
+  function initClipCoordsField() {
+    if (!clipCoordsForm || !clipCoordsInput) {
+      return;
+    }
+    clipCoordsForm.addEventListener("submit", function (ev) {
+      // The submit event is what Enter produces inside a text input; the
+      // browser would otherwise navigate and reload the viewer.
+      if (ev && typeof ev.preventDefault === "function") {
+        ev.preventDefault();
+      }
+      var bbox = bboxFromCoordinateField(clipCoordsInput.value);
+      if (!bbox) {
+        // Every rejection wrote its message and committed nothing.
+        return;
+      }
+      commitClip(bbox);
+    });
+  }
+
+  /**
    * Persist the committed bbox, fire the endpoint, and route the response
    * into the panel. The same rectangle is handed to the study catalog, which
    * is its SECOND consumer (D5): one gesture filters the catalog list and adds
@@ -1402,14 +1529,15 @@
     if (clipClearBtn) {
       clipClearBtn.disabled = false;
     }
+    var bboxText = formatBbox(bbox);
     if (clipStatus) {
       clipStatus.textContent =
-        "Zona seleccionada: " +
-        bbox.map(function (n, i) {
-          // Two-decimal precision in the status line keeps it readable.
-          return Number(n).toFixed(2);
-        }).join(", ") +
-        ". Solicitando composición...";
+        "Zona seleccionada: " + bboxText + ". Solicitando composición...";
+    }
+    if (clipCoordsInput) {
+      // Round-trip: a drag fills the field with the exact string the
+      // status line shows, and a typed area is echoed back normalised.
+      clipCoordsInput.value = bboxText;
     }
     var catalog = window.MapBiomasCatalog;
     if (catalog && typeof catalog.setArea === "function") {
@@ -1451,11 +1579,33 @@
         if (reqId !== inFlightClipRequest) {
           return;
         }
+        // The reader gets a sentence naming the problem and the way out; the
+        // endpoint's own line stays in the console for whoever is debugging.
+        // 400 has one common cause worth naming: a decimal comma typed as a
+        // separator turns "-71,51, 8,26" into four whole numbers.
+        var message;
+        if (err && err.status === 413) {
+          message =
+            "El área es demasiado grande para calcularla: trace o escriba un rectángulo más chico.";
+        } else if (err && err.status === 400) {
+          message =
+            "El área no se pudo calcular: revise que el rectángulo esté dentro de la extensión del mapa y que los decimales usen punto, no coma.";
+        } else if (err && err.status === 404) {
+          message = "No hay datos para esa área en el año seleccionado.";
+        } else if (err && err.status === 503) {
+          message =
+            "El cálculo no está disponible en este momento; vuelva a intentarlo en unos segundos.";
+        } else {
+          message = "No se pudo calcular la composición de esa área.";
+        }
+        if (window.console && window.console.warn) {
+          window.console.warn("clip-stats: " + (err && err.message));
+        }
         if (clipStatus) {
-          clipStatus.textContent = err.message || "Error al obtener la zona.";
+          clipStatus.textContent = message;
         }
         if (panel && typeof panel.showClipError === "function") {
-          panel.showClipError(err.message || "Error al obtener la zona.");
+          panel.showClipError(message);
         }
       });
   }
@@ -1477,6 +1627,10 @@
     }
     if (clipStatus) {
       clipStatus.textContent = "";
+    }
+    if (clipCoordsInput) {
+      // The field must never show an area that is no longer applied.
+      clipCoordsInput.value = "";
     }
     if (drawMode && clipToggleBtn) {
       // Keep the toolbar button state in sync: clearing the rectangle

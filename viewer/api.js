@@ -149,7 +149,11 @@
       headers: { Accept: "application/json" },
     }).then(function (resp) {
       if (!resp.ok) {
-        throw new Error("HTTP " + resp.status + " al obtener " + url);
+        // The status travels on the error so a caller can write its own
+        // message: this one is the technical detail, not what a reader sees.
+        var failure = new Error("HTTP " + resp.status + " al obtener " + url);
+        failure.status = resp.status;
+        throw failure;
       }
       return resp.json();
     });
