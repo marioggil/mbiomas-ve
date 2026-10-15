@@ -244,12 +244,27 @@ Adding a country means adding its data tree and a codebook; no code path hardcod
 | Clip statistics, ~177 × 177 km | 246 ms |
 | Composition statistics, 40 years | 1,504 s |
 
-## Licence and attribution — UNRESOLVED
+## Licence and attribution
 
-**This is not settled and it blocks publishing.** MapBiomas data carries attribution obligations
-and possibly share-alike terms that have not been verified. Do not publish derived products from
-this repository, and do not add a licence file implying otherwise, until the terms have been read
-and recorded. The intent is to state them here once they are confirmed.
+The MapBiomas Venezuela data this repository builds on is **CC BY 4.0** (Creative Commons Attribution
+4.0 International). There is **no ShareAlike condition**: derivative works and commercial use are
+permitted, provided the source is attributed in the format the terms specify and the changes are
+indicated. The terms were read and recorded on **2026-10-15** from
+<https://venezuela.mapbiomas.org/terminos-de-uso/>; **[`NOTICE.md`](NOTICE.md)** carries the evidence,
+the citation filled for this repository and the list of changes it makes.
+
+Cite a product of this repository as:
+
+> «MapBiomas – Colección **3** de la Serie **anual** de Mapas de **Cobertura y Uso del Suelo** de
+> Venezuela, consultada el **[fecha]** a través del enlace: **[ENLACE]**»
+
+filling in the consultation date and the link to the product, and stating that it is **adapted** from
+that source. The viewer carries the attribution next to the map, which is never part of the
+collapsible overlays, so it cannot be hidden.
+
+**The source code of this repository still has no licence.** CC BY 4.0 governs the data, not the
+software that reads it; choosing a licence for the code is a separate decision and this repository
+does not claim one.
 
 ## Limitations a reader should know
 

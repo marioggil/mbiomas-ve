@@ -500,7 +500,7 @@ an unknown year, 413 for an oversized window with a message naming the bound.
 - `README.md` covers what the platform is, the mandatory labelling, and prominently that the data
   is **not** in the repository, plus the quickstart, the measured stage costs, what the viewer
   shows, a Dokploy deployment section, the behaviours that look like bugs but are not,
-  multi-country, measured performance, the unresolved licence, and a limitations section.
+  multi-country, measured performance, the licence and attribution, and a limitations section.
 - `Dockerfile` builds a 108 MB serve-only image, and `docker-compose.yml` is ready for Dokploy:
   external `dokploy-network`, no published ports because Traefik reaches the container over that
   network, the domain configured in the Domains tab, and only the two large data subdirectories
