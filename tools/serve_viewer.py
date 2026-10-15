@@ -636,11 +636,14 @@ class StudiesCatalogError(RuntimeError):
 
 _STUDIES_CATALOG_LOAD_COUNTER: _LoadCounter = _LoadCounter()
 
-# The study-catalog schema version this service understands. Version 3 added the
-# two collision tallies the map note renders (``collision_coordinate_count`` and
-# ``collision_marker_count``); the note depends on those fields, so a version 2
-# artifact must be refused instead of served with the numbers silently absent.
-STUDIES_SCHEMA_VERSION: Final[int] = 3
+# The study-catalog schema version this service understands. Version 4 added the
+# fields the congress metrics are computed from: the parsed ``especies`` list,
+# the ``rores`` ids and the ``human_reviewer``. Version 3 added the two collision
+# tallies the map note renders (``collision_coordinate_count`` and
+# ``collision_marker_count``). A version 3 artifact carries no species, no ROR
+# and no reviewer, so the metrics block would render empty arrays and a false
+# ``undefined``; the service refuses it instead of serving that.
+STUDIES_SCHEMA_VERSION: Final[int] = 4
 
 # The exact ``display_contract`` key set. Pinned so a contract that grows or
 # loses a field fails here rather than reaching a consumer that reads it by
@@ -663,6 +666,13 @@ _GRANULARITY_EXCLUDED_FROM_MAP: Final = ("T0", "T1")
 # stays contract-driven (read from the artifact); these two names are the
 # contract vocabulary the coordinate/level rule below is written against.
 _LEVEL_T2_CLASSES: Final = ("placeable", "outside_extent")
+
+# The curated ROR verdicts. ``ok`` is graphable; ``dudoso`` resolves to a
+# different institution than the free text names, so the client must be able to
+# tell them apart. A verdict outside this set is fatal rather than silently
+# charted. The ``ror_instituciones`` values are the display names the client
+# renders, so an entry without one is a broken legend.
+_ROR_ESTADOS: Final = ("ok", "dudoso")
 
 
 def _load_studies_catalog(path: Path) -> dict[str, Any]:
@@ -751,6 +761,12 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
      18. ``schema_version`` is the version this service understands. The map
          note renders the collision tallies, so the fields it reads must
          exist rather than be silently absent from an older artifact.
+     19. ``ror_instituciones`` is an object whose every value carries a
+         non-empty ``nombre`` and an ``estado`` in ``ok``/``dudoso``.
+     20. Every study's ``especies`` is a list of non-empty strings.
+     21. Every study's ``rores`` is a sorted list of unique non-empty strings,
+         each a key of ``ror_instituciones``.
+     22. Every study's ``human_reviewer`` is a non-empty string.
 
     A violation stops the service. We never patch the artifact: a value the
     map or the table would show that disagrees with the rest of the artifact
@@ -789,6 +805,33 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
                 f"studies catalog declares duplicate class key {cls['key']!r}: {path}"
             )
         class_keys.add(cls["key"])
+
+    # The curated ROR map is validated before the per-study pass because the
+    # ``rores`` of each study are closed against its keys below. Every value is
+    # the legend entry the client renders, so a missing name or an unknown
+    # verdict is a lie the chart would show.
+    ror_instituciones = catalog.get("ror_instituciones")
+    if not isinstance(ror_instituciones, dict):
+        raise StudiesCatalogError(
+            f"studies catalog 'ror_instituciones' is not an object: {path}: "
+            f"{ror_instituciones!r}"
+        )
+    for ror_id, entry in ror_instituciones.items():
+        if (
+            not isinstance(entry, dict)
+            or not isinstance(entry.get("nombre"), str)
+            or not entry["nombre"].strip()
+        ):
+            raise StudiesCatalogError(
+                f"studies catalog 'ror_instituciones[{ror_id!r}]' has no "
+                f"non-empty 'nombre': {path}: {entry!r}"
+            )
+        if entry.get("estado") not in _ROR_ESTADOS:
+            raise StudiesCatalogError(
+                f"studies catalog 'ror_instituciones[{ror_id!r}]' has estado "
+                f"{entry.get('estado')!r} which is not one of "
+                f"{list(_ROR_ESTADOS)}: {path}"
+            )
 
     seen_ids: set[str] = set()
     tally: dict[str, int] = {}
@@ -919,6 +962,47 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
             raise StudiesCatalogError(
                 f"studies catalog study {study_id!r} has 'palabrasclaves' which "
                 f"is not a list of strings: {path}: {palabrasclaves!r}"
+            )
+
+        especies = study.get("especies")
+        if not isinstance(especies, list) or not all(
+            isinstance(name, str) and name.strip() for name in especies
+        ):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has 'especies' which is "
+                f"not a list of non-empty strings: {path}: {especies!r}"
+            )
+
+        rores = study.get("rores")
+        if not isinstance(rores, list) or not all(
+            isinstance(ror_id, str) and ror_id.strip() for ror_id in rores
+        ):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has 'rores' which is not a "
+                f"list of non-empty strings: {path}: {rores!r}"
+            )
+        if rores != sorted(rores):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has 'rores' that are not "
+                f"sorted ascending: {path}: {rores!r}"
+            )
+        if len(set(rores)) != len(rores):
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has duplicate 'rores': "
+                f"{path}: {rores!r}"
+            )
+        for ror_id in rores:
+            if ror_id not in ror_instituciones:
+                raise StudiesCatalogError(
+                    f"studies catalog study {study_id!r} references unknown ROR "
+                    f"id {ror_id!r} in 'rores': {path}"
+                )
+
+        human_reviewer = study.get("human_reviewer")
+        if not isinstance(human_reviewer, str) or not human_reviewer.strip():
+            raise StudiesCatalogError(
+                f"studies catalog study {study_id!r} has no non-empty string "
+                f"'human_reviewer': {path}: {human_reviewer!r}"
             )
 
         group_size = study.get("coordinate_group_size")
@@ -1157,9 +1241,10 @@ def _validate_studies_catalog(catalog: dict[str, Any], path: Path) -> None:
     # The version gate is deliberately the LAST check: a specific structural
     # defect (a missing field, a fabricated count) names the concrete problem,
     # while an umbrella version mismatch would shadow it and make every other
-    # control report the version instead of its own branch. The note renders
-    # the collision tallies, so a version 2 artifact reaching this point is
-    # still refused rather than served with fields it was never built to carry.
+    # control report the version instead of its own branch. The metrics block
+    # reads the species, the ROR ids and the reviewer, so a version 3 artifact
+    # reaching this point is still refused rather than served with fields it
+    # was never built to carry.
     schema_version = catalog.get("schema_version")
     if schema_version != STUDIES_SCHEMA_VERSION:
         raise StudiesCatalogError(

@@ -87,7 +87,7 @@ PARQUET_PATH = (
 # Pinned numbers. These describe the committed artifact; they are asserted
 # against the file, never re-derived from the Parquet.
 # ---------------------------------------------------------------------------
-EXPECTED_SCHEMA_VERSION = 3
+EXPECTED_SCHEMA_VERSION = 4
 EXPECTED_STUDY_COUNT = 255
 EXPECTED_CLASS_COUNTS = {
     "placeable": 145,
@@ -107,6 +107,22 @@ EXPECTED_EXCLUDED = 110
 EXPECTED_COLLISION_COORDINATE_COUNT = 15
 EXPECTED_COLLISION_MARKER_COUNT = 69
 EXPECTED_ESPECIES_NON_NULL = 194
+
+# The congress-metrics contract (schema v4). Pinned against the committed
+# artifact, never re-derived from the Parquet.
+#
+# ``ror_instituciones`` is the curated ROR table projected for the client: 42
+# reviewed ids, 26 usable (``ok``) and 16 doubtful (``dudoso``). 226 of the 255
+# studies carry at least one usable ROR, and the 226 studies hold 282
+# talk-institution pairs. The parsed species list is non-empty in 189 studies;
+# the 189 studies name 534 distinct species once lowercased (the artifact keeps
+# the first form it saw, the client lowercases for grouping).
+EXPECTED_ROR_ENTRIES = 42
+EXPECTED_ROR_ESTADOS = {"ok": 26, "dudoso": 16}
+EXPECTED_STUDIES_WITH_RORES = 226
+EXPECTED_ROR_TALK_PAIRS = 282
+EXPECTED_STUDIES_WITH_ESPECIES = 189
+EXPECTED_DISTINCT_SPECIES = 534
 
 # The curated taxonomy is complete: one entry per row of the 202-study corpus.
 EXPECTED_GRANULARITY_ENTRIES = 255
@@ -155,10 +171,22 @@ PROVENANCE_FIELDS = ["source_sha256", "source_rows", "source_bytes"]
 AUTHOR = {
     "nombre": "Ana Pérez",
     "afiliacion": "Universidad de Los Andes",
-    "ror": "https://ror.org/01",
+    "ror": "https://ror.org/02h1b1x27",
     "pais": "VE",
     "orcid": "0000-0001-0000-0000",
 }
+
+# The curated ROR table the synthetic builder fixtures use. One entry is enough
+# for the cooperative cases; the abort case below supplies its own row with an
+# id this map does not carry. The id matches ``AUTHOR`` so the wiring tests that
+# run ``main`` against the real curated file also close.
+TEST_ROR_ENTRIES = {
+    "https://ror.org/02h1b1x27": {
+        "nombre": "Universidad de Los Andes",
+        "estado": "ok",
+    }
+}
+TEST_ROR_SENTINELS = ("No disponible",)
 
 
 def make_row(**overrides: Any) -> dict[str, Any]:
@@ -175,6 +203,7 @@ def make_row(**overrides: Any) -> dict[str, Any]:
         "latitud": INSIDE[0],
         "longitud": INSIDE[1],
         "human_verified": True,
+        "human_reviewer": "mario",
         "autores": json.dumps([dict(AUTHOR)]),
         "instituciones": json.dumps(["Universidad de Los Andes"]),
         "ubicaciongeografica": "Merida",
@@ -393,10 +422,13 @@ def granularity_document(**overrides: Any) -> dict[str, Any]:
 def build_catalog_from(
     rows: list[dict[str, Any]],
     granularity: dict[str, dict[str, Any]] | None = None,
+    ror_instituciones: dict[str, dict[str, str]] | None = None,
 ) -> tuple[dict[str, Any], dict[str, int]]:
     """Run the real builder over the given synthetic rows and taxonomy."""
     if granularity is None:
         granularity = taxonomy_for(rows)
+    if ror_instituciones is None:
+        ror_instituciones = dict(TEST_ROR_ENTRIES)
     return subject.build_catalog(
         rows,
         EXTENT,
@@ -406,6 +438,8 @@ def build_catalog_from(
         "extent label",
         "extent boundary note",
         SOURCE_IDENTITY,
+        ror_instituciones,
+        TEST_ROR_SENTINELS,
     )
 
 
@@ -539,6 +573,34 @@ def write_granularity(
     return path
 
 
+def write_ror_instituciones(
+    test: unittest.TestCase,
+    extra: dict[str, Any] | None = None,
+) -> Path:
+    """Write a curated ROR fixture that lives only as long as the test.
+
+    The fixture always carries the ``AUTHOR`` id so the wiring tests' synthetic
+    rows close against it; ``extra`` adds entries for the unused-entry case.
+    """
+    directory = tempfile.TemporaryDirectory()
+    test.addCleanup(directory.cleanup)
+    path = Path(directory.name) / "ror-instituciones.json"
+    entries: dict[str, Any] = {key: dict(value) for key, value in TEST_ROR_ENTRIES.items()}
+    entries.update(extra or {})
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "ror_sentinels": list(TEST_ROR_SENTINELS),
+                "entries": entries,
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 def run_probe(body: str) -> subprocess.CompletedProcess:
     """Run ``body`` in a fresh interpreter and capture its streams."""
     return subprocess.run(
@@ -666,6 +728,91 @@ def assert_catalog_contract(catalog: dict[str, Any]) -> None:
     ]
     assert not not_a_string, (
         f"non-null especiesmencionadas is not a string in {not_a_string[:3]}"
+    )
+
+    # --- institutions and the parsed species (schema v4) -----------------
+    ror_instituciones = catalog.get("ror_instituciones")
+    assert isinstance(ror_instituciones, dict), (
+        f"ror_instituciones is {type(ror_instituciones).__name__}, expected an object"
+    )
+    for ror_id, entry in ror_instituciones.items():
+        assert isinstance(entry, dict), (
+            f"ror_instituciones[{ror_id!r}] is {type(entry).__name__}, "
+            "expected an object"
+        )
+        nombre = entry.get("nombre")
+        assert isinstance(nombre, str) and nombre.strip(), (
+            f"ror_instituciones[{ror_id!r}] has no non-empty nombre: {nombre!r}"
+        )
+        assert entry.get("estado") in ("ok", "dudoso"), (
+            f"ror_instituciones[{ror_id!r}] has estado {entry.get('estado')!r}, "
+            "expected 'ok' or 'dudoso'"
+        )
+    assert len(ror_instituciones) == EXPECTED_ROR_ENTRIES, (
+        f"ror_instituciones has {len(ror_instituciones)} entries, expected "
+        f"{EXPECTED_ROR_ENTRIES}"
+    )
+    estado_counts = Counter(
+        entry["estado"] for entry in ror_instituciones.values()
+    )
+    assert dict(estado_counts) == EXPECTED_ROR_ESTADOS, (
+        f"ror_instituciones estados are {dict(estado_counts)}, expected "
+        f"{EXPECTED_ROR_ESTADOS}"
+    )
+
+    for study in studies:
+        estudio = study["study_id"]
+        especies = study.get("especies")
+        assert isinstance(especies, list), (
+            f"{estudio}: especies is {type(especies).__name__}, expected a list"
+        )
+        assert all(isinstance(name, str) and name.strip() for name in especies), (
+            f"{estudio}: especies has a non-string or empty name: {especies!r}"
+        )
+        rores = study.get("rores")
+        assert isinstance(rores, list), (
+            f"{estudio}: rores is {type(rores).__name__}, expected a list"
+        )
+        assert all(isinstance(ror_id, str) and ror_id.strip() for ror_id in rores), (
+            f"{estudio}: rores has a non-string or empty id: {rores!r}"
+        )
+        assert rores == sorted(rores), (
+            f"{estudio}: rores is not sorted ascending: {rores!r}"
+        )
+        assert len(set(rores)) == len(rores), (
+            f"{estudio}: rores carries duplicates: {rores!r}"
+        )
+        unknown = [ror_id for ror_id in rores if ror_id not in ror_instituciones]
+        assert not unknown, (
+            f"{estudio}: rores references ROR id(s) absent from "
+            f"ror_instituciones: {unknown}"
+        )
+        reviewer = study.get("human_reviewer")
+        assert isinstance(reviewer, str) and reviewer.strip(), (
+            f"{estudio}: human_reviewer is not a non-empty string: {reviewer!r}"
+        )
+
+    with_rores = [study for study in studies if study["rores"]]
+    assert len(with_rores) == EXPECTED_STUDIES_WITH_RORES, (
+        f"rores is non-empty in {len(with_rores)} studies, expected "
+        f"{EXPECTED_STUDIES_WITH_RORES}"
+    )
+    pair_total = sum(len(study["rores"]) for study in studies)
+    assert pair_total == EXPECTED_ROR_TALK_PAIRS, (
+        f"the studies hold {pair_total} talk-institution pairs, expected "
+        f"{EXPECTED_ROR_TALK_PAIRS}"
+    )
+    with_parsed_species = [study for study in studies if study["especies"]]
+    assert len(with_parsed_species) == EXPECTED_STUDIES_WITH_ESPECIES, (
+        f"especies is non-empty in {len(with_parsed_species)} studies, expected "
+        f"{EXPECTED_STUDIES_WITH_ESPECIES}"
+    )
+    distinct_species = {
+        name.lower() for study in studies for name in study["especies"]
+    }
+    assert len(distinct_species) == EXPECTED_DISTINCT_SPECIES, (
+        f"the studies name {len(distinct_species)} distinct species "
+        f"(lowercased), expected {EXPECTED_DISTINCT_SPECIES}"
     )
 
     # --- per-study display consistency ------------------------------------
@@ -888,6 +1035,146 @@ class ShippedCatalogControlTests(unittest.TestCase):
         broken = self._broken()
         broken["studies"][self._index_with_species(broken)]["especiesmencionadas"] = 42
         self._fail(broken, "is not a string in")
+
+    # --- the congress-metrics fields (schema v4) --------------------------
+    def _index_with_rores(
+        self, catalog: dict[str, Any], minimum: int = 1
+    ) -> int:
+        for index, study in enumerate(catalog["studies"]):
+            if len(study["rores"]) >= minimum:
+                return index
+        raise AssertionError(
+            f"no study carries {minimum} or more rores"
+        )
+
+    def _index_with_parsed_especies(self, catalog: dict[str, Any]) -> int:
+        for index, study in enumerate(catalog["studies"]):
+            if study["especies"]:
+                return index
+        raise AssertionError("no study carries a parsed species list")
+
+    def test_control_rejects_a_non_object_ror_instituciones(self) -> None:
+        broken = self._broken()
+        broken["ror_instituciones"] = []
+        self._fail(broken, "ror_instituciones is list, expected an object")
+
+    def test_control_rejects_a_ror_entry_without_a_nombre(self) -> None:
+        broken = self._broken()
+        first = next(iter(broken["ror_instituciones"]))
+        broken["ror_instituciones"][first]["nombre"] = "   "
+        self._fail(broken, "has no non-empty nombre")
+
+    def test_control_rejects_a_ror_entry_with_an_unknown_estado(self) -> None:
+        broken = self._broken()
+        first = next(iter(broken["ror_instituciones"]))
+        broken["ror_instituciones"][first]["estado"] = "quizá"
+        self._fail(broken, "has estado 'quizá', expected 'ok' or 'dudoso'")
+
+    def test_control_rejects_a_wrong_ror_entry_count(self) -> None:
+        broken = self._broken()
+        broken["ror_instituciones"].pop(
+            next(iter(broken["ror_instituciones"]))
+        )
+        self._fail(
+            broken,
+            f"ror_instituciones has {EXPECTED_ROR_ENTRIES - 1} entries",
+        )
+
+    def test_control_rejects_ror_estados_that_moved(self) -> None:
+        broken = self._broken()
+        for entry in broken["ror_instituciones"].values():
+            if entry["estado"] == "ok":
+                entry["estado"] = "dudoso"
+                break
+        self._fail(broken, "ror_instituciones estados are")
+
+    def test_control_rejects_a_non_list_especies(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_with_parsed_especies(broken)][
+            "especies"
+        ] = "Pinus caribaea"
+        self._fail(broken, "especies is str, expected a list")
+
+    def test_control_rejects_an_empty_species_name(self) -> None:
+        broken = self._broken()
+        study = broken["studies"][self._index_with_parsed_especies(broken)]
+        study["especies"] = study["especies"] + ["   "]
+        self._fail(broken, "especies has a non-string or empty name")
+
+    def test_control_rejects_a_non_list_rores(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_with_rores(broken)]["rores"] = (
+            "https://ror.org/x"
+        )
+        self._fail(broken, "rores is str, expected a list")
+
+    def test_control_rejects_an_empty_ror_id(self) -> None:
+        broken = self._broken()
+        study = broken["studies"][self._index_with_rores(broken)]
+        study["rores"] = ["", "https://ror.org/zzz"]
+        self._fail(broken, "rores has a non-string or empty id")
+
+    def test_control_rejects_unsorted_rores(self) -> None:
+        broken = self._broken()
+        study = broken["studies"][self._index_with_rores(broken, minimum=2)]
+        study["rores"] = sorted(study["rores"], reverse=True)
+        self._fail(broken, "rores is not sorted ascending")
+
+    def test_control_rejects_duplicate_rores(self) -> None:
+        broken = self._broken()
+        study = broken["studies"][self._index_with_rores(broken, minimum=2)]
+        study["rores"] = [study["rores"][0], study["rores"][0]]
+        self._fail(broken, "rores carries duplicates")
+
+    def test_control_rejects_an_unknown_ror_id(self) -> None:
+        broken = self._broken()
+        study = broken["studies"][self._index_with_rores(broken)]
+        study["rores"] = sorted(study["rores"] + ["https://ror.org/zzzz"])
+        self._fail(broken, "references ROR id(s) absent from")
+
+    def test_control_rejects_a_blank_human_reviewer(self) -> None:
+        broken = self._broken()
+        broken["studies"][0]["human_reviewer"] = "   "
+        self._fail(broken, "human_reviewer is not a non-empty string")
+
+    def test_control_rejects_a_study_count_that_lost_its_rores(self) -> None:
+        broken = self._broken()
+        study = broken["studies"][self._index_with_rores(broken)]
+        study["rores"] = []
+        self._fail(
+            broken,
+            f"rores is non-empty in {EXPECTED_STUDIES_WITH_RORES - 1} studies",
+        )
+
+    def test_control_rejects_a_missing_talk_institution_pair(self) -> None:
+        broken = self._broken()
+        study = broken["studies"][self._index_with_rores(broken, minimum=2)]
+        study["rores"] = study["rores"][1:]
+        self._fail(
+            broken,
+            f"the studies hold {EXPECTED_ROR_TALK_PAIRS - 1} "
+            f"talk-institution pairs",
+        )
+
+    def test_control_rejects_a_study_count_that_lost_its_species(self) -> None:
+        broken = self._broken()
+        broken["studies"][self._index_with_parsed_especies(broken)][
+            "especies"
+        ] = []
+        self._fail(
+            broken,
+            f"especies is non-empty in "
+            f"{EXPECTED_STUDIES_WITH_ESPECIES - 1} studies",
+        )
+
+    def test_control_rejects_a_new_distinct_species(self) -> None:
+        broken = self._broken()
+        study = broken["studies"][self._index_with_parsed_especies(broken)]
+        study["especies"] = list(study["especies"]) + ["Especie sintética única"]
+        self._fail(
+            broken,
+            f"the studies name {EXPECTED_DISTINCT_SPECIES + 1} distinct species",
+        )
 
     # --- per-study display consistency ------------------------------------
     def test_control_rejects_on_map_true_with_a_non_placeable_class(self) -> None:
@@ -1131,34 +1418,44 @@ class MissingDependencyTests(unittest.TestCase):
 class MainTaxonomyWiringTests(unittest.TestCase):
     """``main`` loads the curated taxonomy and closes it against the rows."""
 
-    def main_argv(self, granularidad: Path) -> list[str]:
-        return [
+    def main_argv(
+        self, granularidad: Path, ror_instituciones: Path | None = None
+    ) -> list[str]:
+        argv = [
             "--parquet", str(REPO_ROOT / "no-such.parquet"),
             "--granularidad", str(granularidad),
             "--cog", str(REPO_ROOT / "no-such.tif"),
             "--outdir", "unused",
             "--country", "venezuela",
         ]
+        if ror_instituciones is not None:
+            argv += ["--ror-instituciones", str(ror_instituciones)]
+        return argv
 
     def run_main(
-        self, rows: list[dict[str, Any]], granularidad: Path, outdir: str
-    ) -> tuple[int, str]:
-        argv = self.main_argv(granularidad)
+        self,
+        rows: list[dict[str, Any]],
+        granularidad: Path,
+        outdir: str,
+        ror_instituciones: Path | None = None,
+    ) -> tuple[int, str, str]:
+        argv = self.main_argv(granularidad, ror_instituciones)
         # ``read_rows`` checks the path before it parses, so the fake bytes must
         # live in a real temporary file, exactly as the other tests do it.
         argv[1] = str(write_source_file(self, b"fake parquet bytes"))
         argv[7] = outdir
         stderr = io.StringIO()
+        stdout = io.StringIO()
         with module_swaps(
             present=fake_pyarrow(mock.Mock(return_value=FakeTable(rows)))
         ), mock.patch.object(
             subject, "load_labelling", return_value=("label", "note")
         ), mock.patch.object(subject, "cog_extent", return_value=EXTENT):
-            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(
                 stderr
             ):
                 status = subject.main(argv)
-        return status, stderr.getvalue()
+        return status, stderr.getvalue(), stdout.getvalue()
 
     def test_main_builds_both_artifacts_from_the_curated_level(self) -> None:
         row = make_row(source_path="I/curatedwithgeo/pagina_5_2.json")
@@ -1173,7 +1470,7 @@ class MainTaxonomyWiringTests(unittest.TestCase):
         )
         path = write_granularity(self, document)
         with tempfile.TemporaryDirectory() as outdir:
-            status, stderr = self.run_main([row], path, outdir)
+            status, stderr, _ = self.run_main([row], path, outdir)
             self.assertEqual(status, 0, stderr)
             self.assertEqual(stderr, "")
             catalog = json.loads(
@@ -1196,7 +1493,7 @@ class MainTaxonomyWiringTests(unittest.TestCase):
         row = make_row(source_path="I/curatedwithgeo/pagina_5_2.json")
         absent = REPO_ROOT / "no-such-granularidad.json"
         with tempfile.TemporaryDirectory() as outdir:
-            status, stderr = self.run_main([row], absent, outdir)
+            status, stderr, _ = self.run_main([row], absent, outdir)
             leftovers = list(Path(outdir).iterdir())
         self.assertEqual(status, 1)
         self.assertIn("granularity file not found", stderr)
@@ -1211,7 +1508,7 @@ class MainTaxonomyWiringTests(unittest.TestCase):
         )
         path = write_granularity(self, document)
         with tempfile.TemporaryDirectory() as outdir:
-            status, stderr = self.run_main([row], path, outdir)
+            status, stderr, _ = self.run_main([row], path, outdir)
         self.assertEqual(status, 1)
         self.assertIn("has no entry for parquet source_path", stderr)
 
@@ -1224,9 +1521,29 @@ class MainTaxonomyWiringTests(unittest.TestCase):
         )
         path = write_granularity(self, document)
         with tempfile.TemporaryDirectory() as outdir:
-            status, stderr = self.run_main([row], path, outdir)
+            status, stderr, _ = self.run_main([row], path, outdir)
         self.assertEqual(status, 1)
         self.assertIn("location text no longer matches", stderr)
+
+    def test_main_reports_a_curated_ror_entry_the_corpus_does_not_use(self) -> None:
+        # An unused curated entry is a note, never a failure: the curated table
+        # reviews the wider enrichment cache, so shrinking it would delete review
+        # work whenever the study set changes.
+        row = make_row(source_path="I/curatedwithgeo/pagina_5_2.json")
+        document = granularity_document(
+            entries={row["source_path"]: {"nivel": "T2", "texto": "Merida"}}
+        )
+        path = write_granularity(self, document)
+        ror_path = write_ror_instituciones(
+            self, extra={"https://ror.org/unused": {"nombre": "Sin uso", "estado": "ok"}}
+        )
+        with tempfile.TemporaryDirectory() as outdir:
+            status, stderr, stdout = self.run_main(
+                [row], path, outdir, ror_instituciones=ror_path
+            )
+        self.assertEqual(status, 0, stderr)
+        self.assertIn("note:", stdout)
+        self.assertIn("https://ror.org/unused", stdout)
 
 
 class ReadRowsTests(unittest.TestCase):
@@ -2381,6 +2698,118 @@ class PalabrasclavesParsingTests(unittest.TestCase):
             subject._parse_palabrasclaves(make_row(palabrasclaves=["ok", 7]), "WHERE")
 
 
+class EspeciesParsingTests(unittest.TestCase):
+    """The parsed species list, per decision D7 (the client groups, it does not parse)."""
+
+    def test_none_and_absent_values_are_an_empty_list(self) -> None:
+        self.assertEqual(subject.parse_especies(None), [])
+        self.assertEqual(subject.parse_especies(42), [])
+
+    def test_every_sentinel_casing_is_dropped(self) -> None:
+        sentinels = [
+            "", "   ", "N.A.", "n.a.", "n/a", "NA", "s/d", "S/D",
+            "s.a.", "-", "none", "NULL",
+            "No se mencionan especies específicas",
+            "No se mencionan especies específicas en el resumen",
+        ]
+        for sentinel in sentinels:
+            with self.subTest(sentinel=sentinel):
+                self.assertEqual(subject.parse_especies(sentinel), [])
+
+    def test_a_serialised_single_item_list_is_unwrapped(self) -> None:
+        self.assertEqual(
+            subject.parse_especies("['Pinus caribaea']"), ["Pinus caribaea"]
+        )
+
+    def test_a_serialised_two_item_list_yields_both_names(self) -> None:
+        self.assertEqual(subject.parse_especies("['A', 'B']"), ["A", "B"])
+
+    def test_an_empty_serialised_list_is_empty(self) -> None:
+        self.assertEqual(subject.parse_especies("[]"), [])
+        self.assertEqual(subject.parse_especies("[ ]"), [])
+
+    def test_commas_and_semicolons_both_split(self) -> None:
+        self.assertEqual(subject.parse_especies("A, B; C"), ["A", "B", "C"])
+
+    def test_a_repeated_name_is_deduplicated_case_insensitively_keeping_the_first(
+        self,
+    ) -> None:
+        self.assertEqual(subject.parse_especies("Zea mays, zea mays"), ["Zea mays"])
+        self.assertEqual(
+            subject.parse_especies("Zea mays; ZEA MAYS; zea Mays"), ["Zea mays"]
+        )
+
+    def test_the_long_species_sentinel_is_dropped(self) -> None:
+        self.assertEqual(
+            subject.parse_especies("No se mencionan especies específicas"), []
+        )
+
+    def test_control_the_declared_limit_a_comma_inside_a_name_is_indistinguishable(
+        self,
+    ) -> None:
+        # The builder cannot know the second token is a family list rather than a
+        # second species, so it splits. Fixing it belongs to curation, not to an
+        # inference here; this test declares the accepted limit with a real value.
+        self.assertEqual(
+            subject.parse_especies(
+                "Peces de las Familias Characidae, Loricariidae"
+            ),
+            ["Peces de las Familias Characidae", "Loricariidae"],
+        )
+
+    def test_control_a_json_list_value_is_accepted_defensively(self) -> None:
+        self.assertEqual(subject.parse_especies(["A", "B; C"]), ["A", "B", "C"])
+
+    def test_control_surrounding_quotes_and_whitespace_are_trimmed(self) -> None:
+        self.assertEqual(
+            subject.parse_especies('  "A"  , \'B\' '), ["A", "B"]
+        )
+
+    def test_control_a_blank_name_after_splitting_is_dropped(self) -> None:
+        self.assertEqual(subject.parse_especies("A,,  ,B"), ["A", "B"])
+
+
+class RoresParsingTests(unittest.TestCase):
+    """The per-study ROR ids: trimmed, sentinel-free, deduplicated, sorted."""
+
+    def test_two_authors_with_the_same_ror_yield_one_id(self) -> None:
+        autores = [dict(AUTHOR), {**AUTHOR, "nombre": "Luis"}]
+        self.assertEqual(subject.parse_rores(autores), [AUTHOR["ror"]])
+
+    def test_sentinel_and_empty_values_are_dropped(self) -> None:
+        autores = [
+            {**AUTHOR, "ror": "No disponible"},
+            {**AUTHOR, "ror": ""},
+            {**AUTHOR, "ror": "   "},
+            {**AUTHOR, "ror": None},
+        ]
+        self.assertEqual(
+            subject.parse_rores(autores, TEST_ROR_SENTINELS), []
+        )
+
+    def test_the_ids_are_sorted_ascending(self) -> None:
+        autores = [
+            {**AUTHOR, "ror": "https://ror.org/zzz"},
+            {**AUTHOR, "ror": "https://ror.org/aaa"},
+        ]
+        self.assertEqual(
+            subject.parse_rores(autores),
+            ["https://ror.org/aaa", "https://ror.org/zzz"],
+        )
+
+    def test_a_study_without_a_usable_ror_is_empty(self) -> None:
+        autores = [{**AUTHOR, "ror": None}, {**AUTHOR, "ror": "  "}]
+        self.assertEqual(subject.parse_rores(autores), [])
+
+    def test_control_a_sentinel_that_is_not_declared_survives(self) -> None:
+        autores = [{**AUTHOR, "ror": "No disponible"}]
+        self.assertEqual(subject.parse_rores(autores), ["No disponible"])
+
+    def test_control_a_trimmed_id_is_stored_without_whitespace(self) -> None:
+        autores = [{**AUTHOR, "ror": "  https://ror.org/aaa  "}]
+        self.assertEqual(subject.parse_rores(autores), ["https://ror.org/aaa"])
+
+
 class NAutoresTests(unittest.TestCase):
     def test_a_matching_row_is_counted_as_matched(self) -> None:
         matched, mismatches = subject.check_n_autores([make_row()])
@@ -2448,6 +2877,38 @@ class ValidateRowsTests(unittest.TestCase):
             subject.StudyCatalogError, re.escape("row is not human-verified (False)")
         ):
             subject.validate_rows([make_row(human_verified=False)])
+
+    def test_control_rejects_a_row_without_a_human_reviewer(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("human_reviewer is not a non-empty string (None)"),
+        ):
+            subject.validate_rows([make_row(human_reviewer=None)])
+
+    def test_control_rejects_a_blank_human_reviewer(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("human_reviewer is not a non-empty string ('   ')"),
+        ):
+            subject.validate_rows([make_row(human_reviewer="   ")])
+
+    def test_control_rejects_a_non_string_human_reviewer(self) -> None:
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape("human_reviewer is not a non-empty string (7)"),
+        ):
+            subject.validate_rows([make_row(human_reviewer=7)])
+
+    def test_control_rejects_a_missing_human_reviewer_column(self) -> None:
+        row = make_row()
+        del row["human_reviewer"]
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape(
+                "source Parquet is missing required column(s): human_reviewer"
+            ),
+        ):
+            subject.validate_rows([row])
 
     def test_control_rejects_latitud_without_longitud(self) -> None:
         with self.assertRaisesRegex(
@@ -2650,6 +3111,28 @@ class BuildStudyTests(unittest.TestCase):
             subject.StudyCatalogError, re.escape("autores does not parse as JSON")
         ):
             subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
+
+    # --- species, ROR ids and the reviewer (schema v4) -----------------
+    def test_a_study_carries_the_parsed_species_and_the_reviewer(self) -> None:
+        row = make_row(especiesmencionadas="A, B; A", human_reviewer="IA")
+        study = subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
+        self.assertEqual(study["especies"], ["A", "B"])
+        self.assertEqual(study["especiesmencionadas"], "A, B; A")
+        self.assertEqual(study["human_reviewer"], "IA")
+        self.assertEqual(study["rores"], [AUTHOR["ror"]])
+
+    def test_a_study_without_species_carries_an_empty_parsed_list(self) -> None:
+        row = make_row(especiesmencionadas=None)
+        study = subject.build_study(row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"])
+        self.assertEqual(study["especies"], [])
+        self.assertIsNone(study["especiesmencionadas"])
+
+    def test_the_sentinel_ror_is_dropped_from_a_study(self) -> None:
+        row = make_row(autores=json.dumps([{**AUTHOR, "ror": "No disponible"}]))
+        study = subject.build_study(
+            row, EXTENT, T2_ENTRY, ["cve-1991-pagina-5-2"], TEST_ROR_SENTINELS
+        )
+        self.assertEqual(study["rores"], [])
 
     # --- the collision attributes -------------------------------------
     def test_an_alone_study_has_size_one_and_no_other_ids(self) -> None:
@@ -2899,10 +3382,38 @@ class BuildCatalogTests(unittest.TestCase):
         self.assertEqual(catalog["extent_boundary_note"], "extent boundary note")
         self.assertEqual(catalog["extent"], EXTENT)
 
+    def test_the_catalog_projects_the_curated_ror_instituciones(self) -> None:
+        catalog, _ = build_test_catalog()
+        self.assertEqual(catalog["ror_instituciones"], TEST_ROR_ENTRIES)
+        self.assertEqual(
+            set(catalog["ror_instituciones"]),
+            {AUTHOR["ror"]},
+        )
+
+    def test_control_a_study_with_an_uncurated_ror_aborts_and_names_both(self) -> None:
+        row = make_row(
+            autores=json.dumps([{**AUTHOR, "ror": "https://ror.org/uncurated"}])
+        )
+        with self.assertRaisesRegex(
+            subject.StudyCatalogError,
+            re.escape(
+                "study 'cve-1991-pagina-5-2' carries ROR id "
+                "'https://ror.org/uncurated'"
+            ),
+        ):
+            build_catalog_from([row])
+
+    def test_control_a_sentinel_ror_is_dropped_silently(self) -> None:
+        # ``No disponible`` is a declared non-answer, not an uncurated id, so it
+        # must not trip the closure above.
+        row = make_row(autores=json.dumps([{**AUTHOR, "ror": "No disponible"}]))
+        catalog, _ = build_catalog_from([row])
+        self.assertEqual(catalog["studies"][0]["rores"], [])
+
     def test_control_the_recorded_country_is_the_argument(self) -> None:
         catalog, _ = subject.build_catalog(
             [make_row()], EXTENT, taxonomy_for([make_row()]), "otro-pais", "p.parquet",
-            "l", "n", SOURCE_IDENTITY,
+            "l", "n", SOURCE_IDENTITY, dict(TEST_ROR_ENTRIES), TEST_ROR_SENTINELS,
         )
         self.assertEqual(catalog["country"], "otro-pais")
         self.assertNotEqual(catalog["country"], "testland")
@@ -3036,8 +3547,20 @@ class CsvFieldsTests(unittest.TestCase):
             "coordinate_group_size",
             "coordinate_group_ids",
             "palabrasclaves",
+            "especies",
+            "rores",
+            "human_reviewer",
         ):
             self.assertIn(field, subject.CSV_FIELDS)
+
+    def test_the_species_column_sits_right_after_the_verbatim_text(self) -> None:
+        fields = list(subject.CSV_FIELDS)
+        self.assertEqual(fields[fields.index("especiesmencionadas") + 1], "especies")
+
+    def test_the_ror_and_reviewer_columns_sit_right_after_instituciones(self) -> None:
+        fields = list(subject.CSV_FIELDS)
+        index = fields.index("instituciones")
+        self.assertEqual(fields[index + 1:index + 3], ["rores", "human_reviewer"])
 
     def test_control_the_coarse_class_is_not_a_csv_column(self) -> None:
         # ``display_class`` already carries the class; the level is the extra
@@ -3057,14 +3580,15 @@ class SchemaVersionTests(unittest.TestCase):
 
     def test_the_builder_writes_the_anchored_version(self) -> None:
         catalog, _ = build_test_catalog()
-        self.assertEqual(subject.SCHEMA_VERSION, 3)
+        self.assertEqual(subject.SCHEMA_VERSION, 4)
         self.assertEqual(catalog["schema_version"], subject.SCHEMA_VERSION)
 
     def test_control_the_version_is_not_a_previous_contract_s(self) -> None:
-        # Version 3 added the collision tallies the map note renders, so a
-        # reader must not mistake this document for schema 1 or schema 2.
+        # Version 4 added the parsed species, the ROR ids and the reviewer, so a
+        # reader must not mistake this document for schema 1, 2 or 3.
         self.assertNotEqual(subject.SCHEMA_VERSION, 1)
         self.assertNotEqual(subject.SCHEMA_VERSION, 2)
+        self.assertNotEqual(subject.SCHEMA_VERSION, 3)
 
 
 # ---------------------------------------------------------------------------

@@ -89,9 +89,9 @@ class CommittedStudiesCatalogTests(unittest.TestCase):
             _committed_catalog(), serve_viewer.STUDIES_CATALOG_PATH
         )
 
-    def test_committed_catalog_is_the_version_3_255_study_rebuild(self) -> None:
+    def test_committed_catalog_is_the_version_4_255_study_rebuild(self) -> None:
         catalog = _committed_catalog()
-        self.assertEqual(catalog["schema_version"], 3)
+        self.assertEqual(catalog["schema_version"], 4)
         self.assertEqual(catalog["study_count"], 255)
         self.assertEqual(len(catalog["studies"]), 255)
         # The numbers the map note renders, pinned against the committed
@@ -423,8 +423,92 @@ class StudiesCatalogInvariantControlTests(unittest.TestCase):
     # --- invariant 18: the schema version this service understands ---------
 
     def test_control_rejects_a_previous_schema_version(self) -> None:
-        self.catalog["schema_version"] = 2
-        self._fail(self.catalog, r"schema_version is 2, expected 3")
+        self.catalog["schema_version"] = 3
+        self._fail(self.catalog, r"schema_version is 3, expected 4")
+
+    # --- invariant 19: ror_instituciones ----------------------------------
+
+    def test_control_rejects_a_non_object_ror_instituciones(self) -> None:
+        self.catalog["ror_instituciones"] = []
+        self._fail(self.catalog, r"'ror_instituciones' is not an object")
+
+    def test_control_rejects_a_ror_entry_without_a_nombre(self) -> None:
+        first = next(iter(self.catalog["ror_instituciones"]))
+        self.catalog["ror_instituciones"][first]["nombre"] = "   "
+        self._fail(self.catalog, r"has no non-empty 'nombre'")
+
+    def test_control_rejects_a_ror_entry_with_an_unknown_estado(self) -> None:
+        first = next(iter(self.catalog["ror_instituciones"]))
+        self.catalog["ror_instituciones"][first]["estado"] = "quizá"
+        self._fail(
+            self.catalog, r"has estado 'quizá' which is not one of"
+        )
+
+    # --- invariant 20: especies is a list of non-empty strings -------------
+
+    def test_control_rejects_a_non_list_especies(self) -> None:
+        study = self._study(lambda s: True)
+        study["especies"] = "Pinus caribaea"
+        self._fail(
+            self.catalog,
+            r"has 'especies' which is not a list of non-empty strings",
+        )
+
+    def test_control_rejects_an_empty_species_name(self) -> None:
+        study = self._study(lambda s: bool(s["especies"]))
+        study["especies"] = list(study["especies"]) + ["   "]
+        self._fail(
+            self.catalog,
+            r"has 'especies' which is not a list of non-empty strings",
+        )
+
+    # --- invariant 21: rores is a sorted list of unique curated ids --------
+
+    def test_control_rejects_a_non_list_rores(self) -> None:
+        study = self._study(lambda s: True)
+        study["rores"] = "https://ror.org/02h1b1x27"
+        self._fail(
+            self.catalog,
+            r"has 'rores' which is not a list of non-empty strings",
+        )
+
+    def test_control_rejects_an_empty_ror_id(self) -> None:
+        study = self._study(lambda s: bool(s["rores"]))
+        study["rores"] = ["", "https://ror.org/zzz"]
+        self._fail(
+            self.catalog,
+            r"has 'rores' which is not a list of non-empty strings",
+        )
+
+    def test_control_rejects_unsorted_rores(self) -> None:
+        study = self._study(lambda s: len(s["rores"]) >= 2)
+        study["rores"] = sorted(study["rores"], reverse=True)
+        self._fail(self.catalog, r"has 'rores' that are not sorted ascending")
+
+    def test_control_rejects_duplicate_rores(self) -> None:
+        study = self._study(lambda s: len(s["rores"]) >= 2)
+        study["rores"] = [study["rores"][0], study["rores"][0]]
+        self._fail(self.catalog, r"has duplicate 'rores'")
+
+    def test_control_rejects_an_unknown_ror_id(self) -> None:
+        study = self._study(lambda s: bool(s["rores"]))
+        study["rores"] = sorted(study["rores"] + ["https://ror.org/zzzz"])
+        self._fail(
+            self.catalog,
+            r"references unknown ROR id 'https://ror.org/zzzz' in 'rores'",
+        )
+
+    # --- invariant 22: human_reviewer is a non-empty string ---------------
+
+    def test_control_rejects_a_blank_human_reviewer(self) -> None:
+        study = self._study(lambda s: True)
+        study["human_reviewer"] = "   "
+        self._fail(self.catalog, r"has no non-empty string 'human_reviewer'")
+
+    def test_control_rejects_a_non_string_human_reviewer(self) -> None:
+        study = self._study(lambda s: True)
+        study["human_reviewer"] = 7
+        self._fail(self.catalog, r"has no non-empty string 'human_reviewer'")
 
 
 if __name__ == "__main__":

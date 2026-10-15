@@ -136,8 +136,9 @@ catalog list is capped and scrolls internally — deliberately unlike the compos
 grows to its content and lets the document scroll (see "Behaviours that look like bugs but are
 not").
 
-The artifact carries `schema_version` **3**, and `on_map` is true exactly for `placeable`, so the
-four classes partition the corpus and only the first is drawn:
+The artifact carries `schema_version` **4** — v3 added the two collision tallies the map note renders,
+and v4 the parsed species, the institution ids and the reviewer — and `on_map` is true exactly for
+`placeable`, so the four classes partition the corpus and only the first is drawn:
 
 | Class | Count | On the map |
 |---|---|---|
@@ -267,14 +268,14 @@ and recorded. The intent is to state them here once they are confirmed.
   carries no GDAL: `python3 -m unittest discover -s tests -v`. It reads no raster.
 - **A green suite does not mean the whole suite ran, and no single documented command covers it.**
   The interpreters cover different parts, because they can import different modules:
-  - the **system interpreter** (`python3 -m unittest discover -s tests -v`) runs **322 tests** and
-    finishes green with **36 skips**: the **35 viewer tests that need `fastapi`** and **one freshness
+  - the **system interpreter** (`python3 -m unittest discover -s tests -v`) runs **382 tests** and
+    finishes green with **48 skips**: the **47 viewer tests that need `fastapi`** and **one freshness
     row-count check that needs `pyarrow`**. A green run here **did not cover the viewer tests**, and
     must not be reported as if it did.
-  - the repository **`.venv`** runs those **35 viewer tests**, but cannot run the composition schema
-    test, because it carries no `osgeo`: it reports `Ran 301 tests` with one import error and one
+  - the repository **`.venv`** runs those **47 viewer tests**, but cannot run the composition schema
+    test, because it carries no `osgeo`: it reports `Ran 361 tests` with one import error and one
     `pyarrow` skip.
-  - only an interpreter carrying GDAL **and** `pyarrow` **and** `fastapi` runs all **322** with zero
+  - only an interpreter carrying GDAL **and** `pyarrow` **and** `fastapi` runs all **382** with zero
     skips.
 - **The study catalog panel has no persisted automated test.** Its logic was checked with a throwaway
   headless DOM stub, and its layout with a browser pass; **neither is reproducible by a CI run**.
