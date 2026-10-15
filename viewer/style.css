@@ -701,8 +701,15 @@ body.is-overlays-collapsed .map-overlays {
       "catalog"
       "panel";
   }
+  /* A definite height, not just a cap. ``overflow-y: auto`` (base rule) gives
+   * this grid item an automatic minimum size of 0, and the page grid's height
+   * is definite (``html { height: 100% }``), so an ``auto`` track whose item
+   * contributes 0 never grows: the 220px cap left the panel at its own
+   * padding — 33px of empty box with 443px of legend scrolling inside a
+   * zero-height content box, while the panel's toggle still claimed
+   * ``aria-expanded="true"``. The height is the one the cap already asked for. */
   .legend-panel {
-    max-height: 220px;
+    height: 220px;
     border-right: 0;
     border-bottom: 1px solid var(--border);
   }
@@ -755,8 +762,10 @@ body.is-overlays-collapsed .map-overlays {
       "catalog"
       "panel";
   }
+  /* A definite height for the same reason as the 960px block: a cap alone
+   * leaves the panel at its padding, because the track never grows. */
   .legend-panel {
-    max-height: 220px;
+    height: 220px;
     border-right: 0;
     border-bottom: 1px solid var(--border);
   }

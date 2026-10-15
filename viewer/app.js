@@ -247,6 +247,10 @@
       var code = document.createElement("span");
       code.className = "legend-group-code";
       code.textContent = group.code ? "Grupo " + group.code : "";
+      // The code is a visual key, not a name: without this the button's
+      // accessible name concatenates its two spans into "Formaciones
+      // boscosasGrupo 1", which is what a screen reader announces.
+      code.setAttribute("aria-hidden", "true");
 
       var disclosure = document.createElement("span");
       disclosure.className = "legend-disclosure";
