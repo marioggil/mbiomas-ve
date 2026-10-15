@@ -1,6 +1,6 @@
 # Fix: the type scale is not a scale (P1-1 of the critique)
 
-**Status**: implemented and verified — see §6 for the measured outcome · **Branch**: `fix/tipografia-visor` (from `origin/main`) ·
+**Status**: implemented and verified — see §6 for the measured outcome · **Commit**: `d61deb1` · **Branch**: `fix/tipografia-visor` (from `origin/main`) ·
 **Source of truth**: `.impeccable/critique/2026-10-15T05-25-10Z__viewer-index-html.md` (the critique that
 opened this) and `PRODUCT.md` (users, constraints, principles).
 **Decided with the owner**: this slice is the priority; the extent-notice issue was closed as a *decision*
