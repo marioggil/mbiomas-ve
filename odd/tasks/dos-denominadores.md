@@ -1,6 +1,6 @@
 # Fix: the composition panel's two denominators (P2-5)
 
-**Status**: implemented and verified — §5 · **Branch**: `fix/dos-denominadores` (from `origin/main`) · **Commit**: `<pending>` ·
+**Status**: implemented and verified — §5 · **Branch**: `fix/dos-denominadores` (from `origin/main`) · **Commit**: `7f01bfd` ·
 **Opened by**: `.impeccable/critique/2026-10-15T05-25-10Z__viewer-index-html.md`, issue **P2-5** (persona flag: Valentina).
 
 ## 1. The defect, measured
