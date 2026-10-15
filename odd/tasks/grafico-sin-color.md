@@ -1,6 +1,6 @@
 # Fix: the composition chart is encoded in colour only (P1-3, third slice)
 
-**Status**: implemented and verified — §4 · **Branch**: `fix/grafico-sin-color` (from `origin/main`) ·
+**Status**: implemented and verified — §4 · **Branch**: `fix/grafico-sin-color` (from `origin/main`) · **Commit**: `212fd55` ·
 **Opened by**: `.impeccable/critique/2026-10-15T05-25-10Z__viewer-index-html.md`, issue **P1-3** (persona flag for Sam).
 
 ## 1. The defect, measured
