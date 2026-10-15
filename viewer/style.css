@@ -499,11 +499,14 @@ body.is-overlays-collapsed .map-overlays {
   body {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto auto auto;
+    /* The order here is the document order, and the map comes third: a
+     * stacked layout that put the catalogue before the map would make the
+     * visual order contradict the keyboard one. */
     grid-template-areas:
       "header"
       "legend"
-      "catalog"
       "map"
+      "catalog"
       "panel"
       "time";
   }
@@ -524,8 +527,8 @@ body.is-overlays-collapsed .map-overlays {
     grid-template-areas:
       "header"
       "legend"
-      "catalog"
       "map"
+      "catalog"
       "panel"
       "time";
   }
