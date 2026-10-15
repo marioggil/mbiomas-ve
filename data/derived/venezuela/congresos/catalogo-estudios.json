@@ -1,6 +1,6 @@
 {
-  "schema_version": 3,
-  "generated_utc": "2026-10-14T16:20:30.009206+00:00",
+  "schema_version": 4,
+  "generated_utc": "2026-10-15T01:16:50.872569+00:00",
   "country": "venezuela",
   "source_parquet": "data/raw/congresos/congresos_revisados.parquet",
   "source_sha256": "55cc3091d2d06353a48ee7d07edd1fc380da42ec00b365d4955c3eef8e3266d8",
@@ -51,6 +51,176 @@
       "reason": "El estudio no trae latitud ni longitud."
     }
   ],
+  "ror_instituciones": {
+    "https://ror.org/00dbx4k72": {
+      "nombre": "Ministerio del Ambiente y de los Recursos Naturales",
+      "estado": "dudoso"
+    },
+    "https://ror.org/00fr68j09": {
+      "nombre": "Universidad Nacional Experimental del Táchira",
+      "estado": "dudoso"
+    },
+    "https://ror.org/00qseeb08": {
+      "nombre": "Universidad Nacional Experimental de Guayana",
+      "estado": "ok"
+    },
+    "https://ror.org/00sbcwg24": {
+      "nombre": "Asociación Civil Fundación Esfera",
+      "estado": "dudoso"
+    },
+    "https://ror.org/00t4fvv78": {
+      "nombre": "Instituto de Ciencias Ambientales y Ecológicas, Universidad de Los Andes",
+      "estado": "ok"
+    },
+    "https://ror.org/00z6hkq67": {
+      "nombre": "Fundación Tierra Viva",
+      "estado": "ok"
+    },
+    "https://ror.org/0129z1n29": {
+      "nombre": "Sociedad Venezolana de Ciencias Naturales",
+      "estado": "dudoso"
+    },
+    "https://ror.org/013meh722": {
+      "nombre": "University of Cambridge",
+      "estado": "ok"
+    },
+    "https://ror.org/0143dvz59": {
+      "nombre": "Instituto de Zoología y Ecología Tropical, Universidad Central de Venezuela",
+      "estado": "ok"
+    },
+    "https://ror.org/01ak5cj98": {
+      "nombre": "Universidad Simón Bolívar",
+      "estado": "ok"
+    },
+    "https://ror.org/01f2hnj65": {
+      "nombre": "Instituto Nacional de Parques",
+      "estado": "dudoso"
+    },
+    "https://ror.org/01zstgj41": {
+      "nombre": "Universidad Nacional Experimental Rafael María Baralt",
+      "estado": "ok"
+    },
+    "https://ror.org/022b6wh61": {
+      "nombre": "Laboratorio de Limnología, Facultad Experimental de Ciencias, Universidad del Zulia",
+      "estado": "dudoso"
+    },
+    "https://ror.org/023kaz366": {
+      "nombre": "Provita",
+      "estado": "ok"
+    },
+    "https://ror.org/02bb0ey42": {
+      "nombre": "Escuela de Ciencias Aplicadas del Mar, Universidad de Oriente (Núcleo Nueva Esparta)",
+      "estado": "dudoso"
+    },
+    "https://ror.org/02h1b1x27": {
+      "nombre": "Universidad de Los Andes",
+      "estado": "ok"
+    },
+    "https://ror.org/02ntheh91": {
+      "nombre": "Instituto Venezolano de Investigaciones Científicas",
+      "estado": "ok"
+    },
+    "https://ror.org/02r59nq91": {
+      "nombre": "Fundación La Salle de Ciencias Naturales",
+      "estado": "ok"
+    },
+    "https://ror.org/02v75tb58": {
+      "nombre": "Instituto Oceanográfico de Venezuela, Universidad de Oriente",
+      "estado": "ok"
+    },
+    "https://ror.org/030vkw561": {
+      "nombre": "Instituto Alexander von Humboldt",
+      "estado": "dudoso"
+    },
+    "https://ror.org/0354nax61": {
+      "nombre": "Escuela de Biología, Facultad de Ciencias, Universidad Central de Venezuela",
+      "estado": "dudoso"
+    },
+    "https://ror.org/037jqrk16": {
+      "nombre": "Wataniba, Grupo de Trabajo Socioambiental",
+      "estado": "dudoso"
+    },
+    "https://ror.org/038ypnm26": {
+      "nombre": "Ministerio del Poder Popular para el Ambiente",
+      "estado": "dudoso"
+    },
+    "https://ror.org/03951zg45": {
+      "nombre": "Universidad Nacional Experimental Simón Rodríguez",
+      "estado": "ok"
+    },
+    "https://ror.org/03ewatc56": {
+      "nombre": "Real Jardín Botánico de España",
+      "estado": "ok"
+    },
+    "https://ror.org/03mvpvm42": {
+      "nombre": "Centro de Estudios Integrales del Ambiente, Universidad Central de Venezuela",
+      "estado": "dudoso"
+    },
+    "https://ror.org/03qgg3111": {
+      "nombre": "Universidad Centroccidental Lisandro Alvarado",
+      "estado": "ok"
+    },
+    "https://ror.org/03re99q86": {
+      "nombre": "Museo del Instituto de Zoología Agrícola Francisco Fernández Yépez, Universidad Central de Venezuela",
+      "estado": "ok"
+    },
+    "https://ror.org/03thbf157": {
+      "nombre": "Comunidad Las Galderas y Escuela Bolivariana Los Negritos",
+      "estado": "dudoso"
+    },
+    "https://ror.org/03xygw105": {
+      "nombre": "Universidad de Oriente",
+      "estado": "ok"
+    },
+    "https://ror.org/040tkk892": {
+      "nombre": "Universidad Marítima del Caribe",
+      "estado": "ok"
+    },
+    "https://ror.org/04382kq29": {
+      "nombre": "Universidad Nacional Experimental de los Llanos Occidentales Ezequiel Zamora",
+      "estado": "ok"
+    },
+    "https://ror.org/04h3gcf69": {
+      "nombre": "Instituto Nacional de Investigaciones Agrícolas",
+      "estado": "ok"
+    },
+    "https://ror.org/04ks7cj51": {
+      "nombre": "Petróleos de Venezuela (PDVSA)",
+      "estado": "ok"
+    },
+    "https://ror.org/04teayy65": {
+      "nombre": "Pontificia Universidad Católica de Chile",
+      "estado": "ok"
+    },
+    "https://ror.org/04vy5s568": {
+      "nombre": "Universidad del Zulia",
+      "estado": "ok"
+    },
+    "https://ror.org/05ak8xb62": {
+      "nombre": "Instituto de Medicina Tropical, Universidad Central de Venezuela",
+      "estado": "dudoso"
+    },
+    "https://ror.org/05bv0r345": {
+      "nombre": "Instituto Universitario de Tecnología de Yaracuy",
+      "estado": "dudoso"
+    },
+    "https://ror.org/05kacnm89": {
+      "nombre": "Universidad Central de Venezuela",
+      "estado": "ok"
+    },
+    "https://ror.org/05sj7yp62": {
+      "nombre": "Universidad de Carabobo",
+      "estado": "ok"
+    },
+    "https://ror.org/05sx4sby0": {
+      "nombre": "Universidad de Los Andes",
+      "estado": "dudoso"
+    },
+    "https://ror.org/05xc4qj60": {
+      "nombre": "Universidad Pedagógica Experimental Libertador",
+      "estado": "ok"
+    }
+  },
   "studies": [
     {
       "study_id": "cve-1991-pagina-5-2",
@@ -68,9 +238,12 @@
       "instituciones": [
         "University of Puerto Rico"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Bosque Nacional del Caribe",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_5_2.json",
       "anio": 1991,
@@ -108,9 +281,14 @@
       "instituciones": [
         "Instituto de Zoología Tropical, U.C.V."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_6_1.json",
       "anio": 1991,
@@ -148,9 +326,18 @@
       "instituciones": [
         "Centro de Ecología, IVIC."
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Territorio Amazonas, Edo. Bolívar, Edo. Apure, Edo. Lara",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Ananas ananassoides, Ananas paraguensis, Ananas comosus",
+      "especies": [
+        "Ananas ananassoides",
+        "Ananas paraguensis",
+        "Ananas comosus"
+      ],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_6_2.json",
       "anio": 1991,
@@ -188,9 +375,12 @@
       "instituciones": [
         "Arizona University. Dept. of Zoology."
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_6_3.json",
       "anio": 1991,
@@ -228,9 +418,14 @@
       "instituciones": [
         "C. de Ciencias, Universidad de Los Andes - Mérida (5101) Venezuela."
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Páramo de Gavidia dentro del Parque Nacional Sierra Nevada",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_7_1.json",
       "anio": 1991,
@@ -296,9 +491,21 @@
       "instituciones": [
         "Facultad de Agronomía - UCV, Maracay, Venezuela, 2101."
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "TUREN, EDO. PORTUGUESA, VENEZUELA",
       "ubicaciontemporal": "1990",
       "especiesmencionadas": "Porphyryula martinica, Rallus maculatus, Gallinula chloropus, Laterallus exilis, Porzana flaviventor, Neocrex erythrops",
+      "especies": [
+        "Porphyryula martinica",
+        "Rallus maculatus",
+        "Gallinula chloropus",
+        "Laterallus exilis",
+        "Porzana flaviventor",
+        "Neocrex erythrops"
+      ],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_8_1.json",
       "anio": 1991,
@@ -350,9 +557,16 @@
       "instituciones": [
         "Fac. Ciencias, Universidad de Los Andes, Mérida (5101)"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Jardín Botánico de la ULA, Barinas",
       "ubicaciontemporal": "1989,90",
       "especiesmencionadas": "Panicum maximum",
+      "especies": [
+        "Panicum maximum"
+      ],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_8_2.json",
       "anio": 1991,
@@ -408,9 +622,20 @@
       "instituciones": [
         "Facultad de Agronomía - UCV, Maracay, VENEZUELA, 2101"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "TUREN, EDO. PORTUGUESA, VENEZUELA",
       "ubicaciontemporal": "1990",
       "especiesmencionadas": "Quiscalus lugubris, Guazuma ulmifolia, Rallus maculatus, Porphyrio martinica, Gallinula chloropus",
+      "especies": [
+        "Quiscalus lugubris",
+        "Guazuma ulmifolia",
+        "Rallus maculatus",
+        "Porphyrio martinica",
+        "Gallinula chloropus"
+      ],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_9_1.json",
       "anio": 1991,
@@ -474,9 +699,12 @@
         }
       ],
       "instituciones": [],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Barinas",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_9_2.json",
       "anio": 1991,
@@ -538,9 +766,12 @@
         "N.A.Postgrado de Ecología Tropical de la Universidad de Los Andes y Proyecto PAN-BARTH.",
         "Postgrado de Ecología Tropical de la Universidad de Los Andes y Proyecto PAN-BARTH."
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Barinas, Turen y Yaritagua",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_10_1.json",
       "anio": 1991,
@@ -594,9 +825,14 @@
       "instituciones": [
         "CIEAT, Facultad de Ciencias, Universidad de Los Andes, Mérida (5101) Venezuela."
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Páramos venezolanos",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_10_2.json",
       "anio": 1991,
@@ -639,9 +875,14 @@
         }
       ],
       "instituciones": [],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "estado Barinas",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Zea mays",
+      "especies": [
+        "Zea mays"
+      ],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_11_1.json",
       "anio": 1991,
@@ -697,9 +938,16 @@
       "instituciones": [
         "Centro de Ecología Tropical, IVIC, Apdo. 21827, Caracas, Venezuela"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Hacienda Fe, cerca de Palmarito y en el Río. Yaracuy",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Saccharum officinarum",
+      "especies": [
+        "Saccharum officinarum"
+      ],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_12_1.json",
       "anio": 1991,
@@ -737,9 +985,14 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "R.F. Imataca, Edo. Bolívar, Venezuela",
       "ubicaciontemporal": "oct.86-sept.90",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_39_2.json",
       "anio": 1991,
@@ -784,9 +1037,17 @@
       "instituciones": [
         "Universidad Central de Venezuela. Facultad de Ciencias. Instituto de Zoología Tropical."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Llanos de Venezuela, Estado Guárico",
       "ubicaciontemporal": null,
       "especiesmencionadas": "A. purpusii, P. plicatulum",
+      "especies": [
+        "A. purpusii",
+        "P. plicatulum"
+      ],
       "palabrasclaves": [],
       "source_path": "I/curatedwithgeo/pagina_64_1.json",
       "anio": 1991,
@@ -824,9 +1085,18 @@
       "instituciones": [
         "CVG TECMIN CA"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Región Guayana, Estado Delta Amacuro, Venezuela (8°-10° N, 60°-63° W)",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Tyrannidae, Fringillidae, Throchilidae, Ardeidae, aves acuáticas",
+      "especies": [
+        "Tyrannidae",
+        "Fringillidae",
+        "Throchilidae",
+        "Ardeidae",
+        "aves acuáticas"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_25_1.json",
       "anio": 1994,
@@ -864,9 +1134,17 @@
       "instituciones": [
         "Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Región de los Andes, Sur del Lago de Maracaibo, Mérida, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Serpientes, serpientes ponzoñosas",
+      "especies": [
+        "Serpientes",
+        "serpientes ponzoñosas"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_25_2.json",
       "anio": 1994,
@@ -911,9 +1189,17 @@
       "instituciones": [
         "Universidad Pedagógica Experimental Libertador. Instituto Pedagógico de Caracas. Centro de Investigaciones en Ciencias Naturales Prof. M.A. Sponga. Departamento de Biología y Química"
       ],
+      "rores": [
+        "https://ror.org/05xc4qj60"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional 'El Ávila', Caracas, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "flora, fauna",
+      "especies": [
+        "flora",
+        "fauna"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_26_1.json",
       "anio": 1994,
@@ -988,9 +1274,14 @@
       "instituciones": [
         "Universidad Pedagógica Experimental Libertador (UPEL). Instituto Pedagógico de Caracas (IPC). Centro de Investigaciones en Ciencias Naturales Prof. M. A. Sponga (CICNAT) Laboratorio de Ecología Humana. Departamento de Biología y Química."
       ],
+      "rores": [
+        "https://ror.org/05xc4qj60"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Recreacional Morros de La Guarita, Urbanización el Cafetal, estado Miranda, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_26_2.json",
       "anio": 1994,
@@ -1028,9 +1319,22 @@
       "instituciones": [
         "Dircción de Vegetación. MARNR"
       ],
+      "rores": [
+        "https://ror.org/05ak8xb62"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "P. N. \"EL AVILA\"",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Papilionaceac, Euphorbiaceac, Bignoniaceae, Caesalpinaceac, Mimosaceae, Rubiaceae, Verbenaceae",
+      "especies": [
+        "Papilionaceac",
+        "Euphorbiaceac",
+        "Bignoniaceae",
+        "Caesalpinaceac",
+        "Mimosaceae",
+        "Rubiaceae",
+        "Verbenaceae"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_27_1.json",
       "anio": 1994,
@@ -1082,9 +1386,16 @@
       "instituciones": [
         "Instituto de Zoología Tropical. Laboratorio de Biología de Vectores. U.C.V."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Piritu- Pto. Píritu (Edo. Anzoátegui, Vzla)",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Aedes aegypti",
+      "especies": [
+        "Aedes aegypti"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_27_2.json",
       "anio": 1994,
@@ -1122,9 +1433,15 @@
       "instituciones": [
         "FUDENA"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Falcón, Venezuela",
       "ubicaciontemporal": "1991-1993",
       "especiesmencionadas": "Crocodylus acutus,Caiman crocodilus fuscus",
+      "especies": [
+        "Crocodylus acutus",
+        "Caiman crocodilus fuscus"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_28_1.json",
       "anio": 1994,
@@ -1179,9 +1496,22 @@
         "Centro Nacional para el Mejoramiento de la Enseñanza de la Ciencia",
         "usb"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Golfo Triste, Edo. Carabobo, Venezuela",
       "ubicaciontemporal": "1988",
       "especiesmencionadas": "['Loligo sp.', 'Prionathus arenatus', 'Haemulon sp.', 'Penaeus sp.', 'Upeneus parvus', 'Selene setapinnis', 'Sphyraena sp.', 'Trichiurus lepturus', 'Sciaenidae']",
+      "especies": [
+        "Loligo sp.",
+        "Prionathus arenatus",
+        "Haemulon sp.",
+        "Penaeus sp.",
+        "Upeneus parvus",
+        "Selene setapinnis",
+        "Sphyraena sp.",
+        "Trichiurus lepturus",
+        "Sciaenidae"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_29_1.json",
       "anio": 1994,
@@ -1219,9 +1549,14 @@
       "instituciones": [
         "UNELLEZ"
       ],
+      "rores": [
+        "https://ror.org/04382kq29"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Río Acarigua, Venezuela",
       "ubicaciontemporal": "1946-1988",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_29_2.json",
       "anio": 1994,
@@ -1267,9 +1602,16 @@
         "Centro Investigaciones Agropecuarias del Estado Mérida. FONAIAP-Mérida. Avenida Urdaneta, Edif. MAC. Planta Alta, Mérida 5101, Venezuela",
         "ULA-Facultad de Ciencias, Mérida-Venezuela"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sierra Nevada de los Andes venezolanos, Estado Mérida, quebrada El Oro y Mucunuútan",
       "ubicaciontemporal": "marzo 1987 - febrero 1988",
       "especiesmencionadas": "Oncorhynchus mykiss",
+      "especies": [
+        "Oncorhynchus mykiss"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_30_1.json",
       "anio": 1994,
@@ -1313,9 +1655,16 @@
       "instituciones": [
         "Instituto de Zoología Tropical. Facultad de Ciencias.UCV"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Llanos Altos Centrales, Estado Guárico, Venezuela",
       "ubicaciontemporal": "1989-90",
       "especiesmencionadas": "zea maíz",
+      "especies": [
+        "zea maíz"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_31_2.json",
       "anio": 1994,
@@ -1362,9 +1711,14 @@
       "instituciones": [
         "Postgrado de Ecología, Laboratorio de Ictiología, Instituto de Zoología Tropical, Fac. de Ciencias, UCV"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Región Centro-Oriental de Venezuela, cuencas del Lago de Valencia y del Río Tuy",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Moenkhausia pittieri",
+      "especies": [
+        "Moenkhausia pittieri"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_32_1.json",
       "anio": 1994,
@@ -1402,9 +1756,14 @@
       "instituciones": [
         "CVG - TECMIN"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Bolívar, Venezuela (06º-08º N, 60º-63º W)",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Aves",
+      "especies": [
+        "Aves"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_44_1.json",
       "anio": 1994,
@@ -1455,9 +1814,17 @@
       "instituciones": [
         "Instituto Nacional de Parques, Dirección General de Parques Nacionales"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Unidad V de la Reserva Forestal de Imataca, Edo. Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Carollia perspicillata, Sturnira lilium, Solanum spp., Piper spp.",
+      "especies": [
+        "Carollia perspicillata",
+        "Sturnira lilium",
+        "Solanum spp.",
+        "Piper spp."
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_54_1.json",
       "anio": 1994,
@@ -1495,9 +1862,17 @@
       "instituciones": [
         "Instituto de Zoología Tropical, Facultad de Ciencias, U.C.V."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Archipiélago de Los Roques, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "T. testudinum, peces",
+      "especies": [
+        "T. testudinum",
+        "peces"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_92_1.json",
       "anio": 1994,
@@ -1549,9 +1924,16 @@
       "instituciones": [
         "Instituto de Zoología Tropical, Facultad de Ciencias, U.C.V., Escuela de Bioanálisis, Facultad de Medicina, U.C.V."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Programa Colorido (CVG-PROFORCA, Edo. Anzoátegui, Venezuela",
       "ubicaciontemporal": "abril-agosto de 1993",
       "especiesmencionadas": "Pinus caribaea var. hondurensis",
+      "especies": [
+        "Pinus caribaea var. hondurensis"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_92_2.json",
       "anio": 1994,
@@ -1589,9 +1971,14 @@
       "instituciones": [
         "CVG-PROFORCA"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sur del Estado Monagas, Venezuela",
       "ubicaciontemporal": "1980",
       "especiesmencionadas": "['Pinus caribaea']",
+      "especies": [
+        "Pinus caribaea"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_93_1.json",
       "anio": 1994,
@@ -1629,9 +2016,16 @@
       "instituciones": [
         "UNELLEZ Vice-rectorado Planificación y Desarrollo"
       ],
+      "rores": [
+        "https://ror.org/04382kq29"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Alto Barinas (Edo. Barinas), Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Insectos Acuáticos",
+      "especies": [
+        "Insectos Acuáticos"
+      ],
       "palabrasclaves": [],
       "source_path": "II/curatedwithgeo/pagina_94_1.json",
       "anio": 1994,
@@ -1669,9 +2063,14 @@
       "instituciones": [
         "Instituto De Zoologia Tropical. Facultad De Ciencias. Universidad Central De Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Kwakwani, Guyana",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_55_2.json",
       "anio": 1999,
@@ -1709,9 +2108,17 @@
       "instituciones": [
         "A.P. 1432, Cagua, Estado Aragua"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Mar Caribe, Venezuela",
       "ubicaciontemporal": "19/08/98",
       "especiesmencionadas": "Mesoplodon, Ziphius cavirostris, M. densirostris, M. europaeus",
+      "especies": [
+        "Mesoplodon",
+        "Ziphius cavirostris",
+        "M. densirostris",
+        "M. europaeus"
+      ],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_56_3.json",
       "anio": 1999,
@@ -1749,9 +2156,14 @@
       "instituciones": [
         "Centro de Estudios del Desarrollo (CENDES), Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": "1996",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_60_1.json",
       "anio": 1999,
@@ -1803,9 +2215,16 @@
       "instituciones": [
         "Centro De Investigaciones \"José Witremundo Torreaba\" Núcleo Universitario \"Rafael Rangel\"l"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Aguas Calientes, Municipio Miranda, estado Trujillo, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Anopheles spp.', 'Culicidae', 'Bacillus thuringiensis var. israelensis']",
+      "especies": [
+        "Anopheles spp.",
+        "Culicidae",
+        "Bacillus thuringiensis var. israelensis"
+      ],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_61_1.json",
       "anio": 1999,
@@ -1858,9 +2277,17 @@
         "Instituto de Zoología Tropical, Facultad de Ciencias, U.C.V.",
         "Laboratorio de Comportamiento Animal, Instituto de Biología Experimental, Facultad de Ciencias, U.C.V."
       ],
+      "rores": [
+        "https://ror.org/00t4fvv78",
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Embalse de Guri, Edo. Bolívar, Venezuela",
       "ubicaciontemporal": "1995",
       "especiesmencionadas": "['Pithecia pithecia pithecia']",
+      "especies": [
+        "Pithecia pithecia pithecia"
+      ],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_61_2.json",
       "anio": 1999,
@@ -1906,9 +2333,15 @@
         "Departamento de Planificación Urbana y Grupo de Investigación en Gestión Ambiental Urbana (GAU). Universidad Simón Bolivar",
         "Escuela de Sociología , Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Reserva Forestal de Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_73_2.json",
       "anio": 1999,
@@ -1988,9 +2421,14 @@
       "instituciones": [
         "FUNDA-GEOMINAS - UNIVERSIDAD DE ORIENTE"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_83_2.json",
       "anio": 1999,
@@ -2063,9 +2501,14 @@
       "instituciones": [
         "Instituto de Investigaciones para el Desarrollo Forestal (INDEFOR), Facultad de Ciencias Forestales y Ambientales, Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Guayana Venezolana",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_87_2.json",
       "anio": 1999,
@@ -2119,9 +2562,14 @@
         "Departamento de Estudios Ambientales. Universidad Simón Bolívar",
         "Instituto de Ciencia de Materiales, Sede B (CSIC). Facultad de Ciencias. C-III-301. Universidad Autónoma de Madrid. 28049 Madrid, España"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Río Lozoya, Cuenca río Tajo, España",
       "ubicaciontemporal": "16 años (1998-2014), 21 años (1993-2014), 15 años (1999-2014), 29 años",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_90_2.json",
       "anio": 1999,
@@ -2181,9 +2629,22 @@
       "instituciones": [
         "Dpto. de Biología. Escuela de Ciencias. UDO-Núcleo de Sucre"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Mochima, Estado Sucre, Venezuela",
       "ubicaciontemporal": "1994-1995",
       "especiesmencionadas": "Thalassia testudinum, Eucinostomus gula, E. argenteus, Thalassophryne maculosa, Archosargus rhomboidalis, Haemulon bonariense, H. steindachneri",
+      "especies": [
+        "Thalassia testudinum",
+        "Eucinostomus gula",
+        "E. argenteus",
+        "Thalassophryne maculosa",
+        "Archosargus rhomboidalis",
+        "Haemulon bonariense",
+        "H. steindachneri"
+      ],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_92_1.json",
       "anio": 1999,
@@ -2237,9 +2698,19 @@
       "instituciones": [
         "Fundación Museo De Ciencias Y Lab. Fauna Terrestre, Instituto De Zoología Tropical-Ucv"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Isla Redonda, Embalse de Guri, Edo. Bolívar, Venezuela",
       "ubicaciontemporal": "abril-julio 1995",
       "especiesmencionadas": "Pithecia pithecia, Licanias discolor, Morinda citrifolia, Connarus venezuelanus",
+      "especies": [
+        "Pithecia pithecia",
+        "Licanias discolor",
+        "Morinda citrifolia",
+        "Connarus venezuelanus"
+      ],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_104_1.json",
       "anio": 1999,
@@ -2277,9 +2748,17 @@
       "instituciones": [
         "Instituto Limnológico, UDO"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Laguna Castillero, Rio Orinoco, Venezuela",
       "ubicaciontemporal": "enero-mayo 1996",
       "especiesmencionadas": "Pistia stratiotes, Eichhornia crassipes",
+      "especies": [
+        "Pistia stratiotes",
+        "Eichhornia crassipes"
+      ],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_104_4.json",
       "anio": 1999,
@@ -2320,9 +2799,14 @@
       "instituciones": [
         "UDO-IAMOT-FUNDAGEOMINAS"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_114_2.json",
       "anio": 1999,
@@ -2376,9 +2860,17 @@
         "Instituto Oceanográfico de Venezuela",
         "Universidad de Oriente. Núcleo de Sucre. Dpto. de Biología"
       ],
+      "rores": [
+        "https://ror.org/02v75tb58",
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Sucre, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Plexaura flexuosa']",
+      "especies": [
+        "Plexaura flexuosa"
+      ],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_115_1.json",
       "anio": 1999,
@@ -2423,9 +2915,16 @@
       "instituciones": [
         "Universidad de Oriente. Núcleo de Sucre. Departamento de Biología"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Península de Araya, Edo Sucre, Venezuela",
       "ubicaciontemporal": "Octubre de 1997 a junio de 1998",
       "especiesmencionadas": "['Gracilariopsis tenuifrons']",
+      "especies": [
+        "Gracilariopsis tenuifrons"
+      ],
       "palabrasclaves": [],
       "source_path": "III/curatedwithgeo/pagina_115_2.json",
       "anio": 1999,
@@ -2466,9 +2965,14 @@
       "instituciones": [
         "Centro de Ecología, Instituto Venezolano de Investigaciones Científicas"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sur del Orinoco, Guayana Venezolana, Estados Amazonas, Bolívar y Delta Amacuro",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_19_1.json",
       "anio": 2001,
@@ -2514,9 +3018,24 @@
         "Instituto Nacional de Investigaciones Agricolas. Ciae-Zulia. Estación Local El Lago",
         "Servicio Autónomo de los Recursos Pesqueros y Acuícolas. Región Occidental"
       ],
+      "rores": [
+        "https://ror.org/04h3gcf69"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Bahía del Tablazo, Estado Zulia, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Litopenaeus schmitti, Ariidae, Engraulidae, Achiridae, Gerreidae, Gobiidae, Sciaenidae, Tetraodontidae, Mugilidae",
+      "especies": [
+        "Litopenaeus schmitti",
+        "Ariidae",
+        "Engraulidae",
+        "Achiridae",
+        "Gerreidae",
+        "Gobiidae",
+        "Sciaenidae",
+        "Tetraodontidae",
+        "Mugilidae"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_99_1.json",
       "anio": 2001,
@@ -2571,9 +3090,22 @@
       "instituciones": [
         "Museo de Historia Natural La Salle"
       ],
+      "rores": [
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Río de aguas negras del sureste de la Guayana venezolana",
       "ubicaciontemporal": "Abril 1999 y septiembre 2000",
       "especiesmencionadas": "Myles rubripinnis, Jupiaiba sp 1, Bryconops colanegra, Moenkhausia oligolepis, Jupiaiba zonata, Hoplias macrophthalmus, Hemiodus vorderwinkleri",
+      "especies": [
+        "Myles rubripinnis",
+        "Jupiaiba sp 1",
+        "Bryconops colanegra",
+        "Moenkhausia oligolepis",
+        "Jupiaiba zonata",
+        "Hoplias macrophthalmus",
+        "Hemiodus vorderwinkleri"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_99_2.json",
       "anio": 2001,
@@ -2619,9 +3151,14 @@
         "Centro de Estudios Integrales del Ambiente, Universidad Central de Venezuela",
         "Dirección de Recurso Forestal, Estudios e Inventario de Vegetación"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Reserva Forestal de Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_110_1.json",
       "anio": 2001,
@@ -2695,9 +3232,14 @@
         "Department of Geography. University of North Texas",
         "Universidad Nacional, Experimental de Guayana Centro de Investigaciones Ecológicas - Unidad de Investigación Geográfica"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_131_1.json",
       "anio": 2001,
@@ -2764,9 +3306,14 @@
       "instituciones": [
         "ICAE, Facultad de Ciencias, Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Llanos del Orinoco, Venezuela; El Frío, Edo. Apure, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_132_2.json",
       "anio": 2001,
@@ -2811,9 +3358,16 @@
       "instituciones": [
         "Laboratorio de Biogeografía, Escuela de Geografía, Facultad de Ciencias Forestales y Ambientales, Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Cordillera de Mérida, Venezuela",
       "ubicaciontemporal": "1961-2100",
       "especiesmencionadas": "No se mencionan especies específicas en el resumen.",
+      "especies": [
+        "No se mencionan especies específicas en el resumen."
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_133_1.json",
       "anio": 2001,
@@ -2853,9 +3407,29 @@
       "instituciones": [
         "Universidad Experimental de Guayana, Coordinación General de Investigación y Postgrado, Centro de Investigaciones Ecológicas de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Campamento El Buey, Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": "1998-2000",
       "especiesmencionadas": "['Licania densiflora', 'Croton xanthochloros', 'Guazuma ulmifolia', 'Jacaranda obtusifolia', 'Spondias mombin', 'Pentaclethra macroloba', 'Ficus sp.', 'Clansia racemosa', 'Manilkara bidentata', 'Piranhea longepedunculata', 'Aspidosperma excelsum', 'Aspidosperma marcgravianum', 'Protium sagotianum', 'Eclinusa guianensis']",
+      "especies": [
+        "Licania densiflora",
+        "Croton xanthochloros",
+        "Guazuma ulmifolia",
+        "Jacaranda obtusifolia",
+        "Spondias mombin",
+        "Pentaclethra macroloba",
+        "Ficus sp.",
+        "Clansia racemosa",
+        "Manilkara bidentata",
+        "Piranhea longepedunculata",
+        "Aspidosperma excelsum",
+        "Aspidosperma marcgravianum",
+        "Protium sagotianum",
+        "Eclinusa guianensis"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_136_1.json",
       "anio": 2001,
@@ -2922,9 +3496,21 @@
         "Division of Fishes, Field Museum of Natural History, Chicago",
         "Museo de Biologia Universidad Central de Venezuela, Instituto de Zoologia Tropical Caracas"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Río Caura, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Peces de las Familias Characidae, Loricariidae, Cichlidae, Anostomidae, Characidiidae, Parodontidae",
+      "especies": [
+        "Peces de las Familias Characidae",
+        "Loricariidae",
+        "Cichlidae",
+        "Anostomidae",
+        "Characidiidae",
+        "Parodontidae"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_167_1.json",
       "anio": 2001,
@@ -2985,9 +3571,17 @@
         "Laboratorio de Ecología de Ecosistemas Acuáticos Continentales. Escuela de Biologia. Facultad de Ciencias. Universidad Central de Venezuela",
         "Laboratorio de Ecología de Insectos. Escuela de Biologia. Facultad de Ciencias. Universidad de Los Andes Estado Mérida"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Río Chama, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Anacroneuria paleta",
+      "especies": [
+        "Anacroneuria paleta"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_167_2.json",
       "anio": 2001,
@@ -3041,9 +3635,15 @@
         "Facultad de Ciencias ucv",
         "Instituto de Zoología Tropical ucv"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Península de Paria, Estado Sucre, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Utricularia inflata', 'Utricularia gibba']",
+      "especies": [
+        "Utricularia inflata",
+        "Utricularia gibba"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_170_1.json",
       "anio": 2001,
@@ -3088,9 +3688,17 @@
       "instituciones": [
         "Laboratorio de Biología Funcional de los Kinetoplastida. Instituto de Zoología Tropical, Facultad de Ciencias, Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Maracay (Estado Aragua), Cúpira (Estado Miranda), Guatire (Estado Miranda), Caracas (Distrito Capital), Carabobo (Estado Guarico) y Campo de Carabobo (Estado Carabobo), Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Phytomonas sp., Euphorbia hirta",
+      "especies": [
+        "Phytomonas sp.",
+        "Euphorbia hirta"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_175_2.json",
       "anio": 2001,
@@ -3135,9 +3743,20 @@
       "instituciones": [
         "Museo de Historia Natural La Salle"
       ],
+      "rores": [
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": "1991",
       "especiesmencionadas": "peces, reptiles, anfibios, aves, mamíferos",
+      "especies": [
+        "peces",
+        "reptiles",
+        "anfibios",
+        "aves",
+        "mamíferos"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_177_1.json",
       "anio": 2001,
@@ -3196,9 +3815,14 @@
       "instituciones": [
         "Oficina Nacional de Diversidad Biológica. Dirección de Administración de Recursos Genéticos. Ministerio del Ambiente y de los Recursos Naturales"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": "1973",
       "especiesmencionadas": "Flora No Maderable",
+      "especies": [
+        "Flora No Maderable"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_177_2.json",
       "anio": 2001,
@@ -3265,9 +3889,20 @@
         "Escuela de Biología, Facultad de Ciencias, UCV",
         "Unidad de Manejo Agroecológico, Laboratorio de Estudios Ambientales, IZT, Facultad de Ciencias, UCV"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Amazonas, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Oligoquetos, Bos taurus, Vigna unguiculata, Imperata contracta, Cynodon dactilon",
+      "especies": [
+        "Oligoquetos",
+        "Bos taurus",
+        "Vigna unguiculata",
+        "Imperata contracta",
+        "Cynodon dactilon"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_178_2.json",
       "anio": 2001,
@@ -3320,9 +3955,17 @@
         "PDVSA San Tomé",
         "Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/04ks7cj51",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Cuenca alta del Río Tigre, Estado Anzoátegui",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Mauritia flexuosa",
+      "especies": [
+        "Mauritia flexuosa"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_179_2.json",
       "anio": 2001,
@@ -3385,9 +4028,14 @@
         "Postgrado en Ecología-Instituto de Zoología Tropical",
         "Postgrado en Ecología-Instituto de Zoología Tropical, Coordinación de Extensión"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Los Pijiguaos, Edo. Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_180_1.json",
       "anio": 2001,
@@ -3425,9 +4073,23 @@
       "instituciones": [
         "Postgrado en Ecología. Facultad de Ciencias. Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Isla de Margarita, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Cocothrinax barbadensis, Cebus apella margaritae, Sciurus granatensis nesaeus, Glomeropitcairnia erectiflora, Amazonas barbadensis, Leopardus pardalis, Odocoileus virginianus margaritae, Drymarchon corais margaritae",
+      "especies": [
+        "Cocothrinax barbadensis",
+        "Cebus apella margaritae",
+        "Sciurus granatensis nesaeus",
+        "Glomeropitcairnia erectiflora",
+        "Amazonas barbadensis",
+        "Leopardus pardalis",
+        "Odocoileus virginianus margaritae",
+        "Drymarchon corais margaritae"
+      ],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_180_2.json",
       "anio": 2001,
@@ -3465,9 +4127,12 @@
       "instituciones": [
         "No disponible"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Municipio Caroní, sector urbano, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "IV/curatedwithgeo/pagina_181_1.json",
       "anio": 2001,
@@ -3505,9 +4170,14 @@
       "instituciones": [
         "Instituto de Zoología Tropical. Facultad de Ciencias. U.C.V."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Llanos Centrales Venezolanos",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_78_3.json",
       "anio": 2003,
@@ -3567,9 +4237,15 @@
         "Centro de Estudios Integrales del Ambiente, U.C.V.",
         "Instituto de Zoología Tropical, U.C.V."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/03mvpvm42"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_123_1.json",
       "anio": 2003,
@@ -3643,9 +4319,15 @@
         "Centro de Estudios Integrales del Ambiente, U.C.V.",
         "Instituto de Zoología Tropical, U.C.V."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/03mvpvm42"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_123_5.json",
       "anio": 2003,
@@ -3748,9 +4430,15 @@
         "Instituto de Zoología Tropical, U.C.V.",
         "M.A.R.N."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/03mvpvm42"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_125_2.json",
       "anio": 2003,
@@ -3816,9 +4504,14 @@
       "instituciones": [
         "Universidad Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Estado Bolívar, Venezuela",
       "ubicaciontemporal": "Año 2000",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_133_1.json",
       "anio": 2003,
@@ -3900,9 +4593,20 @@
         "IUTEB",
         "WCS"
       ],
+      "rores": [
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Quebrada San José, Imataca, Estado Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Ancistrus sp, Corydoras sp, Hoplias malabaricus, Pinelodella aff. cristata, Astyanax bimaculatus",
+      "especies": [
+        "Ancistrus sp",
+        "Corydoras sp",
+        "Hoplias malabaricus",
+        "Pinelodella aff. cristata",
+        "Astyanax bimaculatus"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_161_2.json",
       "anio": 2003,
@@ -3948,9 +4652,15 @@
         "Centro de Estudios Integrales del Ambiente, U.C.V.",
         "Instituto de Zoología Tropical, U.C.V."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/03mvpvm42"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, estado Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_164_2.json",
       "anio": 2003,
@@ -4031,9 +4741,18 @@
         "Escuela de Biología, Facultad de Ciencias, U.C.V.",
         "Instituto de Zoología Tropical, Facultad de Ciencias, U.C.V."
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/0354nax61"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Morrocoy, Cayo Sombrero, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Verongula rigida, Aplysina archeri",
+      "especies": [
+        "Verongula rigida",
+        "Aplysina archeri"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_182_1.json",
       "anio": 2003,
@@ -4116,9 +4835,18 @@
       "instituciones": [
         "Departamento de Biología, Universidad del Zulia"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sistema lagunar Las Peonías, Municipio Maracaibo, Estado Zulia, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Limnothrix sp., Artemia, Chroomonas sp.",
+      "especies": [
+        "Limnothrix sp.",
+        "Artemia",
+        "Chroomonas sp."
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_195_1.json",
       "anio": 2003,
@@ -4156,9 +4884,14 @@
       "instituciones": [
         "Instituto de Zoología Tropical, Facultad de Ciencias UCV"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Reserva Forestal Imataca, Estado Bolívar, Venezuela",
       "ubicaciontemporal": "1997",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_195_2.json",
       "anio": 2003,
@@ -4232,9 +4965,18 @@
         "Grupo de Ecologúa Animal B, Departamento de Biologúa, Universidad de Los Andes",
         "Laboratorio de Ecologia del Comportamiento, Departamento de Estudios Ambientales, Universidad Simón Bolívar"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98",
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Morrocoy, Estado Falcón, Venezuela",
       "ubicaciontemporal": "Noviembre 2001 y Enero 2002",
       "especiesmencionadas": "Artibeus lituratus, Washingtonia robusta",
+      "especies": [
+        "Artibeus lituratus",
+        "Washingtonia robusta"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_196_1.json",
       "anio": 2003,
@@ -4297,9 +5039,19 @@
         "Departamento de Biología, Facultad de Ciencias, Universidad de Los Andes",
         "Instituto de Ciencias Ambientales y Ecológicas (ICAE), Facultad de Ciencias, Universidad de Los Andes, Mérida"
       ],
+      "rores": [
+        "https://ror.org/00t4fvv78",
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Mérida, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "papa, trigo, café",
+      "especies": [
+        "papa",
+        "trigo",
+        "café"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_201_1.json",
       "anio": 2003,
@@ -4350,9 +5102,19 @@
       "instituciones": [
         "Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Cuenca alta del Río Tigre, Estado Anzoátegui, Venezuela",
       "ubicaciontemporal": "mayo-2000 a mayo-2001",
       "especiesmencionadas": "Costus arabicus, Heliconia psittacorum, Mauritia flexuosa, Virola surinamensis",
+      "especies": [
+        "Costus arabicus",
+        "Heliconia psittacorum",
+        "Mauritia flexuosa",
+        "Virola surinamensis"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_201_2.json",
       "anio": 2003,
@@ -4407,9 +5169,19 @@
         "INIA-Guárico",
         "INIA-Portuguesa"
       ],
+      "rores": [
+        "https://ror.org/04h3gcf69"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sistema de Riego del Río Guárico, Estado Guárico, Venezuela",
       "ubicaciontemporal": "2000-2002",
       "especiesmencionadas": "['Zygodontomys brevicauda', 'Holochilus sciureus', 'Sigmodon alstoni', 'Oecomys bicolor']",
+      "especies": [
+        "Zygodontomys brevicauda",
+        "Holochilus sciureus",
+        "Sigmodon alstoni",
+        "Oecomys bicolor"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_206_1.json",
       "anio": 2003,
@@ -4447,9 +5219,14 @@
       "instituciones": [
         "Laboratorio de Ecología Vegetal y Sistemática de Plantas Vasculares, Departamento de Biología, LUZ"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Cuenca baja de los ríos Socuy, Guasare y Cachirí, Estado Zulia, Venezuela",
       "ubicaciontemporal": "1986-2001",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_207_1.json",
       "anio": 2003,
@@ -4502,9 +5279,18 @@
         "Departamento de Biología de Organismos, Universidad Simón Bolívar",
         "Sustainable Development and Conservation Biology Department, University of Maryland"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Morrocoy, Venezuela",
       "ubicaciontemporal": "Mayo-Agosto 2001",
       "especiesmencionadas": "Panulirus argus, P. guttatus, P. laevicauda",
+      "especies": [
+        "Panulirus argus",
+        "P. guttatus",
+        "P. laevicauda"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_207_2.json",
       "anio": 2003,
@@ -4554,9 +5340,16 @@
         "Museo MARN - Oficina Nacional de Biodiversidad. Museo Estación Biológica Rancho Grande",
         "Postgrado Latinoamericano en Manejo de Fauna Silvestre - Universidad Nacional de los Llanos occidentales 'Ezequiel Zamora'"
       ],
+      "rores": [
+        "https://ror.org/04382kq29"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Golfo de Venezuela, costa occidental, Islas San Bernardo, San Carlos y Zapara, estado Zulia",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Sotalia sp.",
+      "especies": [
+        "Sotalia sp."
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_210_1.json",
       "anio": 2003,
@@ -4597,9 +5390,14 @@
       "instituciones": [
         "Instituto de Zoología Tropical, Facultad de Ciencias. Laboratorio SIMEA AP"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Trópicos, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_212_1.json",
       "anio": 2003,
@@ -4651,9 +5449,18 @@
       "instituciones": [
         "Tecnologías de Infraestructura y Ambiente, PDVSA-Intevep"
       ],
+      "rores": [
+        "https://ror.org/04ks7cj51"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Laguna de Asfalto Guanoco, Sucre, Estados Mérida y Lara, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Bacillus licheniformis, Bacillus subtilis, Bacillus dipsosauri",
+      "especies": [
+        "Bacillus licheniformis",
+        "Bacillus subtilis",
+        "Bacillus dipsosauri"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_212_2.json",
       "anio": 2003,
@@ -4707,9 +5514,19 @@
         "Instituto Oceanográfico de Venezuela",
         "Instituto de Zoología Tropical, Facultad de Ciencias, UCV"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/02v75tb58",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Región sur de Brasil, Lagoa dos Patos, Laguna",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Farfantepenaeus paulensis, Nematopsis sp.",
+      "especies": [
+        "Farfantepenaeus paulensis",
+        "Nematopsis sp."
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_241_1.json",
       "anio": 2003,
@@ -4762,9 +5579,16 @@
         "Escuela de Ingeniería Agronómica, Universidad de Oriente",
         "Escuela de Petróleo, Universidad de Oriente"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Monagas, El Tejero, Caripito",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Zea mays",
+      "especies": [
+        "Zea mays"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_241_2.json",
       "anio": 2003,
@@ -4823,9 +5647,16 @@
       "instituciones": [
         "Estación de Investigaciones Marinas de Margarita (EDIMAR). Fundación La Salle de Ciencias Naturales"
       ],
+      "rores": [
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Nueva Esparta, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Crassostrea rhizophorae",
+      "especies": [
+        "Crassostrea rhizophorae"
+      ],
       "palabrasclaves": [],
       "source_path": "V/curatedwithgeo/pagina_270_2.json",
       "anio": 2003,
@@ -4873,9 +5704,14 @@
       "instituciones": [
         "Fundación La Salle. Estación de Investigaciones Marinas de Margarita (EDIMAR)"
       ],
+      "rores": [
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Atlántico Tropical Norte, Mar Caribe, Delta del Orinoco, Isla de Trinidad",
       "ubicaciontemporal": "Octubre a diciembre de 2001",
       "especiesmencionadas": "['N.A.']",
+      "especies": [],
       "palabrasclaves": [
         "Nutrientes",
         "Rio Orinoco",
@@ -4917,9 +5753,14 @@
       "instituciones": [
         "Institute of Ecology, University of Georgia"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Caribbean",
       "ubicaciontemporal": null,
       "especiesmencionadas": "decapod",
+      "especies": [
+        "decapod"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_115_1.json",
       "anio": 2005,
@@ -5002,9 +5843,16 @@
         "Laboratorio de Sensores Remotos INTECMAR, USB",
         "USB"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Lago de Maracaibo, Venezuela",
       "ubicaciontemporal": "2003-2004",
       "especiesmencionadas": "Lemna obscura",
+      "especies": [
+        "Lemna obscura"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_116_1.json",
       "anio": 2005,
@@ -5047,9 +5895,16 @@
       "instituciones": [
         "Laboratorio de Limnología. Departamento de Biología. Facultad Experimental de Ciencias. Luz"
       ],
+      "rores": [
+        "https://ror.org/022b6wh61"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Lago de Maracaibo, Venezuela",
       "ubicaciontemporal": "2004",
       "especiesmencionadas": "['Lemna obscura']",
+      "especies": [
+        "Lemna obscura"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_117_1.json",
       "anio": 2005,
@@ -5134,9 +5989,14 @@
       "instituciones": [
         "Instituto para el Control y Conservación de la Cuenca del Lago de Maracaibo"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Lago de Maracaibo, Venezuela",
       "ubicaciontemporal": "2004",
       "especiesmencionadas": "Lemna sp.",
+      "especies": [
+        "Lemna sp."
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_118_1.json",
       "anio": 2005,
@@ -5193,9 +6053,16 @@
       "instituciones": [
         "Centro de Ecología, Instituto Venezolano de Investigaciones Científicas"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Terrenos del IVIC, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Pteridium caudatum']",
+      "especies": [
+        "Pteridium caudatum"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_120_2.json",
       "anio": 2005,
@@ -5247,9 +6114,23 @@
       "instituciones": [
         "Instituto de Ciencias Ambientales y Ecológicas (ICAE), Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/00t4fvv78"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Páramo de Piedras Blancas, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Hypericum lugens, Hintonia lantana, Castilleja fissifolia, Senecio formosus, Valeriana parviflora, Monticalia utrofiz, Lasiocephalus longipenicillatus, Senecio funckii",
+      "especies": [
+        "Hypericum lugens",
+        "Hintonia lantana",
+        "Castilleja fissifolia",
+        "Senecio formosus",
+        "Valeriana parviflora",
+        "Monticalia utrofiz",
+        "Lasiocephalus longipenicillatus",
+        "Senecio funckii"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_121_1.json",
       "anio": 2005,
@@ -5294,9 +6175,18 @@
       "instituciones": [
         "Instituto de Biología Experimental. Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Península de Paraguaná, Edo. Falcón, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Alternanthera crucis, Ipomoea carnea, Jatropha gossypifolia",
+      "especies": [
+        "Alternanthera crucis",
+        "Ipomoea carnea",
+        "Jatropha gossypifolia"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_124_1.json",
       "anio": 2005,
@@ -5348,9 +6238,21 @@
       "instituciones": [
         "Instituto de Biología Experimental. Universidad Central de Venezuela."
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Laguna de Tacarigua y Parque Nacional Morrocoy, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Avicennia germinans, Rhizophora mangle, Laguncularia racemosa, Conocarpus erectus, Coccoloba uvifera, Phthirousa maritima",
+      "especies": [
+        "Avicennia germinans",
+        "Rhizophora mangle",
+        "Laguncularia racemosa",
+        "Conocarpus erectus",
+        "Coccoloba uvifera",
+        "Phthirousa maritima"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_125_1.json",
       "anio": 2005,
@@ -5509,9 +6411,21 @@
         "Instituto para la concervación del lago de Maracaibo",
         "Universidad Nacional Experimental Rafael Maria Baralt"
       ],
+      "rores": [
+        "https://ror.org/01zstgj41",
+        "https://ror.org/02ntheh91",
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Desembocadura del estuario de Maracaibo, Venezuela",
       "ubicaciontemporal": "2003-2004",
       "especiesmencionadas": "Rhizophora mangle, Avicennia germinans, Conocarpus, Laguncularia racemosa",
+      "especies": [
+        "Rhizophora mangle",
+        "Avicennia germinans",
+        "Conocarpus",
+        "Laguncularia racemosa"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_126_1.json",
       "anio": 2005,
@@ -5549,9 +6463,14 @@
       "instituciones": [
         "Instituto de Ciências do Mar, Universidade Federal do Ceará"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Costa de Brasil",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Manglares",
+      "especies": [
+        "Manglares"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_130_1.json",
       "anio": 2005,
@@ -5603,9 +6522,18 @@
       "instituciones": [
         "Centro Ecologia, IVIC - Depto.de Biología, LUZ"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Lago de Maracaibo, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Rhizophora mangle, Typha dominguensis, Acrostichum aureum",
+      "especies": [
+        "Rhizophora mangle",
+        "Typha dominguensis",
+        "Acrostichum aureum"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_133_1.json",
       "anio": 2005,
@@ -5648,9 +6576,21 @@
       "instituciones": [
         "Museo del Instituto de Zoología Agrícola Francisco Fernández Yépez (MIZA), Facultad de Agronomía, UCV"
       ],
+      "rores": [
+        "https://ror.org/03re99q86"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Insectos, ácaros, alacranes, coleópteros, odonatos, lepidópteros",
+      "especies": [
+        "Insectos",
+        "ácaros",
+        "alacranes",
+        "coleópteros",
+        "odonatos",
+        "lepidópteros"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_134_1.json",
       "anio": 2005,
@@ -5702,9 +6642,14 @@
       "instituciones": [
         "Museo del Instituto de Zoología Agrícola Francisco Fernández Yépez (MIZA), Facultad de Agronomía, UCV"
       ],
+      "rores": [
+        "https://ror.org/03re99q86"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Región Andina",
       "ubicaciontemporal": "últimos 20 años",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_134_2.json",
       "anio": 2005,
@@ -5749,9 +6694,14 @@
       "instituciones": [
         "Grupo BIOEVO. Universidad Simón Bolívar"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_135_1.json",
       "anio": 2005,
@@ -5803,9 +6753,20 @@
       "instituciones": [
         "Museo de La Estación Biológica de Rancho Grande (EBRG). Of. Nacional Diversidad Biológica. Min. del Ambiente y de Los Recursos Naturales"
       ],
+      "rores": [
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": "Mamíferos, Aves, Peces, Reptiles, Anfibios",
+      "especies": [
+        "Mamíferos",
+        "Aves",
+        "Peces",
+        "Reptiles",
+        "Anfibios"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_136_1.json",
       "anio": 2005,
@@ -5851,9 +6812,15 @@
         "Instituto Nacional de Parques",
         "Ministerio del Ambiente y de los Recursos Naturales"
       ],
+      "rores": [
+        "https://ror.org/00dbx4k72",
+        "https://ror.org/01f2hnj65"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_136_2.json",
       "anio": 2005,
@@ -5919,9 +6886,19 @@
       "instituciones": [
         "Museo de Biología de la Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": "1995, N.A.",
       "especiesmencionadas": "anfibios, reptiles, aves, mamíferos",
+      "especies": [
+        "anfibios",
+        "reptiles",
+        "aves",
+        "mamíferos"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_137_1.json",
       "anio": 2005,
@@ -6001,9 +6978,22 @@
       "instituciones": [
         "Museo de Ciencias Naturales de Guanare (MCNG). Universidad Nacional Experimental de los Llanos Occidentales 'Ezequiel Zamora' (UNELLEZ)"
       ],
+      "rores": [
+        "https://ror.org/04382kq29"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Guanare, Venezuela",
       "ubicaciontemporal": "1976",
       "especiesmencionadas": "peces, insectos acuáticos, invertebrados, peces, anfibios, reptiles, aves, mamíferos",
+      "especies": [
+        "peces",
+        "insectos acuáticos",
+        "invertebrados",
+        "anfibios",
+        "reptiles",
+        "aves",
+        "mamíferos"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_138_1.json",
       "anio": 2005,
@@ -6062,9 +7052,17 @@
       "instituciones": [
         "Laboratorio de Estudios Ambientales. IZT. Facultad de Ciencias. Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Norte del estado Amazonas, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Imperata contracta, Vigna unguiculata",
+      "especies": [
+        "Imperata contracta",
+        "Vigna unguiculata"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_163_1.json",
       "anio": 2005,
@@ -6189,9 +7187,16 @@
         "UNEG",
         "WSC"
       ],
+      "rores": [],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Sierra Imataca, Valle intramomerio del Río San José",
       "ubicaciontemporal": "2003",
       "especiesmencionadas": "Pomacea spp., Ancystrosp., Coridoras sp.",
+      "especies": [
+        "Pomacea spp.",
+        "Ancystrosp.",
+        "Coridoras sp."
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_163_2.json",
       "anio": 2005,
@@ -6227,9 +7232,17 @@
       "instituciones": [
         "PDVSA-INTEVEP"
       ],
+      "rores": [
+        "https://ror.org/04ks7cj51"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Urochloa brizantha', 'Cajanus cajan']",
+      "especies": [
+        "Urochloa brizantha",
+        "Cajanus cajan"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_165_1.json",
       "anio": 2005,
@@ -6274,9 +7287,16 @@
       "instituciones": [
         "Museo de Biologia de la Universidad del Zulia"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Municipio El Hatillo, Estado Miranda, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Flectonotus pygmeaus']",
+      "especies": [
+        "Flectonotus pygmeaus"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_170_1.json",
       "anio": 2005,
@@ -6321,9 +7341,14 @@
       "instituciones": [
         "Centro de Ecología, Instituto Venezolano de Investigaciones Científicas"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Gran Sabana, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_171_1.json",
       "anio": 2005,
@@ -6372,9 +7397,14 @@
       "instituciones": [
         "Centro de Ecología, Instituto Venezolano de Investigaciones Científicas"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Gran Sabana, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_172_1.json",
       "anio": 2005,
@@ -6423,9 +7453,25 @@
       "instituciones": [
         "Laboratorio de Ecología de Suelos, Centro de Ecología, Instituto Venezolano de Investigaciones Científicas"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Gran Sabana, Estado Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Leguminosae, Palmae, Flacourtiaceae, Chrysobalanaceae, Linaceae, Clusiaceae, Asteraceae, Melastomataceae, Poaceae, Cyperaceae",
+      "especies": [
+        "Leguminosae",
+        "Palmae",
+        "Flacourtiaceae",
+        "Chrysobalanaceae",
+        "Linaceae",
+        "Clusiaceae",
+        "Asteraceae",
+        "Melastomataceae",
+        "Poaceae",
+        "Cyperaceae"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_173_1.json",
       "anio": 2005,
@@ -6470,9 +7516,18 @@
       "instituciones": [
         "IVIC, Centro de Ecología"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "La Gran Sabana, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Humiria balsamifera, Scutellospora, Gigaspora",
+      "especies": [
+        "Humiria balsamifera",
+        "Scutellospora",
+        "Gigaspora"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_174_1.json",
       "anio": 2005,
@@ -6518,9 +7573,20 @@
         "Centro de Ecología, IVIC",
         "Departamento de Agronomía, Universidad Nacional Experimental del Táchira (UNET)"
       ],
+      "rores": [
+        "https://ror.org/00fr68j09",
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Oyedaea verbesinoides', 'Heliocarpus americanus', 'Richeria grandis', 'Guapira olfersiana']",
+      "especies": [
+        "Oyedaea verbesinoides",
+        "Heliocarpus americanus",
+        "Richeria grandis",
+        "Guapira olfersiana"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_175_1.json",
       "anio": 2005,
@@ -6565,9 +7631,14 @@
       "instituciones": [
         "Fundación Instituto Botánico de Venezuela, Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Carmen de Uria, Estado Vargas, Venezuela",
       "ubicaciontemporal": "2001-2004",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_176_1.json",
       "anio": 2005,
@@ -6605,9 +7676,14 @@
       "instituciones": [
         "Centro de Investigaciones Ecológica (CIE), Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Cuenca alta del río Botanamo, Reserva Forestal Imataca, Estado Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_197_2.json",
       "anio": 2005,
@@ -6701,9 +7777,17 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal de Imataca y área de influencia, Venezuela",
       "ubicaciontemporal": "Diciembre 2003 - Abril 2004",
       "especiesmencionadas": "Lipaugus vociferans, Myrmeciza longipes",
+      "especies": [
+        "Lipaugus vociferans",
+        "Myrmeciza longipes"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_201_2.json",
       "anio": 2005,
@@ -6769,9 +7853,14 @@
       "instituciones": [
         "Grupo de Investigación BIODESUS, Instituto de Investigaciones Forestales para el Desarrollo Forestal (INDEFOR), Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal de Imataca, Venezuela",
       "ubicaciontemporal": "Años 1980s",
       "especiesmencionadas": "[]",
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_231_2.json",
       "anio": 2005,
@@ -6837,9 +7926,16 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana. Laboratorio de Modelos y Ecología de Paisaje. Centro de Investigaciones Ecológicas"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Cuenca alta del río Botanamo, Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "árboles",
+      "especies": [
+        "árboles"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_232_2.json",
       "anio": 2005,
@@ -6905,9 +8001,17 @@
       "instituciones": [
         "Universidad Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": "1999-2000",
       "especiesmencionadas": "Penelope jacquacu, Cracidae",
+      "especies": [
+        "Penelope jacquacu",
+        "Cracidae"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_258_1.json",
       "anio": 2005,
@@ -6980,9 +8084,16 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Croton megalodendron",
+      "especies": [
+        "Croton megalodendron"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_258_2.json",
       "anio": 2005,
@@ -7055,9 +8166,18 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": "1997-1999",
       "especiesmencionadas": "Pithecia pithecia, Alouatta seniculus, Cebus olivaceus",
+      "especies": [
+        "Pithecia pithecia",
+        "Alouatta seniculus",
+        "Cebus olivaceus"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_258_3.json",
       "anio": 2005,
@@ -7137,9 +8257,20 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Phaetornis rupurumii, Ramphastos vitellinus, Aratinga pertinax, Psaracolius decumanus, Pionites melanocephala",
+      "especies": [
+        "Phaetornis rupurumii",
+        "Ramphastos vitellinus",
+        "Aratinga pertinax",
+        "Psaracolius decumanus",
+        "Pionites melanocephala"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_308_1.json",
       "anio": 2005,
@@ -7213,9 +8344,16 @@
         "Universidad Nacional Experimental de Guayana",
         "Urbanización Chilemex"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Arboretum del Campamento El Buey, Concesión Forestal C.V.G., Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Bactris hirta",
+      "especies": [
+        "Bactris hirta"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_314_3.json",
       "anio": 2005,
@@ -7295,9 +8433,14 @@
       "instituciones": [
         "Grupo de Investigación BIODESUS, Instituto de Investigaciones para el Desarrollo Forestal (INDEFOR), Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Edo Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_315_3.json",
       "anio": 2005,
@@ -7371,9 +8514,17 @@
         "Fundación La Salle",
         "Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08",
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Río San José, Campamento El Buey, Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Pomacea sp.",
+      "especies": [
+        "Pomacea sp."
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_326_3.json",
       "anio": 2005,
@@ -7419,9 +8570,18 @@
         "Instituto Venezolano de Investigaciones Científicas",
         "Laboratorio de Biología de Organismos. Instituto Venezolano de Investigaciones Científicas"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Henri Pittier, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Carollia perspicillata', 'Artibeus jamaicensis', 'Cecropia sp.']",
+      "especies": [
+        "Carollia perspicillata",
+        "Artibeus jamaicensis",
+        "Cecropia sp."
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_353_2.json",
       "anio": 2005,
@@ -7490,9 +8650,16 @@
         "Proyecto FONACIT PS1-2000000792",
         "Universidad del Zulia"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Zulia, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Eisenia spp",
+      "especies": [
+        "Eisenia spp"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_355_1.json",
       "anio": 2005,
@@ -7547,9 +8714,17 @@
       "instituciones": [
         "INIA-Guárico"
       ],
+      "rores": [
+        "https://ror.org/04h3gcf69"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Guárico, Venezuela",
       "ubicaciontemporal": "Año 2004",
       "especiesmencionadas": "['Holochilus sciureus', 'Cucurbita maxima']",
+      "especies": [
+        "Holochilus sciureus",
+        "Cucurbita maxima"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_356_1.json",
       "anio": 2005,
@@ -7603,9 +8778,16 @@
       "instituciones": [
         "Laboratorio de Biotecnología Agrícola. Centro de Estudios de Agroecología Tropical (CEDAT). Instituto de Estudios Científicos y Tecnológicos (IDECYT). Universidad Nacional Experimental 'Simón Rodríguez'"
       ],
+      "rores": [
+        "https://ror.org/03951zg45"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sabanas, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Bowchidia virgilioides']",
+      "especies": [
+        "Bowchidia virgilioides"
+      ],
       "palabrasclaves": [],
       "source_path": "VI/curatedwithgeo/pagina_357_1.json",
       "anio": 2005,
@@ -7643,9 +8825,15 @@
       "instituciones": [
         "Departamento de Ciencias Ecológicas (DCE). Facultad de Ciencias. Universidad de Chile"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Chile central, entre los 35° y 55° S",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Especies amenazadas, pequeños carnívoros",
+      "especies": [
+        "Especies amenazadas",
+        "pequeños carnívoros"
+      ],
       "palabrasclaves": [
         "Conservación",
         "Economía",
@@ -7689,9 +8877,19 @@
       "instituciones": [
         "Centro de Antropología. Laboratorio de Ecología Humana. Instituto Venezolano de Investigaciones Científicas (IVIC). Ministerio del Poder Popular para Ciencia y Tecnología"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sierra Maigualida, Guayana venezolana",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Jotï, plantas, hongos, animales",
+      "especies": [
+        "Jotï",
+        "plantas",
+        "hongos",
+        "animales"
+      ],
       "palabrasclaves": [
         "Jotï",
         "Naturaleza",
@@ -7741,9 +8939,14 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana (UNEG)"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Cuenca del río Botanamo, Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Bienes y servicios ambientales",
         "Imataca",
@@ -7828,9 +9031,16 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Estado Bolívar, Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": "Abril 2006, Junio 2007, Abril 2007",
       "especiesmencionadas": "['Erisma uncinatum']",
+      "especies": [
+        "Erisma uncinatum"
+      ],
       "palabrasclaves": [
         "Germinación",
         "Imataca",
@@ -7900,9 +9110,14 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana (UNEG)"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Cuenca alta del río Botanamo, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Cobertura",
         "Río Botanamo",
@@ -7981,9 +9196,48 @@
         "Instituto de Zoología Tropical (IZT). Facultad de Ciencias. Universidad Central de Venezuela (UCV)",
         "Sociedad Venezolana de Ciencias Naturales (SVCN)"
       ],
+      "rores": [
+        "https://ror.org/0129z1n29",
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Sureste de la Reserva Forestal Imataca, Estado Bolívar, Venezuela",
       "ubicaciontemporal": "Agosto 2005",
       "especiesmencionadas": "['Didelphis marsupialis', 'Alouatta seniculus', 'Cebus olivaceus', 'Carollia brevicauda', 'Carollia perspicillata', 'Lipaugus vociferans', 'Pipra pipra', 'Pipra erythrocephala', 'Threnetes niger', 'Chelidoptera tenebrosa', 'Galbula dea', 'Pteroglossus aracari', 'Ramphastos tucanus', 'Iguana iguana', 'Tropidurus hispidus', 'Cnemidophorus lemniscatus', 'Paleosuchus trigonatus', 'Boa constrictor', 'Chironius carinatus', 'Chironius fuscus', 'Clelia clelia', 'Leptophis ahaetulla', 'Spillotes pullatus', 'Micrurus dissoleucus', 'Micrurus isozonus', 'Bothrops atrox', 'Hyalinobatrachium orientale', 'Hypsiboas crepitans', 'Hypsiboas granosa', 'Hypsiboas minuta', 'Bufo granulosus', 'Bufo marinus']",
+      "especies": [
+        "Didelphis marsupialis",
+        "Alouatta seniculus",
+        "Cebus olivaceus",
+        "Carollia brevicauda",
+        "Carollia perspicillata",
+        "Lipaugus vociferans",
+        "Pipra pipra",
+        "Pipra erythrocephala",
+        "Threnetes niger",
+        "Chelidoptera tenebrosa",
+        "Galbula dea",
+        "Pteroglossus aracari",
+        "Ramphastos tucanus",
+        "Iguana iguana",
+        "Tropidurus hispidus",
+        "Cnemidophorus lemniscatus",
+        "Paleosuchus trigonatus",
+        "Boa constrictor",
+        "Chironius carinatus",
+        "Chironius fuscus",
+        "Clelia clelia",
+        "Leptophis ahaetulla",
+        "Spillotes pullatus",
+        "Micrurus dissoleucus",
+        "Micrurus isozonus",
+        "Bothrops atrox",
+        "Hyalinobatrachium orientale",
+        "Hypsiboas crepitans",
+        "Hypsiboas granosa",
+        "Hypsiboas minuta",
+        "Bufo granulosus",
+        "Bufo marinus"
+      ],
       "palabrasclaves": [
         "Ambientes perturbados",
         "Biodiversidad",
@@ -8046,9 +9300,14 @@
       "instituciones": [
         "Laboratorio de Mercurio. Estación Investigaciones Hidrobiológicas de Guayana (EDIHG). Fundación La Salle de Ciencias Naturales (FLSCN)"
       ],
+      "rores": [
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Estado Bolívar, Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Mercurio",
         "Minería",
@@ -8134,9 +9393,18 @@
         "Grupo de Trabajo en Tortugas Marinas del Golfo de Venezuela (GTTM-GV), Laboratorio de Ecología y Genética de Poblaciones, Centro de Ecología, Instituto Venezolano de Investigaciones Científicas (IVIC), Ministerio del Poder Popular para Ciencia y Tecnología",
         "Postgrado en Ciencias Biológicas - Mención Ecología Acuática, División de Estudios para Graduados, Facultad Experimental de Ciencias, Universidad del Zulia (LUZ)"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Golfo de Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Chelonia mydas', 'Thalassia testudinum', 'Syringodium filiforme']",
+      "especies": [
+        "Chelonia mydas",
+        "Thalassia testudinum",
+        "Syringodium filiforme"
+      ],
       "palabrasclaves": [
         "Chelonia mydas",
         "Ecología alimenticia",
@@ -8190,9 +9458,18 @@
         "Instituto de Ciencias Ambientales y Ecológicas (ICAE). Facultad de Ciencias. Universidad de Los Andes (ULA)",
         "Laboratorio de Ecología Animal. Departamento de Biología. Facultad de Ciencias. Universidad de Los Andes (ULA)"
       ],
+      "rores": [
+        "https://ror.org/00t4fvv78",
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Los Andes venezolanos",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Tillandsia myriantha', 'Racinaea tenuispica']",
+      "especies": [
+        "Tillandsia myriantha",
+        "Racinaea tenuispica"
+      ],
       "palabrasclaves": [
         "Andes",
         "Bromeliáceas",
@@ -8237,9 +9514,14 @@
       "instituciones": [
         "Centro de Ecología, Instituto Venezolano de Investigaciones Científicas (IVIC), Ministerio del Poder Popular para Ciencia y Tecnología"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Gran Sabana, Edo. Bolívar, Venezuela",
       "ubicaciontemporal": "No disponible",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Escleromorfismo",
         "Osmolalidad",
@@ -8300,9 +9582,16 @@
       "instituciones": [
         "Laboratorio de Ecofisiologia Vegetal. Centro de Ecologia. Instituto Venezolano de Investigaciones Cientificas (IVIC). Ministerio del Poder Popular para Ciencia y Tecnologia"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": "Pouteria orinocoensis",
+      "especies": [
+        "Pouteria orinocoensis"
+      ],
       "palabrasclaves": [
         "Conductividad hidráulica",
         "Intercambio gaseoso",
@@ -8366,9 +9655,16 @@
       "instituciones": [
         "Laboratorio de Ecofisiología Vegetal. Centro de Ecología. Instituto Venezolano de Investigaciones Científicas (IVIC). Ministerio del Poder Popular para Ciencia y Tecnología"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Río Mapire, Estado Anzoátegui, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Campsiandra laurifolia",
+      "especies": [
+        "Campsiandra laurifolia"
+      ],
       "palabrasclaves": [
         "Fotosíntesis",
         "Potencial hídrico",
@@ -8433,9 +9729,16 @@
         "Laboratorio de Ecología. Centro de Investigaciones Biológicas. Facultad de Humanidades y Educación. Universidad del Zulia (LUZ)",
         "Universidad del Zulia (LUZ)"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Planicie de Maracaibo, Estado Zulia, Venezuela",
       "ubicaciontemporal": "Junio y Julio 2007",
       "especiesmencionadas": "['Cenchrus ciliaris']",
+      "especies": [
+        "Cenchrus ciliaris"
+      ],
       "palabrasclaves": [
         "Cenchrus ciliaris",
         "Biomasa aérea",
@@ -8490,9 +9793,33 @@
         "Departamento de Biología. Facultad Experimental de Ciencias y Tecnología (FACYT). Universidad de Carabobo (UC)",
         "Laboratorio de Fitopatología. Instituto de Biología Experimental (IBE). Facultad de Ciencias. Universidad Central de Venezuela (UCV)"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89",
+        "https://ror.org/05sj7yp62"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Río Cabriales, Parque San Esteban, Estado Carabobo, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Mangifera indica', 'Alatospora acuminata', 'Articulospora tetracladia', 'Beltrania rhombica', 'Campylospora chaetocladia', 'C. filicladia', 'Clavariopsis aquatica', 'Clavatospora tentacula', 'Culicidospora gravida', 'Flabellospora acuminata', 'F. crassa', 'Heliscus submersus', 'Jaculispora submersa', 'Lunulospora curvula', 'Tetracladium marchalianum', 'T. setigerum', 'Triscelophorus acuminatus']",
+      "especies": [
+        "Mangifera indica",
+        "Alatospora acuminata",
+        "Articulospora tetracladia",
+        "Beltrania rhombica",
+        "Campylospora chaetocladia",
+        "C. filicladia",
+        "Clavariopsis aquatica",
+        "Clavatospora tentacula",
+        "Culicidospora gravida",
+        "Flabellospora acuminata",
+        "F. crassa",
+        "Heliscus submersus",
+        "Jaculispora submersa",
+        "Lunulospora curvula",
+        "Tetracladium marchalianum",
+        "T. setigerum",
+        "Triscelophorus acuminatus"
+      ],
       "palabrasclaves": [
         "Hifomicetos acuáticos",
         "Mangifera indica",
@@ -8534,9 +9861,18 @@
       "instituciones": [
         "Centro Regional de Investigaciones Ambientales (CRIA). Universidad de Oriente (UDO) - Núcleo Nueva Esparta"
       ],
+      "rores": [
+        "https://ror.org/02bb0ey42"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Laguna Castillero, Caicara del Orinoco, Estado Bolívar, Venezuela",
       "ubicaciontemporal": "Julio-Agosto 2005",
       "especiesmencionadas": "['Eichhornia crassipes', 'Pistia stratiotes', 'Salvinia molesta']",
+      "especies": [
+        "Eichhornia crassipes",
+        "Pistia stratiotes",
+        "Salvinia molesta"
+      ],
       "palabrasclaves": [
         "Microalgas",
         "Plantas acuáticas",
@@ -8586,9 +9922,34 @@
         "Departamento de Biología. Facultad Experimental de Ciencias y Tecnologia (FACYT). Universidad de Carabobo (UC)",
         "Laboratorio de Fitopatología. Instituto de Biología Experimental (IBE). Facultad de Ciencias. Universidad Central de Venezuela (UCV)"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89",
+        "https://ror.org/05sj7yp62"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Quebrada Tócome (Parque Nacional El Ávila, Caracas), vertiente sur de la Cordillera de la Costa",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Bambusa vulgaris', 'Alatospora acuminata', 'Articulospora tetracladia', 'Campylospora chaetocladia', 'Clavariopsis aquatica', 'Clavatospora tentacula', 'Diploa cladiella scalaroides', 'Flabellospora acuminata', 'Helicomycs torquatus', 'Heliscus submersus', 'Jaculispora submersa', 'Lunulospora curvula', 'Tetracladium marchalianum', 'Alternaria tenuis', 'Cladosporium graminum', 'Drechslera graminea', 'Curvularia lunata', 'Mycosphaerella']",
+      "especies": [
+        "Bambusa vulgaris",
+        "Alatospora acuminata",
+        "Articulospora tetracladia",
+        "Campylospora chaetocladia",
+        "Clavariopsis aquatica",
+        "Clavatospora tentacula",
+        "Diploa cladiella scalaroides",
+        "Flabellospora acuminata",
+        "Helicomycs torquatus",
+        "Heliscus submersus",
+        "Jaculispora submersa",
+        "Lunulospora curvula",
+        "Tetracladium marchalianum",
+        "Alternaria tenuis",
+        "Cladosporium graminum",
+        "Drechslera graminea",
+        "Curvularia lunata",
+        "Mycosphaerella"
+      ],
       "palabrasclaves": [
         "Bambú",
         "Hifomicetos acuáticos",
@@ -8646,9 +10007,14 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana (UNEG)"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Canaima, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Bosque",
         "Fragmentación",
@@ -8710,9 +10076,17 @@
         "Cooperativa Biopretpila",
         "Instituto de Medicina Tropical. Facultad de Medicina. Universidad Central de Venezuela (UCV)"
       ],
+      "rores": [
+        "https://ror.org/05ak8xb62"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Henri Pittier, Caracas, Maracay, Estación Biológica Rancho Grande",
       "ubicaciontemporal": "2002, N.A.",
       "especiesmencionadas": "Insectos, Aves",
+      "especies": [
+        "Insectos",
+        "Aves"
+      ],
       "palabrasclaves": [
         "Conservación",
         "Educación Ambiental",
@@ -8765,9 +10139,15 @@
         "Comunidad Las Galderas; Escuela Bolivariana 'Los Negritos'",
         "Universidad Nacional Experimental de Guayana (UNEG)"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08",
+        "https://ror.org/03thbf157"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Riberas del Orinoco, Comunidad Las Galderas",
       "ubicaciontemporal": "2005-2006",
       "especiesmencionadas": "No se mencionan especies específicas",
+      "especies": [],
       "palabrasclaves": [
         "Aprender-haciendo",
         "Educación Ambiental",
@@ -8824,9 +10204,17 @@
         "Laboratorio de Ecología Humana. Centro de Investigación en Ciencias Naturales Manuel Angel González-Sponga (CICNAT)",
         "Laboratorio de Proyectos en Zoología. Centro de Investigación en Ciencias Naturales Manuel Angel González-Sponga (CICNAT). Departamento de Biología y Química. Instituto Pedagógico de Caracas (IPC). Universidad Pedagógica Experimental Libertador (UPEL)"
       ],
+      "rores": [
+        "https://ror.org/05xc4qj60"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Municipio Libertador del Distrito Capital, Venezuela",
       "ubicaciontemporal": "2002",
       "especiesmencionadas": "peces, aves",
+      "especies": [
+        "peces",
+        "aves"
+      ],
       "palabrasclaves": [
         "Comercio",
         "Mercados populares"
@@ -8916,9 +10304,14 @@
       "instituciones": [
         "Instituto Universitario de Tecnología Amazonas (IUTAMA). Fundación La Salle de Ciencias Naturales (FLSCN)"
       ],
+      "rores": [
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Amazonas venezolano",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Biodiversidad",
         "Recursos naturales",
@@ -8983,9 +10376,17 @@
         "Instituto de Investigaciones Farmacéuticas. Facultad de Farmacia. Universidad Central de Venezuela (UCV)",
         "Instituto de Medicina Tropical. Facultad de Medicina. Universidad Central de Venezuela (UCV); Cooperativa Bioreptilia"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela, Cordillera de la Costa, Valle de Caracas",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Bothriopsis medusa, Bothrops",
+      "especies": [
+        "Bothriopsis medusa",
+        "Bothrops"
+      ],
       "palabrasclaves": [
         "Bothriopsis",
         "DL50",
@@ -9050,9 +10451,20 @@
         "Universidad Nacional Experimental de Guayana (UNEG)",
         "Universidad Nacional Experimental de Guayana (UNEG), Grupo de Investigaciones Ornitológicas"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Cuenca del Río Botanamo, Estado Bolívar, Reserva Forestal de Imataca, Serrania de Nuria",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Odocoileus virginianus, Mazama gouazoubira, Agouti paca, Tayassu tajacu, Geochelone denticulada",
+      "especies": [
+        "Odocoileus virginianus",
+        "Mazama gouazoubira",
+        "Agouti paca",
+        "Tayassu tajacu",
+        "Geochelone denticulada"
+      ],
       "palabrasclaves": [],
       "source_path": "VII/curatedwithgeo/pagina_584_1.json",
       "anio": 2007,
@@ -9110,9 +10522,14 @@
       "instituciones": [
         "Instituto de Investigaciones para el Desarrollo Forestal (INDEFOR). Grupo de Investigación BIODESUS. Facultad de Ciencias Forestales y Ambientales. Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": "8 años después de la intervención (no se especifica el año exacto ni el mes)",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Aprovechamiento forestal",
         "Biomasa",
@@ -9190,9 +10607,14 @@
       "instituciones": [
         "Fundación Tierra Viva"
       ],
+      "rores": [
+        "https://ror.org/00z6hkq67"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Parque Nacional Canaima, Reserva Forestal de Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Areas protegidas",
         "Participacion",
@@ -9243,9 +10665,18 @@
         "Centro de Ecología, Instituto Venezolano de Investigaciones Científicas",
         "Provita"
       ],
+      "rores": [
+        "https://ror.org/023kaz366",
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": "1995, 1999, 2003, 2008",
       "especiesmencionadas": "['Atelopus vogli', 'Lithogenes valencia']",
+      "especies": [
+        "Atelopus vogli",
+        "Lithogenes valencia"
+      ],
       "palabrasclaves": [
         "Libro Rojo",
         "Fauna",
@@ -9340,9 +10771,15 @@
         "Instituto de Zoología Tropical, Laboratorio SIMEA, Facultad de Ciencias, UCV",
         "Provita"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Falcón, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Ecosistema",
         "Riesgo de extinción",
@@ -9396,9 +10833,20 @@
         "Provita",
         "Universidad Simón Bolívar, Dpto. de Estudios Ambientales"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela, Cordillera de la Costa, Los Andes, Lago de Maracaibo, Delta del Orinoco",
       "ubicaciontemporal": "2003-2009",
       "especiesmencionadas": "Margaritolobium luteum, Atelopus cruciger, Masdevallia tovarensis, Juglans venezuelensis, Trichechus manatus",
+      "especies": [
+        "Margaritolobium luteum",
+        "Atelopus cruciger",
+        "Masdevallia tovarensis",
+        "Juglans venezuelensis",
+        "Trichechus manatus"
+      ],
       "palabrasclaves": [
         "Conservación",
         "Especies amenazadas",
@@ -9463,9 +10911,16 @@
         "Grupo de Trabajo en Tortugas Marinas del Estado Nueva Esparta",
         "Provita"
       ],
+      "rores": [
+        "https://ror.org/023kaz366"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Nueva Esparta, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Tortugas Marinas",
+      "especies": [
+        "Tortugas Marinas"
+      ],
       "palabrasclaves": [
         "Tortugas Marinas",
         "Conservación",
@@ -9511,9 +10966,20 @@
       "instituciones": [
         "Laboratorio de Biogeografía, Facultad de Ciencias Forestales y Ambientales, Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Andes de Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Atelopus, Mannophryne, Aromobates, Pristimantis, Hyalinobatrachium",
+      "especies": [
+        "Atelopus",
+        "Mannophryne",
+        "Aromobates",
+        "Pristimantis",
+        "Hyalinobatrachium"
+      ],
       "palabrasclaves": [
         "Amphibia",
         "Anura",
@@ -9586,9 +11052,19 @@
         "LABORATORIO DE FISIOLOGIA VEGETAL",
         "MUSEO DE HISTORIA NATURAL. UNMSM"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Lima, Perú",
       "ubicaciontemporal": "Enero 2006 - Julio 2008",
       "especiesmencionadas": "poáceas, Solanáceas, asteráceas, eufobiáceas, fabáceas, malváceas",
+      "especies": [
+        "poáceas",
+        "Solanáceas",
+        "asteráceas",
+        "eufobiáceas",
+        "fabáceas",
+        "malváceas"
+      ],
       "palabrasclaves": [
         "ESPECIES",
         "INVASIVAS",
@@ -9654,9 +11130,14 @@
         "Dirección de Fauna, Oficina Nacional de Diversidad Biológica. Ministerio del Poder Popular para el Ambiente.",
         "https://ror.org/038ypnm26"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Maracay, Estado Aragua, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Achatina fulica",
+      "especies": [
+        "Achatina fulica"
+      ],
       "palabrasclaves": [
         "A. fulica",
         "especies exóticas",
@@ -9721,9 +11202,18 @@
         "Centro de Ecología, Instituto Venezolano de Investigaciones Científicas",
         "Museo del Instituto de Zoología Agrícola, Facultad de Agronomía (MIZA), Campus Maracay, Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91",
+        "https://ror.org/03re99q86"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Andes Venezolanos, La Carbonera, estado Mérida, Venezuela",
       "ubicaciontemporal": "2006",
       "especiesmencionadas": "Dendropsophus meridensis, Lithobates catesbeianus",
+      "especies": [
+        "Dendropsophus meridensis",
+        "Lithobates catesbeianus"
+      ],
       "palabrasclaves": [
         "especie exótica",
         "invasiones",
@@ -9783,9 +11273,15 @@
         "Ministerio del Poder Popular del Ambiente, Dirección General de la Oficina Nacional de Diversidad Biológica",
         "Ministerio del Poder Popular para el Ambiente, Oficina Nacional de Diversidad Biológica, Museo de la Estación Biológica de Rancho Grande"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Cuenca del Lago de Valencia, Carabobo, Venezuela",
       "ubicaciontemporal": "1999, 2006, 2009",
       "especiesmencionadas": "['Ploceus cucullatus', 'Pithecellobium saman']",
+      "especies": [
+        "Ploceus cucullatus",
+        "Pithecellobium saman"
+      ],
       "palabrasclaves": [
         "Aves",
         "Ploceidae",
@@ -9840,9 +11336,17 @@
         "Escuela de Biología, Facultad de Ciencias, Universidad Central de Venezuela",
         "Instituto de Biología Experimental, Facultad de Ciencias, Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "San Diego de los Altos, Parroquia Cecilio Acosta del Municipio Guaicaipuro, Municipio Los Salias",
       "ubicaciontemporal": null,
       "especiesmencionadas": "20 especies de plantas, 13 especies son comúnmente empleadas",
+      "especies": [
+        "20 especies de plantas",
+        "13 especies son comúnmente empleadas"
+      ],
       "palabrasclaves": [
         "Etnobotánica",
         "Plantas Medicinales",
@@ -9892,9 +11396,16 @@
         "Instituto para la Conservación del Lago de Maracaibo (ICLAM). Biodiversidad",
         "Museo de Biología Universidad del Zulia. Sección de Herpetología."
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Laguna de las Peonias, Estado Zulia, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Helicops scalaris']",
+      "especies": [
+        "Helicops scalaris"
+      ],
       "palabrasclaves": [
         "Helicops scalaris",
         "neonatos",
@@ -9967,9 +11478,17 @@
         "Instituto Oceanográfico de Venezuela, UDO",
         "Instituto Universitario de Tecnología de Cumaná"
       ],
+      "rores": [
+        "https://ror.org/02v75tb58"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Municipio Sucre del estado Sucre, Venezuela, Bahía de Mochima, Río Manzanares",
       "ubicaciontemporal": "2004, 2005",
       "especiesmencionadas": "Zooplancton, microalgas",
+      "especies": [
+        "Zooplancton",
+        "microalgas"
+      ],
       "palabrasclaves": [
         "Clorofila",
         "Feofitina",
@@ -10026,9 +11545,14 @@
         "Laboratorio de Fisicoquímica, Estación de Investigaciones Hidrobiológicas de Guayana, Fundación La Salle de Ciencias Naturales",
         "Laboratorio de Mercurio, Estación de Investigaciones Hidrobiológicas de Guayana, Fundación La Salle de Ciencias Naturales"
       ],
+      "rores": [
+        "https://ror.org/02r59nq91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Bolívar, Venezuela, Escudo de Guayana",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "Geoquímica",
         "Río",
@@ -10107,9 +11631,14 @@
       "instituciones": [
         "Universidad Pedagógica Experimental Libertador-Instituto Pedagógico De Caracas Departamento de Ciencias de La Tierra"
       ],
+      "rores": [
+        "https://ror.org/05xc4qj60"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Hoyo de la Cumbre, cuenca alta del río Piedra Azul, estado Vargas, Venezuela",
       "ubicaciontemporal": "2007-2008",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "eutrofización",
         "agua de riego",
@@ -10174,9 +11703,16 @@
         "Instituto de Zoologia y Ecologia Tropical",
         "Postgrado en Zoologia"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Laguna de Tacarigua, Distrito Páez, estado Miranda, Venezuela",
       "ubicaciontemporal": "Junio 2009",
       "especiesmencionadas": "Manglar",
+      "especies": [
+        "Manglar"
+      ],
       "palabrasclaves": [
         "Calidad de agua",
         "Coliformes",
@@ -10249,9 +11785,24 @@
         "Universidad Nacional Experimental de los Llanos Occidentales «Ezequiel Zamora», Biocentro-Museo de Zoología",
         "Universidad de Oriente, Núcleo Sucre, Instituto Oceanográfico de Venezuela, Postgrado en Ciencias Marinas"
       ],
+      "rores": [
+        "https://ror.org/02v75tb58",
+        "https://ror.org/04382kq29",
+        "https://ror.org/04h3gcf69"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Delta del río Orinoco, Venezuela",
       "ubicaciontemporal": "Octubre 2010 - Febrero 2011",
       "especiesmencionadas": "['Triportheus auritus', 'Pachypops fourcroi', 'Geophagus abalios', 'Cathorops spixii', 'Ctenobrycon spilurus', 'Myloplus duriventri', 'Plagioscion squamosissimus']",
+      "especies": [
+        "Triportheus auritus",
+        "Pachypops fourcroi",
+        "Geophagus abalios",
+        "Cathorops spixii",
+        "Ctenobrycon spilurus",
+        "Myloplus duriventri",
+        "Plagioscion squamosissimus"
+      ],
       "palabrasclaves": [
         "caño Mánamo",
         "diversidad",
@@ -10309,9 +11860,18 @@
         "Grupo de Investigación Manejo Múltiple de Ecosistemas Forestales (GIMEFOR), Instituto de Investigaciones para el Desarrollo Forestal (INDEFOR), Facultad de Ciencias Forestales y Ambientales, Universidad de Los Andes",
         "Jardín Botánico de la Universidad de Valencia"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela, Estación Experimental Caparo y Reserva Forestal Imataca",
       "ubicaciontemporal": "3, 6, 9, 12, 15 y 18 años",
       "especiesmencionadas": "Especies típicas de las comunidades primarias, pioneras sin valor de mercado, especies primarias de alto valor comercial",
+      "especies": [
+        "Especies típicas de las comunidades primarias",
+        "pioneras sin valor de mercado",
+        "especies primarias de alto valor comercial"
+      ],
       "palabrasclaves": [
         "Escudo Guayanés",
         "Llanos occidentales",
@@ -10363,9 +11923,17 @@
       "instituciones": [
         "Centro de Investigaciones Ecológicas de Guayana, Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Cuenca alta del río San José, Complejo Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Croton megalodendron, Piranhea longepedunculata",
+      "especies": [
+        "Croton megalodendron",
+        "Piranhea longepedunculata"
+      ],
       "palabrasclaves": [
         "Croton megalodendron",
         "complejo Imataca",
@@ -10453,9 +12021,23 @@
         "Oficina Nacional de Diversidad Biológica. Ministerio del Poder Popular para el Ambiente",
         "Universidad Central de Venezuela, Facultad de Ciencias-IZET"
       ],
+      "rores": [
+        "https://ror.org/02v75tb58",
+        "https://ror.org/038ypnm26",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Delta del Orinoco, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Terminalia dichotoma, Pterocarpus officinalis, Licania hypoleuca, Symphonia globulifera, Mora excelsa, Calophyllum brasiliense",
+      "especies": [
+        "Terminalia dichotoma",
+        "Pterocarpus officinalis",
+        "Licania hypoleuca",
+        "Symphonia globulifera",
+        "Mora excelsa",
+        "Calophyllum brasiliense"
+      ],
       "palabrasclaves": [
         "abundancia relativa",
         "biogeográfico",
@@ -10522,9 +12104,28 @@
         "Gerencia de Ambiente, PDVSA Intevep",
         "Universidad Simón Bolívar"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98",
+        "https://ror.org/04ks7cj51"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Cabo Codera, estado Miranda, Venezuela",
       "ubicaciontemporal": "2010-2011",
       "especiesmencionadas": "['Prorocentrum', 'Dinophysis', 'Ceratium', 'Protoperidinium', 'Chaetoceros', 'Nitzschia', 'Navicula', 'Asterionella', 'Odontella', 'Leptocylindrus', 'Thalassionema', 'Coscinodiscus']",
+      "especies": [
+        "Prorocentrum",
+        "Dinophysis",
+        "Ceratium",
+        "Protoperidinium",
+        "Chaetoceros",
+        "Nitzschia",
+        "Navicula",
+        "Asterionella",
+        "Odontella",
+        "Leptocylindrus",
+        "Thalassionema",
+        "Coscinodiscus"
+      ],
       "palabrasclaves": [
         "Cabo Codera",
         "estructura comunitaria",
@@ -10567,9 +12168,16 @@
       "instituciones": [
         "Instituto Universitario de Tecnología de Yaracuy"
       ],
+      "rores": [
+        "https://ror.org/05bv0r345"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Isla la Tortuga, Los Tortuguillos, Cayo Herradura, Los Palanquines, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Thalassia testudinum",
+      "especies": [
+        "Thalassia testudinum"
+      ],
       "palabrasclaves": [
         "ecosistema marino costero",
         "evaluación",
@@ -10619,9 +12227,19 @@
       "instituciones": [
         "Laboratorio de Investigaciones Piscícolas. Facultad Experimental de Ciencias. Universidad del Zulia"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Golfo de Venezuela, estado Zulia, Punta de Palma, Puertos de Altagracia",
       "ubicaciontemporal": "abril 2010-mayo 2011, enero-julio",
       "especiesmencionadas": "Rhizoprionodon lalandii, Rhizoprionodon porosus, Carcharhinus limbatus, Sphyrna lewini",
+      "especies": [
+        "Rhizoprionodon lalandii",
+        "Rhizoprionodon porosus",
+        "Carcharhinus limbatus",
+        "Sphyrna lewini"
+      ],
       "palabrasclaves": [
         "área de criadero",
         "Carcharhinidae",
@@ -10675,9 +12293,16 @@
       "instituciones": [
         "Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/05sx4sby0"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Lagunillas, Mérida, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Pheidole fallax",
+      "especies": [
+        "Pheidole fallax"
+      ],
       "palabrasclaves": [
         "enclave semiárido",
         "dieta",
@@ -10735,9 +12360,16 @@
         "Centro de Investigaciones Ecotoxicológicas, Facultad de Ciencias Silvoagropecuarias, Universidad Mayor, Santiago de Chile",
         "Laboratorio de Ecología Animal. Departamento de Biología. Facultad de Ciencias. Universidad de los Andes."
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Cuenca del río Chama, Cordillera de Mérida, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Lontra longicaudis",
+      "especies": [
+        "Lontra longicaudis"
+      ],
       "palabrasclaves": [
         "Andes",
         "Lontra longicaudis",
@@ -10792,9 +12424,17 @@
         "Escuela de Biología, Facultad de Ciencias, Universidad Central de Venezuela",
         "Laboratorio de Biología y Conservación de Anfibios y Reptiles. Instituto de Zoología y Ecología Tropical, Facultad de Ciencias, Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Waraira Repano, Distrito Capital, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Mannophryne herminae']",
+      "especies": [
+        "Mannophryne herminae"
+      ],
       "palabrasclaves": [
         "anfibio",
         "área de vivienda diaria",
@@ -10870,9 +12510,18 @@
         "Instituto de Investigaciones Agrícolas Portuguesa",
         "Universidad Centroccidental Lisandro Alvarado"
       ],
+      "rores": [
+        "https://ror.org/03qgg3111",
+        "https://ror.org/04h3gcf69"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Portuguesa, municipio Ospino, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Sciurus granatensis', 'Theobroma cacao']",
+      "especies": [
+        "Sciurus granatensis",
+        "Theobroma cacao"
+      ],
       "palabrasclaves": [
         "cacao",
         "daños",
@@ -10937,9 +12586,16 @@
       "instituciones": [
         "Laboratorio de Ictiología, Escuela de Ciencias Aplicadas del Mar, Universidad de Oriente"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Ríos San Juan y La Asunción, Estado Nueva Esparta, Venezuela",
       "ubicaciontemporal": "Año 2010",
       "especiesmencionadas": "['Rivulus hartii']",
+      "especies": [
+        "Rivulus hartii"
+      ],
       "palabrasclaves": [
         "Cyprinodontiformes",
         "ecología poblacional",
@@ -10993,9 +12649,19 @@
       "instituciones": [
         "Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "La Lagunillas, Mérida, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Pheidole fallax', 'Stenocereus griseus', 'Cereus repandus', 'Pilosocereus tillianus']",
+      "especies": [
+        "Pheidole fallax",
+        "Stenocereus griseus",
+        "Cereus repandus",
+        "Pilosocereus tillianus"
+      ],
       "palabrasclaves": [
         "cactáceas",
         "enclave semiárido",
@@ -11045,9 +12711,16 @@
       "instituciones": [
         "Escuela de Ciencias Aplicadas del Mar. Universidad de Oriente, Núcleo Nueva Esparta"
       ],
+      "rores": [
+        "https://ror.org/02bb0ey42"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Laguna de La Restinga, bosques de manglar",
       "ubicaciontemporal": "Julio de 2010",
       "especiesmencionadas": "['Uca rapax']",
+      "especies": [
+        "Uca rapax"
+      ],
       "palabrasclaves": [
         "bosques de manglar",
         "estructura poblacional",
@@ -11097,9 +12770,19 @@
         "Departamento de Biología, Facultad de Ciencias, Universidad de Los Andes",
         "Instituto de Ciencias Ambientales y Ecológicas (ICAE). Facultad de Ciencias. Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/00t4fvv78",
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Páramos de Gavidia y Mixteque, Estado Mérida, Venezuela",
       "ubicaciontemporal": "30 años atrás (sin fecha exacta)",
       "especiesmencionadas": "Papas, ovejas, plantas medicinales",
+      "especies": [
+        "Papas",
+        "ovejas",
+        "plantas medicinales"
+      ],
       "palabrasclaves": [
         "diálogo de saberes",
         "ecología comunitaria",
@@ -11183,9 +12866,16 @@
       "instituciones": [
         "Departamento de Biología. Facultad de Ciencias y Tecnología. Universidad de Carabobo"
       ],
+      "rores": [
+        "https://ror.org/05sj7yp62"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela, estado Carabobo",
       "ubicaciontemporal": "2011-2013",
       "especiesmencionadas": "Dípteros",
+      "especies": [
+        "Dípteros"
+      ],
       "palabrasclaves": [
         "boletines",
         "dípteros",
@@ -11287,9 +12977,17 @@
       "instituciones": [
         "Departamento de Biología, Facultad Experimental de Ciencias y Tecnología, Universidad de Carabobo"
       ],
+      "rores": [
+        "https://ror.org/05sj7yp62"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Carabobo, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Serpientes, ofidios venenosos",
+      "especies": [
+        "Serpientes",
+        "ofidios venenosos"
+      ],
       "palabrasclaves": [
         "biologia ofidica",
         "preservación ambiental",
@@ -11369,9 +13067,14 @@
       "instituciones": [
         "Escuela de Ciencias Aplicadas del Mar, Universidad de Oriente"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sector Los Cocos, Porlamar, Estado Nueva Esparta, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "concientización",
         "contaminación",
@@ -11456,9 +13159,16 @@
         "Departamento de Biología, Facultad de Ciencias, Universidad de los Andes",
         "PNF Agroalimentación. Instituto Universitario Tecnológico de Ejido (IUTE)"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Municipio Campo Elías, Parroquia Jají, Estado Mérida, Venezuela",
       "ubicaciontemporal": "Marzo del presente año (no se especifica el año en el texto)",
       "especiesmencionadas": "['Lithobates catesbeianus (Rana toro)']",
+      "especies": [
+        "Lithobates catesbeianus (Rana toro)"
+      ],
       "palabrasclaves": [
         "divulgación",
         "especies invasoras y exóticas",
@@ -11508,9 +13218,20 @@
         "Colección Regional de Peces, Museo de Ciencias Naturales, Universidad Centroccidental Lisandro Alvarado (UCLA)",
         "Programa de Ciencias del Agro y el Mar, Vicerrectorado de Producción Agrícola, Universidad Nacional Experimental de los Llanos Occidentales Ezequiel Zamora (UNELLEZ)"
       ],
+      "rores": [
+        "https://ror.org/03qgg3111",
+        "https://ror.org/04382kq29"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Orinoquia venezolana, planicies y altiplanicies antiguas centrales, meridionales y orientales de Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Mauritia flexuosa, Mauritiella aculeata, Mauritiella armata, peces",
+      "especies": [
+        "Mauritia flexuosa",
+        "Mauritiella aculeata",
+        "Mauritiella armata",
+        "peces"
+      ],
       "palabrasclaves": [
         "aguas negras",
         "contaminación",
@@ -11554,9 +13275,21 @@
       "instituciones": [
         "Instituto de Zoología y Ecología Tropical (IZET), Facultad de Ciencias, Universidad Central de Venezuela (UCV)"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Laguna de Tacarigua, Venezuela",
       "ubicaciontemporal": "2009-07 a 2010-09",
       "especiesmencionadas": "['Mugil curema', 'M. liza', 'Centropomus undecimalis', 'Litopenaeus schmitti', 'Eugerres plumieri', 'C. ensiferus']",
+      "especies": [
+        "Mugil curema",
+        "M. liza",
+        "Centropomus undecimalis",
+        "Litopenaeus schmitti",
+        "Eugerres plumieri",
+        "C. ensiferus"
+      ],
       "palabrasclaves": [
         "Laguna de Tacarigua",
         "peces",
@@ -11605,9 +13338,19 @@
       "instituciones": [
         "Postgrado en Ecología, Centro de Ecología, Instituto Venezolano de Investigaciones Científicas (IVIC)"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal de Imataca, entre los estados Delta Amacuro y Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Águila harpía (Harpya harpyja), especies nativas de gran envergadura, Bombacaceae, Chrysobalanaceae",
+      "especies": [
+        "Águila harpía (Harpya harpyja)",
+        "especies nativas de gran envergadura",
+        "Bombacaceae",
+        "Chrysobalanaceae"
+      ],
       "palabrasclaves": [
         "águila harpía",
         "biología",
@@ -11694,9 +13437,18 @@
         "Instituto de Investigaciones para el Desarrollo Forestal (INDEFOR), Facultad de Ciencias Forestales y Ambientales, Universidad de Los Andes (ULA)",
         "Jardín Botánico de la Universidad de Valencia"
       ],
+      "rores": [
+        "https://ror.org/00t4fvv78"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Mora excelsa', 'Catostemma commune', 'Alexa imperatricis']",
+      "especies": [
+        "Mora excelsa",
+        "Catostemma commune",
+        "Alexa imperatricis"
+      ],
       "palabrasclaves": [
         "ecosistemas neotropicales",
         "fragilidad de ecosistemas",
@@ -11813,9 +13565,15 @@
         "Oficina de Análisis Estratégico, Ministerio del Poder Popular para el Ambiente",
         "Universidad Simón Bolívar (USB)"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98",
+        "https://ror.org/038ypnm26"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Venezuela, río Orinoco",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "conservación",
         "ecosistémico",
@@ -11868,9 +13626,16 @@
       "instituciones": [
         "Laboratorio de Malacología, Escuela de Ciencias Aplicada del Mar, Universidad de Oriente (UDO), Núcleo de Nueva Esparta"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Laguna El Morro de Porlamar, Nueva Esparta, Venezuela",
       "ubicaciontemporal": "marzo-octubre 2011",
       "especiesmencionadas": "['Melampus monilis']",
+      "especies": [
+        "Melampus monilis"
+      ],
       "palabrasclaves": [
         "gasterópodo",
         "lagunas costeras",
@@ -11927,9 +13692,16 @@
       "instituciones": [
         "Laboratorio de Malacología, Escuela de Ciencias Aplicada del Mar, Universidad de Oriente (UDO), Núcleo de Nueva Esparta"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Laguna El Morro, Isla de Margarita, Venezuela",
       "ubicaciontemporal": "marzo-octubre 2011",
       "especiesmencionadas": "['Melampus monilis']",
+      "especies": [
+        "Melampus monilis"
+      ],
       "palabrasclaves": [
         "crecimiento",
         "estructura de tallas",
@@ -11988,9 +13760,17 @@
         "Instituto para el Control y la Conservación de la cuenca del lago de Maracaibo (ICLAM), Ministerio del Poder Popular para el Ambiente, Zulia, Venezuela",
         "Laboratorio de Cultivo de Invertebrados Acuáticos, Departamento de Biología, Facultad Experimental de Ciencias, La Universidad del Zulia (LUZ), Zulia, Venezuela"
       ],
+      "rores": [
+        "https://ror.org/038ypnm26",
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Lago de Maracaibo, playas La Rosita y Nazaret, estado Zulia, Venezuela",
       "ubicaciontemporal": "Octubre, noviembre y diciembre",
       "especiesmencionadas": "Geukensia demissa",
+      "especies": [
+        "Geukensia demissa"
+      ],
       "palabrasclaves": [
         "Geukensia demissa",
         "contenido estomacal",
@@ -12046,9 +13826,20 @@
         "Laboratorio de Biología Marina Costera (BIOMAC), Departamento de Biología, Facultad de Ciencias y Tecnologías (FACYT), Universidad de Carabobo (UC)",
         "Postgrado en Ecología, Instituto de Zoología y Ecología Tropical (IZET), Universidad Central de Venezuela (UCV)"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/05sj7yp62"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Mochima, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Gobiidae, Chaenopsidae, Blenniidae, Labrisomidae",
+      "especies": [
+        "Gobiidae",
+        "Chaenopsidae",
+        "Blenniidae",
+        "Labrisomidae"
+      ],
       "palabrasclaves": [
         "arrecifes coralinos",
         "Parque Nacional Mochima",
@@ -12101,9 +13892,20 @@
         "Universidad Autónoma de Santo Domingo",
         "Universidad de Los Andes (ULA)"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sierra de Neiba, República Dominicana",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Danthonia domingensis', 'Pinus occidentalis', 'Hypoxis decumbens', 'Hieracium gronobii', 'Cyperus picardae']",
+      "especies": [
+        "Danthonia domingensis",
+        "Pinus occidentalis",
+        "Hypoxis decumbens",
+        "Hieracium gronobii",
+        "Cyperus picardae"
+      ],
       "palabrasclaves": [
         "Antillas",
         "Danthonia domingensis",
@@ -12187,9 +13989,17 @@
         "Liceo Bolivariano José Silverio González",
         "Postgrado en Ciencias Marinas, Instituto Oceanográfico de Venezuela (IOV), Universidad de Oriente (UDO), Núcleo de Sucre"
       ],
+      "rores": [
+        "https://ror.org/02v75tb58",
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Laguna de Bocaripo, Sucre, Venezuela",
       "ubicaciontemporal": "Agosto 2010 - Enero 2011",
       "especiesmencionadas": "Eucinostomus spp.",
+      "especies": [
+        "Eucinostomus spp."
+      ],
       "palabrasclaves": [
         "condiciones ambientales",
         "crecimiento",
@@ -12232,9 +14042,16 @@
       "instituciones": [
         "Universidad del Zulia (LUZ)"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Capitán Chico, Edo. Zulia, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Uca",
+      "especies": [
+        "Uca"
+      ],
       "palabrasclaves": [
         "cangrejo violinista",
         "etología",
@@ -12291,9 +14108,26 @@
       "instituciones": [
         "Laboratorio de Contaminación Acuática y Ecología Fluvial, Departamento de Biología, Facultad Experimental de Ciencias, La Universidad del Zulia (LUZ)"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Cuenca del río Capaz, Estado Mérida, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Smicridia, Leptonema, Xiphocentrum, Polycentropus, Antosheche, Austrosinodes, Neotrichopsyche, Atanatolica, Mortoniella, Marilia, Philloicus",
+      "especies": [
+        "Smicridia",
+        "Leptonema",
+        "Xiphocentrum",
+        "Polycentropus",
+        "Antosheche",
+        "Austrosinodes",
+        "Neotrichopsyche",
+        "Atanatolica",
+        "Mortoniella",
+        "Marilia",
+        "Philloicus"
+      ],
       "palabrasclaves": [
         "cuenca del río Capaz",
         "dieta",
@@ -12356,9 +14190,27 @@
       "instituciones": [
         "Laboratorio de Zoología de Invertebrados, Departamento de Biología, Escuela de Ciencias, Universidad de Oriente (UDO), Núcleo de Sucre"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Península de Araya, estado Sucre, Venezuela",
       "ubicaciontemporal": "Marzo a septiembre de 2012",
       "especiesmencionadas": "Argiope argentata, A. savignyi, Diptera, Hemiptera, Orthoptera, Lepidoptera, Hymenoptera, Coleoptera, Odonata, Apidae, Libellulidae, Culicidae",
+      "especies": [
+        "Argiope argentata",
+        "A. savignyi",
+        "Diptera",
+        "Hemiptera",
+        "Orthoptera",
+        "Lepidoptera",
+        "Hymenoptera",
+        "Coleoptera",
+        "Odonata",
+        "Apidae",
+        "Libellulidae",
+        "Culicidae"
+      ],
       "palabrasclaves": [
         "Araneidae",
         "Argiope argentata",
@@ -12420,9 +14272,17 @@
         "Laboratorio de Investigaciones en Zoología (LIZ), Instituto Pedagógico de Caracas (IPC), Universidad Pedagógica Experimental Libertador (UPEL), Distrito Capital",
         "Postgrado de Entomología, Facultad de Agronomía, Universidad Central de Venezuela (UCV), Aragua"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89",
+        "https://ror.org/05xc4qj60"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Caracas, Venezuela",
       "ubicaciontemporal": "Mayo 2006 - Abril 2007",
       "especiesmencionadas": "['Brassolis sophorae']",
+      "especies": [
+        "Brassolis sophorae"
+      ],
       "palabrasclaves": [
         "Brassolis sophorae",
         "daño",
@@ -12475,9 +14335,17 @@
         "Escuela de Biología, Facultad de Ciencias, Universidad Central de Venezuela (UCV)",
         "Laboratorio de Biología y Conservación de Anfibios y Reptiles, Instituto de Zoología y Ecología Tropical (IZET), Facultad de Ciencias, Universidad Central de Venezuela (UCV)"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Quebrada de Sabaneta, municipio El Hatillo, estado Miranda, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Mannophryne cf. herminae",
+      "especies": [
+        "Mannophryne cf. herminae"
+      ],
       "palabrasclaves": [
         "Anura",
         "cría en cautiverio",
@@ -12520,9 +14388,17 @@
       "instituciones": [
         "Departamento de Biología, Facultad Experimental de Ciencias y Tecnología (FACYT), Universidad de Carabobo (UC)"
       ],
+      "rores": [
+        "https://ror.org/05sj7yp62"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Hato Masaguaral, Estado Guárico, Venezuela",
       "ubicaciontemporal": "Diciembre 2012 - Febrero 2013",
       "especiesmencionadas": "Podocnemis vogli, Galápago Llanero",
+      "especies": [
+        "Podocnemis vogli",
+        "Galápago Llanero"
+      ],
       "palabrasclaves": [
         "galápago llanero",
         "Hato Masaguaral",
@@ -12581,9 +14457,16 @@
         "The World of Snakes",
         "Universidad de Oriente (UDO), Núcleo de Sucre"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sector El Morado, Caripe, Estado Monagas, Venezuela",
       "ubicaciontemporal": "2011-2013",
       "especiesmencionadas": "Lachesis muta",
+      "especies": [
+        "Lachesis muta"
+      ],
       "palabrasclaves": [
         "ecología de vipéridos",
         "Lachesis muta",
@@ -12649,9 +14532,34 @@
       "instituciones": [
         "Laboratorio de Paleontología, Centro de Ecología, Instituto Venezolano de Investigaciones Científicas (IVIC)"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "El Breal de Orocual, estado Monagas, Venezuela",
       "ubicaciontemporal": "Pleistoceno tardío",
       "especiesmencionadas": "['Glyptodon sp.', 'Pampatherium humboldtii', 'Holmesina occidentalis', 'Tapirus sp.', 'Sigmodon sp.', 'Zygodontomys sp.', 'Hydrochaeridae', 'Megalonychidae', 'Eremotherium sp.', 'Tayassu pecari', 'Palaeolama sp.', 'Mixtotoxodon larensis', 'Mylodontidae', 'Pachyarmatherium leiseyi', 'Propaopus sulcatus', 'Didelphis sp.', 'Smilodon populator', 'Panthera onca', 'Protocyon sp.']",
+      "especies": [
+        "Glyptodon sp.",
+        "Pampatherium humboldtii",
+        "Holmesina occidentalis",
+        "Tapirus sp.",
+        "Sigmodon sp.",
+        "Zygodontomys sp.",
+        "Hydrochaeridae",
+        "Megalonychidae",
+        "Eremotherium sp.",
+        "Tayassu pecari",
+        "Palaeolama sp.",
+        "Mixtotoxodon larensis",
+        "Mylodontidae",
+        "Pachyarmatherium leiseyi",
+        "Propaopus sulcatus",
+        "Didelphis sp.",
+        "Smilodon populator",
+        "Panthera onca",
+        "Protocyon sp."
+      ],
       "palabrasclaves": [
         "El Breal de Orocual",
         "paleoambiente",
@@ -12721,9 +14629,24 @@
       "instituciones": [
         "Laboratorio de Paleontología, Centro de Ecología, Instituto Venezolano de Investigaciones Científicas (IVIC)"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Occidente de Venezuela, estado Zulia",
       "ubicaciontemporal": "Cretácico tardío",
       "especiesmencionadas": "Ptychodus, Isurus, Squalicorax, Cretolamna, Cretoxyrhin, Enchodus, Belonostomus, Vinctifer, Plethodids",
+      "especies": [
+        "Ptychodus",
+        "Isurus",
+        "Squalicorax",
+        "Cretolamna",
+        "Cretoxyrhin",
+        "Enchodus",
+        "Belonostomus",
+        "Vinctifer",
+        "Plethodids"
+      ],
       "palabrasclaves": [
         "condrictíos",
         "ecosistema",
@@ -12766,9 +14689,18 @@
       "instituciones": [
         "udone"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela, océano Índico, Pacífico, Atlántico",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Clibanarius', 'C. antillensis', 'C. sclopetarius', 'C. tricolor', 'C. vittatus']",
+      "especies": [
+        "Clibanarius",
+        "C. antillensis",
+        "C. sclopetarius",
+        "C. tricolor",
+        "C. vittatus"
+      ],
       "palabrasclaves": [
         "Crustacea",
         "Diogenidae",
@@ -12825,9 +14757,16 @@
         "Centro de Botánica Tropical, Fac. Ciencias, UCV",
         "Centro de Botánica Tropical, Facultad de Ciencias, Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Theobroma cacao']",
+      "especies": [
+        "Theobroma cacao"
+      ],
       "palabrasclaves": [
         "anegamiento",
         "cacao",
@@ -12879,9 +14818,16 @@
         "IVIC",
         "Instituto Venezolano de Investigaciones Científicas"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Neotrópico",
       "ubicaciontemporal": "último lustro",
       "especiesmencionadas": "['Eucaliptus']",
+      "especies": [
+        "Eucaliptus"
+      ],
       "palabrasclaves": [
         "ecotecnologías",
         "ingeniería genética",
@@ -12933,9 +14879,19 @@
         "Fundación La Salle de Ciencias Naturales",
         "Instituto Alexander von Humboldt. "
       ],
+      "rores": [
+        "https://ror.org/02r59nq91",
+        "https://ror.org/030vkw561"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Delta del Orinoco, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['manglares', 'peces', 'camaron']",
+      "especies": [
+        "manglares",
+        "peces",
+        "camaron"
+      ],
       "palabrasclaves": [
         "bentos",
         "caño Macareo",
@@ -12982,9 +14938,18 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Puerto Ordaz, parroquia Cachamay, Municipio Caroní, Edo Bolívar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Eupsittula pertinax', 'Amaurospiza carrizalensis', 'águila arpía']",
+      "especies": [
+        "Eupsittula pertinax",
+        "Amaurospiza carrizalensis",
+        "águila arpía"
+      ],
       "palabrasclaves": [
         "ornitología",
         "bosque seco",
@@ -13029,9 +14994,14 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Sur de Venezuela, Reserva Forestal Imataca, cuenca alta del río Botanamo",
       "ubicaciontemporal": "30 años anteriores al estudio, sin fecha específica",
       "especiesmencionadas": "[]",
+      "especies": [],
       "palabrasclaves": [
         "heterogeneidad",
         "deforestación",
@@ -13105,9 +15075,15 @@
         "Universidad Central de Venezuela",
         "Universidad Simón Bolívar"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Parque Nacional Canaima, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "fuego",
         "Manejo Integral de Fuego",
@@ -13154,9 +15130,14 @@
       "instituciones": [
         "Universidad Nacional Experimental de Guayana (UNEG)"
       ],
+      "rores": [
+        "https://ror.org/00qseeb08"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Orinoquia Venezolano-Colombiana, río Orinoco, Corredor Orinoco",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "estaciones científicas",
         "participación",
@@ -13208,9 +15189,16 @@
       "instituciones": [
         "La Universidad del Zulia"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Felis catus']",
+      "especies": [
+        "Felis catus"
+      ],
       "palabrasclaves": [
         "Felis catus",
         "meiosis",
@@ -13267,9 +15255,15 @@
         "Universidad Central de Venezuela",
         "Universidad Simón Bolívar"
       ],
+      "rores": [
+        "https://ror.org/01ak5cj98",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": "2000-2014",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [
         "fuego activo",
         "incendios forestales",
@@ -13325,9 +15319,14 @@
       "instituciones": [
         "Instituto Nacional de Parques"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Homo sapiens']",
+      "especies": [
+        "Homo sapiens"
+      ],
       "palabrasclaves": [
         "economía",
         "ecología",
@@ -13380,9 +15379,17 @@
         "Instituto Venezolano de Investigaciones Científicas",
         "Universidad Marítima del Caribe"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91",
+        "https://ror.org/040tkk892"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Refugio de Fauna Silvestre Isla de Aves (RFSIA)",
       "ubicaciontemporal": "2014, junio 2015",
       "especiesmencionadas": "['Gasterópodos']",
+      "especies": [
+        "Gasterópodos"
+      ],
       "palabrasclaves": [
         "Refugio Fauna Silvestre Isla de Aves",
         "gasterópodos",
@@ -13426,9 +15433,24 @@
       "instituciones": [
         "Universidad del Magdalena"
       ],
+      "rores": [
+        "https://ror.org/00fr68j09"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sierra Nevada de Santa Marta, Colombia",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Lachlania', 'Baetodes', 'Leptohyphes', 'Haplohyphes', 'Mayobaetis', 'Anacroneuria', 'Leptonema', 'Limnocoris', 'Tricoritodes']",
+      "especies": [
+        "Lachlania",
+        "Baetodes",
+        "Leptohyphes",
+        "Haplohyphes",
+        "Mayobaetis",
+        "Anacroneuria",
+        "Leptonema",
+        "Limnocoris",
+        "Tricoritodes"
+      ],
       "palabrasclaves": [
         "biomasa",
         "grupos funcionales",
@@ -13482,9 +15504,18 @@
         "UCV",
         "Universidad Central de Venezuela,  2 Laboratorio de Ecología de Sistemas Acuáticos, Instituto de Zoología y Ecología Tropical"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "PNALR, arrecife de Dos Mosquises Sur, Venezuela",
       "ubicaciontemporal": "2012 (junio, agosto), 2013 (octubre)",
       "especiesmencionadas": "['Udotea cyathifomis', 'F. infundibulum']",
+      "especies": [
+        "Udotea cyathifomis",
+        "F. infundibulum"
+      ],
       "palabrasclaves": [
         "algas",
         "arrecifes",
@@ -13542,9 +15573,17 @@
         "Centro de Ecología, Instituto Venezolano de Investigaciones Cientificas",
         "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Carora, Lara, Venezuela",
       "ubicaciontemporal": "2014, marzo-abril",
       "especiesmencionadas": "['Capra aegagrus hircus', 'chivo']",
+      "especies": [
+        "Capra aegagrus hircus",
+        "chivo"
+      ],
       "palabrasclaves": [
         "cámaras-trampa",
         "chivos",
@@ -13617,9 +15656,21 @@
         "INIA",
         "INIA Lara"
       ],
+      "rores": [
+        "https://ror.org/04h3gcf69"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sanare, Quibor, Río Claro, Las Lajitas, Eneal, El Palenque",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Rhizobium', 'Glomeromycota', 'Hortalizas', 'Café', 'Piña', 'Papa']",
+      "especies": [
+        "Rhizobium",
+        "Glomeromycota",
+        "Hortalizas",
+        "Café",
+        "Piña",
+        "Papa"
+      ],
       "palabrasclaves": [
         "fitoparasíticos",
         "nativos",
@@ -13678,9 +15729,16 @@
         "Universidad del Magdalena",
         "universidad del Atlantico"
       ],
+      "rores": [
+        "https://ror.org/00fr68j09"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Sierra Nevada de Santa Marta, Colombia",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Corydalus spp']",
+      "especies": [
+        "Corydalus spp"
+      ],
       "palabrasclaves": [
         "contenido estomacal",
         "Córdoba",
@@ -13728,9 +15786,19 @@
       "instituciones": [
         "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Panthera onca', 'tigre', 'jaguar', 'felinos']",
+      "especies": [
+        "Panthera onca",
+        "tigre",
+        "jaguar",
+        "felinos"
+      ],
       "palabrasclaves": [
         "jaguar",
         "oralidad",
@@ -13811,9 +15879,17 @@
         "Postgrado en Medicina Veterinaria, FCV -UCV.",
         "Universidad Central de Venezuela, Facultad de Ciencias Veterinarias, Cát de Histologia"
       ],
+      "rores": [
+        "https://ror.org/05ak8xb62",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Guayabal, Estado Guárico",
       "ubicaciontemporal": null,
       "especiesmencionadas": "['Caiman crocodilus crocodilus']",
+      "especies": [
+        "Caiman crocodilus crocodilus"
+      ],
       "palabrasclaves": [
         "babas",
         "células",
@@ -13873,9 +15949,17 @@
         "Laboratorio de Nutrición Mineral de Plantas Silvestres. Instituto de Biología Experimental, Centro de Botánica Tropical. Universidad Central de Venezuela",
         "Universidad Central de Venezuela Facultad de Ciencias- Escuela de Biología"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Estados Bolívar y Delta Amacuro, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Bacterias",
+      "especies": [
+        "Bacterias"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_99_1.json",
       "anio": 2019,
@@ -13970,9 +16054,17 @@
         "Instituto de Zoología y Ecología Tropical, Laboratorio de Ecología de Agroecosistemas-Univesidad Central de Venezuela",
         "Laboratorio de Nutrición Mineral de Plantas Silvestres. Instituto de Biología Experimental, Centro de Botánica Tropical. Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Estado Bolivar, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Hongos micorrizícos arbusculares (HMA)",
+      "especies": [
+        "Hongos micorrizícos arbusculares (HMA)"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_99_2.json",
       "anio": 2019,
@@ -14074,9 +16166,15 @@
         "Laboratorio de Ecología de Microorganismos-IZET-UCV",
         "Laboratorio de Nutrición Mineral de Plantas Silvestres. Instituto de Biología Experimental, Centro de Botánica Tropical. Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, estado Bolívar, Venezuela",
       "ubicaciontemporal": "2010",
       "especiesmencionadas": "No se mencionan especies específicas en el resumen",
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_101_1.json",
       "anio": 2019,
@@ -14164,9 +16262,18 @@
         "Facultad de Ciencias Forestales y Ambientales, Universidad de Los Andes",
         "Laboratorio de Nutrición Mineral de Plantas Silvestres. Instituto de Biología Experimental, Centro de Botánica Tropical. Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal Imataca, Venezuela",
       "ubicaciontemporal": "Seis años después de la siembra, N.A. mes",
       "especiesmencionadas": "['Parkia nitida', 'Hymenaea courbaril']",
+      "especies": [
+        "Parkia nitida",
+        "Hymenaea courbaril"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_171_1.json",
       "anio": 2019,
@@ -14254,9 +16361,16 @@
         "Asociación Civil Fundación Esfera",
         "Earthmatters.Org"
       ],
+      "rores": [
+        "https://ror.org/00sbcwg24"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Reserva Forestal de Imataca, Venezuela",
       "ubicaciontemporal": "2017-2019",
       "especiesmencionadas": "Águilas harpías",
+      "especies": [
+        "Águilas harpías"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_191_2.json",
       "anio": 2019,
@@ -14343,9 +16457,16 @@
       "instituciones": [
         "Universidad de Oriente"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Guaranache, Estado Sucre, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": "70 especies florísticas y 57 especies faunísticas",
+      "especies": [
+        "70 especies florísticas y 57 especies faunísticas"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_219_1.json",
       "anio": 2019,
@@ -14411,9 +16532,14 @@
       "instituciones": [
         "Laboratorio de Contaminación Acuática y Ecología Fluvial, Departamento de Biología, Facultad de Ciencias, Universidad del Zulia"
       ],
+      "rores": [
+        "https://ror.org/04vy5s568"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Cuenca del Río Capaz, Estado Mérida, Venezuela",
       "ubicaciontemporal": "2012-2014",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_219_2.json",
       "anio": 2019,
@@ -14480,9 +16606,16 @@
         "INPARQUES Mérida",
         "Universidad de Los Andes"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Estado Mérida, Venezuela",
       "ubicaciontemporal": "Septiembre 2018 - Julio 2019",
       "especiesmencionadas": "Mariposas",
+      "especies": [
+        "Mariposas"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_220_1.json",
       "anio": 2019,
@@ -14533,9 +16666,14 @@
       "instituciones": [
         "Universidad de Oriente"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "La Restinga, Venezuela",
       "ubicaciontemporal": "2001-2002",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_221_1.json",
       "anio": 2019,
@@ -14573,9 +16711,16 @@
       "instituciones": [
         "Universidad Central de Venezuela, Instituto Experimental Jardín Botánico Dr. Tobías Lasser"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Bosques periurbanos del sur de la Gran Caracas, estado Miranda, Venezuela",
       "ubicaciontemporal": "2014",
       "especiesmencionadas": "Helechos",
+      "especies": [
+        "Helechos"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_222_1.json",
       "anio": 2019,
@@ -14613,9 +16758,17 @@
       "instituciones": [
         "Universidad Central de Venezuela, Instituto Experimental Jardín Botánico Dr. Tobías Lasser"
       ],
+      "rores": [
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Bosques urbanos, Venezuela, América Latina",
       "ubicaciontemporal": "1953",
       "especiesmencionadas": "Líquenes, hongos liquenizados",
+      "especies": [
+        "Líquenes",
+        "hongos liquenizados"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_223_1.json",
       "anio": 2019,
@@ -14653,9 +16806,14 @@
       "instituciones": [
         "Fundación Tierra Viva"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Venezuela, Edo. Aragua y Carabobo, Parroquia Canoabo",
       "ubicaciontemporal": "2018",
       "especiesmencionadas": "cacao",
+      "especies": [
+        "cacao"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_226_1.json",
       "anio": 2019,
@@ -14693,9 +16851,16 @@
       "instituciones": [
         "Provita, Instituto Venezolano de Investigación Científicas"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Piedra de Cachimbo y La Florida, Edo. Vargas",
       "ubicaciontemporal": null,
       "especiesmencionadas": "café",
+      "especies": [
+        "café"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_226_2.json",
       "anio": 2019,
@@ -14733,9 +16898,14 @@
       "instituciones": [
         "Provita"
       ],
+      "rores": [
+        "https://ror.org/023kaz366"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "La Florida, Piedra de Cachimbo, Colonia Tovar, Edo. Aragua, Venezuela",
       "ubicaciontemporal": null,
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_227_1.json",
       "anio": 2019,
@@ -14773,9 +16943,14 @@
       "instituciones": [
         "Provita"
       ],
+      "rores": [
+        "https://ror.org/023kaz366"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Pan-Amazonía",
       "ubicaciontemporal": "2000-2017",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_229_1.json",
       "anio": 2019,
@@ -14856,9 +17031,17 @@
         "Orpia - Organización Regional de los Pueblos Indígenas de Amazonas",
         "Wataniba, Grupo de Trabajo Socioambiental"
       ],
+      "rores": [
+        "https://ror.org/02h1b1x27",
+        "https://ror.org/037jqrk16"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Amazonas, Bolívar y Delta Amacuro",
       "ubicaciontemporal": null,
       "especiesmencionadas": "Peces",
+      "especies": [
+        "Peces"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_229_2.json",
       "anio": 2019,
@@ -14896,9 +17079,16 @@
       "instituciones": [
         "Instituto de Zoología y Ecología Tropical, Facultad de Ciencias, Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/0143dvz59"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Amazonía Venezolana, Río Orinoco (Bolívar)",
       "ubicaciontemporal": "2018",
       "especiesmencionadas": "mosquitos",
+      "especies": [
+        "mosquitos"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_231_1.json",
       "anio": 2019,
@@ -14944,9 +17134,17 @@
         "Instituto Venezolano de Investigaciones Científicas",
         "University of New South Wales, Provita"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "IA",
       "ubicaciongeografica": "Gran Sabana, Venezuela",
       "ubicaciontemporal": "2016",
       "especiesmencionadas": "mamíferos, venado de cola blanca (Odocoileus virginianus)",
+      "especies": [
+        "mamíferos",
+        "venado de cola blanca (Odocoileus virginianus)"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_231_2.json",
       "anio": 2019,
@@ -14996,9 +17194,16 @@
       "instituciones": [
         "Laboratorio de Ecosistemas y Cambio Global, Centro de Ecología, Instituto Venezolano de Investigaciones Científicas"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Isla de Aves, Venezuela",
       "ubicaciontemporal": "2017",
       "especiesmencionadas": "['Ocypode quadrata']",
+      "especies": [
+        "Ocypode quadrata"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_234_1.json",
       "anio": 2019,
@@ -15058,9 +17263,15 @@
         "Ecosadas del mar, C.A., CorpoMedina",
         "Proyecto de Conservación de Tortugas Marinas AKUPARA, Sucre-Vargas, Venezuela"
       ],
+      "rores": [],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Playa Puipuy, Estado Sucre, Venezuela",
       "ubicaciontemporal": "2015-2019",
       "especiesmencionadas": "['Dermochelys coriacea', 'Caretta caretta']",
+      "especies": [
+        "Dermochelys coriacea",
+        "Caretta caretta"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_234_2.json",
       "anio": 2019,
@@ -15121,9 +17332,16 @@
         "Real Jardín Botánico de España",
         "University of Cambridge"
       ],
+      "rores": [
+        "https://ror.org/013meh722",
+        "https://ror.org/03ewatc56",
+        "https://ror.org/04teayy65"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "América Latina",
       "ubicaciontemporal": "2000-2010",
       "especiesmencionadas": null,
+      "especies": [],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_237_1.json",
       "anio": 2019,
@@ -15185,9 +17403,21 @@
         "Instituto Venezolano de Investigaciones Científicas",
         "Universidad Central de Venezuela"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91",
+        "https://ror.org/05kacnm89"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Península de Macanao, Isla de Margarita, Venezuela",
       "ubicaciontemporal": "Mayo 2012 - Abril 2013",
       "especiesmencionadas": "Hymenoptera, Scelionidae, Apidae, Encyrtidae, Bethylidae",
+      "especies": [
+        "Hymenoptera",
+        "Scelionidae",
+        "Apidae",
+        "Encyrtidae",
+        "Bethylidae"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_239_1.json",
       "anio": 2019,
@@ -15274,9 +17504,16 @@
       "instituciones": [
         "Universidad de Oriente"
       ],
+      "rores": [
+        "https://ror.org/03xygw105"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": "Península de Araya, Estado Sucre, Venezuela",
       "ubicaciontemporal": "2010-2018",
       "especiesmencionadas": "Sciurus granatensis (Ardilla Cola Roja)",
+      "especies": [
+        "Sciurus granatensis (Ardilla Cola Roja)"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_245_1.json",
       "anio": 2019,
@@ -15324,9 +17561,17 @@
       "instituciones": [
         "Instituto Venezolano de Investigaciones Científicas (IVIC)"
       ],
+      "rores": [
+        "https://ror.org/02ntheh91"
+      ],
+      "human_reviewer": "mario",
       "ubicaciongeografica": null,
       "ubicaciontemporal": null,
       "especiesmencionadas": "Hongos Micorrízicos Arbusculares (HMA), café (Catuai rojo y Caturra)",
+      "especies": [
+        "Hongos Micorrízicos Arbusculares (HMA)",
+        "café (Catuai rojo y Caturra)"
+      ],
       "palabrasclaves": [],
       "source_path": "XII/curatedwithgeo/pagina_248_1.json",
       "anio": 2019,
