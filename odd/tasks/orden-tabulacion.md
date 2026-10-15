@@ -1,6 +1,6 @@
 # Fix: the DOM order contradicted the visual order (P1-3, first slice)
 
-**Status**: in progress · **Branch**: `fix/orden-tabulacion` (from `origin/main`) ·
+**Status**: implemented and verified — §3 · **Branch**: `fix/orden-tabulacion` (from `origin/main`) · **Commit**: `26dc875` ·
 **Opened by**: `.impeccable/critique/2026-10-15T05-25-10Z__viewer-index-html.md`, issue **P1-3**.
 
 ## 1. The defect, measured
@@ -40,6 +40,8 @@ both. Mobile is not a target per `PRODUCT.md`, and the map is the entry point of
 coherent — but it is a change a reader should know about, so it is stated here and in the PR.
 
 ## 3. Acceptance criteria
+
+All four measured on the served page, at 1600, 1280, 960 and 390:
 
 1. The first focusable inside the map panel is within the first **15** positions (from 278).
 2. The visual order of the five panels equals the document order at 1600, 1280, 960 and 390.
