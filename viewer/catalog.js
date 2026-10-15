@@ -299,10 +299,11 @@
     // and the year, so a future edition appears in the filter for free.
     //
     // Ordering rule: editions with a year sort first, ascending by year;
-    // editions without one (Vol XI carries ``anio: null``, the D14 undated
-    // studies) sort LAST and among themselves by their label. That mirrors
-    // the artifact's own order, where the builder places undated studies
-    // last (D14), and makes ``null`` never reach a numeric comparison.
+    // editions without one sort LAST and among themselves by their label
+    // (D14). No shipped edition is undated today -- Vol XI is dated 2015 --
+    // but the rule stays live by contract: the builder still places undated
+    // studies last from its synthetic fixtures, and ``null`` never reaches a
+    // numeric comparison.
     var order = [];
     var byCongress = {};
     studies.forEach(function (s) {
@@ -511,8 +512,10 @@
 
   // The list keeps the artifact's own order: the builder sorts dated studies
   // by (anio, congreso, pagina, indice) and places the ``anio: null`` ones
-  // last (D14), so a null year never reaches a comparison here and the order
-  // is deterministic without the panel re-sorting anything.
+  // last (D14). The shipped corpus has no null year today (Vol XI is dated
+  // 2015), but the contract still holds, so a null year would never reach a
+  // comparison here and the order stays deterministic without the panel
+  // re-sorting anything.
   function visibleStudies() {
     var studies = (catalog && catalog.studies) || [];
     if (activeCongress === "all" && !searchQuery && !activePointKey) {
@@ -894,9 +897,10 @@
   }
 
   /**
-   * A readable label for a study's year. The 16 undated Vol XI studies carry
-   * ``anio: null`` (D14); the panel states that plainly instead of letting
-   * ``null`` or ``NaN`` reach the screen.
+   * A readable label for a study's year. A null year is still handled by
+   * contract (D14) and renders as "sin año" instead of letting ``null`` or
+   * ``NaN`` reach the screen. No shipped study is undated today, because the
+   * regenerated export dates Vol XI at 2015.
    *
    * @param {object} study
    * @returns {string}

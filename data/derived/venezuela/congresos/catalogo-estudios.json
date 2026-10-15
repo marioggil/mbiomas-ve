@@ -1,11 +1,11 @@
 {
   "schema_version": 3,
-  "generated_utc": "2026-10-14T05:27:42.095540+00:00",
+  "generated_utc": "2026-10-14T16:20:30.009206+00:00",
   "country": "venezuela",
   "source_parquet": "data/raw/congresos/congresos_revisados.parquet",
-  "source_sha256": "576b6fe05d2be0ec72e4d5ede4532199a1f201967fd279c04f3265b780971618",
+  "source_sha256": "55cc3091d2d06353a48ee7d07edd1fc380da42ec00b365d4955c3eef8e3266d8",
   "source_rows": 255,
-  "source_bytes": 364547,
+  "source_bytes": 364549,
   "extent_label": "extension MapBiomas Venezuela",
   "extent_boundary_note": "The pixel extent in the source COGs exceeds internationally recognised borders and includes disputed territory. No boundary mask has been applied to the pyramid.",
   "extent": {
@@ -1783,8 +1783,8 @@
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -2301,7 +2301,7 @@
       "coordinate_group_size": 3,
       "coordinate_group_ids": [
         "cve-2013-pagina-405-1",
-        "cve-sin-anio-pagina-602-1"
+        "cve-2015-pagina-602-1"
       ]
     },
     {
@@ -3169,8 +3169,8 @@
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -3230,8 +3230,8 @@
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -5682,8 +5682,8 @@
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -5783,8 +5783,8 @@
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -5885,8 +5885,8 @@
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -5953,8 +5953,8 @@
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -6735,8 +6735,8 @@
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -7939,8 +7939,8 @@
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -8675,7 +8675,7 @@
       "coordinate_group_size": 3,
       "coordinate_group_ids": [
         "cve-2009-pagina-110-1",
-        "cve-sin-anio-pagina-601-1"
+        "cve-2015-pagina-601-1"
       ]
     },
     {
@@ -9216,7 +9216,7 @@
       "coordinate_group_size": 3,
       "coordinate_group_ids": [
         "cve-2007-pagina-573-1",
-        "cve-sin-anio-pagina-601-1"
+        "cve-2015-pagina-601-1"
       ]
     },
     {
@@ -9283,8 +9283,8 @@
         "cve-2007-pagina-398-1",
         "cve-2009-pagina-122-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -9435,8 +9435,8 @@
         "cve-2007-pagina-398-1",
         "cve-2009-pagina-119-1",
         "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -10403,8 +10403,8 @@
         "cve-2007-pagina-398-1",
         "cve-2009-pagina-119-1",
         "cve-2009-pagina-122-1",
-        "cve-sin-anio-pagina-605-1",
-        "cve-sin-anio-pagina-614-1"
+        "cve-2015-pagina-605-1",
+        "cve-2015-pagina-614-1"
       ]
     },
     {
@@ -10481,7 +10481,7 @@
       "exclusion_reason": "La ubicación 'Delta del Orinoco, Venezuela' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T1 (unidad administrativa sin localidad nombrada dentro, o accidente o región de escala estadal o regional sin localidad) porque región natural de escala estadal. Un nivel T1 no se puede dibujar como un punto del mapa.",
       "coordinate_group_size": 2,
       "coordinate_group_ids": [
-        "cve-sin-anio-pagina-261-1"
+        "cve-2015-pagina-261-1"
       ]
     },
     {
@@ -11842,7 +11842,7 @@
       "coordinate_group_size": 3,
       "coordinate_group_ids": [
         "cve-1999-pagina-104-4",
-        "cve-sin-anio-pagina-602-1"
+        "cve-2015-pagina-602-1"
       ]
     },
     {
@@ -12747,6 +12747,1097 @@
       "granularidad_nivel": "T1",
       "granularidad_razon": "referencia de escala estadal",
       "exclusion_reason": "La ubicación 'Occidente de Venezuela, estado Zulia' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T1 (unidad administrativa sin localidad nombrada dentro, o accidente o región de escala estadal o regional sin localidad) porque referencia de escala estadal. Un nivel T1 no se puede dibujar como un punto del mapa.",
+      "coordinate_group_size": 1,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-5-1",
+      "titulo": "ALGUNOS ASPECTOS DE LA BIOLOGÍA Y TAXONOMÍA DE LOS CANGREJOS ERMITAñOS DEL GÉNERO CLIBANARIUS DANA, 1852 (CRUSTACEA: ANOMURA: DIOGENIDAE)",
+      "resumen": "justificacion:\n Los cangrejos ermitaños del género Clibanarius poseen el abdomen blando y asimétrico, haciéndolos susceptibles de ser depredados, por lo que generalmente ocupan conchas vacías de gasterópodos que emplean como hábitat individual. \nobjetivo:\n Debido a la poca información existente de estos crustaceos en Venezuela se consideró oportuno \nmetodos:\n recopilar información bibliográfica, para contribuir al conocimiento de su biología, taxonomía y distribución. \nconclusiones:\n Los representantes del género Clibanarius presentan un tipo de alimentación omnívora. En su mayoría habitan aguas litorales en mares tropicales y templados. La relación que tiene el tamaño de la concha a habitar con respecto al tamaño del ermitaño está influenciada por la fisiología y el comportamiento del ermitaño. Los patrones de dispersión y la agrupación están asociados al ciclo de las mareas. Son dioicos con dimorfismo sexual, la cópula no dura más de 10 segundos, y el desarrollo embrionario se da entre 20 y 26 días. Los rizocéfalos del orden Kentrogonida y los Isópodos son los huéspedes más comunes de estos cangrejos. El género Clibanarius están representados actualmente por 59 especies nominales, distribuyéndose en el litoral rocoso desde el área intermareal hasta los primeros metros del infralitoral, encontrándose mayor cantidad en el océano Índico (47%), mientras que el 31% están en el Pacifico y sólo un 22% en el Atlántico. En Venezuela están reportadas las especies C. antillensis; C. sclopetarius; C. tricolor y C. vittatus",
+      "autores": [
+        {
+          "nombre": "contreras, orgelis",
+          "afiliacion": "udone",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "udone"
+      ],
+      "ubicaciongeografica": "Venezuela, océano Índico, Pacífico, Atlántico",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Clibanarius', 'C. antillensis', 'C. sclopetarius', 'C. tricolor', 'C. vittatus']",
+      "palabrasclaves": [
+        "Crustacea",
+        "Diogenidae",
+        "reproducción y parásito"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_5_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 5,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.574222,
+      "longitud": -67.939715,
+      "display_class": "coarse_location",
+      "on_map": false,
+      "granularidad_nivel": "T0",
+      "granularidad_razon": "enumera océanos, no un lugar",
+      "exclusion_reason": "La ubicación 'Venezuela, océano Índico, Pacífico, Atlántico' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque enumera océanos, no un lugar. Un nivel T0 no se puede dibujar como un punto del mapa.",
+      "coordinate_group_size": 1,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-19-1",
+      "titulo": "ESTADO HÍDRICO Y FOTOSÍNTESIS DE CUATRO CLONES DE CACAO SOMETIDOS A DÉFICIT HÍDRICO O A ANEGAMIENTO",
+      "resumen": "justificacion:\n El cacao es sensible tanto al déficit hídrico (DH) como al anegamiento (AN), especialmente durante la etapa juvenil. \nobjetivo:\n El objetivo del presente estudio fue comparar el estado hídrico, el intercambio gaseoso y la actividad fotoquímica del PSII en individuos jóvenes de cuatro clones sometidos a DH o a AN. \nmetodos:\n El potencial hídrico fue medido con bomba de presión, el potencial osmótico con psicrómetro, el intercambio gaseoso con analizador infrarrojo de gases y la actividad fotoquímica con fluorímetro. \nconclusiones:\n Después de 35 días de tratamiento, los cuatro clones presentaron descensos en el potencial hídrico con el DH (66 %) y el AN (23 %). La tasa fotosintética (PN) disminuyó en promedio 46 % debido al DH y 60 % debido al AN, siendo el clon 447 el más susceptible al DH y el 415 el más susceptible al AN. En promedio, PN retomó 100 % de los valores del control siete días después de suspendido el DH, pero solo 74 % al suspenderse el AN. El clon 439, con mayor densidad de lenticelas, fue el que más se recuperó del AN. En ningún caso ocurrió fotoinhibición crónica. La aparición de raíces adventicias caulinares y la hipertrofia de lenticelas fueron parte de los mecanismos de aclimatación al AN. Las respuestas observadas permiten sugerir que todos los clones son aptos para el cultivo en zonas propensas a sequía, y el clon 439 el más apto para terrenos anegadizos.",
+      "autores": [
+        {
+          "nombre": "Herrera, Ana",
+          "afiliacion": "Centro de Botánica Tropical, Fac. Ciencias, UCV",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "De Almeida, Jenny",
+          "afiliacion": "Centro de Botánica Tropical, Facultad de Ciencias, Universidad Central de Venezuela",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Tezara, Wilmer",
+          "afiliacion": "Centro de Botánica Tropical, Facultad de Ciencias, Universidad Central de Venezuela",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Centro de Botánica Tropical, Fac. Ciencias, UCV",
+        "Centro de Botánica Tropical, Facultad de Ciencias, Universidad Central de Venezuela"
+      ],
+      "ubicaciongeografica": null,
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Theobroma cacao']",
+      "palabrasclaves": [
+        "anegamiento",
+        "cacao",
+        "déficit hídrico",
+        "fotosíntesis",
+        "lenticelas"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_19_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 19,
+      "indice": 1,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": null,
+      "longitud": null,
+      "display_class": "no_coordinate",
+      "on_map": false,
+      "granularidad_nivel": "T0",
+      "granularidad_razon": "sin texto de ubicación utilizable",
+      "exclusion_reason": "El estudio no tiene latitud ni longitud, así que no se puede situar en el mapa.",
+      "coordinate_group_size": null,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-60-1",
+      "titulo": "ECOTECNOLOGÍAS QUE GENERAN SOLUCIONES Y LOS DERROTEROS DE LA ECOLOGÍA: INGENIERÍA GENÉTICA DE ÁRBOLES",
+      "resumen": "justificacion:\n La desaparición de bosques tropicales es alarmante en la actualidad y genera consecuentemente impactos en la pérdida de biodiversidad, disponibilidad de agua y recursos para la subsistencia de las comunidades locales; aunado a las consecuencias climáticas globales. Recientemente, ha emergido como solución ecológica para satisfacer la demanda de madera, la generación de plantaciones forestales utilizando árboles “domesticados” con el uso de ingeniería genética. Estos avances científicos se basan en criterios llamados \"ecotecnológicos\" o \"ecoevolutivos.\" \nobjetivo:\n El objetivo de este trabajo fue evaluar los fundamentos de estas propuestas de plantaciones forestales y sus principios ecológicos. \nmetodos:\n Para ello, hemos realizado una investigación de la literatura especializada del último lustro. \nconclusiones:\n La revisión permitió diagnosticar que: 1. Existe un reconocimiento de la importancia de los bosques naturales como ecosistemas en riesgo; 2. El mayor interés en los bosques es por su beneficio en madera como mercancía; 3. Debemos, en nombre del crecimiento y de la demanda, domesticar genéticamente a los árboles de interés forestal; 4. Existe una proyección de las plantaciones monoespecíficas como bosques; 5. Dado que hay variabilidad natural, los genotipos modificados coincidirían con algún rasgo del abanico genético. Desde la ecología se omiten algunos aspectos determinantes: un bosque natural provee muchos más beneficios locales que sólo la madera; una plantación monoclonal no es un bosque, es un desierto verde; el uso de Eucaliptus en el Neotrópico implica incorporar especies exóticas; una plantación es la privatización de los servicios ecosistémicos fundamentales para las comunidades locales. Estas ecotecnologías forestales ni son soluciones, ni son ecológicas.",
+      "autores": [
+        {
+          "nombre": "Ramos, Maribel",
+          "afiliacion": "IVIC",
+          "ror": "https://ror.org/02ntheh91",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Herrera, Francisco F. ",
+          "afiliacion": "Instituto Venezolano de Investigaciones Científicas",
+          "ror": "https://ror.org/02ntheh91",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "IVIC",
+        "Instituto Venezolano de Investigaciones Científicas"
+      ],
+      "ubicaciongeografica": "Neotrópico",
+      "ubicaciontemporal": "último lustro",
+      "especiesmencionadas": "['Eucaliptus']",
+      "palabrasclaves": [
+        "ecotecnologías",
+        "ingeniería genética",
+        "plantaciones",
+        "privatización",
+        "riesgo"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_60_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 60,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.417107,
+      "longitud": -84.123118,
+      "display_class": "coarse_location",
+      "on_map": false,
+      "granularidad_nivel": "T0",
+      "granularidad_razon": "región supra-nacional",
+      "exclusion_reason": "La ubicación 'Neotrópico' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque región supra-nacional. Un nivel T0 no se puede dibujar como un punto del mapa.",
+      "coordinate_group_size": 1,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-261-1",
+      "titulo": "LOS RÍOS DEL DELTA DEL ORINOCO, VENEZUELA",
+      "resumen": "\njustificacion:\n El Delta del Orinoco está conformado por una extensa red de ríos de porte variable denominados caños, grandes cauces (p. e. Brazo Imataca-4 km ancho); intermedios (caño Merejina-1,6 km); más estrechos (Caño Macareo-650 m), y numerosos de menor anchura. Estos cauces interconectan múltiples ecosistemas, en general inalterados aunque una parte de ellos ha sufrido intervenciones fuertes. \nobjetivo:\n El objetivo de este trabajo es describir estos ambientes y los cambios causados por las intervenciones antrópicas. \nmetodos:\n Por medio del análisis crítico de la bibliografía existente y de estudios propios, se evalúan las características de los diferentes ríos y el impacto causado en ellos por obras y actividades humanas. \nconclusiones:\n Si bien la mayoría de los cauces recorren territorios poco alterados, algunos de ellos se hallan profundamente influenciados por la regulación de las aguas (caño Mánamo) y por el dragado y navegación (Rio Grande y Brazo Imataca). Estas intervenciones han generado cambios en la flora y comunidades asociada al cauce así como a la fauna íctica y bentos, al afectar particularmente la salinidad y los patrones anuales de caudal, descarga, así como la estacionalidad hidrológica. La diversidad de las plantas asociadas a las riberas de los cauces intervenidos se ha incrementado, al igual que la productividad, al suprimirse los picos de velocidad y creciente de las aguas. Igualmente algunas especies han sido suplantadas por otras. Otras afectaciones incluyen la deforestación de manglares, sobrepesca, impactos potenciales derivados de la actividad petrolera y especialmente, la pesca camaronera de arrastre en las bocas, barras y estuarios.",
+      "autores": [
+        {
+          "nombre": "Colonnello, Giuseppe",
+          "afiliacion": "Fundación La Salle de Ciencias Naturales",
+          "ror": "https://ror.org/02r59nq91",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Lasso Alcalá, Carlos",
+          "afiliacion": "Instituto Alexander von Humboldt. ",
+          "ror": "https://ror.org/030vkw561",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Fundación La Salle de Ciencias Naturales",
+        "Instituto Alexander von Humboldt. "
+      ],
+      "ubicaciongeografica": "Delta del Orinoco, Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['manglares', 'peces', 'camaron']",
+      "palabrasclaves": [
+        "bentos",
+        "caño Macareo",
+        "caño Mánamo",
+        "fauna íctica",
+        "río delta Orinoco",
+        "vegetación ribereña"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_261_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 261,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 9.4966304,
+      "longitud": -61.4052615,
+      "display_class": "coarse_location",
+      "on_map": false,
+      "granularidad_nivel": "T1",
+      "granularidad_razon": "región natural de escala estadal",
+      "exclusion_reason": "La ubicación 'Delta del Orinoco, Venezuela' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T1 (unidad administrativa sin localidad nombrada dentro, o accidente o región de escala estadal o regional sin localidad) porque región natural de escala estadal. Un nivel T1 no se puede dibujar como un punto del mapa.",
+      "coordinate_group_size": 2,
+      "coordinate_group_ids": [
+        "cve-2011-pagina-366-1"
+      ]
+    },
+    {
+      "study_id": "cve-2015-pagina-473-1",
+      "titulo": "POBLACIONES DE Eupsittula pertinax COMO INDICADOR EN LA FRAGMENTACIÓN DEL BOSQUE SECO TROPICAL EN PUERTO ORDAZ",
+      "resumen": "\njustificacion:\n En muchas naciones como México y Costa Rica se han realizado estudios de Aves para comprender la dinámica de los bosques y selvas, además de entender el estado de conservación del ave en la zona. En Venezuela, se tienen numerosos estudios desde antes del año 2000 en diferentes especies de Aves como el águila arpía y su relación con el avance de frontera agrícola en la reserva forestal de Imataca. En la actualidad, la UNEG junto con organismos internacionales están estudiando al Amaurospiza carrizalensis una especie amenazada a causa de la destrucción de su habitad por la construcción de la represa de Tocoma. \nobjetivo:\n Este proyecto tiene como objetivos: conocer el estado de fragmentación del bosque seco tropical en el área que actualmente cubre la ciudad de Puerto Ordaz, conocer el flujo de energía y conectividad entre los fragmentos, conocer las poblaciones de Eupsittula pertinax en la parroquia Cachamay de Puerto Ordaz, y estudiar los hábitos del Eupsittula pertinax en la parroquia Cachamay de Puerto Ordaz. \nmetodos:\n Para ello, se realizaron observaciones itinerantes cronometradas en senderos en 10 parches naturales o artificiales del bosque seco tropical escogidos al azar y estratificado por la antigüedad de su poblamiento en la parroquia Cachamay de Puerto Ordaz, Municipio Caroní, del Edo Bolívar. \nconclusiones:\n Como resultados se obtuvieron que: las aves prefieren los parches menos intervenidos, las mismas se concentran en los parches continuos al bosque original, las poblaciones disminuyen mientras los parches se alejan del bosque continuo y del margen del rio.",
+      "autores": [
+        {
+          "nombre": "Gonzalez, Walter ",
+          "afiliacion": "Universidad Nacional Experimental de Guayana",
+          "ror": "https://ror.org/00qseeb08",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad Nacional Experimental de Guayana"
+      ],
+      "ubicaciongeografica": "Puerto Ordaz, parroquia Cachamay, Municipio Caroní, Edo Bolívar, Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Eupsittula pertinax', 'Amaurospiza carrizalensis', 'águila arpía']",
+      "palabrasclaves": [
+        "ornitología",
+        "bosque seco",
+        "fragmentación",
+        "conectividad",
+        "poblaciones",
+        "flujo de energía"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_473_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 473,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.2750351,
+      "longitud": -62.7558263,
+      "display_class": "placeable",
+      "on_map": true,
+      "granularidad_nivel": "T2",
+      "granularidad_razon": null,
+      "exclusion_reason": null,
+      "coordinate_group_size": 1,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-489-1",
+      "titulo": "DIVERSIDAD DE ESPECIES ARBÓREAS EN PAISAJES BOSCOSOS FRAGMENTADOS POR CAMBIOS EN EL USO DEL SUELO EN EL SUR DE VENEZUELA",
+      "resumen": "\njustificacion:\n El avance de las fronteras de colonización en los límites de la Reserva Forestal Imataca (RFI) ha determinado estructuras del paisaje diferentes que impulsan variaciones en estados sucesionales del bosque y en consecuencia en la capacidad de especies que pueden soportar. \nobjetivo:\n Este estudio tuvo como objetivo, evaluar el efecto de la fragmentación del bosque por el uso del suelo en la diversidad de especies arbóreas en un mosaico del paisaje de la cuenca alta del río Botanamo, RFI. \nmetodos:\n Para ello, se utilizaron imágenes de satélite y el chequeo de campo de la cuenca fue clasificada en cuatro mosaicos, cuya estructura espacial y temporal ha sido alterada de manera desigual en su patrón histórico de deforestación; fragmentación del bosque y cambios en el uso del suelo. En el caso del mosaico más fragmentado, pero sin cambios en su estructura en los últimos 30 años, la riqueza y composición florística de especies de árboles en parches de diferente tamaño y bosque continuo fueron caracterizadas utilizando el método de cuadrantes centrados en un punto y relacionadas con métricas del paisaje, utilizando análisis de correspondencia canónica. \nconclusiones:\n Como resultados se obtuvo que la relación especie-área se mantuvo para fragmentos medianos (10-30ha) y grandes (>30ha). Sin embargo, en fragmentos menores de 14ha, la riqueza tiende a ser independiente del tamaño del fragmento y podría estar determinada por las perturbaciones episódicas de los que son objeto. Por otro lado, las características de parches y del contexto que mejor explicaron la variabilidad en la composición de especies fueron: porcentaje de bosque de interior, distancia y contigüidad y grado de fragmentación alrededor de los fragmentos.",
+      "autores": [
+        {
+          "nombre": "Delgado M., Luz A.",
+          "afiliacion": "Universidad Nacional Experimental de Guayana",
+          "ror": "https://ror.org/00qseeb08",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad Nacional Experimental de Guayana"
+      ],
+      "ubicaciongeografica": "Sur de Venezuela, Reserva Forestal Imataca, cuenca alta del río Botanamo",
+      "ubicaciontemporal": "30 años anteriores al estudio, sin fecha específica",
+      "especiesmencionadas": "[]",
+      "palabrasclaves": [
+        "heterogeneidad",
+        "deforestación",
+        "fragmentación del bosque",
+        "riqueza de especies (alfa)",
+        "composición de especies (beta)",
+        "Reserva Forestal Imataca"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_489_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 489,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 3.4125346,
+      "longitud": -76.563085,
+      "display_class": "outside_extent",
+      "on_map": false,
+      "granularidad_nivel": "T2",
+      "granularidad_razon": null,
+      "exclusion_reason": "La latitud 3.4125346 supera el límite norte de la extensión mapeada (12.654657238920112); el punto (3.4125346, -76.563085) queda fuera del área del mapa.",
+      "coordinate_group_size": 1,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-601-1",
+      "titulo": "MANEJO INTERCULTURAL DE FUEGO COMO HERRAMIENTA PARA LA CONSERVACIÓN DEL PARQUE NACIONAL CANAIMA, VENEZUELA",
+      "resumen": "justificacion:\n El manejo del fuego ha sido uno de los retos más importantes en la gestión del Parque Nacional Canaima (PNC), debido a la alta incidencia de incendios, y a las dificultades en integrar los aspectos ecológicos, culturales e institucionales, generalmente en conflicto, así como diversos actores, con opiniones encontradas sobre las estrategias a seguir. Actualmente el manejo del fuego en el PNC, llevado a cabo por instituciones gubernamentales, posee un enfoque de exclusión, centrado en el combate y prevención. Esta política ha sido poco efectiva ya que desconoce las prácticas y conocimiento del fuego por parte del pueblo Pemón, habitantes locales del Parque. \nobjetivo:\n Esta investigación busca establecer las bases para el diseño de un plan de Manejo Integral del Fuego (MIF), que permita agrupar las necesidades de la comunidad Pemón, de conservación y el conocimiento científico, con los aspectos clásicos de manejo del fuego, bajo un mismo marco conceptual. \nmetodos:\n Para este fin fueron realizados diversos talleres con los distintos actores del Parque, en los cuales se dió a conocer el enfoque del MIF; se realizaron dinámicas grupales para identificar fortalezas y debilidades del manejo actual y definir estrategias para insertar el conocimiento Pemón en una nueva propuesta de manejo del fuego. \nconclusiones:\n Entre las ventajas actuales para la implementación del MIF están la presencia de infraestructura y personal capacitado, así como los sistemas de organización comunal de los pueblos indígenas. En contraparte, la variedad de actores con múltiples intereses de uso y los cambios culturales representan obstáculos para una futura ejecución.",
+      "autores": [
+        {
+          "nombre": "Millán, Adriana",
+          "afiliacion": "Universidad Central de Venezuela",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Bilbao, Bibiana",
+          "afiliacion": "Universidad Simón Bolívar",
+          "ror": "https://ror.org/01ak5cj98",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Marín , Sofía",
+          "afiliacion": "Universidad Simón Bolívar",
+          "ror": "https://ror.org/01ak5cj98",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Salazar, Ruth",
+          "afiliacion": "Universidad Simón Bolívar",
+          "ror": "https://ror.org/01ak5cj98",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Yerena, Edgard",
+          "afiliacion": "Universidad Simón Bolívar",
+          "ror": "https://ror.org/01ak5cj98",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad Central de Venezuela",
+        "Universidad Simón Bolívar"
+      ],
+      "ubicaciongeografica": "Parque Nacional Canaima, Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "palabrasclaves": [
+        "fuego",
+        "Manejo Integral de Fuego",
+        "Parque Nacional Canaima",
+        "Pemón",
+        "Venezuela"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_601_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 601,
+      "indice": 1,
+      "n_autores": 5,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 5.5943331,
+      "longitud": -62.1257965,
+      "display_class": "placeable",
+      "on_map": true,
+      "granularidad_nivel": "T2",
+      "granularidad_razon": null,
+      "exclusion_reason": null,
+      "coordinate_group_size": 3,
+      "coordinate_group_ids": [
+        "cve-2007-pagina-573-1",
+        "cve-2009-pagina-110-1"
+      ]
+    },
+    {
+      "study_id": "cve-2015-pagina-602-1",
+      "titulo": "DINAMIZADORES DE LA RELACIÓN INVESTIGACIÓN CIENTÍFICA-PARTICIPACIÓN COMUNITARIA EN LA ORINOQUIA Y EL PROYECTO ESTACIÓN CIENTÍFICA ORINOCO",
+      "resumen": "justificacion:\n En la Orinoquia Venezolano-Colombiana, con una densidad de solo 10 hab/km2, hay un uso no sustentable de los espacios naturales, rurales y urbanos y hay pocas estaciones científicas que permitan la investigación de largo plazo. En las existentes, la participación de la comunidad local es desde lo laboral, más los locales no son capacitados para formar parte de los investigadores y dirigir las estaciones; éstas tampoco forman parte de la estrategia de desarrollo endógeno socioeconómico local. \nobjetivo:\n Nuestro objetivo fue construir una estación científica en el río Orinoco para la capacitación, monitoreo e investigación ecológica de largo plazo en el Corredor Orinoco siguiendo una estrategia participativa. \nmetodos:\n Se desarrolló una estrategia de incorporación a la acción a través de la integración de la comunidad con el Proyecto Corredor Orinoco, creando las bases para la estación científica con la Universidad Nacional Experimental de Guayana (UNEG) como eje dinamizador del desarrollo endógeno de las comunidades ribereñas locales, a través del ecoturismo fluvial como soporte socioeconómico. \nconclusiones:\n La comunidad cedió el espacio para la construcción de la estación junto a la escuela, lo que permitiría la integración de los niños al trabajo ecológico en la estación; se firmó un convenio de participación y realizaron talleres de formación en bioconstrucción con materiales locales, los cuales permitieron la realización de dos módulos de la estación. Se observó un creciente interés de la comunidad y otras comunidades aledañas en participar en los objetivos de largo plazo de la estación como actores de la conservación.",
+      "autores": [
+        {
+          "nombre": "Rosales, Judith",
+          "afiliacion": "Universidad Nacional Experimental de Guayana (UNEG)",
+          "ror": "https://ror.org/00qseeb08",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad Nacional Experimental de Guayana (UNEG)"
+      ],
+      "ubicaciongeografica": "Orinoquia Venezolano-Colombiana, río Orinoco, Corredor Orinoco",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": null,
+      "palabrasclaves": [
+        "estaciones científicas",
+        "participación",
+        "comunitariarío Orinoco"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_602_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 602,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 7.6355416,
+      "longitud": -64.873581,
+      "display_class": "coarse_location",
+      "on_map": false,
+      "granularidad_nivel": "T0",
+      "granularidad_razon": "región binacional, no un lugar",
+      "exclusion_reason": "La ubicación 'Orinoquia Venezolano-Colombiana, río Orinoco, Corredor Orinoco' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque región binacional, no un lugar. Un nivel T0 no se puede dibujar como un punto del mapa.",
+      "coordinate_group_size": 3,
+      "coordinate_group_ids": [
+        "cve-1999-pagina-104-4",
+        "cve-2013-pagina-405-1"
+      ]
+    },
+    {
+      "study_id": "cve-2015-pagina-603-1",
+      "titulo": "MADURACION in vitro DE OVOCITOS DE GATA DOMÉSTICA (Felis catus) OBTENIDOS A TRAVÉS DE LA TÉCNICA DE SLICING",
+      "resumen": "justificacion:\n La aplicación de biotecnologías reproductivas (BTR) en felinos domésticos es limitada por factores fisiológicos intrínsecos de la especie. El uso de técnicas de reproducción asistida como la Fecundación in vitro es una potente herramienta para la conservación de especies felinas en peligro de extinción. Esta investigación plantea la aplicación de la Maduración in vitro de ovocitos proveniente de gatas domesticas como un modelo en el desarrollo de programas BTR en felinos silvestres. \nobjetivo:\n Encontrar el tiempo maduración in vitro de ovocitos de gatas domésticas más óptimo dentro de los aplicadoos (18h,24h,30h y 48h). \nmetodos:\n Un total de 596 Complejos Cumulus Oocitos (COC) fueron evaluados. Ovocitos provenientes de hembras ovariohisterectomizadas fueron obtenidos por la técnica de slincing. Seleccionando aquellos COC que presentaron formato esférico, coloración del citoplasma uniformemente oscura, zona pelúcida intacta y rodeados por cinco capas de células compactas del cúmulo. Los COC seleccionados fueron puestos a madurar en atmosfera gaseosa de 5% de CO2 y por tiempos variables de 18h, 24h, 30h y 48h en un medio de TCM-199 suplementado y a temperatura de 38.5 °C. Transcurrido los diferentes tiempos los COC fueron fijados y teñidos con aceto-orcenia para determinar su estadio nuclear. \nconclusiones:\n Ovocitos maduros fueron encontrados a las 30h y 48h con un 8,52% y 7,64% respectivamente (P≤0.001) comparado con los grupos de 18 y 24 h. Concluyéndose que bajo las condiciones de este estudio, 30 h de maduración parecen suficientes para permitir alcanzar la maduración pero más estudios deben realizarse para mejorar la calidad del medio.",
+      "autores": [
+        {
+          "nombre": "Madrigal, Karina",
+          "afiliacion": "La Universidad del Zulia",
+          "ror": "https://ror.org/04vy5s568",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Pirela, Amaru",
+          "afiliacion": "La Universidad del Zulia",
+          "ror": "https://ror.org/04vy5s568",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "La Universidad del Zulia"
+      ],
+      "ubicaciongeografica": null,
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Felis catus']",
+      "palabrasclaves": [
+        "Felis catus",
+        "meiosis",
+        "TCM-199"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_603_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 603,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": null,
+      "longitud": null,
+      "display_class": "no_coordinate",
+      "on_map": false,
+      "granularidad_nivel": "T0",
+      "granularidad_razon": "sin texto de ubicación utilizable",
+      "exclusion_reason": "El estudio no tiene latitud ni longitud, así que no se puede situar en el mapa.",
+      "coordinate_group_size": null,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-605-1",
+      "titulo": "ANÁLISIS COMPARATIVO ENTRE FOCOS DE CALOR DETECTADOS CON EL SATÉLITE MODIS/AQUA Y LA OCURRENCIA DE INCENDIOS FORESTALES EN VENEZUELA (2000-2014)",
+      "resumen": "justificacion:\n Los inventarios de incendios forestales ocurridos en Venezuela se basan en los reportes realizados por las instituciones responsables del control, combate y extinción de los eventos ocurridos en el territorio nacional. Sin embargo, el número y extensión de la superficie afectada no ha sido validada hasta el presente debido a imprecisiones en el cálculo de las estadísticas de ocurrencia, así como a la inexistencia de información para algunas entidades federales. \nobjetivo:\n El presente trabajo tiene como objetivo realizar un análisis comparativo entre focos de calor detectados con el satélite MODIS/AQUA y la ocurrencia de incendios forestales en Venezuela en el período 2000-2014. \nmetodos:\n En el presente trabajo se realizó un análisis estadístico comparativo entre los focos de calor identificados con el satélite Modis/Aqua y los reportes de eventos ocurridos a escala nacional durante el período 2000-2014, mediante el uso de herramientas estadísticas básicas. \nconclusiones:\n Los resultados obtenidos señalan que existe correspondencia en la variación anual de la superficie afectada, así como del número de incendios forestales estimados con ambos procedimientos, los cuales se relacionan con la ocurrencia de eventos El Niño - Oscilación del Sur (ENOS). Las conclusiones del presente trabajo apuntan hacia la necesidad de estimar con mayor precisión las superficies quemadas, utilizando datos de sensores de alta resolución espacial, a fin de validar los reportes oficiales y disponer de estadísticas confiables de ocurrencia de incendios forestales a escala nacional.",
+      "autores": [
+        {
+          "nombre": "Bilbao, Bibiana",
+          "afiliacion": "Universidad Simón Bolívar",
+          "ror": "https://ror.org/01ak5cj98",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Aguilar, Víctor",
+          "afiliacion": "Universidad Central de Venezuela",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Rivera-Lombardi, Roberto",
+          "afiliacion": "Universidad Central de Venezuela",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad Central de Venezuela",
+        "Universidad Simón Bolívar"
+      ],
+      "ubicaciongeografica": "Venezuela",
+      "ubicaciontemporal": "2000-2014",
+      "especiesmencionadas": null,
+      "palabrasclaves": [
+        "fuego activo",
+        "incendios forestales",
+        "percepción remota"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_605_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 605,
+      "indice": 1,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.0018709,
+      "longitud": -66.1109318,
+      "display_class": "coarse_location",
+      "on_map": false,
+      "granularidad_nivel": "T0",
+      "granularidad_razon": "menciona el país entero, sin lugar",
+      "exclusion_reason": "La ubicación 'Venezuela' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque menciona el país entero, sin lugar. Un nivel T0 no se puede dibujar como un punto del mapa.",
+      "coordinate_group_size": 14,
+      "coordinate_group_ids": [
+        "cve-1999-pagina-60-1",
+        "cve-2001-pagina-177-1",
+        "cve-2001-pagina-177-2",
+        "cve-2005-pagina-134-1",
+        "cve-2005-pagina-135-1",
+        "cve-2005-pagina-136-2",
+        "cve-2005-pagina-137-1",
+        "cve-2005-pagina-201-2",
+        "cve-2007-pagina-398-1",
+        "cve-2009-pagina-119-1",
+        "cve-2009-pagina-122-1",
+        "cve-2011-pagina-348-1",
+        "cve-2015-pagina-614-1"
+      ]
+    },
+    {
+      "study_id": "cve-2015-pagina-606-1",
+      "titulo": "ECONOMÍA VS ECOLOGÍA: APROXIMANDONOS A UNA TEORÍA UNIFICADORA",
+      "resumen": "justificacion:\n El enfrentamiento de la economía y la ecología por el valor de uso y conservación de los recursos naturales se ha agudizado frente a la crisis ambiental. \nobjetivo:\n Este estudio nos aproxima a una teoría unificadora, donde la economía representa un subsistema del ecosistema y la ecología un cuerpo de conocimientos relativo a la economía ambiental. \nmetodos:\n El método utilizado para llevar a cabo este estudio, es el análisis documental, el cual, \nconclusiones:\n revisa el trabajo familiar como entidad creadora de capital que facilita el paso de la información genética entre generaciones y define a los humanos como una especie con categorías propias de capital. Las estrategias de búsqueda y consumo representan el conjunto de capacidades para obtener los insumos, por lo que en la ecología humana el mercado cumple la misma función. La selección natural humana ha sido alterada por adelantos médicos, seguridad social y derechos humanos, reduciendo la mortalidad y aumentando la expectativa de vida. Así mismo, los cambios tecnológicos han elevado la capacidad de carga humana, permitiendo que la población crezca sin límite. De ello se concluye, que la economía es un cuerpo de conocimiento que forma parte de la ecología humana; el mercado es su estrategia de búsqueda y consumo; el genoma humano representa su “capital fundamental” y a través de capitales tangibles e intangibles se crean bases económicas para su herencia; la alteración de la selección natural y modificación de la capacidad de carga humana implica no solo la reducción de recursos naturales y contaminación ambiental, sino la acumulación de genes potencialmente nocivos, que pondrían en peligro al Homo sapiens.",
+      "autores": [
+        {
+          "nombre": "Naveda, Jorge",
+          "afiliacion": "Instituto Nacional de Parques",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Instituto Nacional de Parques"
+      ],
+      "ubicaciongeografica": null,
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Homo sapiens']",
+      "palabrasclaves": [
+        "economía",
+        "ecología",
+        "capital",
+        "mercado",
+        "ecología humana",
+        "ecoeconomía"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_606_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 606,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": null,
+      "longitud": null,
+      "display_class": "no_coordinate",
+      "on_map": false,
+      "granularidad_nivel": "T0",
+      "granularidad_razon": "sin texto de ubicación utilizable",
+      "exclusion_reason": "El estudio no tiene latitud ni longitud, así que no se puede situar en el mapa.",
+      "coordinate_group_size": null,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-607-1",
+      "titulo": "CARACTERIZACIÓN PRELIMINAR ANATÓMICA E HISTOLÓGICA EN ÓRGANOS BLANCOS DE GASTERÓPODOS INTERMAREALES (REFUGIO DE FAUNA SILVESTRE ISLA DE AVES, RFSIA)",
+      "resumen": "justificacion:\n El estudio de biomarcadores de contaminación en gasterópodos y alteraciones en su anatomía, son herramientas empleadas para determinar si un organismo ha estado expuesto a contaminantes o situaciones de estrés, tomándose medidas correctivas y evitando alteraciones del ecosistema. Las playas rocosas presentan un patrón de zonación espacial típico para los moluscos donde las especies intermareales son buenos ejemplares para ser considerados bioindicadores. El RFSIA presenta una influencia antrópica limitada, por lo cual es una zona prístina, pero, con el tiempo, podría presentarse una contaminación crónica o bien puede estar expuesto a una contaminación aguda por algún desastre. \nobjetivo:\n El objetivo de esta investigación es estudiar si hay variaciones en la anatomía y tejidos blancos (gónadas y glándulas digestivas) de gasterópodos en el tiempo, realizando un monitoreo anual en el RFSIA. \nmetodos:\n Para ello se colectaron organismos en el RFSIA en la zona sur y norte en la campaña del 2014, fueron fijados en solución Bouin y conservados en formalina buferada hasta su inclusión en parafina para realizar los cortes histológicos, los cuales fueron teñidos con la tinción básica eosina-hematoxilina. La anatomía del tejido blando o cuerpo fue estudiada previo a la inclusión. \nconclusiones:\n En este trabajo se presentan los resultados preliminares obtenidos sobre la caracterización anatómica e histológica en órganos blancos a ser considerados línea base. Se espera recolectar ejemplares nuevamente en la campaña de este año, junio 2015, a fin de realizar las primeras comparaciones entre los resultados obtenidos para las variables estudiadas en el período de los dos años.",
+      "autores": [
+        {
+          "nombre": "Neuberger-Cywiak, Lya",
+          "afiliacion": "Universidad Marítima del Caribe",
+          "ror": "https://ror.org/040tkk892",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Noriega Gil, Nicida",
+          "afiliacion": "Instituto Venezolano de Investigaciones Científicas",
+          "ror": "https://ror.org/02ntheh91",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Instituto Venezolano de Investigaciones Científicas",
+        "Universidad Marítima del Caribe"
+      ],
+      "ubicaciongeografica": "Refugio de Fauna Silvestre Isla de Aves (RFSIA)",
+      "ubicaciontemporal": "2014, junio 2015",
+      "especiesmencionadas": "['Gasterópodos']",
+      "palabrasclaves": [
+        "Refugio Fauna Silvestre Isla de Aves",
+        "gasterópodos",
+        "anatomía",
+        "histología",
+        "biomonitoreo"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_607_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 607,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 15.670426,
+      "longitud": -63.618248,
+      "display_class": "outside_extent",
+      "on_map": false,
+      "granularidad_nivel": "T2",
+      "granularidad_razon": null,
+      "exclusion_reason": "La latitud 15.670426 supera el límite norte de la extensión mapeada (12.654657238920112); el punto (15.670426, -63.618248) queda fuera del área del mapa.",
+      "coordinate_group_size": 1,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-608-1",
+      "titulo": "RELACIONES LONGITUD-PESO Y ESTIMACIÓN DE BIOMASA EN INSECTOS ACUÁTICOS EN DOS RIOS DE LA SIERRA NEVADA-SANTA MARTA, COLOMBIA",
+      "resumen": "justificacion:\n Esta investigación inquirió conseguir relaciones enfocadas en aspectos morfométricos de insectos acuáticos de varios órdenes y su peso seco a través de modelos de regresión lineal, con el fin de obtener modelos matemáticos que permitan predecir la biomasa de los organismos. La estimación de la biomasa a partir de las relaciones longitud-masa representa un paso crítico en la formulación de cuestionamientos ecológicos, independientemente del hábitat que los organismos ocupen, determinar las tasas de crecimiento y/o producción secundaria, comprender las historias de vida, los patrones estacionales y las relaciones tróficas entre grupos funcionales (Benke, 1996; Burgherr & Meyer, 1997; Cressa, 1999). \nobjetivo:\n El objetivo del presente trabajo consistió en relacionar variables de longitud y peso de insectos acuáticos correspondientes a dos ríos de la Sierra Nevada de Santa Marta-Colombia. \nmetodos:\n Los organismos fueron separados e identificados hasta el nivel de género como categoría taxonómica. Después secados en una estufa a 65°C durante 48h, para luego estimar el peso libre de humedad (mg) de cada individuo en una balanza electrónica (Shieh et al., 2003). Finalmente se realizaron regresiones para hallar la relación entre las mediciones morfometricas y el peso seco o libre de humedad. \nconclusiones:\n El modelo de regresión lineal describió la distribución de los datos entre las variables analizadas, con buenos ajustes en términos generales, permitiendo se formularan por primera vez ecuaciones de longitud-peso en géneros de insectos acuáticos de la región del caribe Colombiano entre estos los géneros: Lachlania, Baetodes, Leptohyphes, Haplohyphes, Mayobaetis, Anacroneuria, Leptonema, Limnocoris, Tricoritodes.",
+      "autores": [
+        {
+          "nombre": "Manjarres Palacio, Liliana Paola",
+          "afiliacion": "Universidad del Magdalena",
+          "ror": "https://ror.org/00fr68j09",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad del Magdalena"
+      ],
+      "ubicaciongeografica": "Sierra Nevada de Santa Marta, Colombia",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Lachlania', 'Baetodes', 'Leptohyphes', 'Haplohyphes', 'Mayobaetis', 'Anacroneuria', 'Leptonema', 'Limnocoris', 'Tricoritodes']",
+      "palabrasclaves": [
+        "biomasa",
+        "grupos funcionales",
+        "hábitat",
+        "insectos acuáticos",
+        "Sierra Nevada de Santa Marta"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_608_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 608,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.835,
+      "longitud": -73.675,
+      "display_class": "outside_extent",
+      "on_map": false,
+      "granularidad_nivel": "T2",
+      "granularidad_razon": null,
+      "exclusion_reason": "La latitud 10.835 supera el límite norte de la extensión mapeada (12.654657238920112); el punto (10.835, -73.675) queda fuera del área del mapa.",
+      "coordinate_group_size": 2,
+      "coordinate_group_ids": [
+        "cve-2015-pagina-613-1"
+      ]
+    },
+    {
+      "study_id": "cve-2015-pagina-610-1",
+      "titulo": "CARACTERIZACIÓN DE LAS COMUNIDADES DE ALGAS A LO LARGO DE UN GRADIENTE DE PROFUNDIDAD EN EL ARRECIFE DE DOS MOSQUISES SUR (PNALR)",
+      "resumen": "justificacion:\n Los arrecifes de coral son sistemas que están cambiando rápidamente, observándose una perdida significativa de coral vivo y una dominancia de algas sobre las superficie de corales muertos y de otros sustratos duros en estos sistemas. El arrecife de Dos Mosquises Sur (DMS) en el PNALR no escapa de esta realidad. \nobjetivo:\n En este trabajo, se evaluó la estructura y zonación de la comunidad de algas presentes en este arrecife en los meses de junio, agosto de 2012 y octubre de 2013. \nmetodos:\n Para esto, se fijaron transeptos perpendiculares y paralelos a la línea de costa, a lo largo de los cuales se colocaron cuadratas (10x10cm), donde se estimó la cobertura de los principales grupos funcionales (GFA) y especies de algas. Los datos de cobertura (de grupos funcionales y de especies), para los distintos niveles de profundidad y meses evaluados, se evaluaron mediante un análisis de similitud (nmMDS). \nconclusiones:\n La comunidad de algas asociada al arrecife de DMS está representada por 4 phyla de algas y 62 especies. La especie Udotea cyathifomis y F. infundibulum, representan un nuevo registro para Venezuela, junto con 8 nuevos registros para el parque. Las coberturas promedio de las algas denominadas tipo tapete (TT) y las macroalgas frondosas (MF) presentaron diferencias estadisticamente significativas, siendo superiores a las coberturas del resto de los GFA. Los tres transeptos perpendiculares presentaron una alta heterogeneidad espacial y estacional. Sólo se observó un patrón de zonación a nivel de especies, mas no de grupos funcionales.",
+      "autores": [
+        {
+          "nombre": "narvaez, marijul",
+          "afiliacion": "UCV",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Villamizar, Estrella",
+          "afiliacion": "Universidad Central de Venezuela,  2 Laboratorio de Ecología de Sistemas Acuáticos, Instituto de Zoología y Ecología Tropical",
+          "ror": "https://ror.org/0143dvz59",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "UCV",
+        "Universidad Central de Venezuela,  2 Laboratorio de Ecología de Sistemas Acuáticos, Instituto de Zoología y Ecología Tropical"
+      ],
+      "ubicaciongeografica": "PNALR, arrecife de Dos Mosquises Sur, Venezuela",
+      "ubicaciontemporal": "2012 (junio, agosto), 2013 (octubre)",
+      "especiesmencionadas": "['Udotea cyathifomis', 'F. infundibulum']",
+      "palabrasclaves": [
+        "algas",
+        "arrecifes",
+        "grupos funcionales",
+        "zonación"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_610_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 610,
+      "indice": 1,
+      "n_autores": 2,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 11.794433,
+      "longitud": -66.892576,
+      "display_class": "placeable",
+      "on_map": true,
+      "granularidad_nivel": "T2",
+      "granularidad_razon": null,
+      "exclusion_reason": null,
+      "coordinate_group_size": 1,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-611-1",
+      "titulo": "IMPACTO DEL FORRAJEO INTENSIVO DE CAPRINOS SOBRE LA ACTIVIDAD FAUNÍSTICA EN CARORA, VENEZUELA, EVIDENCIAS REGISTRADAS CON CAMARAS-TRAMPA",
+      "resumen": "justificacion:\n La ganadería intensiva suele desplazar los herbívoros autóctonos, afectando los recursos botánicos. \nobjetivo:\n Se estudió la actividad del chivo (Capra aegagrus hircus) en una zona árida. \nmetodos:\n El monitoreo biológico involucró 28 cámaras-trampa durante 35 días (marzo-abril 2014), a 25 km al NW de Carora (Lara), donde los campesinos crían rebaños de 200 chivos. El ganado es resguardado durante la noche en corrales, los criadores no acompañan el rebaño, el cual se dispersa libremente. \nconclusiones:\n Se perciben estrategias individuales y/o grupales para aprovechar el terreno individualmente o en grupos al alimentarse. Las imágenes muestran una vegetación y fauna silvestres vulneradas, en un ecosistema crecientemente intervenido y desertificado. Algunas estaciones mostraron 100% de presencia caprina, sin fotografiar otras especies autóctonas durante semanas, los registros de herbívoros autóctonos fueron muy escasos durante el estudio. El bajo número de animales silvestres es posiblemente resultado del manejo intensivo del chivo, así como de la intensa actividad de cacería furtiva.",
+      "autores": [
+        {
+          "nombre": "Carreño, Rafael",
+          "afiliacion": "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es",
+          "ror": "https://ror.org/02ntheh91",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Abarca, María",
+          "afiliacion": "Centro de Ecología, Instituto Venezolano de Investigaciones Cientificas",
+          "ror": "https://ror.org/02ntheh91",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Jedrzejewski, Wlodzimierz",
+          "afiliacion": "Centro de Ecología, Instituto Venezolano de Investigaciones Cientificas",
+          "ror": "https://ror.org/02ntheh91",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Centro de Ecología, Instituto Venezolano de Investigaciones Cientificas",
+        "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es"
+      ],
+      "ubicaciongeografica": "Carora, Lara, Venezuela",
+      "ubicaciontemporal": "2014, marzo-abril",
+      "especiesmencionadas": "['Capra aegagrus hircus', 'chivo']",
+      "palabrasclaves": [
+        "cámaras-trampa",
+        "chivos",
+        "herbívoros",
+        "monoproducción",
+        "Venezuela"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_611_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 611,
+      "indice": 1,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.169534,
+      "longitud": -70.0728483,
+      "display_class": "placeable",
+      "on_map": true,
+      "granularidad_nivel": "T2",
+      "granularidad_razon": null,
+      "exclusion_reason": null,
+      "coordinate_group_size": 1,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-612-1",
+      "titulo": "LOS BIOFERTILIZANTES, COMO PROPULSORES DE LA VIDA EN EL SUELO PARA AGROECOSISTEMAS EFICIENTES",
+      "resumen": "justificacion:\n Los microorganismos constituyen parte de la vida del suelo, ubicándose en su mayoría en la rizosfera y dependiendo de su relación con las plantas podrán ser benéficos o perjudiciales. Cuando los equilibrios se respetan en el agroecosistema, los benéficos dominan el espacio traduciéndose en efectos sinérgicos para el desarrollo de las plantas, aunque son susceptibles a desaparecer ante un mal manejo. El INIA Lara, apoyado de la USR, IVIC y UCV, ha trabajado \nobjetivo:\n evaluando el efecto de simbiontes nativos de las zonas de Sanare, Quibor y Río Claro sobre el desarrollo de cultivos de hortalizas y café, combinados con estrategias de multiplicación amigables a los productores, además de evaluar el efecto de desbalances nutricionales y enmiendas orgánicas sobre la distribución y biodiversidad de microrganismos patogénicos y benéficos. \nmetodos:\n Para ello, se han aislado microorganismos simbiontes de diferentes zonas, entre ellos bacterias del género Rhizobium de Quibor y Hongos Glomeromycota de las zonas de Las Lajitas (hortalizas), Eneal (piña), Río Claro (café) y El Palenque (papa), evaluando su efecto a nivel de umbráculo en diseños completamente al azar y en campo evaluando los patrones de dispersión de los patogénicos. \nconclusiones:\n En campo los patrones de dispersión de los patogénicos han tendido a ser uniformes causando daños en el cultivo de papa ante un mal manejo de la fertilización nitrogenada. En umbráculo los simbiontes nativos han sido tan eficientes (p<0,05%) como los testigos fertilizados y nematodos fitoparasìticos han disminuido su densidad incrementándose los no fitoparasíticos con el uso de enmiendas orgánicas.",
+      "autores": [
+        {
+          "nombre": "Renaud, Daunarima",
+          "afiliacion": "INIA",
+          "ror": "https://ror.org/04h3gcf69",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Alvarez, Carlos",
+          "afiliacion": "INIA Lara",
+          "ror": "https://ror.org/04h3gcf69",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Guedez , Farrah ",
+          "afiliacion": "INIA Lara",
+          "ror": "https://ror.org/04h3gcf69",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Pierre, Francis",
+          "afiliacion": "INIA Lara",
+          "ror": "https://ror.org/04h3gcf69",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Pire, Alfredo",
+          "afiliacion": "INIA Lara",
+          "ror": "https://ror.org/04h3gcf69",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "INIA",
+        "INIA Lara"
+      ],
+      "ubicaciongeografica": "Sanare, Quibor, Río Claro, Las Lajitas, Eneal, El Palenque",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Rhizobium', 'Glomeromycota', 'Hortalizas', 'Café', 'Piña', 'Papa']",
+      "palabrasclaves": [
+        "fitoparasíticos",
+        "nativos",
+        "microorganismos",
+        "patogénicos",
+        "simbiontes"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_612_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 612,
+      "indice": 1,
+      "n_autores": 5,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 9.7532604,
+      "longitud": -69.6513271,
+      "display_class": "coarse_location",
+      "on_map": false,
+      "granularidad_nivel": "T0",
+      "granularidad_razon": "enumera seis localidades distintas",
+      "exclusion_reason": "La ubicación 'Sanare, Quibor, Río Claro, Las Lajitas, Eneal, El Palenque' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque enumera seis localidades distintas. Un nivel T0 no se puede dibujar como un punto del mapa.",
+      "coordinate_group_size": 1,
+      "coordinate_group_ids": []
+    },
+    {
+      "study_id": "cve-2015-pagina-613-1",
+      "titulo": "ECOLOGÍA TRÓFICA DE LARVAS DE MEGALOPTERA (CORYDALIDAE: Corydalus SPP) EN RÍOS TROPICALES DE MONTAñA, DE LA SIERRA NEVADA DE SANTA MARTA, COLOMBIA",
+      "resumen": "justificacion:\n Se tiene conocimiento que la taxonomía del orden Megaloptera es satisfactoria para el Neotrópico pero hay carencia en la información biológica y ecológica de las especies suramericanas. \nobjetivo:\n Se busca describir la variedad en la dieta de larvas de Corydalus spp, relacionando talla y época del año, en cuatro ríos de la SNSM \nmetodos:\n Se muestreo mensualmente con redes Surber para recolectar larvas en épocas de precipitaciones altas y bajas. Para los análisis de contenidos estomacales se seleccionan de 1 a 10 individuos por talla, se les extrajo el tracto digestivo y, mediante fotografías en microscopio, se cuantificó cada ítem según el área medida que ocupa, identificando al máximo nivel taxonómico posible, en 20 campos oculares escogidos al azar. \nconclusiones:\n Se han encontrado, hasta el momento, tres grupos de tamaños de varían de 1cm a 5cm. Las larvas analizadas a la fecha corresponden a larvas preemergentes y sus contenidos estomacales corresponden a restos de otros insectos, evidenciando que poseen hábitos depredadores en todos los cuatro ríos. La composición del contenido estomacal varia ligeramente entre ríos pero no entre épocas de lluvias altas y bajas. Las larvas de tamaño pequeño son poco abundantes o ausentes en alguno de los ríos, con frecuencia se encuentran larvas grandes que superan los 5 cm de talla.",
+      "autores": [
+        {
+          "nombre": "guzman soto, cristian",
+          "afiliacion": "universidad del Atlantico",
+          "ror": "https://ror.org/00fr68j09",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Hurtado, Yeselis ",
+          "afiliacion": "Universidad del Magdalena",
+          "ror": "https://ror.org/00fr68j09",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Tamariz Turizo, Cesar",
+          "afiliacion": "Universidad del Magdalena",
+          "ror": "https://ror.org/00fr68j09",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Universidad del Magdalena",
+        "universidad del Atlantico"
+      ],
+      "ubicaciongeografica": "Sierra Nevada de Santa Marta, Colombia",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Corydalus spp']",
+      "palabrasclaves": [
+        "contenido estomacal",
+        "Córdoba",
+        "Gaira",
+        "Megaloptera",
+        "ríos Manzanares",
+        "Sierra Nevada de Santa Marta",
+        "Toribio"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_613_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 613,
+      "indice": 1,
+      "n_autores": 3,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 10.835,
+      "longitud": -73.675,
+      "display_class": "outside_extent",
+      "on_map": false,
+      "granularidad_nivel": "T2",
+      "granularidad_razon": null,
+      "exclusion_reason": "La latitud 10.835 supera el límite norte de la extensión mapeada (12.654657238920112); el punto (10.835, -73.675) queda fuera del área del mapa.",
+      "coordinate_group_size": 2,
+      "coordinate_group_ids": [
+        "cve-2015-pagina-608-1"
+      ]
+    },
+    {
+      "study_id": "cve-2015-pagina-614-1",
+      "titulo": "PAREMIOLOGIA DEL TIGRE EN LA CULTURA VENEZOLANA",
+      "resumen": "justificacion:\n Los refranes son transmitidos intergeneracionalmente desde períodos remotos, constituyendo un muestrario condensado de la idiosincrasia que reitera contenidos breves, constantes y anónimos. \nobjetivo:\n Se propuso estudiar las coincidencias entre la cultura popular y la académica asociada a la Panthera onca. \nmetodos:\n Para revisar la paremiología venezolana, en dichos y proverbios, se consultaron fuentes secundarias impresas, compilando unas 60 expresiones idiomáticas sobre el tigre o jaguar y otras 50 relativas a felinos de menor tamaño. \nconclusiones:\n Aunque es una especie esquiva, el campesinado acopió mediante la experiencia detalles verídicos relativos a los hábitos del jaguar. Una revisión hermenéutica evidencia que el diálogo de saberes perpetúa memes que arraigan determinados conocimientos colectivos sobre el tigre, aludiendo hechos confirmados por científicos como Hoogesteijn y Mondolfi (1992), FUDENA (1992). En el habla coloquial, el emblemático tigre personificó anécdotas, metáforas y moralejas que son reflejadas en las relaciones humanas, como símil o fabulación. La prolongada evocación de esta especie, que casi nadie observa fuera de zoológicos, sugiere la pervivencia de relictos discursivos ancestrales. Por ejemplo, un proverbio de origen lingüístico indígena (Caribe), muestra una impronta mítica y/o ritual: “Cuando el tigre está dentro del hombre, el hombre se convierte en tigre”. El jaguar es mencionado eclécticamente en toda Venezuela, incluso al norte, donde se extinguió localmente. Si este patrimonio biológico llegara a desaparecer totalmente, su valoración sobreviviría en la oralidad mientras se mantenga el acervo regional, pero el uso de figuras literarias tradicionales podría apoyar la educación ambiental para sensibilizar la población con fines conservacionistas.",
+      "autores": [
+        {
+          "nombre": "Carreño, Rafael",
+          "afiliacion": "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es",
+          "ror": "https://ror.org/02ntheh91",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es"
+      ],
+      "ubicaciongeografica": "Venezuela",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Panthera onca', 'tigre', 'jaguar', 'felinos']",
+      "palabrasclaves": [
+        "jaguar",
+        "oralidad",
+        "tigre",
+        "refranes",
+        "Venezuela"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_614_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 614,
+      "indice": 1,
+      "n_autores": 1,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 8.0018709,
+      "longitud": -66.1109318,
+      "display_class": "coarse_location",
+      "on_map": false,
+      "granularidad_nivel": "T0",
+      "granularidad_razon": "menciona el país entero, sin lugar",
+      "exclusion_reason": "La ubicación 'Venezuela' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque menciona el país entero, sin lugar. Un nivel T0 no se puede dibujar como un punto del mapa.",
+      "coordinate_group_size": 14,
+      "coordinate_group_ids": [
+        "cve-1999-pagina-60-1",
+        "cve-2001-pagina-177-1",
+        "cve-2001-pagina-177-2",
+        "cve-2005-pagina-134-1",
+        "cve-2005-pagina-135-1",
+        "cve-2005-pagina-136-2",
+        "cve-2005-pagina-137-1",
+        "cve-2005-pagina-201-2",
+        "cve-2007-pagina-398-1",
+        "cve-2009-pagina-119-1",
+        "cve-2009-pagina-122-1",
+        "cve-2011-pagina-348-1",
+        "cve-2015-pagina-605-1"
+      ]
+    },
+    {
+      "study_id": "cve-2015-pagina-615-1",
+      "titulo": "CARACTERISTÍCAS ULTRAESTRUCTURALES DE LAS CÉLULAS SANGUÍNEAS DE LA ESPECIE Caiman crocodilus crocodilus EN VIDA SILVESTRE",
+      "resumen": "justificacion:\n Las babas, aparecieron hace unos 200 millones de años. El estudio de la morfología de las células sanguíneas aporta posibles soluciones al entendimiento de las rutas metabólicas utilizadas para permanecer tanto tiempo en circulación. \nobjetivo:\n Con el objetivo de determinar las características ultraestructurales de las células sanguíneas de la especie Caimán crocodilus crocodilus en vida silvestre; \nmetodos:\n fueron utilizados 20 ejemplares, provenientes de Guayabal, Estado Guárico; fueron extraídos 5 ml de sangre de la vena coccígea caudal en tubos con EDTA. Para el análisis ultraestructural se utilizó la técnica para microscopia electrónica de transmisión. \nconclusiones:\n Los hematíes son células nucleadas de forma ovalada con bordes gruesos, y mitocondrias cerca de una banda perinuclear compuesta por ácidos grasos. Los heterófilos presentan forma esférica con prolongaciones citoplasmáticas, gránulos polimórficos de diferentes tamaños y electrón densidades, núcleo excéntrico. Los eosinófilos son esféricos con prolongaciones citoplasmáticas, núcleo lenticular excéntrico, su citoplasma contiene gránulos esféricos de diferente electrón densidades. Los linfocitos son pequeños, polimorfos, con citoplasma escaso y ligeramente basofílico con abundantes mitocondrias, presentan núcleo prominente y poros nucleares. Los monocitos son polimorfos, citoplasma basófilo con gránulos finos, núcleo irregular de gran tamaño. Los trombocitos de forma elíptica citoplasma abundante hacia sus polos, con vesículas electrón lúcidas; su núcleo exhibe una hendidura acentuada sin poros nucleares. Este estudio permitió concluir que existen diferencias morfológicas y ultraestructurales entre las células sanguíneas de la especie C. c. crocodilus, y especies ya estudiadas, mostrando indicios de posibles rutas metabólicas que utilizan estas células permitiéndoles ser mas longevas que en otros animales.",
+      "autores": [
+        {
+          "nombre": "Rossini, Mario",
+          "afiliacion": "Facultad de Ciencias Veterinarias",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Cáceres, P., Goyismery",
+          "afiliacion": "Postgrado en Medicina Veterinaria, FCV -UCV.",
+          "ror": null,
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "García, Gisela",
+          "afiliacion": "Universidad Central de Venezuela, Facultad de Ciencias Veterinarias, Cát de Histologia",
+          "ror": "https://ror.org/05kacnm89",
+          "pais": "Venezuela",
+          "orcid": null
+        },
+        {
+          "nombre": "Velázquez, Eva",
+          "afiliacion": "Postgrado en Medicina Veterinaria, FCV -UCV.",
+          "ror": "https://ror.org/05ak8xb62",
+          "pais": "Venezuela",
+          "orcid": null
+        }
+      ],
+      "instituciones": [
+        "Facultad de Ciencias Veterinarias",
+        "Postgrado en Medicina Veterinaria, FCV -UCV.",
+        "Universidad Central de Venezuela, Facultad de Ciencias Veterinarias, Cát de Histologia"
+      ],
+      "ubicaciongeografica": "Guayabal, Estado Guárico",
+      "ubicaciontemporal": null,
+      "especiesmencionadas": "['Caiman crocodilus crocodilus']",
+      "palabrasclaves": [
+        "babas",
+        "células",
+        "sangre",
+        "silvestre",
+        "ultraestructura"
+      ],
+      "source_path": "XI/curatedwithgeo/pagina_615_1.json",
+      "anio": 2015,
+      "congreso": "XI",
+      "ciudad": "Porlamar",
+      "pagina": 615,
+      "indice": 1,
+      "n_autores": 4,
+      "paises": [
+        "Venezuela"
+      ],
+      "latitud": 9.953,
+      "longitud": -66.0349882,
+      "display_class": "placeable",
+      "on_map": true,
+      "granularidad_nivel": "T2",
+      "granularidad_razon": null,
+      "exclusion_reason": null,
       "coordinate_group_size": 1,
       "coordinate_group_ids": []
     },
@@ -14255,1097 +15346,6 @@
       "granularidad_razon": "sin texto de ubicación utilizable",
       "exclusion_reason": "El estudio no tiene latitud ni longitud, así que no se puede situar en el mapa.",
       "coordinate_group_size": null,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-5-1",
-      "titulo": "ALGUNOS ASPECTOS DE LA BIOLOGÍA Y TAXONOMÍA DE LOS CANGREJOS ERMITAñOS DEL GÉNERO CLIBANARIUS DANA, 1852 (CRUSTACEA: ANOMURA: DIOGENIDAE)",
-      "resumen": "justificacion:\n Los cangrejos ermitaños del género Clibanarius poseen el abdomen blando y asimétrico, haciéndolos susceptibles de ser depredados, por lo que generalmente ocupan conchas vacías de gasterópodos que emplean como hábitat individual. \nobjetivo:\n Debido a la poca información existente de estos crustaceos en Venezuela se consideró oportuno \nmetodos:\n recopilar información bibliográfica, para contribuir al conocimiento de su biología, taxonomía y distribución. \nconclusiones:\n Los representantes del género Clibanarius presentan un tipo de alimentación omnívora. En su mayoría habitan aguas litorales en mares tropicales y templados. La relación que tiene el tamaño de la concha a habitar con respecto al tamaño del ermitaño está influenciada por la fisiología y el comportamiento del ermitaño. Los patrones de dispersión y la agrupación están asociados al ciclo de las mareas. Son dioicos con dimorfismo sexual, la cópula no dura más de 10 segundos, y el desarrollo embrionario se da entre 20 y 26 días. Los rizocéfalos del orden Kentrogonida y los Isópodos son los huéspedes más comunes de estos cangrejos. El género Clibanarius están representados actualmente por 59 especies nominales, distribuyéndose en el litoral rocoso desde el área intermareal hasta los primeros metros del infralitoral, encontrándose mayor cantidad en el océano Índico (47%), mientras que el 31% están en el Pacifico y sólo un 22% en el Atlántico. En Venezuela están reportadas las especies C. antillensis; C. sclopetarius; C. tricolor y C. vittatus",
-      "autores": [
-        {
-          "nombre": "contreras, orgelis",
-          "afiliacion": "udone",
-          "ror": null,
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "udone"
-      ],
-      "ubicaciongeografica": "Venezuela, océano Índico, Pacífico, Atlántico",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Clibanarius', 'C. antillensis', 'C. sclopetarius', 'C. tricolor', 'C. vittatus']",
-      "palabrasclaves": [
-        "Crustacea",
-        "Diogenidae",
-        "reproducción y parásito"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_5_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 5,
-      "indice": 1,
-      "n_autores": 1,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 10.574222,
-      "longitud": -67.939715,
-      "display_class": "coarse_location",
-      "on_map": false,
-      "granularidad_nivel": "T0",
-      "granularidad_razon": "enumera océanos, no un lugar",
-      "exclusion_reason": "La ubicación 'Venezuela, océano Índico, Pacífico, Atlántico' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque enumera océanos, no un lugar. Un nivel T0 no se puede dibujar como un punto del mapa.",
-      "coordinate_group_size": 1,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-19-1",
-      "titulo": "ESTADO HÍDRICO Y FOTOSÍNTESIS DE CUATRO CLONES DE CACAO SOMETIDOS A DÉFICIT HÍDRICO O A ANEGAMIENTO",
-      "resumen": "justificacion:\n El cacao es sensible tanto al déficit hídrico (DH) como al anegamiento (AN), especialmente durante la etapa juvenil. \nobjetivo:\n El objetivo del presente estudio fue comparar el estado hídrico, el intercambio gaseoso y la actividad fotoquímica del PSII en individuos jóvenes de cuatro clones sometidos a DH o a AN. \nmetodos:\n El potencial hídrico fue medido con bomba de presión, el potencial osmótico con psicrómetro, el intercambio gaseoso con analizador infrarrojo de gases y la actividad fotoquímica con fluorímetro. \nconclusiones:\n Después de 35 días de tratamiento, los cuatro clones presentaron descensos en el potencial hídrico con el DH (66 %) y el AN (23 %). La tasa fotosintética (PN) disminuyó en promedio 46 % debido al DH y 60 % debido al AN, siendo el clon 447 el más susceptible al DH y el 415 el más susceptible al AN. En promedio, PN retomó 100 % de los valores del control siete días después de suspendido el DH, pero solo 74 % al suspenderse el AN. El clon 439, con mayor densidad de lenticelas, fue el que más se recuperó del AN. En ningún caso ocurrió fotoinhibición crónica. La aparición de raíces adventicias caulinares y la hipertrofia de lenticelas fueron parte de los mecanismos de aclimatación al AN. Las respuestas observadas permiten sugerir que todos los clones son aptos para el cultivo en zonas propensas a sequía, y el clon 439 el más apto para terrenos anegadizos.",
-      "autores": [
-        {
-          "nombre": "Herrera, Ana",
-          "afiliacion": "Centro de Botánica Tropical, Fac. Ciencias, UCV",
-          "ror": "https://ror.org/05kacnm89",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "De Almeida, Jenny",
-          "afiliacion": "Centro de Botánica Tropical, Facultad de Ciencias, Universidad Central de Venezuela",
-          "ror": "https://ror.org/05kacnm89",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Tezara, Wilmer",
-          "afiliacion": "Centro de Botánica Tropical, Facultad de Ciencias, Universidad Central de Venezuela",
-          "ror": "https://ror.org/05kacnm89",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Centro de Botánica Tropical, Fac. Ciencias, UCV",
-        "Centro de Botánica Tropical, Facultad de Ciencias, Universidad Central de Venezuela"
-      ],
-      "ubicaciongeografica": null,
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Theobroma cacao']",
-      "palabrasclaves": [
-        "anegamiento",
-        "cacao",
-        "déficit hídrico",
-        "fotosíntesis",
-        "lenticelas"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_19_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 19,
-      "indice": 1,
-      "n_autores": 3,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": null,
-      "longitud": null,
-      "display_class": "no_coordinate",
-      "on_map": false,
-      "granularidad_nivel": "T0",
-      "granularidad_razon": "sin texto de ubicación utilizable",
-      "exclusion_reason": "El estudio no tiene latitud ni longitud, así que no se puede situar en el mapa.",
-      "coordinate_group_size": null,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-60-1",
-      "titulo": "ECOTECNOLOGÍAS QUE GENERAN SOLUCIONES Y LOS DERROTEROS DE LA ECOLOGÍA: INGENIERÍA GENÉTICA DE ÁRBOLES",
-      "resumen": "justificacion:\n La desaparición de bosques tropicales es alarmante en la actualidad y genera consecuentemente impactos en la pérdida de biodiversidad, disponibilidad de agua y recursos para la subsistencia de las comunidades locales; aunado a las consecuencias climáticas globales. Recientemente, ha emergido como solución ecológica para satisfacer la demanda de madera, la generación de plantaciones forestales utilizando árboles “domesticados” con el uso de ingeniería genética. Estos avances científicos se basan en criterios llamados \"ecotecnológicos\" o \"ecoevolutivos.\" \nobjetivo:\n El objetivo de este trabajo fue evaluar los fundamentos de estas propuestas de plantaciones forestales y sus principios ecológicos. \nmetodos:\n Para ello, hemos realizado una investigación de la literatura especializada del último lustro. \nconclusiones:\n La revisión permitió diagnosticar que: 1. Existe un reconocimiento de la importancia de los bosques naturales como ecosistemas en riesgo; 2. El mayor interés en los bosques es por su beneficio en madera como mercancía; 3. Debemos, en nombre del crecimiento y de la demanda, domesticar genéticamente a los árboles de interés forestal; 4. Existe una proyección de las plantaciones monoespecíficas como bosques; 5. Dado que hay variabilidad natural, los genotipos modificados coincidirían con algún rasgo del abanico genético. Desde la ecología se omiten algunos aspectos determinantes: un bosque natural provee muchos más beneficios locales que sólo la madera; una plantación monoclonal no es un bosque, es un desierto verde; el uso de Eucaliptus en el Neotrópico implica incorporar especies exóticas; una plantación es la privatización de los servicios ecosistémicos fundamentales para las comunidades locales. Estas ecotecnologías forestales ni son soluciones, ni son ecológicas.",
-      "autores": [
-        {
-          "nombre": "Ramos, Maribel",
-          "afiliacion": "IVIC",
-          "ror": "https://ror.org/02ntheh91",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Herrera, Francisco F. ",
-          "afiliacion": "Instituto Venezolano de Investigaciones Científicas",
-          "ror": "https://ror.org/02ntheh91",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "IVIC",
-        "Instituto Venezolano de Investigaciones Científicas"
-      ],
-      "ubicaciongeografica": "Neotrópico",
-      "ubicaciontemporal": "último lustro",
-      "especiesmencionadas": "['Eucaliptus']",
-      "palabrasclaves": [
-        "ecotecnologías",
-        "ingeniería genética",
-        "plantaciones",
-        "privatización",
-        "riesgo"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_60_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 60,
-      "indice": 1,
-      "n_autores": 2,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 10.417107,
-      "longitud": -84.123118,
-      "display_class": "coarse_location",
-      "on_map": false,
-      "granularidad_nivel": "T0",
-      "granularidad_razon": "región supra-nacional",
-      "exclusion_reason": "La ubicación 'Neotrópico' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque región supra-nacional. Un nivel T0 no se puede dibujar como un punto del mapa.",
-      "coordinate_group_size": 1,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-261-1",
-      "titulo": "LOS RÍOS DEL DELTA DEL ORINOCO, VENEZUELA",
-      "resumen": "\njustificacion:\n El Delta del Orinoco está conformado por una extensa red de ríos de porte variable denominados caños, grandes cauces (p. e. Brazo Imataca-4 km ancho); intermedios (caño Merejina-1,6 km); más estrechos (Caño Macareo-650 m), y numerosos de menor anchura. Estos cauces interconectan múltiples ecosistemas, en general inalterados aunque una parte de ellos ha sufrido intervenciones fuertes. \nobjetivo:\n El objetivo de este trabajo es describir estos ambientes y los cambios causados por las intervenciones antrópicas. \nmetodos:\n Por medio del análisis crítico de la bibliografía existente y de estudios propios, se evalúan las características de los diferentes ríos y el impacto causado en ellos por obras y actividades humanas. \nconclusiones:\n Si bien la mayoría de los cauces recorren territorios poco alterados, algunos de ellos se hallan profundamente influenciados por la regulación de las aguas (caño Mánamo) y por el dragado y navegación (Rio Grande y Brazo Imataca). Estas intervenciones han generado cambios en la flora y comunidades asociada al cauce así como a la fauna íctica y bentos, al afectar particularmente la salinidad y los patrones anuales de caudal, descarga, así como la estacionalidad hidrológica. La diversidad de las plantas asociadas a las riberas de los cauces intervenidos se ha incrementado, al igual que la productividad, al suprimirse los picos de velocidad y creciente de las aguas. Igualmente algunas especies han sido suplantadas por otras. Otras afectaciones incluyen la deforestación de manglares, sobrepesca, impactos potenciales derivados de la actividad petrolera y especialmente, la pesca camaronera de arrastre en las bocas, barras y estuarios.",
-      "autores": [
-        {
-          "nombre": "Colonnello, Giuseppe",
-          "afiliacion": "Fundación La Salle de Ciencias Naturales",
-          "ror": "https://ror.org/02r59nq91",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Lasso Alcalá, Carlos",
-          "afiliacion": "Instituto Alexander von Humboldt. ",
-          "ror": "https://ror.org/030vkw561",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Fundación La Salle de Ciencias Naturales",
-        "Instituto Alexander von Humboldt. "
-      ],
-      "ubicaciongeografica": "Delta del Orinoco, Venezuela",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['manglares', 'peces', 'camaron']",
-      "palabrasclaves": [
-        "bentos",
-        "caño Macareo",
-        "caño Mánamo",
-        "fauna íctica",
-        "río delta Orinoco",
-        "vegetación ribereña"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_261_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 261,
-      "indice": 1,
-      "n_autores": 2,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 9.4966304,
-      "longitud": -61.4052615,
-      "display_class": "coarse_location",
-      "on_map": false,
-      "granularidad_nivel": "T1",
-      "granularidad_razon": "región natural de escala estadal",
-      "exclusion_reason": "La ubicación 'Delta del Orinoco, Venezuela' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T1 (unidad administrativa sin localidad nombrada dentro, o accidente o región de escala estadal o regional sin localidad) porque región natural de escala estadal. Un nivel T1 no se puede dibujar como un punto del mapa.",
-      "coordinate_group_size": 2,
-      "coordinate_group_ids": [
-        "cve-2011-pagina-366-1"
-      ]
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-473-1",
-      "titulo": "POBLACIONES DE Eupsittula pertinax COMO INDICADOR EN LA FRAGMENTACIÓN DEL BOSQUE SECO TROPICAL EN PUERTO ORDAZ",
-      "resumen": "\njustificacion:\n En muchas naciones como México y Costa Rica se han realizado estudios de Aves para comprender la dinámica de los bosques y selvas, además de entender el estado de conservación del ave en la zona. En Venezuela, se tienen numerosos estudios desde antes del año 2000 en diferentes especies de Aves como el águila arpía y su relación con el avance de frontera agrícola en la reserva forestal de Imataca. En la actualidad, la UNEG junto con organismos internacionales están estudiando al Amaurospiza carrizalensis una especie amenazada a causa de la destrucción de su habitad por la construcción de la represa de Tocoma. \nobjetivo:\n Este proyecto tiene como objetivos: conocer el estado de fragmentación del bosque seco tropical en el área que actualmente cubre la ciudad de Puerto Ordaz, conocer el flujo de energía y conectividad entre los fragmentos, conocer las poblaciones de Eupsittula pertinax en la parroquia Cachamay de Puerto Ordaz, y estudiar los hábitos del Eupsittula pertinax en la parroquia Cachamay de Puerto Ordaz. \nmetodos:\n Para ello, se realizaron observaciones itinerantes cronometradas en senderos en 10 parches naturales o artificiales del bosque seco tropical escogidos al azar y estratificado por la antigüedad de su poblamiento en la parroquia Cachamay de Puerto Ordaz, Municipio Caroní, del Edo Bolívar. \nconclusiones:\n Como resultados se obtuvieron que: las aves prefieren los parches menos intervenidos, las mismas se concentran en los parches continuos al bosque original, las poblaciones disminuyen mientras los parches se alejan del bosque continuo y del margen del rio.",
-      "autores": [
-        {
-          "nombre": "Gonzalez, Walter ",
-          "afiliacion": "Universidad Nacional Experimental de Guayana",
-          "ror": "https://ror.org/00qseeb08",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Universidad Nacional Experimental de Guayana"
-      ],
-      "ubicaciongeografica": "Puerto Ordaz, parroquia Cachamay, Municipio Caroní, Edo Bolívar, Venezuela",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Eupsittula pertinax', 'Amaurospiza carrizalensis', 'águila arpía']",
-      "palabrasclaves": [
-        "ornitología",
-        "bosque seco",
-        "fragmentación",
-        "conectividad",
-        "poblaciones",
-        "flujo de energía"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_473_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 473,
-      "indice": 1,
-      "n_autores": 1,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 8.2750351,
-      "longitud": -62.7558263,
-      "display_class": "placeable",
-      "on_map": true,
-      "granularidad_nivel": "T2",
-      "granularidad_razon": null,
-      "exclusion_reason": null,
-      "coordinate_group_size": 1,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-489-1",
-      "titulo": "DIVERSIDAD DE ESPECIES ARBÓREAS EN PAISAJES BOSCOSOS FRAGMENTADOS POR CAMBIOS EN EL USO DEL SUELO EN EL SUR DE VENEZUELA",
-      "resumen": "\njustificacion:\n El avance de las fronteras de colonización en los límites de la Reserva Forestal Imataca (RFI) ha determinado estructuras del paisaje diferentes que impulsan variaciones en estados sucesionales del bosque y en consecuencia en la capacidad de especies que pueden soportar. \nobjetivo:\n Este estudio tuvo como objetivo, evaluar el efecto de la fragmentación del bosque por el uso del suelo en la diversidad de especies arbóreas en un mosaico del paisaje de la cuenca alta del río Botanamo, RFI. \nmetodos:\n Para ello, se utilizaron imágenes de satélite y el chequeo de campo de la cuenca fue clasificada en cuatro mosaicos, cuya estructura espacial y temporal ha sido alterada de manera desigual en su patrón histórico de deforestación; fragmentación del bosque y cambios en el uso del suelo. En el caso del mosaico más fragmentado, pero sin cambios en su estructura en los últimos 30 años, la riqueza y composición florística de especies de árboles en parches de diferente tamaño y bosque continuo fueron caracterizadas utilizando el método de cuadrantes centrados en un punto y relacionadas con métricas del paisaje, utilizando análisis de correspondencia canónica. \nconclusiones:\n Como resultados se obtuvo que la relación especie-área se mantuvo para fragmentos medianos (10-30ha) y grandes (>30ha). Sin embargo, en fragmentos menores de 14ha, la riqueza tiende a ser independiente del tamaño del fragmento y podría estar determinada por las perturbaciones episódicas de los que son objeto. Por otro lado, las características de parches y del contexto que mejor explicaron la variabilidad en la composición de especies fueron: porcentaje de bosque de interior, distancia y contigüidad y grado de fragmentación alrededor de los fragmentos.",
-      "autores": [
-        {
-          "nombre": "Delgado M., Luz A.",
-          "afiliacion": "Universidad Nacional Experimental de Guayana",
-          "ror": "https://ror.org/00qseeb08",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Universidad Nacional Experimental de Guayana"
-      ],
-      "ubicaciongeografica": "Sur de Venezuela, Reserva Forestal Imataca, cuenca alta del río Botanamo",
-      "ubicaciontemporal": "30 años anteriores al estudio, sin fecha específica",
-      "especiesmencionadas": "[]",
-      "palabrasclaves": [
-        "heterogeneidad",
-        "deforestación",
-        "fragmentación del bosque",
-        "riqueza de especies (alfa)",
-        "composición de especies (beta)",
-        "Reserva Forestal Imataca"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_489_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 489,
-      "indice": 1,
-      "n_autores": 1,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 3.4125346,
-      "longitud": -76.563085,
-      "display_class": "outside_extent",
-      "on_map": false,
-      "granularidad_nivel": "T2",
-      "granularidad_razon": null,
-      "exclusion_reason": "La latitud 3.4125346 supera el límite norte de la extensión mapeada (12.654657238920112); el punto (3.4125346, -76.563085) queda fuera del área del mapa.",
-      "coordinate_group_size": 1,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-601-1",
-      "titulo": "MANEJO INTERCULTURAL DE FUEGO COMO HERRAMIENTA PARA LA CONSERVACIÓN DEL PARQUE NACIONAL CANAIMA, VENEZUELA",
-      "resumen": "justificacion:\n El manejo del fuego ha sido uno de los retos más importantes en la gestión del Parque Nacional Canaima (PNC), debido a la alta incidencia de incendios, y a las dificultades en integrar los aspectos ecológicos, culturales e institucionales, generalmente en conflicto, así como diversos actores, con opiniones encontradas sobre las estrategias a seguir. Actualmente el manejo del fuego en el PNC, llevado a cabo por instituciones gubernamentales, posee un enfoque de exclusión, centrado en el combate y prevención. Esta política ha sido poco efectiva ya que desconoce las prácticas y conocimiento del fuego por parte del pueblo Pemón, habitantes locales del Parque. \nobjetivo:\n Esta investigación busca establecer las bases para el diseño de un plan de Manejo Integral del Fuego (MIF), que permita agrupar las necesidades de la comunidad Pemón, de conservación y el conocimiento científico, con los aspectos clásicos de manejo del fuego, bajo un mismo marco conceptual. \nmetodos:\n Para este fin fueron realizados diversos talleres con los distintos actores del Parque, en los cuales se dió a conocer el enfoque del MIF; se realizaron dinámicas grupales para identificar fortalezas y debilidades del manejo actual y definir estrategias para insertar el conocimiento Pemón en una nueva propuesta de manejo del fuego. \nconclusiones:\n Entre las ventajas actuales para la implementación del MIF están la presencia de infraestructura y personal capacitado, así como los sistemas de organización comunal de los pueblos indígenas. En contraparte, la variedad de actores con múltiples intereses de uso y los cambios culturales representan obstáculos para una futura ejecución.",
-      "autores": [
-        {
-          "nombre": "Millán, Adriana",
-          "afiliacion": "Universidad Central de Venezuela",
-          "ror": "https://ror.org/05kacnm89",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Bilbao, Bibiana",
-          "afiliacion": "Universidad Simón Bolívar",
-          "ror": "https://ror.org/01ak5cj98",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Marín , Sofía",
-          "afiliacion": "Universidad Simón Bolívar",
-          "ror": "https://ror.org/01ak5cj98",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Salazar, Ruth",
-          "afiliacion": "Universidad Simón Bolívar",
-          "ror": "https://ror.org/01ak5cj98",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Yerena, Edgard",
-          "afiliacion": "Universidad Simón Bolívar",
-          "ror": "https://ror.org/01ak5cj98",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Universidad Central de Venezuela",
-        "Universidad Simón Bolívar"
-      ],
-      "ubicaciongeografica": "Parque Nacional Canaima, Venezuela",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": null,
-      "palabrasclaves": [
-        "fuego",
-        "Manejo Integral de Fuego",
-        "Parque Nacional Canaima",
-        "Pemón",
-        "Venezuela"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_601_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 601,
-      "indice": 1,
-      "n_autores": 5,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 5.5943331,
-      "longitud": -62.1257965,
-      "display_class": "placeable",
-      "on_map": true,
-      "granularidad_nivel": "T2",
-      "granularidad_razon": null,
-      "exclusion_reason": null,
-      "coordinate_group_size": 3,
-      "coordinate_group_ids": [
-        "cve-2007-pagina-573-1",
-        "cve-2009-pagina-110-1"
-      ]
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-602-1",
-      "titulo": "DINAMIZADORES DE LA RELACIÓN INVESTIGACIÓN CIENTÍFICA-PARTICIPACIÓN COMUNITARIA EN LA ORINOQUIA Y EL PROYECTO ESTACIÓN CIENTÍFICA ORINOCO",
-      "resumen": "justificacion:\n En la Orinoquia Venezolano-Colombiana, con una densidad de solo 10 hab/km2, hay un uso no sustentable de los espacios naturales, rurales y urbanos y hay pocas estaciones científicas que permitan la investigación de largo plazo. En las existentes, la participación de la comunidad local es desde lo laboral, más los locales no son capacitados para formar parte de los investigadores y dirigir las estaciones; éstas tampoco forman parte de la estrategia de desarrollo endógeno socioeconómico local. \nobjetivo:\n Nuestro objetivo fue construir una estación científica en el río Orinoco para la capacitación, monitoreo e investigación ecológica de largo plazo en el Corredor Orinoco siguiendo una estrategia participativa. \nmetodos:\n Se desarrolló una estrategia de incorporación a la acción a través de la integración de la comunidad con el Proyecto Corredor Orinoco, creando las bases para la estación científica con la Universidad Nacional Experimental de Guayana (UNEG) como eje dinamizador del desarrollo endógeno de las comunidades ribereñas locales, a través del ecoturismo fluvial como soporte socioeconómico. \nconclusiones:\n La comunidad cedió el espacio para la construcción de la estación junto a la escuela, lo que permitiría la integración de los niños al trabajo ecológico en la estación; se firmó un convenio de participación y realizaron talleres de formación en bioconstrucción con materiales locales, los cuales permitieron la realización de dos módulos de la estación. Se observó un creciente interés de la comunidad y otras comunidades aledañas en participar en los objetivos de largo plazo de la estación como actores de la conservación.",
-      "autores": [
-        {
-          "nombre": "Rosales, Judith",
-          "afiliacion": "Universidad Nacional Experimental de Guayana (UNEG)",
-          "ror": "https://ror.org/00qseeb08",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Universidad Nacional Experimental de Guayana (UNEG)"
-      ],
-      "ubicaciongeografica": "Orinoquia Venezolano-Colombiana, río Orinoco, Corredor Orinoco",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": null,
-      "palabrasclaves": [
-        "estaciones científicas",
-        "participación",
-        "comunitariarío Orinoco"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_602_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 602,
-      "indice": 1,
-      "n_autores": 1,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 7.6355416,
-      "longitud": -64.873581,
-      "display_class": "coarse_location",
-      "on_map": false,
-      "granularidad_nivel": "T0",
-      "granularidad_razon": "región binacional, no un lugar",
-      "exclusion_reason": "La ubicación 'Orinoquia Venezolano-Colombiana, río Orinoco, Corredor Orinoco' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque región binacional, no un lugar. Un nivel T0 no se puede dibujar como un punto del mapa.",
-      "coordinate_group_size": 3,
-      "coordinate_group_ids": [
-        "cve-1999-pagina-104-4",
-        "cve-2013-pagina-405-1"
-      ]
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-603-1",
-      "titulo": "MADURACION in vitro DE OVOCITOS DE GATA DOMÉSTICA (Felis catus) OBTENIDOS A TRAVÉS DE LA TÉCNICA DE SLICING",
-      "resumen": "justificacion:\n La aplicación de biotecnologías reproductivas (BTR) en felinos domésticos es limitada por factores fisiológicos intrínsecos de la especie. El uso de técnicas de reproducción asistida como la Fecundación in vitro es una potente herramienta para la conservación de especies felinas en peligro de extinción. Esta investigación plantea la aplicación de la Maduración in vitro de ovocitos proveniente de gatas domesticas como un modelo en el desarrollo de programas BTR en felinos silvestres. \nobjetivo:\n Encontrar el tiempo maduración in vitro de ovocitos de gatas domésticas más óptimo dentro de los aplicadoos (18h,24h,30h y 48h). \nmetodos:\n Un total de 596 Complejos Cumulus Oocitos (COC) fueron evaluados. Ovocitos provenientes de hembras ovariohisterectomizadas fueron obtenidos por la técnica de slincing. Seleccionando aquellos COC que presentaron formato esférico, coloración del citoplasma uniformemente oscura, zona pelúcida intacta y rodeados por cinco capas de células compactas del cúmulo. Los COC seleccionados fueron puestos a madurar en atmosfera gaseosa de 5% de CO2 y por tiempos variables de 18h, 24h, 30h y 48h en un medio de TCM-199 suplementado y a temperatura de 38.5 °C. Transcurrido los diferentes tiempos los COC fueron fijados y teñidos con aceto-orcenia para determinar su estadio nuclear. \nconclusiones:\n Ovocitos maduros fueron encontrados a las 30h y 48h con un 8,52% y 7,64% respectivamente (P≤0.001) comparado con los grupos de 18 y 24 h. Concluyéndose que bajo las condiciones de este estudio, 30 h de maduración parecen suficientes para permitir alcanzar la maduración pero más estudios deben realizarse para mejorar la calidad del medio.",
-      "autores": [
-        {
-          "nombre": "Madrigal, Karina",
-          "afiliacion": "La Universidad del Zulia",
-          "ror": "https://ror.org/04vy5s568",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Pirela, Amaru",
-          "afiliacion": "La Universidad del Zulia",
-          "ror": "https://ror.org/04vy5s568",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "La Universidad del Zulia"
-      ],
-      "ubicaciongeografica": null,
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Felis catus']",
-      "palabrasclaves": [
-        "Felis catus",
-        "meiosis",
-        "TCM-199"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_603_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 603,
-      "indice": 1,
-      "n_autores": 2,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": null,
-      "longitud": null,
-      "display_class": "no_coordinate",
-      "on_map": false,
-      "granularidad_nivel": "T0",
-      "granularidad_razon": "sin texto de ubicación utilizable",
-      "exclusion_reason": "El estudio no tiene latitud ni longitud, así que no se puede situar en el mapa.",
-      "coordinate_group_size": null,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-605-1",
-      "titulo": "ANÁLISIS COMPARATIVO ENTRE FOCOS DE CALOR DETECTADOS CON EL SATÉLITE MODIS/AQUA Y LA OCURRENCIA DE INCENDIOS FORESTALES EN VENEZUELA (2000-2014)",
-      "resumen": "justificacion:\n Los inventarios de incendios forestales ocurridos en Venezuela se basan en los reportes realizados por las instituciones responsables del control, combate y extinción de los eventos ocurridos en el territorio nacional. Sin embargo, el número y extensión de la superficie afectada no ha sido validada hasta el presente debido a imprecisiones en el cálculo de las estadísticas de ocurrencia, así como a la inexistencia de información para algunas entidades federales. \nobjetivo:\n El presente trabajo tiene como objetivo realizar un análisis comparativo entre focos de calor detectados con el satélite MODIS/AQUA y la ocurrencia de incendios forestales en Venezuela en el período 2000-2014. \nmetodos:\n En el presente trabajo se realizó un análisis estadístico comparativo entre los focos de calor identificados con el satélite Modis/Aqua y los reportes de eventos ocurridos a escala nacional durante el período 2000-2014, mediante el uso de herramientas estadísticas básicas. \nconclusiones:\n Los resultados obtenidos señalan que existe correspondencia en la variación anual de la superficie afectada, así como del número de incendios forestales estimados con ambos procedimientos, los cuales se relacionan con la ocurrencia de eventos El Niño - Oscilación del Sur (ENOS). Las conclusiones del presente trabajo apuntan hacia la necesidad de estimar con mayor precisión las superficies quemadas, utilizando datos de sensores de alta resolución espacial, a fin de validar los reportes oficiales y disponer de estadísticas confiables de ocurrencia de incendios forestales a escala nacional.",
-      "autores": [
-        {
-          "nombre": "Bilbao, Bibiana",
-          "afiliacion": "Universidad Simón Bolívar",
-          "ror": "https://ror.org/01ak5cj98",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Aguilar, Víctor",
-          "afiliacion": "Universidad Central de Venezuela",
-          "ror": "https://ror.org/05kacnm89",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Rivera-Lombardi, Roberto",
-          "afiliacion": "Universidad Central de Venezuela",
-          "ror": "https://ror.org/05kacnm89",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Universidad Central de Venezuela",
-        "Universidad Simón Bolívar"
-      ],
-      "ubicaciongeografica": "Venezuela",
-      "ubicaciontemporal": "2000-2014",
-      "especiesmencionadas": null,
-      "palabrasclaves": [
-        "fuego activo",
-        "incendios forestales",
-        "percepción remota"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_605_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 605,
-      "indice": 1,
-      "n_autores": 3,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 8.0018709,
-      "longitud": -66.1109318,
-      "display_class": "coarse_location",
-      "on_map": false,
-      "granularidad_nivel": "T0",
-      "granularidad_razon": "menciona el país entero, sin lugar",
-      "exclusion_reason": "La ubicación 'Venezuela' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque menciona el país entero, sin lugar. Un nivel T0 no se puede dibujar como un punto del mapa.",
-      "coordinate_group_size": 14,
-      "coordinate_group_ids": [
-        "cve-1999-pagina-60-1",
-        "cve-2001-pagina-177-1",
-        "cve-2001-pagina-177-2",
-        "cve-2005-pagina-134-1",
-        "cve-2005-pagina-135-1",
-        "cve-2005-pagina-136-2",
-        "cve-2005-pagina-137-1",
-        "cve-2005-pagina-201-2",
-        "cve-2007-pagina-398-1",
-        "cve-2009-pagina-119-1",
-        "cve-2009-pagina-122-1",
-        "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-614-1"
-      ]
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-606-1",
-      "titulo": "ECONOMÍA VS ECOLOGÍA: APROXIMANDONOS A UNA TEORÍA UNIFICADORA",
-      "resumen": "justificacion:\n El enfrentamiento de la economía y la ecología por el valor de uso y conservación de los recursos naturales se ha agudizado frente a la crisis ambiental. \nobjetivo:\n Este estudio nos aproxima a una teoría unificadora, donde la economía representa un subsistema del ecosistema y la ecología un cuerpo de conocimientos relativo a la economía ambiental. \nmetodos:\n El método utilizado para llevar a cabo este estudio, es el análisis documental, el cual, \nconclusiones:\n revisa el trabajo familiar como entidad creadora de capital que facilita el paso de la información genética entre generaciones y define a los humanos como una especie con categorías propias de capital. Las estrategias de búsqueda y consumo representan el conjunto de capacidades para obtener los insumos, por lo que en la ecología humana el mercado cumple la misma función. La selección natural humana ha sido alterada por adelantos médicos, seguridad social y derechos humanos, reduciendo la mortalidad y aumentando la expectativa de vida. Así mismo, los cambios tecnológicos han elevado la capacidad de carga humana, permitiendo que la población crezca sin límite. De ello se concluye, que la economía es un cuerpo de conocimiento que forma parte de la ecología humana; el mercado es su estrategia de búsqueda y consumo; el genoma humano representa su “capital fundamental” y a través de capitales tangibles e intangibles se crean bases económicas para su herencia; la alteración de la selección natural y modificación de la capacidad de carga humana implica no solo la reducción de recursos naturales y contaminación ambiental, sino la acumulación de genes potencialmente nocivos, que pondrían en peligro al Homo sapiens.",
-      "autores": [
-        {
-          "nombre": "Naveda, Jorge",
-          "afiliacion": "Instituto Nacional de Parques",
-          "ror": null,
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Instituto Nacional de Parques"
-      ],
-      "ubicaciongeografica": null,
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Homo sapiens']",
-      "palabrasclaves": [
-        "economía",
-        "ecología",
-        "capital",
-        "mercado",
-        "ecología humana",
-        "ecoeconomía"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_606_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 606,
-      "indice": 1,
-      "n_autores": 1,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": null,
-      "longitud": null,
-      "display_class": "no_coordinate",
-      "on_map": false,
-      "granularidad_nivel": "T0",
-      "granularidad_razon": "sin texto de ubicación utilizable",
-      "exclusion_reason": "El estudio no tiene latitud ni longitud, así que no se puede situar en el mapa.",
-      "coordinate_group_size": null,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-607-1",
-      "titulo": "CARACTERIZACIÓN PRELIMINAR ANATÓMICA E HISTOLÓGICA EN ÓRGANOS BLANCOS DE GASTERÓPODOS INTERMAREALES (REFUGIO DE FAUNA SILVESTRE ISLA DE AVES, RFSIA)",
-      "resumen": "justificacion:\n El estudio de biomarcadores de contaminación en gasterópodos y alteraciones en su anatomía, son herramientas empleadas para determinar si un organismo ha estado expuesto a contaminantes o situaciones de estrés, tomándose medidas correctivas y evitando alteraciones del ecosistema. Las playas rocosas presentan un patrón de zonación espacial típico para los moluscos donde las especies intermareales son buenos ejemplares para ser considerados bioindicadores. El RFSIA presenta una influencia antrópica limitada, por lo cual es una zona prístina, pero, con el tiempo, podría presentarse una contaminación crónica o bien puede estar expuesto a una contaminación aguda por algún desastre. \nobjetivo:\n El objetivo de esta investigación es estudiar si hay variaciones en la anatomía y tejidos blancos (gónadas y glándulas digestivas) de gasterópodos en el tiempo, realizando un monitoreo anual en el RFSIA. \nmetodos:\n Para ello se colectaron organismos en el RFSIA en la zona sur y norte en la campaña del 2014, fueron fijados en solución Bouin y conservados en formalina buferada hasta su inclusión en parafina para realizar los cortes histológicos, los cuales fueron teñidos con la tinción básica eosina-hematoxilina. La anatomía del tejido blando o cuerpo fue estudiada previo a la inclusión. \nconclusiones:\n En este trabajo se presentan los resultados preliminares obtenidos sobre la caracterización anatómica e histológica en órganos blancos a ser considerados línea base. Se espera recolectar ejemplares nuevamente en la campaña de este año, junio 2015, a fin de realizar las primeras comparaciones entre los resultados obtenidos para las variables estudiadas en el período de los dos años.",
-      "autores": [
-        {
-          "nombre": "Neuberger-Cywiak, Lya",
-          "afiliacion": "Universidad Marítima del Caribe",
-          "ror": "https://ror.org/040tkk892",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Noriega Gil, Nicida",
-          "afiliacion": "Instituto Venezolano de Investigaciones Científicas",
-          "ror": "https://ror.org/02ntheh91",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Instituto Venezolano de Investigaciones Científicas",
-        "Universidad Marítima del Caribe"
-      ],
-      "ubicaciongeografica": "Refugio de Fauna Silvestre Isla de Aves (RFSIA)",
-      "ubicaciontemporal": "2014, junio 2015",
-      "especiesmencionadas": "['Gasterópodos']",
-      "palabrasclaves": [
-        "Refugio Fauna Silvestre Isla de Aves",
-        "gasterópodos",
-        "anatomía",
-        "histología",
-        "biomonitoreo"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_607_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 607,
-      "indice": 1,
-      "n_autores": 2,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 15.670426,
-      "longitud": -63.618248,
-      "display_class": "outside_extent",
-      "on_map": false,
-      "granularidad_nivel": "T2",
-      "granularidad_razon": null,
-      "exclusion_reason": "La latitud 15.670426 supera el límite norte de la extensión mapeada (12.654657238920112); el punto (15.670426, -63.618248) queda fuera del área del mapa.",
-      "coordinate_group_size": 1,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-608-1",
-      "titulo": "RELACIONES LONGITUD-PESO Y ESTIMACIÓN DE BIOMASA EN INSECTOS ACUÁTICOS EN DOS RIOS DE LA SIERRA NEVADA-SANTA MARTA, COLOMBIA",
-      "resumen": "justificacion:\n Esta investigación inquirió conseguir relaciones enfocadas en aspectos morfométricos de insectos acuáticos de varios órdenes y su peso seco a través de modelos de regresión lineal, con el fin de obtener modelos matemáticos que permitan predecir la biomasa de los organismos. La estimación de la biomasa a partir de las relaciones longitud-masa representa un paso crítico en la formulación de cuestionamientos ecológicos, independientemente del hábitat que los organismos ocupen, determinar las tasas de crecimiento y/o producción secundaria, comprender las historias de vida, los patrones estacionales y las relaciones tróficas entre grupos funcionales (Benke, 1996; Burgherr & Meyer, 1997; Cressa, 1999). \nobjetivo:\n El objetivo del presente trabajo consistió en relacionar variables de longitud y peso de insectos acuáticos correspondientes a dos ríos de la Sierra Nevada de Santa Marta-Colombia. \nmetodos:\n Los organismos fueron separados e identificados hasta el nivel de género como categoría taxonómica. Después secados en una estufa a 65°C durante 48h, para luego estimar el peso libre de humedad (mg) de cada individuo en una balanza electrónica (Shieh et al., 2003). Finalmente se realizaron regresiones para hallar la relación entre las mediciones morfometricas y el peso seco o libre de humedad. \nconclusiones:\n El modelo de regresión lineal describió la distribución de los datos entre las variables analizadas, con buenos ajustes en términos generales, permitiendo se formularan por primera vez ecuaciones de longitud-peso en géneros de insectos acuáticos de la región del caribe Colombiano entre estos los géneros: Lachlania, Baetodes, Leptohyphes, Haplohyphes, Mayobaetis, Anacroneuria, Leptonema, Limnocoris, Tricoritodes.",
-      "autores": [
-        {
-          "nombre": "Manjarres Palacio, Liliana Paola",
-          "afiliacion": "Universidad del Magdalena",
-          "ror": "https://ror.org/00fr68j09",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Universidad del Magdalena"
-      ],
-      "ubicaciongeografica": "Sierra Nevada de Santa Marta, Colombia",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Lachlania', 'Baetodes', 'Leptohyphes', 'Haplohyphes', 'Mayobaetis', 'Anacroneuria', 'Leptonema', 'Limnocoris', 'Tricoritodes']",
-      "palabrasclaves": [
-        "biomasa",
-        "grupos funcionales",
-        "hábitat",
-        "insectos acuáticos",
-        "Sierra Nevada de Santa Marta"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_608_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 608,
-      "indice": 1,
-      "n_autores": 1,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 10.835,
-      "longitud": -73.675,
-      "display_class": "outside_extent",
-      "on_map": false,
-      "granularidad_nivel": "T2",
-      "granularidad_razon": null,
-      "exclusion_reason": "La latitud 10.835 supera el límite norte de la extensión mapeada (12.654657238920112); el punto (10.835, -73.675) queda fuera del área del mapa.",
-      "coordinate_group_size": 2,
-      "coordinate_group_ids": [
-        "cve-sin-anio-pagina-613-1"
-      ]
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-610-1",
-      "titulo": "CARACTERIZACIÓN DE LAS COMUNIDADES DE ALGAS A LO LARGO DE UN GRADIENTE DE PROFUNDIDAD EN EL ARRECIFE DE DOS MOSQUISES SUR (PNALR)",
-      "resumen": "justificacion:\n Los arrecifes de coral son sistemas que están cambiando rápidamente, observándose una perdida significativa de coral vivo y una dominancia de algas sobre las superficie de corales muertos y de otros sustratos duros en estos sistemas. El arrecife de Dos Mosquises Sur (DMS) en el PNALR no escapa de esta realidad. \nobjetivo:\n En este trabajo, se evaluó la estructura y zonación de la comunidad de algas presentes en este arrecife en los meses de junio, agosto de 2012 y octubre de 2013. \nmetodos:\n Para esto, se fijaron transeptos perpendiculares y paralelos a la línea de costa, a lo largo de los cuales se colocaron cuadratas (10x10cm), donde se estimó la cobertura de los principales grupos funcionales (GFA) y especies de algas. Los datos de cobertura (de grupos funcionales y de especies), para los distintos niveles de profundidad y meses evaluados, se evaluaron mediante un análisis de similitud (nmMDS). \nconclusiones:\n La comunidad de algas asociada al arrecife de DMS está representada por 4 phyla de algas y 62 especies. La especie Udotea cyathifomis y F. infundibulum, representan un nuevo registro para Venezuela, junto con 8 nuevos registros para el parque. Las coberturas promedio de las algas denominadas tipo tapete (TT) y las macroalgas frondosas (MF) presentaron diferencias estadisticamente significativas, siendo superiores a las coberturas del resto de los GFA. Los tres transeptos perpendiculares presentaron una alta heterogeneidad espacial y estacional. Sólo se observó un patrón de zonación a nivel de especies, mas no de grupos funcionales.",
-      "autores": [
-        {
-          "nombre": "narvaez, marijul",
-          "afiliacion": "UCV",
-          "ror": "https://ror.org/05kacnm89",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Villamizar, Estrella",
-          "afiliacion": "Universidad Central de Venezuela,  2 Laboratorio de Ecología de Sistemas Acuáticos, Instituto de Zoología y Ecología Tropical",
-          "ror": "https://ror.org/0143dvz59",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "UCV",
-        "Universidad Central de Venezuela,  2 Laboratorio de Ecología de Sistemas Acuáticos, Instituto de Zoología y Ecología Tropical"
-      ],
-      "ubicaciongeografica": "PNALR, arrecife de Dos Mosquises Sur, Venezuela",
-      "ubicaciontemporal": "2012 (junio, agosto), 2013 (octubre)",
-      "especiesmencionadas": "['Udotea cyathifomis', 'F. infundibulum']",
-      "palabrasclaves": [
-        "algas",
-        "arrecifes",
-        "grupos funcionales",
-        "zonación"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_610_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 610,
-      "indice": 1,
-      "n_autores": 2,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 11.794433,
-      "longitud": -66.892576,
-      "display_class": "placeable",
-      "on_map": true,
-      "granularidad_nivel": "T2",
-      "granularidad_razon": null,
-      "exclusion_reason": null,
-      "coordinate_group_size": 1,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-611-1",
-      "titulo": "IMPACTO DEL FORRAJEO INTENSIVO DE CAPRINOS SOBRE LA ACTIVIDAD FAUNÍSTICA EN CARORA, VENEZUELA, EVIDENCIAS REGISTRADAS CON CAMARAS-TRAMPA",
-      "resumen": "justificacion:\n La ganadería intensiva suele desplazar los herbívoros autóctonos, afectando los recursos botánicos. \nobjetivo:\n Se estudió la actividad del chivo (Capra aegagrus hircus) en una zona árida. \nmetodos:\n El monitoreo biológico involucró 28 cámaras-trampa durante 35 días (marzo-abril 2014), a 25 km al NW de Carora (Lara), donde los campesinos crían rebaños de 200 chivos. El ganado es resguardado durante la noche en corrales, los criadores no acompañan el rebaño, el cual se dispersa libremente. \nconclusiones:\n Se perciben estrategias individuales y/o grupales para aprovechar el terreno individualmente o en grupos al alimentarse. Las imágenes muestran una vegetación y fauna silvestres vulneradas, en un ecosistema crecientemente intervenido y desertificado. Algunas estaciones mostraron 100% de presencia caprina, sin fotografiar otras especies autóctonas durante semanas, los registros de herbívoros autóctonos fueron muy escasos durante el estudio. El bajo número de animales silvestres es posiblemente resultado del manejo intensivo del chivo, así como de la intensa actividad de cacería furtiva.",
-      "autores": [
-        {
-          "nombre": "Carreño, Rafael",
-          "afiliacion": "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es",
-          "ror": "https://ror.org/02ntheh91",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Abarca, María",
-          "afiliacion": "Centro de Ecología, Instituto Venezolano de Investigaciones Cientificas",
-          "ror": "https://ror.org/02ntheh91",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Jedrzejewski, Wlodzimierz",
-          "afiliacion": "Centro de Ecología, Instituto Venezolano de Investigaciones Cientificas",
-          "ror": "https://ror.org/02ntheh91",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Centro de Ecología, Instituto Venezolano de Investigaciones Cientificas",
-        "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es"
-      ],
-      "ubicaciongeografica": "Carora, Lara, Venezuela",
-      "ubicaciontemporal": "2014, marzo-abril",
-      "especiesmencionadas": "['Capra aegagrus hircus', 'chivo']",
-      "palabrasclaves": [
-        "cámaras-trampa",
-        "chivos",
-        "herbívoros",
-        "monoproducción",
-        "Venezuela"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_611_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 611,
-      "indice": 1,
-      "n_autores": 3,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 10.169534,
-      "longitud": -70.0728483,
-      "display_class": "placeable",
-      "on_map": true,
-      "granularidad_nivel": "T2",
-      "granularidad_razon": null,
-      "exclusion_reason": null,
-      "coordinate_group_size": 1,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-612-1",
-      "titulo": "LOS BIOFERTILIZANTES, COMO PROPULSORES DE LA VIDA EN EL SUELO PARA AGROECOSISTEMAS EFICIENTES",
-      "resumen": "justificacion:\n Los microorganismos constituyen parte de la vida del suelo, ubicándose en su mayoría en la rizosfera y dependiendo de su relación con las plantas podrán ser benéficos o perjudiciales. Cuando los equilibrios se respetan en el agroecosistema, los benéficos dominan el espacio traduciéndose en efectos sinérgicos para el desarrollo de las plantas, aunque son susceptibles a desaparecer ante un mal manejo. El INIA Lara, apoyado de la USR, IVIC y UCV, ha trabajado \nobjetivo:\n evaluando el efecto de simbiontes nativos de las zonas de Sanare, Quibor y Río Claro sobre el desarrollo de cultivos de hortalizas y café, combinados con estrategias de multiplicación amigables a los productores, además de evaluar el efecto de desbalances nutricionales y enmiendas orgánicas sobre la distribución y biodiversidad de microrganismos patogénicos y benéficos. \nmetodos:\n Para ello, se han aislado microorganismos simbiontes de diferentes zonas, entre ellos bacterias del género Rhizobium de Quibor y Hongos Glomeromycota de las zonas de Las Lajitas (hortalizas), Eneal (piña), Río Claro (café) y El Palenque (papa), evaluando su efecto a nivel de umbráculo en diseños completamente al azar y en campo evaluando los patrones de dispersión de los patogénicos. \nconclusiones:\n En campo los patrones de dispersión de los patogénicos han tendido a ser uniformes causando daños en el cultivo de papa ante un mal manejo de la fertilización nitrogenada. En umbráculo los simbiontes nativos han sido tan eficientes (p<0,05%) como los testigos fertilizados y nematodos fitoparasìticos han disminuido su densidad incrementándose los no fitoparasíticos con el uso de enmiendas orgánicas.",
-      "autores": [
-        {
-          "nombre": "Renaud, Daunarima",
-          "afiliacion": "INIA",
-          "ror": "https://ror.org/04h3gcf69",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Alvarez, Carlos",
-          "afiliacion": "INIA Lara",
-          "ror": "https://ror.org/04h3gcf69",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Guedez , Farrah ",
-          "afiliacion": "INIA Lara",
-          "ror": "https://ror.org/04h3gcf69",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Pierre, Francis",
-          "afiliacion": "INIA Lara",
-          "ror": "https://ror.org/04h3gcf69",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Pire, Alfredo",
-          "afiliacion": "INIA Lara",
-          "ror": "https://ror.org/04h3gcf69",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "INIA",
-        "INIA Lara"
-      ],
-      "ubicaciongeografica": "Sanare, Quibor, Río Claro, Las Lajitas, Eneal, El Palenque",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Rhizobium', 'Glomeromycota', 'Hortalizas', 'Café', 'Piña', 'Papa']",
-      "palabrasclaves": [
-        "fitoparasíticos",
-        "nativos",
-        "microorganismos",
-        "patogénicos",
-        "simbiontes"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_612_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 612,
-      "indice": 1,
-      "n_autores": 5,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 9.7532604,
-      "longitud": -69.6513271,
-      "display_class": "coarse_location",
-      "on_map": false,
-      "granularidad_nivel": "T0",
-      "granularidad_razon": "enumera seis localidades distintas",
-      "exclusion_reason": "La ubicación 'Sanare, Quibor, Río Claro, Las Lajitas, Eneal, El Palenque' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque enumera seis localidades distintas. Un nivel T0 no se puede dibujar como un punto del mapa.",
-      "coordinate_group_size": 1,
-      "coordinate_group_ids": []
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-613-1",
-      "titulo": "ECOLOGÍA TRÓFICA DE LARVAS DE MEGALOPTERA (CORYDALIDAE: Corydalus SPP) EN RÍOS TROPICALES DE MONTAñA, DE LA SIERRA NEVADA DE SANTA MARTA, COLOMBIA",
-      "resumen": "justificacion:\n Se tiene conocimiento que la taxonomía del orden Megaloptera es satisfactoria para el Neotrópico pero hay carencia en la información biológica y ecológica de las especies suramericanas. \nobjetivo:\n Se busca describir la variedad en la dieta de larvas de Corydalus spp, relacionando talla y época del año, en cuatro ríos de la SNSM \nmetodos:\n Se muestreo mensualmente con redes Surber para recolectar larvas en épocas de precipitaciones altas y bajas. Para los análisis de contenidos estomacales se seleccionan de 1 a 10 individuos por talla, se les extrajo el tracto digestivo y, mediante fotografías en microscopio, se cuantificó cada ítem según el área medida que ocupa, identificando al máximo nivel taxonómico posible, en 20 campos oculares escogidos al azar. \nconclusiones:\n Se han encontrado, hasta el momento, tres grupos de tamaños de varían de 1cm a 5cm. Las larvas analizadas a la fecha corresponden a larvas preemergentes y sus contenidos estomacales corresponden a restos de otros insectos, evidenciando que poseen hábitos depredadores en todos los cuatro ríos. La composición del contenido estomacal varia ligeramente entre ríos pero no entre épocas de lluvias altas y bajas. Las larvas de tamaño pequeño son poco abundantes o ausentes en alguno de los ríos, con frecuencia se encuentran larvas grandes que superan los 5 cm de talla.",
-      "autores": [
-        {
-          "nombre": "guzman soto, cristian",
-          "afiliacion": "universidad del Atlantico",
-          "ror": "https://ror.org/00fr68j09",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Hurtado, Yeselis ",
-          "afiliacion": "Universidad del Magdalena",
-          "ror": "https://ror.org/00fr68j09",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Tamariz Turizo, Cesar",
-          "afiliacion": "Universidad del Magdalena",
-          "ror": "https://ror.org/00fr68j09",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Universidad del Magdalena",
-        "universidad del Atlantico"
-      ],
-      "ubicaciongeografica": "Sierra Nevada de Santa Marta, Colombia",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Corydalus spp']",
-      "palabrasclaves": [
-        "contenido estomacal",
-        "Córdoba",
-        "Gaira",
-        "Megaloptera",
-        "ríos Manzanares",
-        "Sierra Nevada de Santa Marta",
-        "Toribio"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_613_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 613,
-      "indice": 1,
-      "n_autores": 3,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 10.835,
-      "longitud": -73.675,
-      "display_class": "outside_extent",
-      "on_map": false,
-      "granularidad_nivel": "T2",
-      "granularidad_razon": null,
-      "exclusion_reason": "La latitud 10.835 supera el límite norte de la extensión mapeada (12.654657238920112); el punto (10.835, -73.675) queda fuera del área del mapa.",
-      "coordinate_group_size": 2,
-      "coordinate_group_ids": [
-        "cve-sin-anio-pagina-608-1"
-      ]
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-614-1",
-      "titulo": "PAREMIOLOGIA DEL TIGRE EN LA CULTURA VENEZOLANA",
-      "resumen": "justificacion:\n Los refranes son transmitidos intergeneracionalmente desde períodos remotos, constituyendo un muestrario condensado de la idiosincrasia que reitera contenidos breves, constantes y anónimos. \nobjetivo:\n Se propuso estudiar las coincidencias entre la cultura popular y la académica asociada a la Panthera onca. \nmetodos:\n Para revisar la paremiología venezolana, en dichos y proverbios, se consultaron fuentes secundarias impresas, compilando unas 60 expresiones idiomáticas sobre el tigre o jaguar y otras 50 relativas a felinos de menor tamaño. \nconclusiones:\n Aunque es una especie esquiva, el campesinado acopió mediante la experiencia detalles verídicos relativos a los hábitos del jaguar. Una revisión hermenéutica evidencia que el diálogo de saberes perpetúa memes que arraigan determinados conocimientos colectivos sobre el tigre, aludiendo hechos confirmados por científicos como Hoogesteijn y Mondolfi (1992), FUDENA (1992). En el habla coloquial, el emblemático tigre personificó anécdotas, metáforas y moralejas que son reflejadas en las relaciones humanas, como símil o fabulación. La prolongada evocación de esta especie, que casi nadie observa fuera de zoológicos, sugiere la pervivencia de relictos discursivos ancestrales. Por ejemplo, un proverbio de origen lingüístico indígena (Caribe), muestra una impronta mítica y/o ritual: “Cuando el tigre está dentro del hombre, el hombre se convierte en tigre”. El jaguar es mencionado eclécticamente en toda Venezuela, incluso al norte, donde se extinguió localmente. Si este patrimonio biológico llegara a desaparecer totalmente, su valoración sobreviviría en la oralidad mientras se mantenga el acervo regional, pero el uso de figuras literarias tradicionales podría apoyar la educación ambiental para sensibilizar la población con fines conservacionistas.",
-      "autores": [
-        {
-          "nombre": "Carreño, Rafael",
-          "afiliacion": "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es",
-          "ror": "https://ror.org/02ntheh91",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Instit. Venez. de Investigaciones Científicas rdcb77@yahoo.es"
-      ],
-      "ubicaciongeografica": "Venezuela",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Panthera onca', 'tigre', 'jaguar', 'felinos']",
-      "palabrasclaves": [
-        "jaguar",
-        "oralidad",
-        "tigre",
-        "refranes",
-        "Venezuela"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_614_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 614,
-      "indice": 1,
-      "n_autores": 1,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 8.0018709,
-      "longitud": -66.1109318,
-      "display_class": "coarse_location",
-      "on_map": false,
-      "granularidad_nivel": "T0",
-      "granularidad_razon": "menciona el país entero, sin lugar",
-      "exclusion_reason": "La ubicación 'Venezuela' no identifica un lugar concreto: la taxonomía curada de granularidad la clasifica en el nivel T0 (mención que no identifica un lugar: el país, una región supra-nacional, una región natural amplia de varios estados, o una enumeración de lugares distintos) porque menciona el país entero, sin lugar. Un nivel T0 no se puede dibujar como un punto del mapa.",
-      "coordinate_group_size": 14,
-      "coordinate_group_ids": [
-        "cve-1999-pagina-60-1",
-        "cve-2001-pagina-177-1",
-        "cve-2001-pagina-177-2",
-        "cve-2005-pagina-134-1",
-        "cve-2005-pagina-135-1",
-        "cve-2005-pagina-136-2",
-        "cve-2005-pagina-137-1",
-        "cve-2005-pagina-201-2",
-        "cve-2007-pagina-398-1",
-        "cve-2009-pagina-119-1",
-        "cve-2009-pagina-122-1",
-        "cve-2011-pagina-348-1",
-        "cve-sin-anio-pagina-605-1"
-      ]
-    },
-    {
-      "study_id": "cve-sin-anio-pagina-615-1",
-      "titulo": "CARACTERISTÍCAS ULTRAESTRUCTURALES DE LAS CÉLULAS SANGUÍNEAS DE LA ESPECIE Caiman crocodilus crocodilus EN VIDA SILVESTRE",
-      "resumen": "justificacion:\n Las babas, aparecieron hace unos 200 millones de años. El estudio de la morfología de las células sanguíneas aporta posibles soluciones al entendimiento de las rutas metabólicas utilizadas para permanecer tanto tiempo en circulación. \nobjetivo:\n Con el objetivo de determinar las características ultraestructurales de las células sanguíneas de la especie Caimán crocodilus crocodilus en vida silvestre; \nmetodos:\n fueron utilizados 20 ejemplares, provenientes de Guayabal, Estado Guárico; fueron extraídos 5 ml de sangre de la vena coccígea caudal en tubos con EDTA. Para el análisis ultraestructural se utilizó la técnica para microscopia electrónica de transmisión. \nconclusiones:\n Los hematíes son células nucleadas de forma ovalada con bordes gruesos, y mitocondrias cerca de una banda perinuclear compuesta por ácidos grasos. Los heterófilos presentan forma esférica con prolongaciones citoplasmáticas, gránulos polimórficos de diferentes tamaños y electrón densidades, núcleo excéntrico. Los eosinófilos son esféricos con prolongaciones citoplasmáticas, núcleo lenticular excéntrico, su citoplasma contiene gránulos esféricos de diferente electrón densidades. Los linfocitos son pequeños, polimorfos, con citoplasma escaso y ligeramente basofílico con abundantes mitocondrias, presentan núcleo prominente y poros nucleares. Los monocitos son polimorfos, citoplasma basófilo con gránulos finos, núcleo irregular de gran tamaño. Los trombocitos de forma elíptica citoplasma abundante hacia sus polos, con vesículas electrón lúcidas; su núcleo exhibe una hendidura acentuada sin poros nucleares. Este estudio permitió concluir que existen diferencias morfológicas y ultraestructurales entre las células sanguíneas de la especie C. c. crocodilus, y especies ya estudiadas, mostrando indicios de posibles rutas metabólicas que utilizan estas células permitiéndoles ser mas longevas que en otros animales.",
-      "autores": [
-        {
-          "nombre": "Rossini, Mario",
-          "afiliacion": "Facultad de Ciencias Veterinarias",
-          "ror": null,
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Cáceres, P., Goyismery",
-          "afiliacion": "Postgrado en Medicina Veterinaria, FCV -UCV.",
-          "ror": null,
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "García, Gisela",
-          "afiliacion": "Universidad Central de Venezuela, Facultad de Ciencias Veterinarias, Cát de Histologia",
-          "ror": "https://ror.org/05kacnm89",
-          "pais": "Venezuela",
-          "orcid": null
-        },
-        {
-          "nombre": "Velázquez, Eva",
-          "afiliacion": "Postgrado en Medicina Veterinaria, FCV -UCV.",
-          "ror": "https://ror.org/05ak8xb62",
-          "pais": "Venezuela",
-          "orcid": null
-        }
-      ],
-      "instituciones": [
-        "Facultad de Ciencias Veterinarias",
-        "Postgrado en Medicina Veterinaria, FCV -UCV.",
-        "Universidad Central de Venezuela, Facultad de Ciencias Veterinarias, Cát de Histologia"
-      ],
-      "ubicaciongeografica": "Guayabal, Estado Guárico",
-      "ubicaciontemporal": null,
-      "especiesmencionadas": "['Caiman crocodilus crocodilus']",
-      "palabrasclaves": [
-        "babas",
-        "células",
-        "sangre",
-        "silvestre",
-        "ultraestructura"
-      ],
-      "source_path": "XI/curatedwithgeo/pagina_615_1.json",
-      "anio": null,
-      "congreso": "XI",
-      "ciudad": "Porlamar",
-      "pagina": 615,
-      "indice": 1,
-      "n_autores": 4,
-      "paises": [
-        "Venezuela"
-      ],
-      "latitud": 9.953,
-      "longitud": -66.0349882,
-      "display_class": "placeable",
-      "on_map": true,
-      "granularidad_nivel": "T2",
-      "granularidad_razon": null,
-      "exclusion_reason": null,
-      "coordinate_group_size": 1,
       "coordinate_group_ids": []
     }
   ]
