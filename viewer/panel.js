@@ -47,6 +47,7 @@
   var chartSvg = null;
   var chartCursor = null;
   var chartHitLayer = null;
+  var chartDescEl = null;
   var legendList = null;
   var breakdownEmpty = null;
   var breakdownList = null;
@@ -210,6 +211,7 @@
         }
       }
     });
+    updateChartDesc(year);
   }
 
   // -------------------------------------------------------------------------
@@ -231,6 +233,22 @@
   var CHART_INNER_HEIGHT =
     CHART_HEIGHT - CHART_PAD_TOP - CHART_PAD_BOTTOM;
 
+  // Direct band labels. The chart used to name its six level-1 series by
+  // hue alone; these labels write the group's name inside its band at the
+  // last year, so the identity survives without colour vision. Both floors
+  // below can drop a band, and a dropped band is left unlabelled instead of
+  // being printed illegibly or clipped.
+  var CHART_LABEL_MIN_THICKNESS = 20;
+  var CHART_LABEL_FONT_PX = 11;
+  var CHART_LABEL_BASELINE = 4;
+  var CHART_LABEL_INSET = 4;
+  var CHART_LABEL_PAD_X = 5;
+  var CHART_LABEL_PLATE_HEIGHT = 17;
+  var CHART_LABEL_WHITE = "#ffffff";
+  // Used only when the stylesheet cannot be read; it is the shipped value
+  // of --fg-strong (viewer/style.css).
+  var CHART_LABEL_NEAR_BLACK_FALLBACK = "#0b1320";
+
   function renderChart() {
     if (!chartRoot || !series) {
       return;
@@ -241,6 +259,24 @@
     chartSvg.setAttribute("class", "panel-chart-svg");
     chartSvg.setAttribute("role", "img");
     chartSvg.setAttribute("aria-label", "Serie temporal apilada de cobertura por grupo nivel 1");
+
+    // The SVG names itself and describes its own data for assistive
+    // technology. The <title> repeats the visible chart title; the <desc>
+    // carries the six groups with their share and hectares for the selected
+    // year and is refreshed on every year change by updateChartDesc(),
+    // which highlightLegendYear() calls.
+    var svgTitle = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "title"
+    );
+    svgTitle.textContent = "Cobertura por grupo (nivel 1) · 1985–2024";
+    chartSvg.appendChild(svgTitle);
+
+    chartDescEl = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "desc"
+    );
+    chartSvg.appendChild(chartDescEl);
 
     chartSvg.appendChild(buildChartTitle());
     chartSvg.appendChild(buildYAxis());
@@ -295,6 +331,64 @@
       chartSvg.appendChild(area);
     }
 
+    // Direct labels: one per band, inside the band, at the last year. The
+    // geometry above is untouched; the labels only put text on top of the
+    // fills. A band thinner than CHART_LABEL_MIN_THICKNESS, or whose name does
+    // not fit the plot at the label size, is skipped.
+    var lastIdx = years.length - 1;
+    var labelsGroup = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "g"
+    );
+    labelsGroup.setAttribute("class", "panel-chart-band-labels");
+    var bandLabels = [];
+    for (var li = 0; li < groups.length; li++) {
+      var labelBand = stacks[lastIdx][li];
+      var thicknessPx =
+        ((labelBand.high - labelBand.low) / 100) * CHART_INNER_HEIGHT;
+      if (thicknessPx < CHART_LABEL_MIN_THICKNESS) {
+        continue;
+      }
+      var labelName =
+        groups[li].name_es || groups[li].name_en || groups[li].code;
+      var midY = y((labelBand.low + labelBand.high) / 2);
+      var rightX = CHART_PAD_LEFT + CHART_INNER_WIDTH - CHART_LABEL_INSET;
+      // Each label is a plate: a near-black rounded box with white text, so
+      // its contrast is the same on every band (18.6:1) and no colour is
+      // chosen per band. A bare label cannot do that: measured, the palette's
+      // widest band (#1f8d49) gives 4.23:1 with white and 4.40:1 with
+      // --fg-strong, both under the 4.5 floor, and the alternative (pure
+      // black) is the anti-pattern the craft floor refuses.
+      var plate = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "rect"
+      );
+      plate.setAttribute("class", "panel-chart-band-plate");
+      plate.setAttribute("rx", "3");
+      plate.setAttribute("ry", "3");
+      plate.setAttribute("fill", nearBlack());
+      plate.setAttribute("height", String(CHART_LABEL_PLATE_HEIGHT));
+      plate.setAttribute(
+        "y",
+        String(midY - CHART_LABEL_PLATE_HEIGHT / 2)
+      );
+      var label = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
+      label.setAttribute("x", String(rightX - CHART_LABEL_PAD_X));
+      label.setAttribute("y", String(midY + CHART_LABEL_BASELINE));
+      label.setAttribute("text-anchor", "end");
+      label.setAttribute("class", "panel-chart-band-label");
+      label.setAttribute("fill", CHART_LABEL_WHITE);
+      label.setAttribute("data-group-name", labelName);
+      label.textContent = labelName;
+      labelsGroup.appendChild(plate);
+      labelsGroup.appendChild(label);
+      bandLabels.push({ plate: plate, label: label });
+    }
+    chartSvg.appendChild(labelsGroup);
+
     // Hit layer: an invisible rectangle over the chart area that captures
     // pointer events. We translate the click X into a year index and call
     // the host callback.
@@ -318,6 +412,10 @@
     chartSvg.appendChild(chartCursor);
 
     chartRoot.appendChild(chartSvg);
+    // The labels are measured once they are in the document, so a name that
+    // is too wide for the plot is dropped rather than allowed to run off it.
+    fitBandLabels(bandLabels);
+    updateChartDesc(currentYear);
     moveCursor(currentYear);
   }
 
@@ -423,6 +521,125 @@
       d += (i === 0 ? "M" : "L") + pts[i][0].toFixed(2) + "," + pts[i][1].toFixed(2);
     }
     return d + " Z";
+  }
+
+  // -------------------------------------------------------------------------
+  // Band labels: colour picked by contrast, width checked against the plot
+  // -------------------------------------------------------------------------
+
+  /** Parse ``#rgb`` or ``#rrggbb`` into ``[r, g, b]`` (0-255), or null. */
+  function parseHexColor(value) {
+    if (typeof value !== "string") {
+      return null;
+    }
+    var hex = value.trim().replace(/^#/, "");
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    if (!/^[0-9a-fA-F]{6}$/.test(hex)) {
+      return null;
+    }
+    return [
+      parseInt(hex.slice(0, 2), 16),
+      parseInt(hex.slice(2, 4), 16),
+      parseInt(hex.slice(4, 6), 16),
+    ];
+  }
+
+  /** The palette's near-black (--fg-strong) as the stylesheet defines it. */
+  function nearBlack() {
+    var value = "";
+    try {
+      var styles = window.getComputedStyle(document.documentElement);
+      if (styles && styles.getPropertyValue) {
+        value = String(styles.getPropertyValue("--fg-strong")).trim();
+      }
+    } catch (err) {
+      value = "";
+    }
+    return parseHexColor(value) ? value : CHART_LABEL_NEAR_BLACK_FALLBACK;
+  }
+
+  /**
+   * Size each plate to its label and drop the pair when the label is wider
+   * than the plot. The plot is wide, but the rule is measured rather than
+   * assumed: a band can be thick at the last year and still have no room for
+   * its name at the 11 px label size.
+   *
+   * @param {Array<{plate: Element, label: Element}>} labels
+   */
+  function fitBandLabels(labels) {
+    if (!labels || !labels.length) {
+      return;
+    }
+    var available =
+      CHART_PAD_LEFT + CHART_INNER_WIDTH - CHART_LABEL_INSET - CHART_PAD_LEFT;
+    for (var i = labels.length - 1; i >= 0; i--) {
+      var pair = labels[i];
+      var textWidth = measureLabelWidth(pair.label);
+      if (textWidth > available) {
+        pair.label.parentNode.removeChild(pair.label);
+        pair.plate.parentNode.removeChild(pair.plate);
+        continue;
+      }
+      var rightX = CHART_PAD_LEFT + CHART_INNER_WIDTH - CHART_LABEL_INSET;
+      var plateWidth = textWidth + 2 * CHART_LABEL_PAD_X;
+      pair.plate.setAttribute("x", String(rightX - plateWidth));
+      pair.plate.setAttribute("width", String(plateWidth));
+    }
+  }
+
+  /** Rendered width of one label, or a character-count estimate. */
+  function measureLabelWidth(el) {
+    if (el.getComputedTextLength) {
+      var measured = el.getComputedTextLength();
+      if (measured > 0) {
+        return measured;
+      }
+    }
+    if (el.getBBox) {
+      var box = el.getBBox();
+      if (box && box.width > 0) {
+        return box.width;
+      }
+    }
+    // No layout engine (or an unrendered SVG): estimate from the character
+    // count so a too-long name is still caught.
+    return String(el.textContent || "").length * 0.58 * CHART_LABEL_FONT_PX;
+  }
+
+  /**
+   * Write the chart's <desc>: the six level-1 groups with their share and
+   * hectares for one year. Called from highlightLegendYear() so the chart
+   * description and the legend values move together on a year change.
+   *
+   * @param {number} year
+   */
+  function updateChartDesc(year) {
+    if (!chartDescEl || !series) {
+      return;
+    }
+    var yearIdx = series.years.indexOf(year);
+    var groups = series.groups
+      .map(function (g) {
+        var name = g.name_es || g.name_en || g.code;
+        if (yearIdx < 0) {
+          return name + " sin datos";
+        }
+        return (
+          name +
+          " " +
+          formatShare(g.share_pct[yearIdx]) +
+          " (" +
+          formatHa(g.area_ha[yearIdx]) +
+          " ha)"
+        );
+      })
+      .join("; ");
+    chartDescEl.textContent =
+      (yearIdx < 0 ? "Sin datos para " + year + ". " : "Año " + year + ". ") +
+      groups +
+      ".";
   }
 
   function moveCursor(year) {
