@@ -1322,7 +1322,12 @@ body.is-metrics-collapsed .catalog-metrics-body {
 .catalog-metrics-body {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+  /* ``min(600px, 100%)`` and not a bare 600px: a column minimum that the
+   * container cannot satisfy forces a horizontal scrollbar, measured at 390px
+   * with the block expanded, where the block is ~347px wide. With the minimum
+   * capped at the container's own width the grid collapses to one column and
+   * the SVG's max-width: 100% takes over. */
+  grid-template-columns: repeat(auto-fit, minmax(min(600px, 100%), 1fr));
   gap: 8px 12px;
   align-items: start;
 }
