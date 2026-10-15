@@ -1,6 +1,6 @@
 # Fix: reach the composition panel and the year without a pointer (P1-3, last slice)
 
-**Status**: implemented and verified — §5 · **Branch**: `fix/teclado-fin` (from `origin/main`) ·
+**Status**: implemented and verified — §5 · **Branch**: `fix/teclado-fin` (from `origin/main`) · **Commit**: `d62b548` ·
 **Opened by**: `.impeccable/critique/2026-10-15T05-25-10Z__viewer-index-html.md`, issue **P1-3**.
 
 ## 1. The remaining barrier, measured
