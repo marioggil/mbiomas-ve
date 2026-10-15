@@ -444,6 +444,15 @@ class StudiesCatalogInvariantControlTests(unittest.TestCase):
             self.catalog, r"has estado 'quizá' which is not one of"
         )
 
+    # --- invariant 23: grafica is a real boolean --------------------------
+
+    def test_control_rejects_a_ror_entry_with_a_non_boolean_grafica(self) -> None:
+        first = next(iter(self.catalog["ror_instituciones"]))
+        self.catalog["ror_instituciones"][first]["grafica"] = "sí"
+        self._fail(
+            self.catalog, r"has grafica 'sí' which is not a boolean"
+        )
+
     # --- invariant 20: especies is a list of non-empty strings -------------
 
     def test_control_rejects_a_non_list_especies(self) -> None:

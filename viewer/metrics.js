@@ -248,6 +248,17 @@
     return total;
   }
 
+  /**
+   * Number agreement for the counters the SVG titles glue to a noun. A single
+   * mention is a real case here — one study in an area is a real area — and
+   * "1 menciones" reads as a defect rather than as shorthand. ``catalog.js``
+   * has its own helper for the DOM copy; this module cannot use it without
+   * depending on the DOM layer.
+   */
+  function agree(n, singular, plural) {
+    return String(n) + " " + (n === 1 ? singular : plural);
+  }
+
   // ---------------------------------------------------------------------------
   // Spatial filter (D5: the single rule the list and the metrics share)
   // ---------------------------------------------------------------------------
@@ -291,9 +302,10 @@
    * ``granularidad_nivel``: T2 is a named locality, T1 an administrative unit,
    * T0 a mention that names no place; a study without a usable level lands in
    * ``unknown`` instead of being dropped from ``n``. ``okPairs``/``doubtfulPairs``
-   * split the talk-institution pairs by the curated verdict, so the 26 pairs the
-   * owner has not accepted are DECLARED here and never charted (task record
-   * §3.2). Without a ``rorInstituciones`` table the split cannot be made and
+   * split the talk-institution pairs by the curated verdict, so the header still
+   * tells the reader how many of the corpus's pairs come from doubtful
+   * assignments, whatever the separate charting decision (``grafica``) is.
+   * Without a ``rorInstituciones`` table the split cannot be made and
    * both stay 0 while ``rorPairs`` stays the total: the missing part is the
    * verdict, never the pair.
    *
@@ -451,31 +463,38 @@
 
   /**
    * The cumulative contribution of the institutions over time — the only series
-   * with real signal in the full-corpus case (D4). Only ``estado === "ok"``
-   * entries count: the curated ``dudoso`` ids resolve to a different institution
-   * than the free text names, so they are DECLARED through ``declared.dudoso``
-   * (a pair count over the same studies) and never charted (§3.2).
+   * with real signal in the full-corpus case (D4). An entry is charted exactly
+   * when its curated ``grafica`` is ``true``; the ``estado`` verdict no longer
+   * decides, so a ``dudoso`` assignment the owner accepted is charted and an
+   * ``ok`` entry the owner excluded stays declared. The three counters in
+   * ``declared`` are read over the same filtered set as the series: ``charted``
+   * is every pair that lands in a column, ``doubtful`` is, of those charted,
+   * how many come from an ``estado === "dudoso"`` entry, and ``uncharted`` is
+   * every pair whose entry has ``grafica === false`` — declared beside the
+   * chart, never drawn.
    *
    * The top ``limit`` institutions are chosen by pair count over the whole
    * filtered set (tie-break: name asc) and each one's ``cumulative`` is its
    * running pair total per year. The residual band ``others`` is the running
-   * total of every REMAINING ok institution, and it is monotone by construction:
-   * every year adds a sum of non-negative counts to the previous value, and the
-   * previous value starts at 0, so a cumulative series — and the "others" band
-   * with it — can never fall.
+   * total of every REMAINING charted institution, and it is monotone by
+   * construction: every year adds a sum of non-negative counts to the previous
+   * value, and the previous value starts at 0, so a cumulative series — and the
+   * "others" band with it — can never fall.
    *
    * ``years`` is optional. When the caller passes the catalogue's 12 editions,
-   * both charts share one X axis and a talk whose year is off the axis (none
-   * today) is counted in ``declared`` but cannot be plotted; when it is omitted,
-   * the axis is the editions present in ``studies``, ascending.
+   * both charts share one X axis and a charted talk whose year is off the axis
+   * (none today) has no column to land in, so it is neither counted as charted
+   * nor as uncharted; when it is omitted, the axis is the editions present in
+   * ``studies``, ascending.
    *
    * @param {Array<object>} studies
-   * @param {Object<string,{nombre:string,estado:string}>} rorInstituciones
+   * @param {Object<string,{nombre:string,estado:string,grafica:boolean}>} rorInstituciones
    * @param {number} [limit] how many institutions get their own band
    * @param {Array<number>} [years]
    * @returns {{years:Array<number>,
    *   series:Array<{ror:string, nombre:string, cumulative:Array<number>}>,
-   *   others:Array<number>, declared:{ok:number, dudoso:number}}}
+   *   others:Array<number>,
+   *   declared:{charted:number, doubtful:number, uncharted:number}}}
    */
   function institutionAccumulation(studies, rorInstituciones, limit, years) {
     var list = studies || [];
@@ -488,7 +507,12 @@
     });
 
     var byYear = Object.create(null);
-    var declared = { ok: 0, dudoso: 0 };
+    // The honest trio for the caption, read over the same filtered set the
+    // series come from: ``charted`` is every pair that lands in a column,
+    // ``doubtful`` is the subset of those charted whose entry is a doubtful
+    // verdict, and ``uncharted`` is every pair the decision left out of the
+    // chart.
+    var declared = { charted: 0, doubtful: 0, uncharted: 0 };
     list.forEach(function (study) {
       if (!study) {
         return;
@@ -496,16 +520,22 @@
       var yi = index[study.anio];
       uniqueStrings(study.rores).forEach(function (ror) {
         var entry = table[ror];
-        var estado = entry && entry.estado;
-        if (estado === "ok") {
-          declared.ok += 1;
-        } else if (estado === "dudoso") {
-          declared.dudoso += 1;
-        }
-        if (estado !== "ok" || yi === undefined) {
-          // Not chartable: doubtful ids are declared only, and a year off the
-          // caller's axis has no column to land in.
+        if (!entry || entry.grafica !== true) {
+          // Anything that is not an explicit ``true`` is out of the chart and
+          // counted as such, so a malformed or missing decision can never make
+          // a pair vanish from the series AND from the tallies at once while
+          // ``areaKpis`` still counts it.
+          declared.uncharted += 1;
           return;
+        }
+        if (yi === undefined) {
+          // Charted by decision, but a year off the caller's axis has no column
+          // to land in, so it is neither charted nor uncharted here.
+          return;
+        }
+        declared.charted += 1;
+        if (entry.estado === "dudoso") {
+          declared.doubtful += 1;
         }
         var row = byYear[ror];
         if (!row) {
@@ -553,8 +583,8 @@
       };
     });
 
-    // Every remaining ok institution folds into one residual band. Running
-    // total per year, and monotone by construction (see above).
+    // Every remaining charted institution folds into one residual band.
+    // Running total per year, and monotone by construction (see above).
     var others = [];
     var runningOthers = 0;
     for (var i = 0; i < n; i++) {
@@ -733,8 +763,7 @@
       " de " +
       distinct +
       " nombres distintos; " +
-      mentions +
-      " menciones en las filas mostradas";
+      agree(mentions, "mención en las filas mostradas", "menciones en las filas mostradas");
     var descText = rows.length
       ? rows
           .map(function (row) {
@@ -830,10 +859,13 @@
     var descId = "catalog-metrics-richness-desc";
     var titleText =
       "Especies distintas por edición: " +
-      talks +
-      " charlas en la selección, máximo de " +
-      maxDistinct(points) +
-      " especies distintas en una edición";
+      agree(talks, "charla en la selección", "charlas en la selección") +
+      ", máximo de " +
+      agree(
+        maxDistinct(points),
+        "especie distinta en una edición",
+        "especies distintas en una edición"
+      );
     var descText = count
       ? points
           .map(function (point) {
@@ -947,20 +979,23 @@
    * The cumulative stacked area of the institutions (D4): one band per top
    * institution plus the residual band, running totals, so the y axis is the
    * number of talk-institution pairs accumulated up to that edition. The legend
-   * states the last cumulative value of every band and the title states the
-   * declared-and-not-charted doubtful pairs, so the chart publishes both its
-   * denominator and its own exclusions.
+   * states the last cumulative value of every band and the title states the trio
+   * the chart is read with (charted pairs, of which doubtful, and how many stay
+   * out), so the chart publishes both its denominator and its own exclusions.
    *
    * @param {{years:Array<number>,
    *   series:Array<{nombre:string, cumulative:Array<number>}>,
-   *   others:Array<number>, declared:{ok:number, dudoso:number}}} accumulation
+   *   others:Array<number>,
+   *   declared:{charted:number, doubtful:number, uncharted:number}}} accumulation
    * @returns {string} an ``<svg>`` markup string
    */
   function institutionsAreaSvg(accumulation) {
     var years = (accumulation && accumulation.years) || [];
     var series = (accumulation && accumulation.series) || [];
     var others = (accumulation && accumulation.others) || [];
-    var declared = (accumulation && accumulation.declared) || { ok: 0, dudoso: 0 };
+    var declared =
+      (accumulation && accumulation.declared) ||
+      { charted: 0, doubtful: 0, uncharted: 0 };
     var count = years.length;
     var bands = [];
     series.forEach(function (entry, i) {
@@ -988,10 +1023,25 @@
     var descId = "catalog-metrics-institutions-desc";
     var titleText =
       "Instituciones por año (acumulado): " +
-      charted +
-      " pares charla-institución verificados; " +
-      declared.dudoso +
-      " pares en instituciones dudosas, declarados y no graficados";
+      agree(charted, "par charla-institución graficado", "pares charla-institución graficados");
+    if (declared.doubtful > 0) {
+      titleText +=
+        "; de ellos, " +
+        agree(
+          declared.doubtful,
+          "viene de asignaciones dudosas, incluidas por decisión del dueño",
+          "vienen de asignaciones dudosas, incluidas por decisión del dueño"
+        );
+    }
+    if (declared.uncharted > 0) {
+      titleText +=
+        "; " +
+        agree(
+          declared.uncharted,
+          "par queda fuera: su institución se declara y no se grafica",
+          "pares quedan fuera: su institución se declara y no se grafica"
+        );
+    }
     var descText = bands
       .map(function (band) {
         return (
@@ -1019,7 +1069,7 @@
     );
     out += svgTitle("Instituciones por año (acumulado)");
     out += svgSubtitle(
-      "Pares charla-institución de instituciones verificadas · nunca baja"
+      "Pares charla-institución acumulados · nunca baja"
     );
 
     out += yTick(maxValue, maxValue);

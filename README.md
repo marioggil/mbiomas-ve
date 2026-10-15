@@ -137,7 +137,8 @@ grows to its content and lets the document scroll (see "Behaviours that look lik
 not").
 
 The artifact carries `schema_version` **4** — v3 added the two collision tallies the map note renders,
-and v4 the parsed species, the institution ids and the reviewer — and `on_map` is true exactly for
+and v4 the parsed species, the institution ids, the reviewer and the curated institution map with its
+charting decision — and `on_map` is true exactly for
 `placeable`, so the four classes partition the corpus and only the first is drawn:
 
 | Class | Count | On the map |
