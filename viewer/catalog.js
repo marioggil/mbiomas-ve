@@ -369,6 +369,17 @@
 
     var studies = (catalog && catalog.studies) || [];
 
+    // The counts answer "how many studies will I see if I pick this". With an
+    // area drawn they are counted inside the area, while the edition keys still
+    // come from the whole catalog so every edition keeps its button -- and an
+    // edition with nothing in the area says so with a zero instead of promising
+    // studies it cannot show.
+    var inArea = metrics ? metrics.studiesInArea(studies, activeArea) : studies;
+    var inAreaIds = {};
+    inArea.forEach(function (s) {
+      inAreaIds[s.study_id] = true;
+    });
+
     // Derive the editions from the data. We never hardcode I / II / III or
     // 1991 / 1994 / 1999: the API is the source of truth for both the code
     // and the year, so a future edition appears in the filter for free.
@@ -387,7 +398,7 @@
         byCongress[key] = { year: s.anio, count: 0 };
         order.push(key);
       }
-      byCongress[key].count += 1;
+      byCongress[key].count += inAreaIds[s.study_id] ? 1 : 0;
     });
     order.sort(function (a, b) {
       var ya = byCongress[a].year;
@@ -403,7 +414,7 @@
       return String(a).localeCompare(String(b));
     });
 
-    filtersEl.appendChild(buildFilterButton("all", "Todas", studies.length));
+    filtersEl.appendChild(buildFilterButton("all", "Todas", inArea.length));
     order.forEach(function (key) {
       var entry = byCongress[key];
       var text =
@@ -423,6 +434,11 @@
       btn.classList.add("is-active");
     }
     btn.textContent = text + " (" + count + ")";
+    if (count === 0) {
+      // An edition the area does not reach keeps its place in the row but does
+      // not look like it holds results.
+      btn.classList.add("is-empty");
+    }
     btn.addEventListener("click", function () {
       activeCongress = value;
       updateFilterButtons();
@@ -717,6 +733,8 @@
     // it asked for the previous scope, not for this one.
     metricsCollapsed = false;
     renderSpatialFilter();
+    // The edition buttons count inside the area, so they are rebuilt with it.
+    renderFilters();
     renderList();
     renderMetrics();
   }
@@ -737,6 +755,7 @@
     // charts answer, so the block folds to its summary line on its own.
     metricsCollapsed = true;
     renderSpatialFilter();
+    renderFilters();
     renderList();
     renderMetrics();
   }

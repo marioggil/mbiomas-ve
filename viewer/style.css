@@ -1049,6 +1049,12 @@ body.is-overlays-collapsed .map-overlays {
   outline-offset: 1px;
 }
 
+/* An edition the drawn area does not reach keeps its button so the row stays
+ * stable, but it must not look like it holds studies. */
+.catalog-filter.is-empty {
+  opacity: 0.55;
+}
+
 .catalog-filter.is-active {
   background: var(--accent);
   border-color: var(--accent);

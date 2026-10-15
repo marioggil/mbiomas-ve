@@ -139,6 +139,7 @@ Settled while building it:
 | `MIN_TALKS_FOR_SERIES` | **5** (F2-C1 closed). Barinas, at 4 talks, is the empty-state case |
 | Tie-breaks | Count desc, then lowercased name asc — with string comparison, never `localeCompare`, so two renders cannot disagree |
 | The block's default | **Collapsed**, with a one-line summary (`255 charlas · 245 con coordenada · 226 con institución · 534 nombres`), because the study list is the panel's primary content and three charts were pushing it off the first screen. Drawing an area expands it; clearing it folds it back; a manual fold is respected until the next area gesture |
+| The edition buttons | They **count inside the area** once one is drawn (`Todas (14)`, and `(0)` for an edition the area does not reach), because a button that promises 15 studies and shows none is the same defect as a chart that hides its granularity |
 
 ### F3 — verification
 
