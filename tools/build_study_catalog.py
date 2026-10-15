@@ -50,6 +50,33 @@ loader fails loudly on a missing or unreadable file, malformed JSON, a
 duplicate key anywhere in the document, an unknown level, a missing or
 non-string ``texto``, or a T0/T1 entry without a ``razon``.
 
+SPECIES AND INSTITUTIONS
+------------------------
+Every study keeps ``especiesmencionadas`` verbatim and adds the parsed
+``especies`` list beside it, because decision D7 moves the parsing out of the
+client: the browser groups the already-parsed names instead of judging a
+free-text field. ``parse_especies`` unwraps one ``[...]`` level, splits on
+commas and semicolons, trims, drops the module's ``ESPECIES_SENTINELS``
+(compared lowercased, so ``NA`` and ``n.a.`` are the same non-answer) and
+deduplicates case-insensitively keeping the first form, so the artifact stays
+faithful to the source while the client lowercases for grouping. A comma inside
+a species name is indistinguishable from a separator and no semantic split is
+attempted; the accepted limit is documented on the function.
+
+``rores`` collects the ``ror`` ids of the study's authors, trims them, drops the
+values the curated table declares as ``ror_sentinels`` (the corpus carries the
+literal ``No disponible``), deduplicates and sorts them. The curated table
+``data/curated/congresos/ror-instituciones.json`` (never an input of the service)
+is projected into the top-level ``ror_instituciones`` map
+``{ror url: {nombre, estado}}``, so the client reads display names and the
+``ok``/``dudoso`` verdict from the artifact alone. The build is hard-closed
+against that table exactly as it is against the granularity taxonomy: a ROR id
+in the corpus that is neither a sentinel nor a curated key aborts and names the
+study, while a curated entry the corpus does not currently use is merely
+reported and kept. Shrinking the curated file would delete review work every
+time the corpus changes, and the table is a review of the wider enrichment cache,
+not of this corpus alone.
+
 CLASSIFICATION
 --------------
 The display class is decided here, at build time, first match wins:
@@ -97,7 +124,8 @@ Usage:
         --cog          data/cog/venezuela/collection-3/coverage-venezuela_classification_2024.tif \\
         --outdir       data/derived/venezuela/congresos \\
         --country      venezuela \\
-        --labelling-json data/derived/venezuela/collection-3/tiles-manifest.json
+        --labelling-json data/derived/venezuela/collection-3/tiles-manifest.json \\
+        --ror-instituciones data/curated/congresos/ror-instituciones.json
 
 The tool is strict on purpose: any missing column, non-labelable row or broken
 labelling source aborts with a non-zero exit status and leaves NO partial
@@ -154,6 +182,7 @@ REQUIRED_COLUMNS = [
     "latitud",
     "longitud",
     "human_verified",
+    "human_reviewer",
     "autores",
     "instituciones",
     "ubicaciongeografica",
@@ -167,10 +196,12 @@ REQUIRED_COLUMNS = [
 # The schema version anchor, following the project's convention (the
 # composition summary is anchored the same way). Bumped when the display
 # contract changes in a way a reader must not mistake for the previous one.
-# Version 3 adds the two builder-produced collision tallies the map note
-# renders (``collision_coordinate_count`` / ``collision_marker_count``); a
-# version 2 artifact carries no number for the ring, so the viewer refuses it.
-SCHEMA_VERSION = 3
+# Version 4 adds what the congress metrics need: the parsed ``especies`` list,
+# the ``rores`` ids and the ``human_reviewer``; version 3 added the two
+# collision tallies the map note renders (``collision_coordinate_count`` /
+# ``collision_marker_count``). A version 3 artifact carries no species, no ROR
+# and no reviewer, so the metrics panel cannot be built from it.
+SCHEMA_VERSION = 4
 
 # The identity of the derived document: the taxonomy replaced the collision
 # class, so ``coarse_location`` sits where ``shared_coordinate`` used to.
@@ -181,6 +212,30 @@ CLASS_ORDER = ["placeable", "coarse_location", "outside_extent", "no_coordinate"
 # so the taxonomy and the code cannot drift apart silently.
 GRANULARITY_LEVELS = ("T0", "T1", "T2")
 GRANULARITY_EXCLUDED_FROM_MAP = ["T0", "T1"]
+
+# The curated ROR verdicts. ``ok`` is graphable, ``dudoso`` resolves to a
+# different institution than the free text names, so it is declared beside the
+# chart instead of inside it. The set is pinned here so a curated file that
+# invents a third verdict stops the build rather than reaching the client.
+ROR_ESTADOS = ("ok", "dudoso")
+
+# The species answers that carry no name. They are compared lowercased, because
+# the same non-answer appears as ``N.A.`` and ``n.a.`` in the corpus. Anything
+# in this set is dropped silently: it is a legitimate answer to the question,
+# not a data defect.
+ESPECIES_SENTINELS = frozenset({
+    "",
+    "n.a.",
+    "n/a",
+    "na",
+    "s/d",
+    "s.a.",
+    "-",
+    "none",
+    "null",
+    "no se mencionan especies específicas",
+    "no se mencionan especies específicas en el resumen",
+})
 
 # What each level means, in the words the exclusion reason uses. The curated
 # file states the same definitions in its own ``levels`` block; this is the
@@ -233,9 +288,12 @@ CSV_FIELDS = [
     "n_autores",
     "paises",
     "instituciones",
+    "rores",
+    "human_reviewer",
     "ubicaciongeografica",
     "ubicaciontemporal",
     "especiesmencionadas",
+    "especies",
     "palabrasclaves",
     "latitud",
     "longitud",
@@ -398,6 +456,170 @@ def load_granularity(path: Path) -> dict[str, dict[str, Any]]:
     return granularity
 
 
+def load_ror_instituciones(
+    path: Path,
+) -> tuple[dict[str, dict[str, str]], tuple[str, ...]]:
+    """Load the curated ROR table and project it for the artifact.
+
+    Returns ``(entries, sentinels)``. ``entries`` is the projected map
+    ``ror url -> {"nombre", "estado"}`` (the review-only ``nota`` is dropped, it
+    never reaches the client) and ``sentinels`` are the values that look like an
+    id but mean "no answer", such as the corpus's literal ``No disponible``.
+
+    This is a hand-edited document, so the loader fails loudly on a missing or
+    unreadable file, malformed JSON, a duplicate key anywhere in the document, a
+    missing ``entries`` / ``ror_sentinels`` block, an unknown ``estado``, or an
+    entry with no non-empty ``nombre``. An entry the current corpus does not use
+    is NOT an error: the table curates the wider enrichment cache, and forcing it
+    to shrink would delete review work every time the study set changes. ``main``
+    reports those entries as a note instead.
+    """
+    if not path.is_file():
+        raise StudyCatalogError(f"ror-instituciones file not found: {path}")
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise StudyCatalogError(
+            f"could not read ror-instituciones file {path}: {exc}"
+        ) from exc
+
+    def reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        seen: set[str] = set()
+        for key, _ in pairs:
+            if key in seen:
+                raise StudyCatalogError(
+                    f"ror-instituciones file {path} has a duplicate key {key!r}; "
+                    f"a repeated entry would silently overwrite the first"
+                )
+            seen.add(key)
+        return dict(pairs)
+
+    try:
+        payload = json.loads(text, object_pairs_hook=reject_duplicate_keys)
+    except json.JSONDecodeError as exc:
+        raise StudyCatalogError(
+            f"ror-instituciones file {path} is not valid JSON: {exc}"
+        ) from exc
+
+    if not isinstance(payload, dict):
+        raise StudyCatalogError(
+            f"ror-instituciones file {path} must be a JSON object, got "
+            f"{type(payload).__name__}"
+        )
+    if "entries" not in payload:
+        raise StudyCatalogError(
+            f"ror-instituciones file {path} is missing 'entries'"
+        )
+    entries = payload["entries"]
+    if not isinstance(entries, dict) or not entries:
+        raise StudyCatalogError(
+            f"ror-instituciones file {path} 'entries' must be a non-empty JSON "
+            f"object, got {type(entries).__name__}"
+        )
+    sentinels = payload.get("ror_sentinels")
+    if not isinstance(sentinels, list) or not all(
+        isinstance(value, str) and value.strip() for value in sentinels
+    ):
+        raise StudyCatalogError(
+            f"ror-instituciones file {path} must declare 'ror_sentinels' as a "
+            f"list of non-empty strings, got {sentinels!r}"
+        )
+
+    projected: dict[str, dict[str, str]] = {}
+    for ror_id, entry in entries.items():
+        where = f"ror-instituciones entry {ror_id!r}"
+        if not isinstance(entry, dict):
+            raise StudyCatalogError(
+                f"{where} must be a JSON object, got {type(entry).__name__}"
+            )
+        nombre = entry.get("nombre")
+        if not isinstance(nombre, str) or not nombre.strip():
+            raise StudyCatalogError(
+                f"{where} has a 'nombre' that is not a non-empty string: "
+                f"{nombre!r}"
+            )
+        estado = entry.get("estado")
+        if estado not in ROR_ESTADOS:
+            raise StudyCatalogError(
+                f"{where} has estado {estado!r}; expected one of "
+                f"{', '.join(ROR_ESTADOS)}"
+            )
+        projected[ror_id] = {"nombre": nombre, "estado": estado}
+    # Sorted so the artifact does not inherit the file's editorial order: two
+    # builds from the same table are byte-identical whatever order it is in.
+    return {key: projected[key] for key in sorted(projected)}, tuple(sentinels)
+
+
+def parse_especies(value: Any) -> list[str]:
+    """Parse an ``especiesmencionadas`` value into a faithful, deduplicated list.
+
+    ``None`` (and any other non-string, non-list value) is ``[]``. A string may
+    carry one serialised ``[...]`` level, which is unwrapped. The candidate text
+    is then split on commas AND semicolons, each part is trimmed and stripped of
+    surrounding ``'``/``"``, and the ``ESPECIES_SENTINELS`` are dropped
+    (compared lowercased). The remaining names are deduplicated
+    case-insensitively keeping the FIRST form, in order, so the artifact stays a
+    faithful reading of the source and the client lowercases it for grouping.
+
+    Declared limit: a separator inside a species name is indistinguishable from
+    a separator between names, so no semantic split is attempted. ``"Peces de
+    las Familias Characidae, Loricariidae"`` yields two parts, because the
+    builder cannot know the second token is a family list rather than a second
+    species. Fixing that belongs to curation, not to an inference here.
+    """
+    if value is None:
+        return []
+    if isinstance(value, str):
+        items: list[Any] = [value]
+    elif isinstance(value, list):
+        items = value
+    else:
+        return []
+
+    names: list[str] = []
+    seen: set[str] = set()
+    for item in items:
+        if not isinstance(item, str):
+            continue
+        text = item.strip()
+        if text.startswith("[") and text.endswith("]"):
+            text = text[1:-1]
+        for part in re.split(r"[,;]", text):
+            name = part.strip().strip("'\"").strip()
+            if name.lower() in ESPECIES_SENTINELS:
+                continue
+            key = name.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            names.append(name)
+    return names
+
+
+def parse_rores(
+    autores: list[dict[str, Any]], ror_sentinels: tuple[str, ...] = ()
+) -> list[str]:
+    """Return the study's usable ROR ids: trimmed, deduplicated, sorted.
+
+    The sentinel values the curated table declares are dropped silently (the
+    corpus carries the literal ``No disponible`` in a ``ror`` field), exactly as
+    the species sentinels are. Whitespace-only values are the absence of an id,
+    not an id, so they are dropped too. The result is always a list and is
+    deterministic for a given author list.
+    """
+    sentinels = set(ror_sentinels)
+    rores: set[str] = set()
+    for author in autores:
+        value = author.get("ror")
+        if not isinstance(value, str):
+            continue
+        ror_id = value.strip()
+        if not ror_id or ror_id in sentinels:
+            continue
+        rores.add(ror_id)
+    return sorted(rores)
+
+
 def row_location_text(row: dict[str, Any]) -> str:
     """Return the location text the corpus carries for one row.
 
@@ -540,6 +762,13 @@ def validate_rows(rows: list[dict[str, Any]]) -> None:
             raise StudyCatalogError(
                 f"row is not human-verified ({row['human_verified']!r}); the "
                 f"catalog may only ship human-reviewed rows [{where}]"
+            )
+
+        reviewer = row["human_reviewer"]
+        if not isinstance(reviewer, str) or not reviewer.strip():
+            raise StudyCatalogError(
+                f"human_reviewer is not a non-empty string ({reviewer!r}); the "
+                f"catalog declares the human/machine split of D1 [{where}]"
             )
 
         lat = row["latitud"]
@@ -830,6 +1059,7 @@ def build_study(
     extent: dict[str, float],
     granularity_entry: dict[str, Any],
     coordinate_group: list[str] | None,
+    ror_sentinels: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     """Assemble one study.
 
@@ -838,9 +1068,15 @@ def build_study(
     coordinate. The collision attributes are derived from it and are independent
     of the display class: a group may hold studies the map draws and studies it
     does not, and the Barinas group genuinely mixes T1 and T2.
+
+    ``ror_sentinels`` are the ``ror`` values the curated table declares as
+    non-answers; they are dropped from ``rores`` here. Whether a surviving ROR
+    has a curated entry is decided by :func:`build_catalog`, which holds the
+    curated map, so this function stays a pure assembler of one row.
     """
     study_id = study_id_for(row)
     display_class = display_class_for(row, extent, granularity_entry)
+    autores = _parse_autores(row, row_name(row))
     if row["latitud"] is None or row["longitud"] is None:
         coordinate_group_size: int | None = None
         coordinate_group_ids: list[str] = []
@@ -858,11 +1094,14 @@ def build_study(
         "study_id": study_id,
         "titulo": row["titulo"],
         "resumen": row["resumen"],
-        "autores": _parse_autores(row, row_name(row)),
+        "autores": autores,
         "instituciones": _parse_instituciones(row, row_name(row)),
+        "rores": parse_rores(autores, ror_sentinels),
+        "human_reviewer": row["human_reviewer"],
         "ubicaciongeografica": row["ubicaciongeografica"],
         "ubicaciontemporal": row["ubicaciontemporal"],
         "especiesmencionadas": row["especiesmencionadas"],
+        "especies": parse_especies(row["especiesmencionadas"]),
         "palabrasclaves": _parse_palabrasclaves(row, row_name(row)),
         "source_path": row["source_path"],
         "anio": None if row["anio"] is None else int(row["anio"]),
@@ -936,26 +1175,46 @@ def build_catalog(
     extent_label: str,
     extent_boundary_note: str,
     source_identity: dict[str, Any],
+    ror_instituciones: dict[str, dict[str, str]] | None = None,
+    ror_sentinels: tuple[str, ...] = (),
 ) -> tuple[dict[str, Any], dict[str, int]]:
     """Assemble the catalog document.
 
     ``granularity`` is the curated taxonomy, keyed by ``source_path``.
     ``source_identity`` comes from :func:`read_rows` and carries the three
     provenance fields. It is written immediately after ``source_parquet`` so the
-    document reads as one provenance block.
+    document reads as one provenance block. ``ror_instituciones`` is the curated
+    ROR map projected for the artifact; ``ror_sentinels`` are its non-answer
+    values.
 
     The ids are computed first, in one pass parallel to ``rows``, because the
     collision attributes relate ids to each other: ``coordinate_group_size`` and
     ``coordinate_group_ids`` need the whole id map before any study is built.
+
+    The curated ROR table is closed against the corpus here: a study whose
+    ``rores`` carry an id that is neither a sentinel nor a curated key aborts and
+    names both the id and the study. A curated entry the corpus does not use is
+    not an error (see :func:`load_ror_instituciones`).
     """
+    if ror_instituciones is None:
+        ror_instituciones = {}
     study_ids = [study_id_for(row) for row in rows]
     groups = coordinate_groups(rows, study_ids)
     studies = []
     for row in rows:
         entry = granularity_entry_for(row, granularity)
         group = groups.get((row["latitud"], row["longitud"]))
-        studies.append(build_study(row, extent, entry, group))
+        studies.append(build_study(row, extent, entry, group, ror_sentinels))
     studies.sort(key=study_sort_key)
+
+    for study in studies:
+        for ror_id in study["rores"]:
+            if ror_id not in ror_instituciones:
+                raise StudyCatalogError(
+                    f"study {study['study_id']!r} carries ROR id {ror_id!r} that "
+                    f"has no curated entry in the ror-instituciones file; the "
+                    f"curated table must cover every ROR the corpus uses"
+                )
 
     seen: set[str] = set()
     for study in studies:
@@ -1003,6 +1262,7 @@ def build_catalog(
             "collision_marker_count": collision_markers,
         },
         "classes": classes,
+        "ror_instituciones": ror_instituciones,
         "studies": studies,
     }
     return catalog, counts
@@ -1016,8 +1276,9 @@ def _csv_value(field: str, value: Any) -> Any:
 
     ``autores`` is a list of objects, so the CSV gets the author ``nombre``
     values joined with ``"; "``; the other list columns (``instituciones``,
-    ``paises``, ``palabrasclaves``, ``coordinate_group_ids``) are already lists
-    of strings and get the same treatment, so a spreadsheet stays readable.
+    ``rores``, ``especies``, ``paises``, ``palabrasclaves``,
+    ``coordinate_group_ids``) are already lists of strings and get the same
+    treatment, so a spreadsheet stays readable.
     ``especiesmencionadas`` stays verbatim because it is free text, not a list.
     """
     if field == "autores":
@@ -1092,6 +1353,13 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
         help="manifest to copy extent_label / extent_boundary_note from "
              "(default: data/derived/venezuela/collection-3/tiles-manifest.json)",
     )
+    parser.add_argument(
+        "--ror-instituciones",
+        type=Path,
+        default=Path("data/curated/congresos/ror-instituciones.json"),
+        help="curated ROR institution table projected into the artifact "
+             "(default: data/curated/congresos/ror-instituciones.json)",
+    )
     return parser.parse_args(argv)
 
 
@@ -1104,6 +1372,9 @@ def main(argv: list[str] | None = None) -> int:
         validate_rows(rows)
         granularity = load_granularity(args.granularidad)
         check_granularity_coverage(granularity, rows)
+        ror_instituciones, ror_sentinels = load_ror_instituciones(
+            args.ror_instituciones
+        )
         matched, mismatches = check_n_autores(rows)
         if mismatches:
             detail = "; ".join(
@@ -1124,6 +1395,8 @@ def main(argv: list[str] | None = None) -> int:
             extent_label,
             extent_boundary_note,
             source_identity,
+            ror_instituciones,
+            ror_sentinels,
         )
         json_path, csv_path = write_outputs(catalog, args.outdir)
     except StudyCatalogError as exc:
@@ -1153,6 +1426,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     for key in CLASS_ORDER:
         print(f"  {key}: {counts[key]}")
+    used_rores = {ror_id for study in catalog["studies"] for ror_id in study["rores"]}
+    unused_rores = sorted(set(ror_instituciones) - used_rores)
+    if unused_rores:
+        print(
+            f"note: {len(unused_rores)} curated ror-instituciones entrie(s) are "
+            f"not used by this corpus (kept, not an error): " + ", ".join(unused_rores)
+        )
     print(f"  wrote {json_path}")
     print(f"  wrote {csv_path}")
     return 0
