@@ -61,6 +61,26 @@ body {
   min-height: 100vh;
 }
 
+/* Reading measure (craft floor). Prose stops at a comfortable line length
+ * instead of running to the panel edge: the catalogue intro and the help
+ * paragraphs are children of a full-width panel whose text line used to
+ * reach the viewport edge (334 and 172 characters long, starting at the
+ * panel's 14px padding). 64ch is inside the reference's 65-75ch band once the
+ * `ch` unit is read against this font's average glyph: at 72ch the rendered
+ * lines measured ~87 characters, and the detector's ceiling is 80, so the cap
+ * is tightened rather than the prose shortened. It is a font-relative measure,
+ * so the line length survives a change to the role sizes. Where the container
+ * is already narrower than the cap (the 320px legend column) the declaration
+ * is inert. */
+.legend-help,
+.catalog-help,
+.catalog-search-help,
+.panel-help,
+.catalog-detail-resumen-text,
+.map-tool-help {
+  max-width: 64ch;
+}
+
 /* ------- Header ------- */
 .viewer-header {
   grid-area: header;
@@ -86,7 +106,7 @@ body {
 
 .viewer-title {
   margin: 0;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 600;
   color: var(--fg-strong);
 }
@@ -109,7 +129,7 @@ body {
 
 .legend-title {
   margin: 0 0 6px;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--fg-strong);
 }
@@ -178,7 +198,7 @@ body {
   width: 14px;
   text-align: center;
   color: var(--fg-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .legend-classes {
@@ -266,7 +286,7 @@ body {
   width: 12px;
   text-align: center;
   color: var(--fg-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 /* Collapsing the legend hands its whole 320px grid column back to the map.
@@ -402,14 +422,14 @@ body.is-overlays-collapsed .map-overlays {
 .map-tool-help {
   flex-basis: 100%;
   color: var(--fg-muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.35;
 }
 
 .map-tool-status {
   flex-basis: 100%;
   color: var(--fg-text);
-  font-size: 11px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -541,7 +561,7 @@ body.is-overlays-collapsed .map-overlays {
 
 .panel-title {
   margin: 0;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--fg-strong);
 }
@@ -557,6 +577,20 @@ body.is-overlays-collapsed .map-overlays {
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 8px 6px;
+  /* The chart is a fixed 600x320 viewBox stretched to the wrapper width
+   * (.panel-chart-svg is width: 100%), so its declared type scaled with
+   * the container: at 1543px of inner width the scale was 1543/600 = 2.57x
+   * and the 10px ticks rendered at 20.6-28px -- bigger than the page
+   * title, with the chart ~660px tall. Capping the wrapper caps the scale
+   * instead of recomputing the geometry: 620px border box - 12px padding
+   * - 2px border = 606px of SVG, so the scale is 606/600 = 1.01x and the
+   * declared 12px tick and subtitle render at 12.1px, the 13px title at 13.1px
+   * — the whole chart inside the 11-13px band the rest of the interface uses,
+   * and every declared size at or above the 12px floor. Height follows the same
+   * factor: 606 x 320/600 = 323px of SVG and ~341px of wrapper, down from
+   * ~660px. No coordinate in panel.js is touched; the cap lives here so the SVG
+   * stays a fixed 600x320 space. */
+  max-width: 620px;
 }
 
 .panel-chart-svg {
@@ -573,7 +607,7 @@ body.is-overlays-collapsed .map-overlays {
 }
 
 .panel-chart-subtitle {
-  font-size: 11px;
+  font-size: 12px;
   fill: var(--fg-muted);
   font-family: var(--font-stack);
 }
@@ -589,13 +623,16 @@ body.is-overlays-collapsed .map-overlays {
 }
 
 .panel-chart-tick {
-  font-size: 10px;
+  font-size: 12px;
   fill: var(--fg-muted);
   font-family: var(--font-stack);
+  /* The five y ticks are figures in a column; tabular figures keep the
+   * axis labels from shifting when the series changes. */
+  font-variant-numeric: tabular-nums;
 }
 
 .panel-chart-axis-label {
-  font-size: 10px;
+  font-size: 12px;
   fill: var(--fg-muted);
   font-family: var(--font-stack);
 }
@@ -650,7 +687,7 @@ body.is-overlays-collapsed .map-overlays {
 
 .panel-breakdown-title {
   margin: 12px 0 4px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--fg-strong);
 }
@@ -713,7 +750,7 @@ body.is-overlays-collapsed .map-overlays {
 .panel-bar-code {
   font-variant-numeric: tabular-nums;
   color: var(--fg-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .panel-bar-track {
@@ -733,7 +770,7 @@ body.is-overlays-collapsed .map-overlays {
 .panel-bar-footer {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fg-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -752,6 +789,9 @@ body.is-overlays-collapsed .map-overlays {
   font-size: 12px;
   font-weight: 600;
   color: var(--fg-strong);
+  /* The year total closes the column of areas the bars stack above it;
+   * tabular figures keep it aligned with those numbers. */
+  font-variant-numeric: tabular-nums;
 }
 
 /* The clip result adds an extra summary line under the year total so the
@@ -759,7 +799,7 @@ body.is-overlays-collapsed .map-overlays {
  * doing the arithmetic in their head. */
 .panel-bar-window-summary {
   padding: 4px 4px 0;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fg-muted);
 }
 
@@ -779,7 +819,7 @@ body.is-overlays-collapsed .map-overlays {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .panel-extent-label {
@@ -870,7 +910,7 @@ body.is-overlays-collapsed .map-overlays {
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 6px 10px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fg-strong);
   box-shadow: var(--shadow);
   display: flex;
@@ -906,7 +946,7 @@ body.is-overlays-collapsed .map-overlays {
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 6px 10px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fg-strong);
   box-shadow: var(--shadow);
   display: flex;
@@ -952,7 +992,7 @@ body.is-overlays-collapsed .map-overlays {
 
 .catalog-title {
   margin: 0;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--fg-strong);
 }
@@ -977,6 +1017,9 @@ body.is-overlays-collapsed .map-overlays {
   align-items: baseline;
   gap: 12px;
   font-size: 13px;
+  /* The three totals wrap into a column at narrow viewports; tabular
+   * figures keep them from shifting per digit as the counts change. */
+  font-variant-numeric: tabular-nums;
 }
 
 .catalog-summary-total {
@@ -1280,13 +1323,13 @@ body.is-metrics-collapsed .catalog-metrics-body {
 
 .catalog-metrics-scope {
   color: var(--fg-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .catalog-metrics-coverage {
   margin: 4px 0 0;
   color: var(--fg-muted);
-  font-size: 11px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1330,7 +1373,7 @@ body.is-metrics-collapsed .catalog-metrics-body {
   display: flex;
   flex-wrap: wrap;
   gap: 2px 12px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fg-muted);
 }
 
@@ -1390,7 +1433,7 @@ body.is-metrics-collapsed .catalog-metrics-body {
 
 .catalog-metrics-note {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fg-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -1534,7 +1577,7 @@ body.is-metrics-collapsed .catalog-metrics-body {
 
 .catalog-row-meta,
 .catalog-row-author {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fg-muted);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -1565,7 +1608,7 @@ body.is-metrics-collapsed .catalog-metrics-body {
 
 .catalog-row-badge {
   flex: 0 0 auto;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.2;
   font-weight: 600;
   /* No ``text-transform``: the badge shows the builder's ``label_es``
@@ -1625,7 +1668,7 @@ body.is-metrics-collapsed .catalog-metrics-body {
 
 .catalog-detail-title {
   margin: 0 0 6px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--fg-strong);
 }
@@ -1688,7 +1731,7 @@ body.is-metrics-collapsed .catalog-metrics-body {
 
 .catalog-detail-author-extra {
   color: var(--fg-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .catalog-detail-institution {
@@ -1724,7 +1767,7 @@ body.is-metrics-collapsed .catalog-metrics-body {
 
 .catalog-detail-resumen-text {
   margin: 4px 0 0;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--fg-text);
   line-height: 1.5;
 }
