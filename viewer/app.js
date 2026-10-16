@@ -255,6 +255,10 @@
       var disclosure = document.createElement("span");
       disclosure.className = "legend-disclosure";
       disclosure.textContent = "▸";
+      // The glyph mirrors the state visually; the state itself is carried by
+      // ``aria-expanded`` on the button, so the arrow has no business in the
+      // accessible name (it read as "…boscosas▾").
+      disclosure.setAttribute("aria-hidden", "true");
 
       toggle.appendChild(swatch);
       toggle.appendChild(name);
@@ -1437,6 +1441,18 @@
         clipCoordsInput.focus();
       }
       return null;
+    }
+
+    // A comma between two digits is a decimal comma, not a separator. Split
+    // on it and "-71,51" silently becomes two whole degrees, which only fails
+    // if the resulting box happens to fall outside the extent — a wrong-area
+    // query that returns a valid figure. Reject it before any request, naming
+    // the problem and the way out, the same thing the 400 message says when
+    // it does slip through.
+    if (/\d,\d/.test(String(raw == null ? "" : raw))) {
+      return reject(
+        "Las coordenadas usan punto decimal, no coma: escriba -71.51, 8.26, -71.02, 8.76."
+      );
     }
 
     // Commas, semicolons and whitespace all separate values; an empty
