@@ -334,14 +334,16 @@ body {
   gap: 6px;
 }
 
-/* The metrics block's and the edition filter's disclosure controls are part of
- * the same family on purpose: one disclosure pattern in the viewer (a real
- * button with aria-expanded + aria-controls and a ▾/▸ glyph), not a second one.
- * They only differ in where they live -- the catalogue panel instead of the map
- * chrome -- so they share these rules and add their own below. */
+/* The metrics block's, the edition filter's and the breakdown's disclosure
+ * controls are part of the same family on purpose: one disclosure pattern in the
+ * viewer (a real button with aria-expanded + aria-controls and a ▾/▸ glyph), not
+ * a second one. They only differ in where they live -- the catalogue panel, or
+ * the composition panel's breakdown -- so they share these rules and add their
+ * own below. */
 .map-chrome-toggle,
 .catalog-metrics-toggle,
-.catalog-filters-toggle {
+.catalog-filters-toggle,
+.panel-breakdown-toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -357,20 +359,23 @@ body {
 
 .map-chrome-toggle:hover,
 .catalog-metrics-toggle:hover,
-.catalog-filters-toggle:hover {
+.catalog-filters-toggle:hover,
+.panel-breakdown-toggle:hover {
   background: var(--bg-panel-alt);
 }
 
 .map-chrome-toggle:focus-visible,
 .catalog-metrics-toggle:focus-visible,
-.catalog-filters-toggle:focus-visible {
+.catalog-filters-toggle:focus-visible,
+.panel-breakdown-toggle:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
 .map-chrome-disclosure,
 .catalog-metrics-disclosure,
-.catalog-filters-disclosure {
+.catalog-filters-disclosure,
+.panel-breakdown-disclosure {
   width: 12px;
   text-align: center;
   color: var(--fg-muted);
@@ -840,6 +845,20 @@ body.is-overlays-collapsed .map-overlays {
   font-size: 12px;
 }
 
+/* The chart and its legend are one block of the panel (see index.html). It is
+ * a flex column so the wrapper changes nothing in the stacked layout: the
+ * panel's own flex column used to put an 8px gap between the chart and the
+ * legend, and this block keeps both that gap and the legend's own 6px margin,
+ * so below 1101px the panel lays out exactly as it did without the wrapper.
+ * From 1101px up it is the grid's first column, and its two children stay
+ * stacked there instead of being placed in rows of their own -- which is what
+ * keeps the legend directly under the chart. */
+.panel-chart-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .panel-chart {
   background: var(--bg-panel-alt);
   border: 1px solid var(--border);
@@ -1003,6 +1022,36 @@ body.is-overlays-collapsed .map-overlays {
   gap: 6px;
 }
 
+/* The breakdown's clamp: eight rows are shown while collapsed and the rest stay
+ * in the list but out of the layout, so expanding restores exactly what was
+ * rendered. One class on the body decides what is hidden (see panel.js's
+ * ``setBreakdownCollapsed``) and the control that removes it lives outside the
+ * list, the pattern the catalogue's two disclosures already use -- no row is
+ * ever removed or rebuilt.
+ *
+ * Only class rows fold, and only from the seventh: the year's total line is a
+ * summary, not one more class, and hiding it while the control offers "20
+ * classes remaining" would hide the number those six rows add up to. The count
+ * panel.js prints in the control is read from the same rows. */
+body.is-breakdown-collapsed #panel-breakdown-list > .panel-bar:nth-child(n + 7) {
+  display: none;
+}
+
+/* The breakdown's disclosure. Only its own two states live here: the button,
+ * its glyph and the pointer/focus treatment come from the shared disclosure
+ * rules above, and the label carries the count panel.js reads from the rows, so
+ * tabular figures keep it from moving the button's own box. */
+.panel-breakdown-toggle-label {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ``display: inline-flex`` in those shared rules would otherwise beat the UA
+ * stylesheet's ``[hidden] { display: none }``, so the state panel.js hides the
+ * control in is restated (as .catalog-point-filter[hidden] does). */
+.panel-breakdown-toggle[hidden] {
+  display: none;
+}
+
 .panel-bar {
   display: flex;
   align-items: stretch;
@@ -1125,6 +1174,66 @@ body.is-overlays-collapsed .map-overlays {
 
 .panel-boundary-note {
   color: var(--fg-muted);
+}
+
+/* The composition panel's two-column shape, from 1101px up: the chart and its
+ * legend on the left, the breakdown on the right. The boundary is 1101px and
+ * not the file's 960px because below it the second column stops being usable:
+ * at 1100 the panel's 1212px of inner width would leave the chart its 660px
+ * and the breakdown ~405px, too narrow for bars whose name, track and figures
+ * share one row -- and the stacked panel is the design there, not a fallback.
+ * Nothing above 1101px is inherited from here: the media query sets the grid
+ * and then closes. */
+@media (min-width: 1101px) {
+  /* A grid, and the flex column's own declarations are left alone: the 8px gap
+   * is the grid's row AND column gap, and nothing else in the panel's box
+   * changes. ``align-content: start`` keeps the rows packed to the top if the
+   * panel ever gets height it does not need. */
+  .panel-panel {
+    display: grid;
+    /* 660px and not the chart's 620px cap: the cap is what keeps the chart's
+     * text in the 11-13px band, so the column must not make it narrower, and
+     * the 40px of slack is the chart's own wrapper padding and border. The
+     * second column is the line of bars: ``minmax(0, 1fr)`` spends whatever is
+     * left without letting a long class name claim a min-content width. */
+    grid-template-columns: 660px minmax(0, 1fr);
+    align-content: start;
+  }
+  /* The panel's own heading, its help line and the D7 labelling are about the
+   * panel, not about one of its two columns, so they span both. */
+  .panel-title,
+  .panel-help,
+  .panel-labelling {
+    grid-column: 1 / -1;
+  }
+  /* The chart block starts the third row and spans three of them, which is
+   * what the shape needs: both columns start on the same row line, so their
+   * tops are the same y, and the chart's own height never fixes the height of
+   * one shared row and pushes the breakdown's rows under it. It does not have
+   * to reach the last row the breakdown may add (the note, the busy row, the
+   * control -- three to five rows in all): a span longer than the rows in use
+   * would leave empty rows behind and their 8px gaps with them. */
+  .panel-chart-block {
+    grid-column: 1;
+    grid-row: 3 / span 3;
+  }
+  /* The breakdown's children stack in the second column, one row each, in the
+   * order panel.js renders them (title, note, list, control). Each one gets the
+   * column explicitly: an auto-placed item with no column of its own would land
+   * in the first free cell, which is the chart's column. */
+  .panel-breakdown-title,
+  .panel-breakdown-empty,
+  .panel-breakdown-list,
+  .panel-breakdown-toggle {
+    grid-column: 2;
+  }
+  /* The title's 12px top margin separates it from the legend above it in the
+   * stacked layout. Here it is the second column's first row, and that margin
+   * would set the breakdown 12px below the chart's own top: the column gap
+   * already separates the two columns. */
+  .panel-breakdown-title {
+    margin-top: 0;
+  }
 }
 
 /* ------- Study point layer legend (slice F4 / T4) -------
