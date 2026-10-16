@@ -14,7 +14,7 @@
   "area_method": "Row-wise geodesic area on the WGS84 sphere using the authalic radius R = 6371007.181 m. Fo",
   "authalic_radius_m": 6371007.181
  },
- "recomputar": "./run.sh pipeline",
+ "recomputar": "python3 tools/build_informe_imataca.py",
  "cogs_por_anio": {
   "1985": {
    "output_sha256": "cd3ab8462b5c90db1931ec6460af3b14fad1c6055d2caace2e3f10c8ee1d850c",

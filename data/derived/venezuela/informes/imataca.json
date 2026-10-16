@@ -1036,7 +1036,7 @@
       "generado_es": "15 de octubre de 2026"
     },
     "clip_schema": "viewer-clip-stats.v1",
-    "recomputar": "./run.sh pipeline",
+    "recomputar": "python3 tools/build_informe_imataca.py",
     "cogs": [
       {
         "anio": 1985,
