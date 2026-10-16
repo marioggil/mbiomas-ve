@@ -57,6 +57,10 @@
   var breakdownEmpty = null;
   var breakdownList = null;
   var breakdownTitle = null;
+  // The in-flight row for a clip request. The panel creates it at init
+  // (see ``setClipBusy``); it carries the same role class as the note
+  // above it, so it inherits the panel's 12 px muted treatment.
+  var breakdownBusy = null;
   var extentLabel = null;
   var extentBoundary = null;
 
@@ -83,6 +87,16 @@
     breakdownEmpty = document.getElementById("panel-breakdown-empty");
     breakdownList = document.getElementById("panel-breakdown-list");
     breakdownTitle = document.getElementById("panel-breakdown-title");
+    // The in-flight row is inserted just before the bar list, which is
+    // exactly where the incoming rows will land. It is hidden by its own
+    // class until a clip request marks the breakdown busy.
+    breakdownBusy = document.createElement("p");
+    breakdownBusy.id = "panel-breakdown-busy";
+    breakdownBusy.className = "panel-breakdown-empty panel-breakdown-busy";
+    breakdownBusy.textContent = "Calculando…";
+    if (breakdownList && breakdownList.parentNode) {
+      breakdownList.parentNode.insertBefore(breakdownBusy, breakdownList);
+    }
     extentLabel = document.getElementById("panel-extent-label");
     extentBoundary = document.getElementById("panel-boundary-note");
 
@@ -969,6 +983,37 @@
   // per-year view by clearing the rectangle.
 
   /**
+   * Mark the breakdown as busy while a clip request is in flight, and take
+   * the mark away when that request settles.
+   *
+   * The panel owns the breakdown's DOM, so the in-flight state lives here:
+   * a figure still being computed has to be declared where the figure will
+   * land, not only in the map's toolbar. ``aria-busy`` keeps the rows on
+   * screen from being read as the answer for the area being computed; the
+   * visible affordance is the panel's own transient note (12 px muted).
+   *
+   * Only the in-flight row and the busy mark are touched: the current rows,
+   * the title and the empty/error note are left exactly as they are. The
+   * host calls this on every settle path of the request, including the
+   * superseded one, so the mark cannot outlive its request.
+   *
+   * @param {boolean} isBusy
+   * @returns {void}
+   */
+  function setClipBusy(isBusy) {
+    if (!breakdownList || !breakdownBusy) {
+      return;
+    }
+    if (isBusy) {
+      breakdownList.setAttribute("aria-busy", "true");
+      breakdownBusy.style.display = "block";
+    } else {
+      breakdownList.removeAttribute("aria-busy");
+      breakdownBusy.style.display = "none";
+    }
+  }
+
+  /**
    * Render the result of ``/api/clip-stats`` for one rectangle + year.
    *
    * The payload is normalised into the same shape as
@@ -1003,6 +1048,10 @@
    * @returns {void}
    */
   function clearClip() {
+    // The clip result is gone, so its in-flight row goes with it: the host
+    // invalidates the request before calling this, and a "Calculando…" line
+    // left behind would promise a figure that can no longer land.
+    setClipBusy(false);
     if (!breakdownList || !breakdownTitle) {
       return;
     }
@@ -1050,5 +1099,6 @@
     renderClip: renderClip,
     clearClip: clearClip,
     showClipError: showClipError,
+    setClipBusy: setClipBusy,
   };
 })();
