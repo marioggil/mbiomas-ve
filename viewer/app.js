@@ -72,6 +72,7 @@
   var overlaysCollapseToggle = document.getElementById(
     "overlays-collapse-toggle"
   );
+  var toolsCollapseToggle = document.getElementById("tools-collapse-toggle");
 
   // State.
   /** @type {object|null} */
@@ -82,6 +83,16 @@
   var map = null;
   /** @type {boolean} */
   var drawMode = false;
+  /**
+   * The clip tool's own draw-mode setter, handed out by ``initClipDraw`` once
+   * the map exists. Collapsing the toolbar has to leave draw mode with the
+   * exact transition the toolbar button performs (``aria-pressed``, the
+   * active class, the MapLibre handlers, the cursor), so the chrome control
+   * calls this handle instead of growing a second copy of that state machine.
+   * ``null`` until the map is initialised: every caller must tolerate it.
+   * @type {function(boolean):void|null}
+   */
+  var clipSetDrawMode = null;
   /** @type {object|null} committed bbox of the current clip, in lon/lat. */
   var clipBbox = null;
   /** @type {number} */
@@ -115,7 +126,7 @@
   var STUDIES_HALO_SOURCE_ID = "studies-halos";
   var STUDIES_HALO_LAYER_ID = "studies-halos-ring";
 
-  // Persisted collapse state for the map chrome (T8). These two MUST be
+  // Persisted collapse state for the map chrome (T8). These three MUST be
   // assigned before ``initChromeCollapse()`` runs below: a ``var`` is hoisted
   // but undefined until its own line executes, so declaring them further down
   // would make the restore read ``getItem(undefined)`` and silently come back
@@ -124,6 +135,7 @@
   // mismatch is what the browser pass caught; keep them here.
   var LEGEND_COLLAPSED_KEY = "mapbiomas.viewer.legendCollapsed";
   var OVERLAYS_COLLAPSED_KEY = "mapbiomas.viewer.overlaysCollapsed";
+  var TOOLS_COLLAPSED_KEY = "mapbiomas.viewer.toolsCollapsed";
 
   api
     .fetchMeta()
@@ -794,31 +806,36 @@
   // -------------------------------------------------------------------------
   // Collapsible map chrome (slice F4 / T8)
   // -------------------------------------------------------------------------
-  // Two controls, each collapsing and restoring its own block:
+  // Three controls, each collapsing and restoring its own block:
   //
   //   * the legend panel (``.legend-panel``, the 320px grid column beside
-  //     the map), and
+  //     the map),
   //   * the on-map information column (``.map-overlays``: the studies
-  //     legend, the ring note and the D7 boundary note, together).
+  //     legend, the ring note and the D7 boundary note, together), and
+  //   * the clip toolbar (``.map-controls``: the draw toggle, the clear
+  //     button, the coordinate field, the help sentence and the status
+  //     line).
   //
-  // Both are real <button>s with ``aria-expanded`` + ``aria-controls``,
+  // All three are real <button>s with ``aria-expanded`` + ``aria-controls``,
   // which is the disclosure pattern ``renderLegend`` already uses for the
   // legend's class groups. They live in the header — never inside the
   // content they hide — because a control nested in its own collapsible
   // block would be unreachable as soon as the block was collapsed.
   //
   // The collapsed flag is mirrored on ``document.body`` as a class, so the
-  // CSS decides what hides (``.legend-panel`` / ``.map-overlays``) and the
-  // grid column returns to the map. No text is ever moved or rewritten:
-  // the D7 note and the MapLibre attribution are untouched by construction.
-  // The two storage keys are declared near the top of the module on purpose:
-  // see the note there about the hoisting trap that made the restore silent.
+  // CSS decides what hides (``.legend-panel`` / ``.map-overlays`` /
+  // ``.map-controls``) and the grid column returns to the map. No text is
+  // ever moved or rewritten: the D7 note and the MapLibre attribution are
+  // untouched by construction. The three storage keys are declared near the
+  // top of the module on purpose: see the note there about the hoisting trap
+  // that made the restore silent.
 
   function initChromeCollapse() {
     // Apply the persisted state before wiring the click handlers. The
     // initial calls do not persist: they are a restore, not a user action.
     applyLegendCollapsed(readCollapsedFlag(LEGEND_COLLAPSED_KEY));
     applyOverlaysCollapsed(readCollapsedFlag(OVERLAYS_COLLAPSED_KEY));
+    applyToolsCollapsed(readCollapsedFlag(TOOLS_COLLAPSED_KEY));
     if (legendCollapseToggle) {
       legendCollapseToggle.addEventListener("click", function () {
         var collapsed = !document.body.classList.contains(
@@ -837,6 +854,15 @@
         writeCollapsedFlag(OVERLAYS_COLLAPSED_KEY, collapsed);
       });
     }
+    if (toolsCollapseToggle) {
+      toolsCollapseToggle.addEventListener("click", function () {
+        var collapsed = !document.body.classList.contains(
+          "is-tools-collapsed"
+        );
+        applyToolsCollapsed(collapsed);
+        writeCollapsedFlag(TOOLS_COLLAPSED_KEY, collapsed);
+      });
+    }
   }
 
   function applyLegendCollapsed(collapsed) {
@@ -851,6 +877,45 @@
     document.body.classList.toggle("is-overlays-collapsed", on);
     setDisclosureState(overlaysCollapseToggle, !on);
     resizeMapForChromeChange();
+  }
+
+  function applyToolsCollapsed(collapsed) {
+    var on = !!collapsed;
+    document.body.classList.toggle("is-tools-collapsed", on);
+    setDisclosureState(toolsCollapseToggle, !on);
+    if (on) {
+      // Hiding the toolbar hides the only control that arms or disarms the
+      // rectangle tool and the only place its status line can be read, so
+      // the two states must not be allowed to contradict each other.
+      exitDrawModeForChromeCollapse();
+    }
+    // The toolbar is absolutely positioned and asks nothing from the layout,
+    // so this is a measure, not a reflow. Kept because every chrome toggle
+    // asks MapLibre to re-measure: one idiom, not two.
+    resizeMapForChromeChange();
+  }
+
+  /**
+   * Leave the clip tool's draw mode when the toolbar is put away. This runs
+   * the toolbar button's own transition (``setDrawMode(false)``) rather than
+   * a second copy of it, so ``aria-pressed``, the active class, the MapLibre
+   * handlers and the cursor all follow exactly as if the user had pressed
+   * "Dibujar zona" again. The mode's hint is dropped for the same reason the
+   * Escape handler drops it: the hint describes a mode that is no longer on.
+   *
+   * Only the hint is cleared. A status line left by something that is not
+   * draw mode (a clip error, a committed zone) is untouched and is still
+   * there when the toolbar comes back. ``clipSetDrawMode`` is ``null`` until
+   * ``initClipDraw`` has run, and draw mode cannot be armed before then.
+   */
+  function exitDrawModeForChromeCollapse() {
+    if (!drawMode || typeof clipSetDrawMode !== "function") {
+      return;
+    }
+    clipSetDrawMode(false);
+    if (clipStatus) {
+      clipStatus.textContent = "";
+    }
   }
 
   // The disclosure arrow is the visual half of ``aria-expanded``; the
@@ -1152,6 +1217,12 @@
         }
       }
     }
+
+    // Hand the setter to the module scope so the header's toolbar toggle can
+    // leave draw mode with this same transition when it hides the toolbar
+    // that arms it. Assigned here, where the closure exists; readers go
+    // through the ``null`` guard described at the declaration.
+    clipSetDrawMode = setDrawMode;
 
     // MapLibre's drag-pan, box-zoom and drag-rotate handlers all
     // consume the same mouse-drag gesture we use to draw a rectangle,

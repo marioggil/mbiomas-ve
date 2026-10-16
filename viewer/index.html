@@ -22,7 +22,7 @@
         Cargando metadatos del visor&hellip;
       </p>
     </div>
-    <!-- T8: the two collapse controls live in the header, which is a grid
+    <!-- T8: the three collapse controls live in the header, which is a grid
          row of its own, never inside the panels they hide. A control that
          lived inside its own collapsible content would be unreachable the
          moment that content was collapsed. -->
@@ -51,6 +51,18 @@
         <span class="map-chrome-toggle-label">Información sobre el mapa</span>
         <span class="map-chrome-disclosure" aria-hidden="true">▾</span>
       </button>
+      <button
+        id="tools-collapse-toggle"
+        class="map-chrome-toggle"
+        type="button"
+        aria-expanded="true"
+        aria-controls="map-controls"
+      >
+        <!-- Same words as the toolbar's own aria-label: the control and the
+             thing it hides must say the same thing. -->
+        <span class="map-chrome-toggle-label">Herramientas del mapa</span>
+        <span class="map-chrome-disclosure" aria-hidden="true">▾</span>
+      </button>
     </div>
   </header>
 
@@ -75,7 +87,7 @@
          they would cover. -->
     <div class="map-canvas">
     <div id="map" class="map" role="application" aria-label="Mapa interactivo"></div>
-    <div class="map-controls" role="toolbar" aria-label="Herramientas del mapa">
+    <div id="map-controls" class="map-controls" role="toolbar" aria-label="Herramientas del mapa">
       <button
         id="clip-draw-toggle"
         class="map-tool"
