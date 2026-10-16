@@ -413,6 +413,15 @@ body.is-overlays-collapsed .map-overlays {
   display: none;
 }
 
+/* Collapsing the toolbar only hides the box. It is absolutely positioned over
+ * the map and asks for nothing from the layout, so the map panel, the
+ * composition panel and the catalogue keep every measurement they had. The
+ * map's controls stay reachable through the header toggle, which never lives
+ * inside this box. */
+body.is-tools-collapsed .map-controls {
+  display: none;
+}
+
 /* ------- Map + labelling ------- */
 .map-panel {
   grid-area: map;
