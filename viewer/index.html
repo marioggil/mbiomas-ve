@@ -355,6 +355,34 @@
     <div class="panel-labelling" aria-live="polite">
       <strong class="panel-extent-label" id="panel-extent-label">&hellip;</strong>
       <span class="panel-boundary-note" id="panel-boundary-note">&hellip;</span>
+      <!-- The provenance block: what produced the figure on screen. It
+           follows the catalogue's disclosure row -- a real button (tab,
+           Enter or Space) with aria-expanded + aria-controls and a glyph --
+           because the panel's height budget is tight: the summary line is the
+           collapsed state's content and the full digests, the byte sizes, the
+           area method and the recompute command live behind the disclosure.
+           The button sits outside the block it hides, so a collapsed block
+           is always restorable. panel.js owns every string in both, and it
+           re-renders them when the year changes, because the COG identity is
+           per year. -->
+      <div class="panel-provenance-disclosure-row">
+        <button
+          id="panel-provenance-toggle"
+          class="panel-provenance-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="panel-provenance-details"
+        >
+          <span class="panel-provenance-toggle-label" id="panel-provenance-toggle-label">Ver procedencia</span>
+          <span class="panel-provenance-disclosure" aria-hidden="true">&#9656;</span>
+        </button>
+        <p class="panel-provenance-summary" id="panel-provenance-summary">
+          <!-- populated by panel.js from /api/provenance: one line -->
+        </p>
+      </div>
+      <dl class="panel-provenance-details" id="panel-provenance-details" hidden>
+        <!-- populated by panel.js from /api/provenance -->
+      </dl>
     </div>
   </aside>
 

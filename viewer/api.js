@@ -82,6 +82,21 @@
   }
 
   /**
+   * Fetch the provenance document for the panel's footer block.
+   *
+   * The backend read the composition summary, the COG manifest and the
+   * repository's entry point once at import, and computed the two CSVs'
+   * digests there; this document is what it cached. A source the backend
+   * could not read arrives as ``read: false`` with the reason, so a caller
+   * renders what it has instead of failing the panel.
+   *
+   * @returns {Promise<object>}
+   */
+  function fetchProvenance() {
+    return fetchJson("/api/provenance");
+  }
+
+  /**
    * Fetch the human-reviewed study catalog (slice F4).
    *
    * The catalog is the authoritative view of the CVE studies: it carries
@@ -163,6 +178,7 @@
     fetchMeta: fetchMeta,
     fetchCompositionSeries: fetchCompositionSeries,
     fetchCompositionYear: fetchCompositionYear,
+    fetchProvenance: fetchProvenance,
     fetchClipStats: fetchClipStats,
     fetchStudyCatalog: fetchStudyCatalog,
     fetchStudy: fetchStudy,

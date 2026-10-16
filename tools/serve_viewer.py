@@ -20,6 +20,11 @@ This service is the read-only front door of the platform. It serves:
     year, read from the source COG at native resolution with the same
     counting method and the same row-wise geodesic area as the committed
     composition engine;
+  * ``/api/provenance`` for the panel's provenance block: the identity of
+    the artefact that produced the figure on screen -- the composition
+    summary, the COG entry for the visible year, and the command that
+    rebuilds them -- read once at import, with a source that could not be
+    read reported rather than fatal;
   * ``/api/health`` for one-call diagnosis of which country/collection is
     wired up and which asset paths were resolved;
   * the frontend in ``viewer/`` plus its static assets.
@@ -66,6 +71,7 @@ which it does.
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import math
 import os
@@ -73,7 +79,7 @@ import re
 import struct
 import sys
 from pathlib import Path
-from typing import Any, Final
+from typing import Any, Callable, Final
 
 import numpy as np
 from fastapi import FastAPI, HTTPException, Path as PathParam, Query, Request, Response
@@ -606,6 +612,315 @@ def _composition_year_payload(year: int) -> dict[str, Any]:
         "boundary_note": _MANIFEST_DATA.get("extent_boundary_note"),
         "total_area_ha": total,
         "classes": classes,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Provenance (the "every figure shows what produced it" unit)
+# ---------------------------------------------------------------------------
+# The block in the panel's footer answers one question: what produced the
+# figure on screen? Its values come from three committed sources and from no
+# other place:
+#
+#   * the composition-summary JSON next to the two CSVs the panel already
+#     reads (schema version, build date, area method and its radius);
+#   * the COG manifest, whose entry for the visible year names the raster a
+#     drawn area is measured on and records its digest and size;
+#   * the repository's own entry point, for the command that rebuilds them.
+#
+# All of them are read exactly once, at import, and cached below. Unlike the
+# tile manifest and the codebook above them, a provenance source that cannot
+# be read must NOT stop the service: the map, the chart and the clip keep
+# working and the block reports what it could not read (the unit record's
+# criterion 6). The two composition CSVs are identified here too -- name,
+# byte size and sha256 -- and the hash runs once at import, never on a
+# request: a request-path hash of a 128 KB file would be a self-inflicted
+# latency, and the panel asks again every time the year changes.
+
+PROVENANCE_SCHEMA_VERSION: Final[str] = "viewer-provenance.v1"
+
+# The artefact the composition panel reads verbatim. It lives next to the two
+# CSVs above and is identified by the same country/collection substitution.
+COMPOSITION_SUMMARY_PATH: Final[Path] = (
+    DERIVED_ROOT
+    / "composition"
+    / f"composition-summary-{COUNTRY}-collection-{COLLECTION}.json"
+)
+
+# The COG manifest the clip endpoint's rasters are described by. The COG
+# identity is per year, so this is the source of the year-dependent half of
+# the block: the figure for 2024 comes from the 2024 entry, not from a batch.
+COG_MANIFEST_PATH: Final[Path] = DERIVED_ROOT / "cog-manifest.json"
+
+# The repository's documented entry point. The recompute command on screen is
+# read from it -- from the line of its usage block that begins with the
+# invocation -- rather than typed a second time here, so the string the reader
+# copies cannot drift from the script that actually runs it.
+ENTRYPOINT_PATH: Final[Path] = REPO_ROOT / "run.sh"
+PIPELINE_COMMAND_RE: Final[re.Pattern[str]] = re.compile(
+    r"^[ \t]*(\./run\.sh[ \t]+pipeline)\b", re.MULTILINE
+)
+
+# Read size of the CSV digest pass. 1 MiB keeps the syscall count negligible
+# for a 128 KB file without holding the whole file in memory.
+SHA256_BLOCK_BYTES: Final[int] = 1 << 20
+
+
+class ProvenanceError(RuntimeError):
+    """Raised when a provenance source is missing, malformed or unreadable."""
+
+
+def _sha256_of_file(path: Path) -> str:
+    """Return the hex sha256 of a file, read in blocks."""
+    digest = hashlib.sha256()
+    with path.open("rb") as fh:
+        for block in iter(lambda: fh.read(SHA256_BLOCK_BYTES), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _load_json_object(path: Path, label: str) -> dict[str, Any]:
+    """Read one JSON object, or raise ``ProvenanceError`` naming the problem."""
+    if not path.is_file():
+        raise ProvenanceError(f"{label} not found: {path}")
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise ProvenanceError(f"{label} is not readable: {path}: {exc}") from exc
+    except UnicodeDecodeError as exc:
+        raise ProvenanceError(f"{label} is not valid UTF-8: {path}: {exc}") from exc
+    try:
+        document = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise ProvenanceError(f"{label} is not valid JSON: {path}: {exc}") from exc
+    if not isinstance(document, dict):
+        raise ProvenanceError(f"{label} root is not an object: {path}")
+    return document
+
+
+def _load_composition_summary() -> dict[str, Any]:
+    """Load the composition-summary artefact the panel reads verbatim."""
+    return _load_json_object(COMPOSITION_SUMMARY_PATH, "composition summary")
+
+
+def _load_cog_manifest() -> dict[str, Any]:
+    """Load the COG manifest; its year entries are what make it usable.
+
+    Same shape as ``_load_manifest`` above -- a path constant, this loader and
+    the module-level cache below -- with one difference: the failure is
+    reported instead of stopping the process (see ``_ProvenanceSlot``).
+    """
+    manifest = _load_json_object(COG_MANIFEST_PATH, "COG manifest")
+    entries = manifest.get("entries")
+    if not isinstance(entries, list) or not entries:
+        raise ProvenanceError(
+            f"COG manifest has no 'entries' list: {COG_MANIFEST_PATH}"
+        )
+    # One entry per year, each carrying the year it is for: without it the
+    # block could not tell which raster produced the figure on screen, and
+    # serving the batch's identity as if it were the year's would be worse
+    # than saying the manifest could not be read.
+    for entry in entries:
+        year = entry.get("year") if isinstance(entry, dict) else None
+        if not isinstance(year, int) or isinstance(year, bool):
+            raise ProvenanceError(
+                f"COG manifest has an entry without an integer year: {COG_MANIFEST_PATH}"
+            )
+    return manifest
+
+
+def _load_recompute_command() -> str:
+    """Read the pipeline command from the repository's documented entry point.
+
+    The command is taken from the script's usage block, so the string on
+    screen is the script's own documentation. A script that no longer
+    documents the subcommand raises, and the block then says the command
+    could not be read instead of showing a command nobody wrote down.
+    """
+    if not ENTRYPOINT_PATH.is_file():
+        raise ProvenanceError(f"entry point not found: {ENTRYPOINT_PATH}")
+    try:
+        script = ENTRYPOINT_PATH.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise ProvenanceError(
+            f"entry point is not readable: {ENTRYPOINT_PATH}: {exc}"
+        ) from exc
+    except UnicodeDecodeError as exc:
+        raise ProvenanceError(
+            f"entry point is not valid UTF-8: {ENTRYPOINT_PATH}: {exc}"
+        ) from exc
+    match = PIPELINE_COMMAND_RE.search(script)
+    if match is None:
+        raise ProvenanceError(f"no documented pipeline command in {ENTRYPOINT_PATH}")
+    # Collapse any run of whitespace the script's own layout carries, so the
+    # command is one stable string whatever the indentation looks like.
+    return " ".join(match.group(1).split())
+
+
+def _describe_composition_csv(path: Path) -> dict[str, Any]:
+    """Identify one committed composition CSV: name, byte size and sha256."""
+    if not path.is_file():
+        raise ProvenanceError(f"composition CSV not found: {path}")
+    try:
+        size = path.stat().st_size
+        digest = _sha256_of_file(path)
+    except OSError as exc:
+        raise ProvenanceError(
+            f"composition CSV is not readable: {path}: {exc}"
+        ) from exc
+    return {"name": path.name, "bytes": size, "sha256": digest}
+
+
+class _ProvenanceSlot:
+    """One cached provenance source: the parsed value, or why it failed.
+
+    The manifest, the codebook and the composition CSVs fail loudly at import
+    because a viewer without them would draw a map that is not the map. The
+    provenance block is the one place where an unreadable source is a fact to
+    report rather than a reason to stop: the slot keeps the error message and
+    the endpoint serves it (unit record section 3.1 and criterion 6).
+    """
+
+    __slots__ = ("value", "error")
+
+    def __init__(self) -> None:
+        self.value: Any = None
+        self.error: str | None = None
+
+    @property
+    def read(self) -> bool:
+        """True when the source was read; an error, or no value, is not."""
+        return self.error is None and self.value is not None
+
+
+def _load_provenance_slot(loader: Callable[[], Any]) -> _ProvenanceSlot:
+    """Run one provenance loader once, at import, and keep value or error."""
+    slot = _ProvenanceSlot()
+    try:
+        slot.value = loader()
+    except ProvenanceError as exc:
+        slot.error = str(exc)
+    return slot
+
+
+# The three sources, loaded once. The loaders raise ``ProvenanceError``; the
+# slot turns that into served state instead of the ``SystemExit`` the assets
+# above raise, which is the whole difference between this block and them.
+_PROVENANCE_COMPOSITION: Final[_ProvenanceSlot] = _load_provenance_slot(
+    _load_composition_summary
+)
+_PROVENANCE_COGS: Final[_ProvenanceSlot] = _load_provenance_slot(_load_cog_manifest)
+_PROVENANCE_COMMAND: Final[_ProvenanceSlot] = _load_provenance_slot(
+    _load_recompute_command
+)
+
+# The two CSVs the panel and the map read, identified once at import: their
+# sha256 is computed here and never on the request path. One slot each, so a
+# CSV that cannot be read does not hide the other one's identity.
+_PROVENANCE_CSV_PATHS: Final[tuple[Path, ...]] = (
+    COMPOSITION_LEVEL1_PATH,
+    COMPOSITION_LEVEL2_PATH,
+)
+_PROVENANCE_CSVS: Final[tuple[_ProvenanceSlot, ...]] = tuple(
+    _load_provenance_slot(lambda p=path: _describe_composition_csv(p))
+    for path in _PROVENANCE_CSV_PATHS
+)
+
+
+def _provenance_source_state(path: Path, slot: _ProvenanceSlot) -> dict[str, Any]:
+    """Describe one source: where it is, whether it was read, and why not."""
+    return {
+        "path": str(path),
+        "name": path.name,
+        "read": slot.read,
+        "error": slot.error,
+    }
+
+
+def _provenance_payload() -> dict[str, Any]:
+    """Build the ``/api/provenance`` document from the cached sources.
+
+    No file is read here: every value was read and cached at import, the CSV
+    digests included. A source the slots could not read arrives as
+    ``read: false`` plus the reason, and the COG half is keyed by year so the
+    frontend can pick the visible year's entry without scanning the list.
+    """
+    summary = _PROVENANCE_COMPOSITION.value
+    cog_manifest = _PROVENANCE_COGS.value
+
+    csv_rows: list[dict[str, Any]] = []
+    for path, slot in zip(_PROVENANCE_CSV_PATHS, _PROVENANCE_CSVS):
+        value = slot.value if isinstance(slot.value, dict) else {}
+        row = _provenance_source_state(path, slot)
+        row["bytes"] = value.get("bytes")
+        row["sha256"] = value.get("sha256")
+        csv_rows.append(row)
+
+    composition: dict[str, Any] | None = None
+    if isinstance(summary, dict):
+        composition = {
+            "name": COMPOSITION_SUMMARY_PATH.name,
+            "schema_version": summary.get("schema_version"),
+            "generated_utc": summary.get("generated_utc"),
+            "area_method": summary.get("area_method"),
+            "authalic_radius_m": summary.get("authalic_radius_m"),
+            "country": summary.get("country"),
+            "collection": summary.get("collection"),
+            "csvs": csv_rows,
+        }
+
+    cogs: dict[str, Any] | None = None
+    if isinstance(cog_manifest, dict):
+        years: dict[str, dict[str, Any]] = {}
+        for entry in cog_manifest.get("entries", []):
+            if not isinstance(entry, dict):
+                continue
+            year = entry.get("year")
+            if not isinstance(year, int) or isinstance(year, bool):
+                continue
+            key = str(year)
+            if key in years:
+                continue
+            years[key] = {
+                "year": year,
+                "input_name": entry.get("input_name"),
+                "input_sha256": entry.get("input_sha256"),
+                "input_bytes": entry.get("input_bytes"),
+                "output_name": entry.get("output_name"),
+                "output_sha256": entry.get("output_sha256"),
+                "output_bytes": entry.get("output_bytes"),
+            }
+        cogs = {
+            "name": COG_MANIFEST_PATH.name,
+            "generated_utc": cog_manifest.get("generated_utc"),
+            "totals": cog_manifest.get("totals"),
+            "years": years,
+        }
+
+    return {
+        "schema_version": PROVENANCE_SCHEMA_VERSION,
+        "country": COUNTRY,
+        "collection": COLLECTION,
+        "composition": composition,
+        "cogs": cogs,
+        "recompute": {
+            "command": _PROVENANCE_COMMAND.value,
+            "entrypoint": ENTRYPOINT_PATH.name,
+            "path": str(ENTRYPOINT_PATH),
+            "read": _PROVENANCE_COMMAND.read,
+            "error": _PROVENANCE_COMMAND.error,
+        },
+        "sources": {
+            "composition_summary": _provenance_source_state(
+                COMPOSITION_SUMMARY_PATH, _PROVENANCE_COMPOSITION
+            ),
+            "cog_manifest": _provenance_source_state(
+                COG_MANIFEST_PATH, _PROVENANCE_COGS
+            ),
+            "entrypoint": _provenance_source_state(
+                ENTRYPOINT_PATH, _PROVENANCE_COMMAND
+            ),
+        },
     }
 
 
@@ -2141,6 +2456,36 @@ def api_composition_load_counters() -> dict[str, Any]:
         "level1_calls": _COMPOSITION_L1_LOAD_COUNTER.calls,
         "level2_calls": _COMPOSITION_L2_LOAD_COUNTER.calls,
     }
+
+
+# ---------------------------------------------------------------------------
+# Provenance endpoint
+# ---------------------------------------------------------------------------
+# Read-only, and the only provenance route: it serves the document the
+# loaders above cached at import. The reasoning behind the shape (why one
+# source failing is not fatal, why the CSV digests are not computed here) is
+# in the section that defines those loaders.
+
+
+@app.get("/api/provenance")
+def api_provenance() -> JSONResponse:
+    """Return what produced the figure on screen, source by source.
+
+    The document carries the composition artefact's identity, the COG
+    manifest's per-year identity for the raster a drawn area is measured on,
+    and the command that rebuilds them. Every value was read at import; a
+    source that could not be read arrives as ``read: false`` with the reason
+    rather than taking this endpoint down (criterion 6), so the panel can
+    say what it could not read while the map, the chart and the clip keep
+    working.
+
+    Cache-Control mirrors ``/api/composition/series``: the dataset is
+    regenerable, so the document is held for no long-lived immutable window.
+    """
+    return JSONResponse(
+        _provenance_payload(),
+        headers={"Cache-Control": "no-cache"},
+    )
 
 
 # ---------------------------------------------------------------------------
