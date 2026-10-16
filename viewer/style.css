@@ -55,8 +55,8 @@ body {
   grid-template-areas:
     "header  header"
     "legend  map"
-    "catalog catalog"
-    "panel   panel";
+    "panel   panel"
+    "catalog catalog";
   min-height: 100vh;
 }
 
@@ -741,8 +741,8 @@ body.is-overlays-collapsed .map-overlays {
       "header"
       "legend"
       "map"
-      "catalog"
-      "panel";
+      "panel"
+      "catalog";
   }
   /* A definite height, not just a cap. ``overflow-y: auto`` (base rule) gives
    * this grid item an automatic minimum size of 0, and the page grid's height
@@ -805,8 +805,8 @@ body.is-overlays-collapsed .map-overlays {
       "header"
       "legend"
       "map"
-      "catalog"
-      "panel";
+      "panel"
+      "catalog";
   }
   /* A definite height for the same reason as the 960px block: a cap alone
    * leaves the panel at its padding, because the track never grows. */
