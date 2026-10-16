@@ -29,6 +29,9 @@ This service is the read-only front door of the platform. It serves:
     fatal;
   * ``/api/health`` for one-call diagnosis of which country/collection is
     wired up and which asset paths were resolved;
+  * ``/api/informe/imataca``, the case study's committed artifact, read once at
+    import and served verbatim, plus ``/informe/imataca``, the report page
+    that renders it (the study's prose, its map and its figures);
   * the frontend in ``viewer/`` plus its static assets.
 
 Why the service exists instead of just ``app.mount("/tiles", StaticFiles(...))``
@@ -143,6 +146,22 @@ COMPOSITION_LEVEL2_PATH: Final[Path] = (
 STUDIES_CATALOG_PATH: Final[Path] = (
     DATA_ROOT / "derived" / COUNTRY / "congresos" / "catalogo-estudios.json"
 )
+
+# The case-study artifact behind ``/informe/imataca``. Like the studies
+# catalog it is not collection-scoped -- it is a study of one box, not a pixel
+# product -- so it lives at ``data/derived/<country>/informes/`` and gets its
+# own path constant instead of reusing ``DERIVED_ROOT``. It is produced by
+# ``tools/build_informe_imataca.py`` from the study's versioned evidence and
+# committed; the page never sees the evidence under ``odd/``, which does not
+# travel in the deployed image.
+INFORME_IMATACA_PATH: Final[Path] = (
+    DATA_ROOT / "derived" / COUNTRY / "informes" / "imataca.json"
+)
+
+# Schema version of the case-study artifact. The builder owns it; the loader
+# below refuses a document that declares anything else, because the page reads
+# the shape this version defines field by field.
+INFORME_IMATACA_SCHEMA_VERSION: Final[str] = "informe-imataca.v1"
 
 # Schema version of the composition endpoints. Bumped on any breaking change
 # to the JSON contract the frontend consumes.
@@ -1656,6 +1675,213 @@ _STUDIES_BY_ID: dict[str, dict[str, Any]] = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Case-study artifact (the Imataca report)
+# ---------------------------------------------------------------------------
+# ``/informe/imataca`` is a published text with its numbers rendered from this
+# artifact, not typed into the markup, and ``/api/informe/imataca`` serves the
+# same document verbatim. Same discipline as the manifest, the codebook and the
+# studies catalog: one read at import, one validation of the invariants the
+# page relies on, and a specific message and a non-zero exit if either fails.
+# The artifact is committed, not user input, so a missing or malformed one is a
+# deployment defect and must not degrade into a page with empty figures.
+
+
+class InformeError(RuntimeError):
+    """Raised when the case-study artifact is missing, malformed or unsafe to serve."""
+
+
+def _load_informe_imataca(path: Path) -> dict[str, Any]:
+    """Load the case-study artifact once, with a message naming the problem."""
+    return _load_json_object(path, "case-study artifact")
+
+
+def _validate_informe_imataca(artifact: dict[str, Any], path: Path) -> None:
+    """Cross-check the case-study artifact at import time.
+
+    The page reads these fields directly, so a document that is internally
+    inconsistent would render a figure that contradicts the prose beside it.
+    The rules, all fatal at import:
+
+      1. ``schema_version`` is the one this file was written against, and
+         ``pais`` / ``coleccion`` name the product the citation quotes.
+      2. ``caja`` carries four finite numbers with ``oeste < este`` and
+         ``sur < norte`` -- the box the map draws as a rectangle.
+      3. ``coberturas.anios`` is a non-empty, strictly ascending list of
+         integers and ``coberturas.clases`` is a non-empty list of classes,
+         each with the four label fields the table needs and parallel
+         ``area_ha`` / ``share_pct`` arrays of exactly one value per year.
+      4. At least one class is flagged ``en_informe``, and every flagged class
+         carries the code the report's coverage figure selects on.
+      5. ``congresos.ediciones`` has one row per coverage year minus the first
+         and the last (the congress did not meet in 1985 or in 2024), each with
+         integer ``anio`` / ``charlas`` / ``especies_distintas``, and those
+         years are exactly the middle coverage years.
+      6. ``especies`` carries the raw entry list and a distinct-species count
+         that does not exceed it.
+      7. ``mapa.anio`` is one of the coverage years, ``mapa.plantilla`` carries
+         the ``{z}``/``{x}``/``{y}`` placeholders a raster source needs, and
+         ``mapa.zoom_min <= mapa.zoom_max``.
+      8. ``procedencia.cogs`` names every coverage year once with a 64-hex
+         digest, and the two artefact identities and the consultation date are
+         present. These are the values the report's provenance section prints;
+         an absent one would print an empty identity.
+    """
+    schema_version = artifact.get("schema_version")
+    if schema_version != INFORME_IMATACA_SCHEMA_VERSION:
+        raise InformeError(
+            f"case-study artifact schema_version is {schema_version!r}, expected "
+            f"{INFORME_IMATACA_SCHEMA_VERSION}: {path}"
+        )
+
+    def _fail(reason: str) -> None:
+        raise InformeError(f"case-study artifact {reason}: {path}")
+
+    def _finite(value: Any) -> bool:
+        return (
+            isinstance(value, (int, float))
+            and not isinstance(value, bool)
+            and math.isfinite(value)
+        )
+
+    # The citation quotes the country and the collection, so a missing one would
+    # print a citation with a hole in it.
+    for field in ("pais", "coleccion"):
+        if not isinstance(artifact.get(field), str) or not artifact[field]:
+            _fail(f"has no '{field}' string")
+
+    box = artifact.get("caja")
+    if not isinstance(box, dict):
+        _fail("has no 'caja' object")
+    if not all(_finite(box.get(side)) for side in ("oeste", "sur", "este", "norte")):
+        _fail("has a 'caja' without the four finite coordinates")
+    if not box["oeste"] < box["este"] or not box["sur"] < box["norte"]:
+        _fail("'caja' is not ordered oeste < este and sur < norte")
+
+    coverage = artifact.get("coberturas")
+    if not isinstance(coverage, dict):
+        _fail("has no 'coberturas' object")
+    years = coverage.get("anios")
+    if (
+        not isinstance(years, list)
+        or not years
+        or not all(isinstance(y, int) and not isinstance(y, bool) for y in years)
+    ):
+        _fail("'coberturas.anios' is not a non-empty list of integers")
+    if any(later <= earlier for earlier, later in zip(years, years[1:])):
+        _fail("'coberturas.anios' is not strictly ascending")
+
+    classes = coverage.get("clases")
+    if not isinstance(classes, list) or not classes:
+        _fail("'coberturas.clases' is not a non-empty list")
+    flagged = 0
+    for index, row in enumerate(classes):
+        if not isinstance(row, dict):
+            _fail(f"coberturas.clases[{index}] is not an object")
+        for field in ("codigo", "nombre_es"):
+            if not isinstance(row.get(field), str) or not row[field]:
+                _fail(f"coberturas.clases[{index}] has no '{field}'")
+        if not isinstance(row.get("en_informe"), bool):
+            _fail(f"coberturas.clases[{index}] has no boolean 'en_informe'")
+        for field in ("area_ha", "share_pct"):
+            series = row.get(field)
+            if not isinstance(series, list) or len(series) != len(years):
+                _fail(
+                    f"coberturas.clases[{index}].{field} does not carry one value "
+                    f"per coverage year"
+                )
+            if not all(_finite(value) for value in series):
+                _fail(f"coberturas.clases[{index}].{field} has a non-finite value")
+        flagged += 1 if row["en_informe"] else 0
+    if flagged == 0:
+        _fail("flags no class with 'en_informe'; the report's figure would be empty")
+
+    congress = artifact.get("congresos")
+    if not isinstance(congress, dict):
+        _fail("has no 'congresos' object")
+    editions = congress.get("ediciones")
+    expected_editions = list(years[1:-1])
+    if not isinstance(editions, list) or len(editions) != len(expected_editions):
+        _fail("'congresos.ediciones' does not carry one row per congress edition")
+    for index, row in enumerate(editions):
+        if not isinstance(row, dict):
+            _fail(f"congresos.ediciones[{index}] is not an object")
+        for field in ("anio", "charlas", "especies_distintas"):
+            value = row.get(field)
+            if not isinstance(value, int) or isinstance(value, bool):
+                _fail(f"congresos.ediciones[{index}] has no integer '{field}'")
+        if row["anio"] != expected_editions[index]:
+            _fail(
+                f"congresos.ediciones[{index}].anio is {row['anio']}, expected "
+                f"{expected_editions[index]}"
+            )
+    if congress.get("charlas") != sum(row["charlas"] for row in editions):
+        _fail("'congresos.charlas' does not equal the sum of the edition rows")
+
+    species = artifact.get("especies")
+    if not isinstance(species, dict):
+        _fail("has no 'especies' object")
+    entries = species.get("entradas")
+    if not isinstance(entries, list) or not entries:
+        _fail("'especies.entradas' is not a non-empty list")
+    distinct = species.get("especies_distintas")
+    if not isinstance(distinct, int) or isinstance(distinct, bool) or distinct > len(entries):
+        _fail("'especies.especies_distintas' is not a count of the curated entries")
+
+    map_block = artifact.get("mapa")
+    if not isinstance(map_block, dict):
+        _fail("has no 'mapa' object")
+    if map_block.get("anio") not in years:
+        _fail("'mapa.anio' is not one of the coverage years")
+    template = map_block.get("plantilla")
+    if not isinstance(template, str) or not all(
+        placeholder in template for placeholder in ("{z}", "{x}", "{y}")
+    ):
+        _fail("'mapa.plantilla' is not an XYZ tile template")
+    zoom_min = map_block.get("zoom_min")
+    zoom_max = map_block.get("zoom_max")
+    if (
+        not isinstance(zoom_min, int)
+        or isinstance(zoom_min, bool)
+        or not isinstance(zoom_max, int)
+        or isinstance(zoom_max, bool)
+        or zoom_min > zoom_max
+    ):
+        _fail("'mapa.zoom_min' / 'mapa.zoom_max' are not an ordered integer range")
+
+    provenance = artifact.get("procedencia")
+    if not isinstance(provenance, dict):
+        _fail("has no 'procedencia' object")
+    for field in ("consulta_utc", "consulta_es"):
+        if not isinstance(provenance.get(field), str) or not provenance[field]:
+            _fail(f"procedencia has no '{field}'")
+    for slot in ("composicion", "catalogo"):
+        block = provenance.get(slot)
+        if not isinstance(block, dict) or not block.get("artefacto"):
+            _fail(f"procedencia.{slot} does not name the artifact it describes")
+    cogs = provenance.get("cogs")
+    if not isinstance(cogs, list) or len(cogs) != len(years):
+        _fail("procedencia.cogs does not carry one digest per coverage year")
+    if sorted(row.get("anio") for row in cogs if isinstance(row, dict)) != sorted(years):
+        _fail("procedencia.cogs does not name each coverage year once")
+    for row in cogs:
+        digest = row.get("sha256")
+        if not isinstance(digest, str) or len(digest) != 64 or not all(
+            character in "0123456789abcdef" for character in digest.lower()
+        ):
+            _fail(f"procedencia.cogs has an entry without a sha256 digest: {row.get('anio')}")
+
+
+# Case-study pre-parsed state. Same fail-loudly-at-import discipline as the
+# manifest, the codebook and the studies catalog: the page's numbers come from
+# this one document, so a service that cannot read it must not start.
+try:
+    _INFORME_IMATACA_DATA: dict[str, Any] = _load_informe_imataca(INFORME_IMATACA_PATH)
+    _validate_informe_imataca(_INFORME_IMATACA_DATA, INFORME_IMATACA_PATH)
+except (InformeError, ProvenanceError) as exc:
+    raise SystemExit(f"viewer: case-study artifact missing or malformed: {exc}") from exc
+
+
 def _studies_provenance() -> dict[str, Any] | None:
     """Build the ``studies`` half of the ``/api/provenance`` document.
 
@@ -2654,6 +2880,33 @@ def api_study_by_id(study_id: str) -> JSONResponse:
 
 
 # ---------------------------------------------------------------------------
+# Case-study endpoint (the Imataca report)
+# ---------------------------------------------------------------------------
+# One route, one document. The artifact was parsed and validated once at
+# import; this handler performs no I/O and re-parses nothing, so the figures on
+# ``/informe/imataca`` are the committed numbers by construction.
+
+
+@app.get("/api/informe/imataca")
+def api_informe_imataca() -> JSONResponse:
+    """Return the case-study artifact the report page renders.
+
+    Every number on the page -- the box, the coverage series, the congress
+    series, the curated species and the provenance -- comes from this document,
+    which is the committed builder output served verbatim. Nothing is
+    recomputed here and nothing is read from ``odd/``: that directory is not
+    part of the deployed image.
+
+    Cache-Control mirrors the other artifact endpoints: the study is
+    regenerable, so it gets no long-lived immutable window.
+    """
+    return JSONResponse(
+        _INFORME_IMATACA_DATA,
+        headers={"Cache-Control": "no-cache"},
+    )
+
+
+# ---------------------------------------------------------------------------
 # Clip stats endpoint (slice T8c)
 # ---------------------------------------------------------------------------
 # Reads ONLY the requested window from the source COG at native resolution
@@ -2922,6 +3175,26 @@ if VIEWER_DIR.is_dir():
             raise HTTPException(status_code=503, detail="viewer not installed")
         return FileResponse(
             index,
+            media_type="text/html",
+            headers={"Cache-Control": "no-cache"},
+        )
+
+    @app.get("/informe/imataca", include_in_schema=False)
+    def serve_informe_imataca() -> FileResponse:
+        """Serve the Imataca report page.
+
+        The page is not a route of the viewer: it is a document that reads one
+        artifact (``/api/informe/imataca``) and borrows the viewer's vendored
+        MapLibre build and tile pyramid. It is served the same way as the
+        viewer's own index -- a file from ``VIEWER_DIR`` with no caching -- so
+        a rebuilt page is never served stale, and its assets arrive through the
+        ``/static`` mount below that same directory already backs.
+        """
+        page = VIEWER_DIR / "informe-imataca.html"
+        if not page.is_file():
+            raise HTTPException(status_code=503, detail="report page not installed")
+        return FileResponse(
+            page,
             media_type="text/html",
             headers={"Cache-Control": "no-cache"},
         )

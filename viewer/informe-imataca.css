@@ -1,0 +1,596 @@
+/* Informe de caso Imataca — estilos
+ *
+ * Página autónoma: no importa viewer/style.css. Esa hoja está construida
+ * alrededor de una rejilla de cuerpo de dos columnas (panel de leyenda + mapa)
+ * y su `body { display: grid }` pelearía con un documento de una sola columna.
+ * Lo que se reutiliza son los VALORES de la paleta del visor, declarados aquí
+ * con los mismos nombres, para que las dos páginas se lean como el mismo sitio
+ * sin que una herede la maquetación de la otra.
+ *
+ * Sin CDN: MapLibre llega desde /static/vendor/ y las figuras son SVG escritos
+ * a mano en informe-imataca.js.
+ *
+ * El bloque @media print del final es el PDF: el diálogo de impresión del
+ * navegador produce el informe. El mapa se imprime a su tamaño de pantalla
+ * (ver .mapa): un lienzo de MapLibre no se reencuadra solo, y cambiarle el
+ * ancho en impresión descuadraría sus etiquetas, que están posicionadas en
+ * píxeles sobre el lienzo.
+ */
+
+:root {
+  --bg-page: #f4f4f2;
+  --bg-panel: #ffffff;
+  --bg-panel-alt: #fafafa;
+  --fg-text: #111827;
+  --fg-muted: #4b5563;
+  --fg-strong: #0b1320;
+  --border: #d1d5db;
+  --border-strong: #6b7280;
+  --accent: #2563eb;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.05);
+  --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+    monospace;
+  /* El color de fondo del lienzo del visor: el mismo que su capa
+   * "background", para que los tiles sin datos se lean igual en las dos
+   * páginas. */
+  --mapa-fondo: #dde3eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  color: var(--fg-text);
+  font-family: var(--font-stack);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+body {
+  /* Una sola columna. `min-width: 0` en los hijos que llevan tablas o SVG
+   * evita que un ancho mínimo de contenido empuje la página a desbordar en
+   * horizontal a 390 px. */
+  display: block;
+}
+
+a {
+  color: var(--accent);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  /* Un ``code`` de una sola línea larga y sin espacios (un endpoint, una ruta
+   * absoluta) no tiene dónde partirse: sin esto ensancha su caja y arrastra a
+   * la página entera, con scroll horizontal en pantallas angostas. Se usa
+   * ``anywhere`` y no ``break-word`` porque ``anywhere`` además reduce el
+   * tamaño intrínseco mínimo de la caja: ``break-word`` partiría la línea pero
+   * el contenedor seguiría creciendo con el contenido. */
+  overflow-wrap: anywhere;
+}
+
+/* ------- Enlace de salto -------
+ * Mismo idioma que el visor: visualmente oculto hasta recibir el foco, y
+ * `position: absolute` para no participar del flujo de la columna. */
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip: rect(0, 0, 0, 0);
+}
+
+.skip-link:focus {
+  width: auto;
+  height: auto;
+  padding: 8px 12px;
+  margin: 0;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  overflow: visible;
+  white-space: normal;
+  clip: auto;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  background: var(--bg-panel);
+  color: var(--fg-strong);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+}
+
+/* ------- Cabecera ------- */
+.informe-header {
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 20px 20px;
+}
+
+.informe-serie {
+  margin: 0 0 8px;
+  color: var(--fg-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.informe-titulo {
+  max-width: 46rem;
+  margin: 0 auto 8px;
+  color: var(--fg-strong);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem);
+  line-height: 1.2;
+}
+
+.informe-subtitulo {
+  max-width: 46rem;
+  margin: 0 auto 10px;
+  color: var(--fg-muted);
+  font-size: 1rem;
+}
+
+.informe-cita-corta {
+  max-width: 46rem;
+  margin: 0 auto 16px;
+  color: var(--fg-muted);
+  font-size: 0.82rem;
+}
+
+.informe-nav {
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.informe-nav-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+.informe-aviso {
+  max-width: 46rem;
+  margin: 12px auto 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--accent);
+  border-radius: 3px;
+  background: var(--bg-panel-alt);
+  color: var(--fg-strong);
+  font-size: 0.9rem;
+}
+
+/* ------- Cuerpo ------- */
+.informe-cuerpo {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 8px 20px 32px;
+}
+
+.seccion {
+  padding-top: 24px;
+}
+
+.seccion-titulo {
+  margin: 0 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg-strong);
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.subseccion-titulo {
+  margin: 24px 0 8px;
+  color: var(--fg-strong);
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+
+.seccion p {
+  margin: 0 0 12px;
+}
+
+.advertencia {
+  padding: 10px 12px;
+  border-left: 4px solid var(--border-strong);
+  background: var(--bg-panel-alt);
+}
+
+.lista-cautelas,
+.lista-metodo {
+  margin: 0 0 12px;
+  padding-left: 22px;
+}
+
+.lista-cautelas li,
+.lista-metodo li {
+  margin-bottom: 10px;
+}
+
+/* El bloque de las cuatro coordenadas: es una definición, no prosa, así que se
+ * lee en monoespaciada y sin justificar. */
+.caja-coordenadas {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--bg-panel);
+  color: var(--fg-strong);
+  overflow-x: auto;
+}
+
+/* ------- Figuras ------- */
+.figura {
+  margin: 20px 0 24px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-panel);
+}
+
+.figura-pie {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-size: 0.82rem;
+}
+
+.figura-pie strong {
+  color: var(--fg-strong);
+}
+
+/* ------- Mapa -------
+ * El ancho se limita a 640 px en TODOS los medios. Una página A4 con márgenes
+ * de 15 mm deja 180 mm (unos 680 px) de caja; si el lienzo se renderizara más
+ * ancho que eso, la impresión lo recortaría por la izquierda y las etiquetas de
+ * las esquinas, que MapLibre posiciona en píxeles, quedarían corridas. Con el
+ * límite, el mapa de pantalla y el de papel miden lo mismo y no hay recorte ni
+ * desalineación. */
+.figura-mapa {
+  padding: 12px;
+}
+
+.mapa {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  height: clamp(320px, 48vh, 520px);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--mapa-fondo);
+}
+
+.mapa-ayuda {
+  max-width: 640px;
+  margin: 6px auto 0;
+  color: var(--fg-muted);
+  font-size: 0.78rem;
+}
+
+/* Etiquetas de las cuatro coordenadas sobre el rectángulo. Son elementos DOM
+ * (no capas de símbolos): una capa `symbol` necesita un endpoint de glifos y
+ * este repositorio no sirve ninguno, así que el texto no se dibujaría. */
+.mapa-etiqueta {
+  padding: 2px 5px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--fg-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.mapa-coordenadas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 4px 16px;
+  max-width: 640px;
+  margin: 10px auto 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+.mapa-coordenadas li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 3px 0;
+  border-bottom: 1px dotted var(--border);
+}
+
+.mapa-coordenadas .coordenada-valor {
+  font-family: var(--font-mono);
+  color: var(--fg-strong);
+}
+
+/* ------- Figuras SVG ------- */
+.paneles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.panel-clase {
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--bg-panel-alt);
+}
+
+.panel-clase-titulo {
+  margin: 0 0 6px;
+  color: var(--fg-strong);
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+.panel-svg,
+.panel-clase-svg {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  display: block;
+}
+
+.panel-svg text,
+.panel-clase-svg text {
+  font-family: var(--font-stack);
+}
+
+.svg-eje {
+  fill: var(--fg-muted);
+  font-size: 11px;
+}
+
+.svg-eje-linea {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.svg-valor {
+  fill: var(--fg-strong);
+  font-size: 11px;
+}
+
+.svg-barra {
+  fill: var(--accent);
+}
+
+.svg-serie {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.svg-area {
+  fill: var(--accent);
+  fill-opacity: 0.14;
+}
+
+.svg-punto {
+  fill: var(--accent);
+}
+
+/* ------- Tablas ------- */
+.tabla-envoltura {
+  margin: 0 0 16px;
+  /* El contenedor de una tabla con scroll: ``overflow-x: auto`` solo hace su
+   * trabajo si la caja no puede crecer con su contenido. Dentro de un
+   * contenedor flex o grid eso exige ``min-width: 0``, porque su minimo
+   * automatico es el contenido: sin esa declaracion la tabla arrastra a la
+   * pagina entera y aparece scroll horizontal en pantallas angostas. */
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.tabla-envoltura table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tabla-envoltura caption {
+  margin-bottom: 6px;
+  color: var(--fg-muted);
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.tabla-envoltura th,
+.tabla-envoltura td {
+  padding: 5px 7px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.tabla-envoltura thead th {
+  border-bottom: 1px solid var(--border-strong);
+  color: var(--fg-strong);
+  white-space: nowrap;
+}
+
+.tabla-envoltura tbody tr:first-child td {
+  border-top: 0;
+}
+
+.tabla-envoltura .numero {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tabla-envoltura .destacado {
+  color: var(--fg-strong);
+  font-weight: 600;
+}
+
+.tabla-envoltura .dudoso {
+  color: var(--fg-muted);
+  font-style: italic;
+}
+
+.tabla-envoltura .digest {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  word-break: break-all;
+}
+
+.tabla-envoltura .nota {
+  color: var(--fg-muted);
+  font-size: 0.78rem;
+}
+
+/* ------- Cita y pie ------- */
+.cita {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-left: 4px solid var(--accent);
+  background: var(--bg-panel);
+  color: var(--fg-strong);
+}
+
+.cita p {
+  margin: 0;
+}
+
+.informe-pie {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 16px 20px 40px;
+  border-top: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-size: 0.82rem;
+}
+
+.informe-pie-linea {
+  margin: 0 0 8px;
+}
+
+.informe-pie-impresion {
+  margin: 0;
+}
+
+/* ------- Impresión: el PDF -------
+ * El diálogo de impresión del navegador es el generador de PDF. Se oculta la
+ * navegación (el documento no tiene controles), se deja el texto en una sola
+ * columna y se conservan las figuras y el mapa. Las tablas no se parten, los
+ * títulos no quedan al final de una página y el ancho de caja de A4 no cambia
+ * el tamaño del mapa (ver .mapa). */
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  html,
+  body {
+    background: #ffffff;
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+
+  .skip-link,
+  .informe-nav,
+  .informe-aviso,
+  .solo-pantalla {
+    display: none !important;
+  }
+
+  .informe-header {
+    padding: 0 0 10px;
+    border-bottom: 1px solid var(--border);
+    break-after: avoid;
+  }
+
+  .informe-cuerpo {
+    max-width: none;
+    padding: 0;
+  }
+
+  .seccion {
+    padding-top: 14pt;
+  }
+
+  .seccion-titulo,
+  .subseccion-titulo {
+    break-after: avoid;
+  }
+
+  .figura,
+  .tabla-envoltura,
+  .cita,
+  .caja-coordenadas {
+    break-inside: avoid;
+  }
+
+  .tabla-envoltura {
+    overflow: visible;
+  }
+
+  .tabla-envoltura table {
+    font-size: 8.5pt;
+  }
+
+  /* El mapa conserva su tamaño de pantalla: el lienzo de MapLibre no se
+   * reencuadra para el papel y las etiquetas de las esquinas van posicionadas
+   * en píxeles sobre él. Reduce el alto de la ventana de impresión, no el
+   * lienzo. */
+  .figura-mapa {
+    break-inside: avoid;
+  }
+
+  .mapa {
+    border: 1px solid var(--border-strong);
+  }
+
+  /* Los controles del mapa son interactivos: no se imprimen. La atribución
+   * (texto, no control) sí, porque la licencia la exige. */
+  .maplibregl-ctrl-top-right,
+  .maplibregl-ctrl-group,
+  .maplibregl-ctrl-attrib-button {
+    display: none !important;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* La dirección de la fuente se imprime junto a la cita: en papel no se puede
+   * seguir un enlace. */
+  .cita a[href]::after {
+    content: " (" attr(href) ")";
+    font-family: var(--font-mono);
+    font-size: 8pt;
+  }
+}

@@ -1,0 +1,1093 @@
+{
+  "schema_version": "informe-imataca.v1",
+  "estudio": "imataca",
+  "pais": "venezuela",
+  "coleccion": "3",
+  "caja": {
+    "oeste": -61.746314,
+    "sur": 6.60103,
+    "este": -60.246314,
+    "norte": 8.00103,
+    "bbox": [
+      -61.746314,
+      6.60103,
+      -60.246314,
+      8.00103
+    ],
+    "centro": [
+      -60.996314,
+      7.30103
+    ],
+    "ventana_ha": 2576409.605510785,
+    "ventana_km2": 25764.096055107846,
+    "ancho_km": 165.44025012994112,
+    "alto_km": 155.67307276731327,
+    "radio_autalico_m": 6371007.181,
+    "ventana_px": {
+      "col_off": 43680,
+      "row_off": 17267,
+      "ancho": 5567,
+      "alto": 5196,
+      "pixeles": 28926132
+    },
+    "sin_dato_ha": 0.0,
+    "observada_pct": 100.0
+  },
+  "coberturas": {
+    "unidad_area": "ha",
+    "metodo_area": "row-wise geodesic area on the WGS84 sphere, identical to the committed composition statistics; per-row pixel area = row_areas_m2 / window_width, with row_areas_m2 derived from the source COG geotransform via tools/spatial_units.py",
+    "anios": [
+      1985,
+      1999,
+      2001,
+      2003,
+      2005,
+      2007,
+      2011,
+      2013,
+      2019,
+      2024
+    ],
+    "clases": [
+      {
+        "codigo": "1.1",
+        "nombre_es": "Bosque",
+        "en_informe": true,
+        "area_ha": [
+          2316390.2698290395,
+          2303532.8625271507,
+          2301945.5338151734,
+          2299891.1570180226,
+          2298233.654949047,
+          2296840.466708745,
+          2292542.1615655054,
+          2290357.8596768556,
+          2280161.1555876173,
+          2268546.249164528
+        ],
+        "share_pct": [
+          89.90768645150291,
+          89.40864284933703,
+          89.34703274244323,
+          89.26729476938348,
+          89.20296097457734,
+          89.14888617849978,
+          88.98205303465319,
+          88.8972721875403,
+          88.5015003324972,
+          88.05068279175192
+        ],
+        "share_1985": 89.90768645150291,
+        "share_2024": 88.05068279175192,
+        "delta_puntos": -1.857003659750987,
+        "delta_ha": -47844.02066451125
+      },
+      {
+        "codigo": "3.1",
+        "nombre_es": "Uso pecuario/Tierras en descanso",
+        "en_informe": true,
+        "area_ha": [
+          43671.66242995761,
+          54285.65691051645,
+          55834.440951368655,
+          57414.51625524026,
+          58410.912293881345,
+          59605.499997873965,
+          62399.943568149116,
+          63587.885980958556,
+          68889.53580730317,
+          71946.64220454993
+        ],
+        "share_pct": [
+          1.695058981947069,
+          2.1070274227515187,
+          2.167141468186664,
+          2.2284700434447253,
+          2.267143864428386,
+          2.3135102380608035,
+          2.4219729438471043,
+          2.4680813891140563,
+          2.673858056574258,
+          2.792515679597701
+        ],
+        "share_1985": 1.695058981947069,
+        "share_2024": 2.792515679597701,
+        "delta_puntos": 1.0974566976506321,
+        "delta_ha": 28274.979774592328
+      },
+      {
+        "codigo": "4.3",
+        "nombre_es": "Uso Minero",
+        "en_informe": true,
+        "area_ha": [
+          977.3047294956999,
+          1408.8883035014067,
+          1471.1993836227252,
+          1683.3055128064561,
+          2038.0230745300405,
+          2225.8803585798746,
+          3124.110935704367,
+          4009.303529856164,
+          7268.288596784936,
+          10909.705039156017
+        ],
+        "share_pct": [
+          0.03793281656011932,
+          0.05468417368449021,
+          0.05710269750880909,
+          0.06533532203908754,
+          0.0791032245094426,
+          0.08639466154057378,
+          0.12125831735070705,
+          0.1556159207480249,
+          0.2821092027152245,
+          0.4234460629172013
+        ],
+        "share_1985": 0.03793281656011932,
+        "share_2024": 0.4234460629172013,
+        "delta_puntos": 0.385513246357082,
+        "delta_ha": 9932.400309660317
+      },
+      {
+        "codigo": "2.2",
+        "nombre_es": "Sabana/Herbazal",
+        "en_informe": true,
+        "area_ha": [
+          92651.35564645861,
+          94530.10635706525,
+          94676.86553069996,
+          94737.70209387245,
+          94895.52950475167,
+          94889.71032321738,
+          95062.19517326582,
+          95072.61232313437,
+          95879.31287636381,
+          97473.4904871028
+        ],
+        "share_pct": [
+          3.5961423000551993,
+          3.669063574164258,
+          3.6747598412997626,
+          3.6771211336595786,
+          3.683247000080106,
+          3.683021136090085,
+          3.6897159120169993,
+          3.6901202401892848,
+          3.7214312767381297,
+          3.783307214761693
+        ],
+        "share_1985": 3.5961423000551993,
+        "share_2024": 3.783307214761693,
+        "delta_puntos": 0.18716491470649377,
+        "delta_ha": 4822.134840644183
+      },
+      {
+        "codigo": "1.4",
+        "nombre_es": "Bosque inundable",
+        "en_informe": true,
+        "area_ha": [
+          110015.78260878503,
+          110017.37813582907,
+          110015.33356579074,
+          110016.57032078784,
+          110017.82094502433,
+          110025.22354533734,
+          110013.9215533911,
+          110007.25439012272,
+          110000.51187336867,
+          109528.38644664595
+        ],
+        "share_pct": [
+          4.270120029574021,
+          4.270181957888549,
+          4.270102600552124,
+          4.270150603594593,
+          4.270199144953614,
+          4.270486467291537,
+          4.270047795120696,
+          4.269789017818589,
+          4.269527315768588,
+          4.251202379170274
+        ],
+        "share_1985": 4.270120029574021,
+        "share_2024": 4.251202379170274,
+        "delta_puntos": -0.018917650403746933,
+        "delta_ha": -487.3961621390772
+      },
+      {
+        "codigo": "5.1",
+        "nombre_es": "Río, lago u océano",
+        "en_informe": true,
+        "area_ha": [
+          9271.509009192467,
+          8955.649740766261,
+          8796.804765586998,
+          8862.239285914156,
+          8916.809821737343,
+          8913.796787516136,
+          8968.712942272303,
+          9130.132769419579,
+          9499.436667226291,
+          11013.173735309778
+        ],
+        "share_pct": [
+          0.35986160699607966,
+          0.347601938822564,
+          0.3414365769624194,
+          0.34397633307057857,
+          0.3460944176991432,
+          0.34597747068051843,
+          0.3481089700600699,
+          0.3543742714625336,
+          0.3687083236651334,
+          0.42746206627056754
+        ],
+        "share_1985": 0.35986160699607966,
+        "share_2024": 0.42746206627056754,
+        "delta_puntos": 0.06760045927448788,
+        "delta_ha": 1741.6647261173111
+      },
+      {
+        "codigo": "3.2",
+        "nombre_es": "Uso agrícola/Tierras en descanso",
+        "en_informe": false,
+        "area_ha": [
+          270.15145310731947,
+          616.0871575027963,
+          594.4096218616178,
+          690.7715962836012,
+          742.353504235431,
+          730.4715675651447,
+          1008.0611034078196,
+          903.8034094944337,
+          1218.136422658547,
+          3138.641162145207
+        ],
+        "share_pct": [
+          0.01048557855588963,
+          0.023912624614697252,
+          0.023071239161281322,
+          0.026811404320418713,
+          0.028813489231199172,
+          0.02835230725746054,
+          0.039126585355513256,
+          0.03507995807659049,
+          0.0472803866300229,
+          0.12182228925990041
+        ],
+        "share_1985": 0.01048557855588963,
+        "share_2024": 0.12182228925990041,
+        "delta_puntos": 0.11133671070401077,
+        "delta_ha": 2868.4897090378877
+      },
+      {
+        "codigo": "4.5",
+        "nombre_es": "Otras áreas antrópicas sin vegetación",
+        "en_informe": false,
+        "area_ha": [
+          1506.4143445826091,
+          1482.3486937473458,
+          1477.7146124440033,
+          1476.2011118600055,
+          1474.418361235222,
+          1473.5269285442355,
+          1462.117735832144,
+          1465.0589423370727,
+          1451.2428953786539,
+          1425.5781396232578
+        ],
+        "share_pct": [
+          0.05846952058246017,
+          0.05753544353260799,
+          0.05735557767224826,
+          0.05729683310846615,
+          0.057227637953279245,
+          0.057193038148609994,
+          0.0567502051189672,
+          0.05686436423786808,
+          0.05632811227976067,
+          0.05533196804475624
+        ],
+        "share_1985": 0.05846952058246017,
+        "share_2024": 0.05533196804475624,
+        "delta_puntos": -0.003137552537703925,
+        "delta_ha": -80.83620495935133
+      },
+      {
+        "codigo": "4.2",
+        "nombre_es": "Uso urbano",
+        "en_informe": false,
+        "area_ha": [
+          480.7359397822695,
+          820.1161477255472,
+          857.8953983545047,
+          884.9819655334089,
+          920.794803034174,
+          943.5138128425533,
+          1021.2097563451077,
+          1046.6040281179073,
+          1135.0012615483352,
+          1341.4549635105088
+        ],
+        "share_pct": [
+          0.01865914250412684,
+          0.03183174546358499,
+          0.0332980981176098,
+          0.03434942812045437,
+          0.03573945699723559,
+          0.036621265920777274,
+          0.03963693327958418,
+          0.04062257902933153,
+          0.0440536030886019,
+          0.052066835981406746
+        ],
+        "share_1985": 0.01865914250412684,
+        "share_2024": 0.052066835981406746,
+        "delta_puntos": 0.033407693477279905,
+        "delta_ha": 860.7190237282393
+      },
+      {
+        "codigo": "1.2",
+        "nombre_es": "Sabana arbolada",
+        "en_informe": false,
+        "area_ha": [
+          523.4810283132055,
+          575.0647798456581,
+          584.4277009964966,
+          591.3803291282921,
+          596.724549110212,
+          594.1367118574333,
+          606.3457753482988,
+          609.9087962703761,
+          645.622880149179,
+          736.816164164597
+        ],
+        "share_pct": [
+          0.020318237720955205,
+          0.022320394187928395,
+          0.022683803838739032,
+          0.022953661089578508,
+          0.023161090062459564,
+          0.02306064651314025,
+          0.023534525490487297,
+          0.023672819530163914,
+          0.025059015413086125,
+          0.028598564552336385
+        ],
+        "share_1985": 0.020318237720955205,
+        "share_2024": 0.028598564552336385,
+        "delta_puntos": 0.00828032683138118,
+        "delta_ha": 213.33513585139156
+      },
+      {
+        "codigo": "2.1",
+        "nombre_es": "Herbazal/Arbustal inundable",
+        "en_informe": false,
+        "area_ha": [
+          610.7416072273181,
+          140.6114647883438,
+          113.08848266028762,
+          118.88833453076843,
+          118.97721051439414,
+          126.37907895123676,
+          157.50650966341746,
+          174.078820798804,
+          217.3281462824996,
+          297.4986603682512
+        ],
+        "share_pct": [
+          0.023705144008195695,
+          0.005457651783613303,
+          0.004389382900079172,
+          0.004614496634249207,
+          0.004617946240376882,
+          0.00490524017147427,
+          0.00611341105570017,
+          0.0067566438359203404,
+          0.00843531035661596,
+          0.011547024965747662
+        ],
+        "share_1985": 0.023705144008195695,
+        "share_2024": 0.011547024965747662,
+        "delta_puntos": -0.012158119042448033,
+        "delta_ha": -313.24294685906693
+      },
+      {
+        "codigo": "2.3",
+        "nombre_es": "Afloramiento rocoso",
+        "en_informe": false,
+        "area_ha": [
+          40.196884843613226,
+          44.03249313189323,
+          41.8916822257605,
+          41.8916868046584,
+          43.58649368332621,
+          40.99968975461288,
+          43.31889190020015,
+          42.070087003393674,
+          44.032496103196976,
+          49.651415542499585
+        ],
+        "share_pct": [
+          0.001560189992990032,
+          0.001709064158032573,
+          0.0016259713570449634,
+          0.0016259715347689517,
+          0.0016917532674190208,
+          0.001591349825234195,
+          0.0016813666509992687,
+          0.0016328959072892872,
+          0.0017090642733598772,
+          0.0019271553496888925
+        ],
+        "share_1985": 0.001560189992990032,
+        "share_2024": 0.0019271553496888925,
+        "delta_puntos": 0.00036696535669886047,
+        "delta_ha": 9.454530698886359
+      },
+      {
+        "codigo": "4.1",
+        "nombre_es": "Playa o duna",
+        "en_informe": false,
+        "area_ha": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.31792813729089
+        ],
+        "share_pct": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          8.996737678407119e-05
+        ],
+        "share_1985": 0.0,
+        "share_2024": 8.996737678407119e-05,
+        "delta_puntos": 8.996737678407119e-05,
+        "delta_ha": 2.31792813729089
+      },
+      {
+        "codigo": "3.3",
+        "nombre_es": "Uso agropecuario/Tierras en descanso",
+        "en_informe": false,
+        "area_ha": [
+          0.0,
+          0.8027992141812081,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          3.032756415293951,
+          0.0,
+          0.0
+        ],
+        "share_pct": [
+          0.0,
+          3.115961112953736e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.00011771251002973549,
+          0.0,
+          0.0
+        ],
+        "share_1985": 0.0,
+        "share_2024": 0.0,
+        "delta_puntos": 0.0,
+        "delta_ha": 0.0
+      }
+    ]
+  },
+  "congresos": {
+    "charlas": 30,
+    "ediciones": [
+      {
+        "anio": 1999,
+        "charlas": 2,
+        "especies_distintas": 0,
+        "especies_sin_curar": 0,
+        "especies": [],
+        "charlas_con_especies": 0,
+        "pares_ror": 3,
+        "instituciones": 3,
+        "pares_dudosos": 0,
+        "revision_ia": 1
+      },
+      {
+        "anio": 2001,
+        "charlas": 3,
+        "especies_distintas": 13,
+        "especies_sin_curar": 14,
+        "especies": [
+          "Aspidosperma excelsum",
+          "Aspidosperma marcgravianum",
+          "Clusia racemosa",
+          "Croton xanthochloros",
+          "Eclinusa guianensis",
+          "Guazuma ulmifolia",
+          "Jacaranda obtusifolia",
+          "Licania densiflora",
+          "Manilkara bidentata",
+          "Pentaclethra macroloba",
+          "Piranhea longepedunculata",
+          "Protium sagotianum",
+          "Spondias mombin"
+        ],
+        "charlas_con_especies": 1,
+        "pares_ror": 3,
+        "instituciones": 2,
+        "pares_dudosos": 0,
+        "revision_ia": 0
+      },
+      {
+        "anio": 2003,
+        "charlas": 6,
+        "especies_distintas": 0,
+        "especies_sin_curar": 0,
+        "especies": [],
+        "charlas_con_especies": 0,
+        "pares_ror": 10,
+        "instituciones": 3,
+        "pares_dudosos": 4,
+        "revision_ia": 5
+      },
+      {
+        "anio": 2005,
+        "charlas": 9,
+        "especies_distintas": 11,
+        "especies_sin_curar": 13,
+        "especies": [
+          "Alouatta seniculus",
+          "Aratinga pertinax",
+          "Bactris hirta",
+          "Cebus olivaceus",
+          "Croton megalodendron",
+          "Penelope jacquacu",
+          "Phaetornis rupurumii",
+          "Pionites melanocephala",
+          "Pithecia pithecia",
+          "Psarocolius decumanus",
+          "Ramphastos vitellinus"
+        ],
+        "charlas_con_especies": 6,
+        "pares_ror": 9,
+        "instituciones": 2,
+        "pares_dudosos": 0,
+        "revision_ia": 9
+      },
+      {
+        "anio": 2007,
+        "charlas": 2,
+        "especies_distintas": 0,
+        "especies_sin_curar": 0,
+        "especies": [],
+        "charlas_con_especies": 0,
+        "pares_ror": 2,
+        "instituciones": 2,
+        "pares_dudosos": 0,
+        "revision_ia": 2
+      },
+      {
+        "anio": 2011,
+        "charlas": 1,
+        "especies_distintas": 0,
+        "especies_sin_curar": 3,
+        "especies": [],
+        "charlas_con_especies": 1,
+        "pares_ror": 1,
+        "instituciones": 1,
+        "pares_dudosos": 0,
+        "revision_ia": 0
+      },
+      {
+        "anio": 2013,
+        "charlas": 2,
+        "especies_distintas": 4,
+        "especies_sin_curar": 7,
+        "especies": [
+          "Alexa imperatricis",
+          "Catostemma commune",
+          "Harpia harpyja",
+          "Mora excelsa"
+        ],
+        "charlas_con_especies": 2,
+        "pares_ror": 2,
+        "instituciones": 2,
+        "pares_dudosos": 0,
+        "revision_ia": 2
+      },
+      {
+        "anio": 2019,
+        "charlas": 5,
+        "especies_distintas": 3,
+        "especies_sin_curar": 5,
+        "especies": [
+          "Harpia harpyja",
+          "Hymenaea courbaril",
+          "Parkia nitida"
+        ],
+        "charlas_con_especies": 4,
+        "pares_ror": 9,
+        "instituciones": 4,
+        "pares_dudosos": 1,
+        "revision_ia": 5
+      }
+    ],
+    "determinaciones_por_edicion": 31,
+    "instituciones": [
+      {
+        "nombre": "Universidad Nacional Experimental de Guayana",
+        "pares": 11,
+        "estado": "ok"
+      },
+      {
+        "nombre": "Instituto de Zoología y Ecología Tropical, Universidad Central de Venezuela",
+        "pares": 8,
+        "estado": "ok"
+      },
+      {
+        "nombre": "Universidad Central de Venezuela",
+        "pares": 6,
+        "estado": "ok"
+      },
+      {
+        "nombre": "Universidad de Los Andes",
+        "pares": 5,
+        "estado": "ok"
+      },
+      {
+        "nombre": "Centro de Estudios Integrales del Ambiente, Universidad Central de Venezuela",
+        "pares": 4,
+        "estado": "dudoso"
+      },
+      {
+        "nombre": "Universidad de Oriente",
+        "pares": 1,
+        "estado": "ok"
+      },
+      {
+        "nombre": "Universidad Simón Bolívar",
+        "pares": 1,
+        "estado": "ok"
+      },
+      {
+        "nombre": "Instituto Venezolano de Investigaciones Científicas",
+        "pares": 1,
+        "estado": "ok"
+      },
+      {
+        "nombre": "Instituto de Ciencias Ambientales y Ecológicas, Universidad de Los Andes",
+        "pares": 1,
+        "estado": "ok"
+      },
+      {
+        "nombre": "Asociación Civil Fundación Esfera",
+        "pares": 1,
+        "estado": "dudoso"
+      }
+    ],
+    "instituciones_distintas": 10,
+    "pares_institucion": 39,
+    "pares_dudosos": 5,
+    "revision_ia": 24
+  },
+  "especies": {
+    "entradas_crudas": 42,
+    "clases": {
+      "especie": 31,
+      "género": 1,
+      "familia": 3,
+      "no es un nombre": 7
+    },
+    "especies_distintas": 30,
+    "determinaciones": 31,
+    "taxones": [
+      "Alexa imperatricis",
+      "Alouatta seniculus",
+      "Aratinga pertinax",
+      "Aspidosperma excelsum",
+      "Aspidosperma marcgravianum",
+      "Bactris hirta",
+      "Catostemma commune",
+      "Cebus olivaceus",
+      "Clusia racemosa",
+      "Croton megalodendron",
+      "Croton xanthochloros",
+      "Eclinusa guianensis",
+      "Guazuma ulmifolia",
+      "Harpia harpyja",
+      "Hymenaea courbaril",
+      "Jacaranda obtusifolia",
+      "Licania densiflora",
+      "Manilkara bidentata",
+      "Mora excelsa",
+      "Parkia nitida",
+      "Penelope jacquacu",
+      "Pentaclethra macroloba",
+      "Phaetornis rupurumii",
+      "Pionites melanocephala",
+      "Piranhea longepedunculata",
+      "Pithecia pithecia",
+      "Protium sagotianum",
+      "Psarocolius decumanus",
+      "Ramphastos vitellinus",
+      "Spondias mombin"
+    ],
+    "entradas": [
+      {
+        "crudo": "alexa imperatricis",
+        "clase": "especie",
+        "taxon": "Alexa imperatricis",
+        "nota": ""
+      },
+      {
+        "crudo": "alouatta seniculus",
+        "clase": "especie",
+        "taxon": "Alouatta seniculus",
+        "nota": ""
+      },
+      {
+        "crudo": "aratinga pertinax",
+        "clase": "especie",
+        "taxon": "Aratinga pertinax",
+        "nota": ""
+      },
+      {
+        "crudo": "aspidosperma excelsum",
+        "clase": "especie",
+        "taxon": "Aspidosperma excelsum",
+        "nota": ""
+      },
+      {
+        "crudo": "aspidosperma marcgravianum",
+        "clase": "especie",
+        "taxon": "Aspidosperma marcgravianum",
+        "nota": ""
+      },
+      {
+        "crudo": "bacterias",
+        "clase": "no es un nombre",
+        "taxon": "",
+        "nota": "un reino"
+      },
+      {
+        "crudo": "bactris hirta",
+        "clase": "especie",
+        "taxon": "Bactris hirta",
+        "nota": ""
+      },
+      {
+        "crudo": "bombacaceae",
+        "clase": "familia",
+        "taxon": "Bombacaceae",
+        "nota": "familia botánica"
+      },
+      {
+        "crudo": "catostemma commune",
+        "clase": "especie",
+        "taxon": "Catostemma commune",
+        "nota": ""
+      },
+      {
+        "crudo": "cebus olivaceus",
+        "clase": "especie",
+        "taxon": "Cebus olivaceus",
+        "nota": ""
+      },
+      {
+        "crudo": "chrysobalanaceae",
+        "clase": "familia",
+        "taxon": "Chrysobalanaceae",
+        "nota": "familia botánica"
+      },
+      {
+        "crudo": "clansia racemosa",
+        "clase": "especie",
+        "taxon": "Clusia racemosa",
+        "nota": "probable errata del género en el resumen (clansia -> Clusia): se conserva la forma cruda y se marca"
+      },
+      {
+        "crudo": "cracidae",
+        "clase": "familia",
+        "taxon": "Cracidae",
+        "nota": "familia de aves"
+      },
+      {
+        "crudo": "croton megalodendron",
+        "clase": "especie",
+        "taxon": "Croton megalodendron",
+        "nota": ""
+      },
+      {
+        "crudo": "croton xanthochloros",
+        "clase": "especie",
+        "taxon": "Croton xanthochloros",
+        "nota": ""
+      },
+      {
+        "crudo": "eclinusa guianensis",
+        "clase": "especie",
+        "taxon": "Eclinusa guianensis",
+        "nota": ""
+      },
+      {
+        "crudo": "especies nativas de gran envergadura",
+        "clase": "no es un nombre",
+        "taxon": "",
+        "nota": "descripción"
+      },
+      {
+        "crudo": "especies primarias de alto valor comercial",
+        "clase": "no es un nombre",
+        "taxon": "",
+        "nota": "descripción"
+      },
+      {
+        "crudo": "especies típicas de las comunidades primarias",
+        "clase": "no es un nombre",
+        "taxon": "",
+        "nota": "descripción"
+      },
+      {
+        "crudo": "ficus sp.",
+        "clase": "género",
+        "taxon": "Ficus sp.",
+        "nota": "determinación a nivel de género, uso botánico estándar: no es una especie"
+      },
+      {
+        "crudo": "guazuma ulmifolia",
+        "clase": "especie",
+        "taxon": "Guazuma ulmifolia",
+        "nota": ""
+      },
+      {
+        "crudo": "hongos micorrizícos arbusculares (hma)",
+        "clase": "no es un nombre",
+        "taxon": "",
+        "nota": "grupo funcional"
+      },
+      {
+        "crudo": "hymenaea courbaril",
+        "clase": "especie",
+        "taxon": "Hymenaea courbaril",
+        "nota": ""
+      },
+      {
+        "crudo": "jacaranda obtusifolia",
+        "clase": "especie",
+        "taxon": "Jacaranda obtusifolia",
+        "nota": ""
+      },
+      {
+        "crudo": "licania densiflora",
+        "clase": "especie",
+        "taxon": "Licania densiflora",
+        "nota": ""
+      },
+      {
+        "crudo": "manilkara bidentata",
+        "clase": "especie",
+        "taxon": "Manilkara bidentata",
+        "nota": ""
+      },
+      {
+        "crudo": "mora excelsa",
+        "clase": "especie",
+        "taxon": "Mora excelsa",
+        "nota": ""
+      },
+      {
+        "crudo": "parkia nitida",
+        "clase": "especie",
+        "taxon": "Parkia nitida",
+        "nota": ""
+      },
+      {
+        "crudo": "penelope jacquacu",
+        "clase": "especie",
+        "taxon": "Penelope jacquacu",
+        "nota": ""
+      },
+      {
+        "crudo": "pentaclethra macroloba",
+        "clase": "especie",
+        "taxon": "Pentaclethra macroloba",
+        "nota": ""
+      },
+      {
+        "crudo": "phaetornis rupurumii",
+        "clase": "especie",
+        "taxon": "Phaetornis rupurumii",
+        "nota": ""
+      },
+      {
+        "crudo": "pioneras sin valor de mercado",
+        "clase": "no es un nombre",
+        "taxon": "",
+        "nota": "descripción"
+      },
+      {
+        "crudo": "pionites melanocephala",
+        "clase": "especie",
+        "taxon": "Pionites melanocephala",
+        "nota": ""
+      },
+      {
+        "crudo": "piranhea longepedunculata",
+        "clase": "especie",
+        "taxon": "Piranhea longepedunculata",
+        "nota": ""
+      },
+      {
+        "crudo": "pithecia pithecia",
+        "clase": "especie",
+        "taxon": "Pithecia pithecia",
+        "nota": ""
+      },
+      {
+        "crudo": "protium sagotianum",
+        "clase": "especie",
+        "taxon": "Protium sagotianum",
+        "nota": ""
+      },
+      {
+        "crudo": "psaracolius decumanus",
+        "clase": "especie",
+        "taxon": "Psarocolius decumanus",
+        "nota": "errata del resumen (psaracolius -> Psarocolius)"
+      },
+      {
+        "crudo": "ramphastos vitellinus",
+        "clase": "especie",
+        "taxon": "Ramphastos vitellinus",
+        "nota": ""
+      },
+      {
+        "crudo": "spondias mombin",
+        "clase": "especie",
+        "taxon": "Spondias mombin",
+        "nota": ""
+      },
+      {
+        "crudo": "águila harpía (harpya harpyja)",
+        "clase": "especie",
+        "taxon": "Harpia harpyja",
+        "nota": "nombre común con su binomial"
+      },
+      {
+        "crudo": "águilas harpías",
+        "clase": "especie",
+        "taxon": "Harpia harpyja",
+        "nota": "misma especie que la anterior, en otra edición y en plural: una sola especie en el conteo"
+      },
+      {
+        "crudo": "árboles",
+        "clase": "no es un nombre",
+        "taxon": "",
+        "nota": "forma de vida"
+      }
+    ],
+    "repetidas": [
+      {
+        "taxon": "Harpia harpyja",
+        "ediciones": [
+          2013,
+          2019
+        ],
+        "veces": 2
+      }
+    ]
+  },
+  "mapa": {
+    "anio": 2024,
+    "plantilla": "/tiles/{year}/{z}/{x}/{y}.png",
+    "zoom_min": 0,
+    "zoom_max": 12
+  },
+  "procedencia": {
+    "consulta_utc": "2026-10-16T20:44:03+00:00",
+    "consulta_es": "16 de octubre de 2026",
+    "composicion": {
+      "artefacto": "composition-summary-venezuela-collection-3.json",
+      "schema_version": 2,
+      "generado_utc": "2026-09-24T18:40:54+00:00",
+      "generado_es": "24 de septiembre de 2026",
+      "radio_autalico_m": 6371007.181
+    },
+    "catalogo": {
+      "artefacto": "catalogo-estudios.json",
+      "schema_version": 4,
+      "generado_utc": "2026-10-15T04:18:01.203025+00:00",
+      "generado_es": "15 de octubre de 2026"
+    },
+    "clip_schema": "viewer-clip-stats.v1",
+    "recomputar": "python3 tools/build_informe_imataca.py",
+    "cogs": [
+      {
+        "anio": 1985,
+        "sha256": "cd3ab8462b5c90db1931ec6460af3b14fad1c6055d2caace2e3f10c8ee1d850c",
+        "bytes": 112452044
+      },
+      {
+        "anio": 1999,
+        "sha256": "91a92785481646a187872b81d97164900377890bb9c08916cfaca10da07f3eb9",
+        "bytes": 109243140
+      },
+      {
+        "anio": 2001,
+        "sha256": "8d86d3be4f82b534c6edc2a1f966f82a9a04fa4abc68c2ae8368c16508aa98ef",
+        "bytes": 109122698
+      },
+      {
+        "anio": 2003,
+        "sha256": "b6a6e57632ba7286343b9eff29c41c982163ba122c0af0e49ee187b12dcb2344",
+        "bytes": 109302065
+      },
+      {
+        "anio": 2005,
+        "sha256": "f5cca611d4e3230df21d429768fd2cd858da90c2200940642841e7ea9fd48322",
+        "bytes": 109622944
+      },
+      {
+        "anio": 2007,
+        "sha256": "83c496e3c4728e65628f9a49db7ac7a350bac146f876cc7b703b654a7c56fc4b",
+        "bytes": 109604144
+      },
+      {
+        "anio": 2011,
+        "sha256": "914956f392c496e8b9591844c09020543f9e59279808ceec5d23a44387be0474",
+        "bytes": 109888900
+      },
+      {
+        "anio": 2013,
+        "sha256": "03df97a5180686cc116930e429e20caa8f80fb72ef194904c509ba5aa2a5939a",
+        "bytes": 110536275
+      },
+      {
+        "anio": 2019,
+        "sha256": "20069357e6cb4ce84367e3ea8c4ebec0e17da491cac56d330e7af0ab00da8825",
+        "bytes": 111317249
+      },
+      {
+        "anio": 2024,
+        "sha256": "cdcf2483479bfe01d6e760501b2db7312d56c1b47cf26952a32b677d3a6cdfc2",
+        "bytes": 114434796
+      }
+    ]
+  }
+}
