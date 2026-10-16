@@ -1563,6 +1563,25 @@
       return;
     }
     var reqId = ++inFlightClipRequest;
+    // The panel declares the in-flight figure where the figure will land.
+    // Every settle path below ends at ``settleClipRequest`` — the rendered
+    // payload, the failure, and the response the staleness guard drops — so
+    // the mark cannot outlive its request.
+    if (panel && typeof panel.setClipBusy === "function") {
+      panel.setClipBusy(true);
+    }
+    function settleClipRequest() {
+      // Only the request that is still current may drop the mark: with two
+      // clips in flight, the older one settling must not present the newer one
+      // as finished. ``clearClip`` clears it directly instead, because it
+      // invalidates the counter before this can run.
+      if (reqId !== inFlightClipRequest) {
+        return;
+      }
+      if (panel && typeof panel.setClipBusy === "function") {
+        panel.setClipBusy(false);
+      }
+    }
     api
       .fetchClipStats(year, bbox)
       .then(function (doc) {
@@ -1611,7 +1630,8 @@
         if (panel && typeof panel.showClipError === "function") {
           panel.showClipError(message);
         }
-      });
+      })
+      .then(settleClipRequest, settleClipRequest);
   }
 
   /**
@@ -1619,6 +1639,11 @@
    * and the status banner. Wired to the "Limpiar zona" toolbar button.
    */
   function clearClip() {
+    // Invalidate first: the zone is gone, so a clip response still in
+    // flight — success or failure — must no longer pass the staleness guard
+    // in ``requestClip``, or it re-renders the cleared area's figure into a
+    // panel that no longer has an area.
+    ++inFlightClipRequest;
     clipBbox = null;
     if (map && typeof map.getSource === "function") {
       var src = map.getSource("clip-rectangle");

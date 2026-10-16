@@ -978,6 +978,15 @@ body.is-overlays-collapsed .map-overlays {
   color: var(--fg-muted);
 }
 
+/* The in-flight row panel.js inserts before .panel-breakdown-list while a
+ * clip request is being computed. It reuses the 12 px muted note role above
+ * (.panel-breakdown-empty) for every typographic and colour decision, so
+ * this rule only carries its hidden default: the panel owns the row and
+ * shows it with an inline display. */
+.panel-breakdown-busy {
+  display: none;
+}
+
 .panel-breakdown-list {
   list-style: none;
   margin: 0;
