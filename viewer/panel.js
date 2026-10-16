@@ -13,6 +13,12 @@
  *      area descending, with the official colour per class. The breakdown
  *      updates when the year changes.
  *
+ *   3. The provenance block under the D7 labelling (the "every figure shows
+ *      what produced it" unit): one summary line for the figure on screen
+ *      plus a disclosure with the full digests, the byte sizes, the area
+ *      method and the command that recomputes the dataset. Every string is
+ *      read from ``/api/provenance``; nothing is typed here.
+ *
  * The D7 labelling is attached to the panel itself, not just the map. This
  * panel is the area-figure surface of the whole application, so it carries
  * ``extent_label`` and ``boundary_note`` from the API verbatim, visible
@@ -71,6 +77,14 @@
   var breakdownCollapsed = true;
   var extentLabel = null;
   var extentBoundary = null;
+  // The provenance block. The document is fetched once and re-rendered on
+  // every year change, because the COG identity it publishes is per year.
+  var provenance = null;
+  var provenanceSummary = null;
+  var provenanceToggle = null;
+  var provenanceToggleLabel = null;
+  var provenanceDetails = null;
+  var provenanceExpanded = false;
 
   // -------------------------------------------------------------------------
   // Public surface
@@ -118,6 +132,18 @@
     setBreakdownCollapsed(true);
     extentLabel = document.getElementById("panel-extent-label");
     extentBoundary = document.getElementById("panel-boundary-note");
+    provenanceSummary = document.getElementById("panel-provenance-summary");
+    provenanceToggle = document.getElementById("panel-provenance-toggle");
+    provenanceToggleLabel = document.getElementById(
+      "panel-provenance-toggle-label"
+    );
+    provenanceDetails = document.getElementById("panel-provenance-details");
+    if (provenanceToggle) {
+      provenanceToggle.addEventListener("click", toggleProvenance);
+    }
+    // The block starts collapsed: the summary is what the reader gets without
+    // asking, and the details are one Tab and one Enter away.
+    setProvenanceExpanded(false);
 
     currentYear = year;
     if (typeof onYearChangeFromPanel === "function") {
@@ -150,6 +176,24 @@
       .catch(function (err) {
         showPanelFatal("No se pudo cargar la composición: " + err.message);
       });
+
+    // The provenance block is its own request so that a failure here cannot
+    // keep the chart and the breakdown from rendering: this is the block that
+    // reports what could not be read, so it must not be the reason the panel
+    // stops. The document is fetched once; the year-dependent parts of it are
+    // selected at render time, on every year change.
+    api
+      .fetchProvenance()
+      .then(function (doc) {
+        provenance = doc;
+        renderProvenance();
+      })
+      .catch(function (err) {
+        if (provenanceSummary) {
+          provenanceSummary.textContent =
+            "Procedencia no disponible (" + err.message + ")";
+        }
+      });
   }
 
   /**
@@ -165,6 +209,10 @@
     moveCursor(year);
     highlightLegendYear(year);
     fetchYear(year);
+    // The COG identity is per year: re-render the provenance block so the
+    // summary's digest and the details' file names are the ones for the year
+    // now on screen, not the ones the page loaded with.
+    renderProvenance();
   }
 
   // -------------------------------------------------------------------------
@@ -1225,6 +1273,320 @@
     }
     // The error replaces the rows, so the fold's control goes with them.
     setBreakdownCollapsed(true);
+  }
+
+  // -------------------------------------------------------------------------
+  // Provenance block
+  // -------------------------------------------------------------------------
+  // The footer block answers what produced the figure on screen. Every string
+  // it renders comes from /api/provenance, which the backend read from the
+  // committed sources once at import: this file types no date, no digest, no
+  // version and no method. A value the source does not carry is shown as
+  // missing rather than filled in, because a provenance line that is not true
+  // is worse than none.
+  //
+  // The COG identity is PER YEAR -- the figure for 2024 comes from the 2024
+  // entry -- so the block is re-rendered on every year change. A render that
+  // only ran on load would publish the digest and the file names of the year
+  // the page loaded with.
+
+  // Hex characters kept in the summary's digest. 12 hex characters (48 bits)
+  // are enough to recognise the raster without spending the line on it; the
+  // full 64 characters are in the details, where they can be copied.
+  var PROVENANCE_DIGEST_HEAD = 12;
+
+  /** Shorten a digest for the summary line; the details show it whole. */
+  function shortenDigest(hex) {
+    if (typeof hex !== "string" || !hex) {
+      return "—";
+    }
+    return hex.length > PROVENANCE_DIGEST_HEAD
+      ? hex.slice(0, PROVENANCE_DIGEST_HEAD) + "…"
+      : hex;
+  }
+
+  /** A value the source did not carry is declared missing, never invented. */
+  function provenanceValue(value) {
+    if (value === null || value === undefined || value === "") {
+      return "—";
+    }
+    return String(value);
+  }
+
+  /** Byte counts are read from the manifests; the grouping is the only licence. */
+  function formatBytes(n) {
+    if (!Number.isFinite(n)) {
+      return "—";
+    }
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " B";
+  }
+
+  /** The date part of a UTC timestamp, for the one-line summary. */
+  function provenanceDay(stamp) {
+    if (typeof stamp !== "string") {
+      return null;
+    }
+    var day = stamp.slice(0, 10);
+    return /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : stamp;
+  }
+
+  /**
+   * The COG entry of the year on screen.
+   *
+   * The endpoint keys its years by their string form and ``currentYear`` is a
+   * number, which a property access coerces, so this is the entry for the
+   * visible year and not the batch's.
+   *
+   * @returns {object|null}
+   */
+  function currentCogEntry() {
+    if (!provenance || !provenance.cogs || !provenance.cogs.years) {
+      return null;
+    }
+    return provenance.cogs.years[currentYear] || null;
+  }
+
+  /**
+   * The summary line: the composition artefact with its version and build
+   * date, the year on screen with a shortened digest of that year's COG
+   * output, and the fact that the figure is computed here.
+   *
+   * @returns {string}
+   */
+  function provenanceSummaryText() {
+    var parts = [];
+    var artefact = provenance.composition;
+    if (artefact) {
+      var head = provenanceValue(artefact.name);
+      if (
+        artefact.schema_version !== null &&
+        artefact.schema_version !== undefined
+      ) {
+        head += " v" + artefact.schema_version;
+      }
+      parts.push(head);
+      var day = provenanceDay(artefact.generated_utc);
+      if (day) {
+        parts.push(day);
+      }
+    } else {
+      // The artefact itself could not be read: name the file that was not,
+      // instead of a version and a date nobody read.
+      var summarySource = provenance.sources && provenance.sources.composition_summary;
+      parts.push(
+        (summarySource && summarySource.name
+          ? summarySource.name
+          : "Resumen de composición") + " ilegible"
+      );
+    }
+
+    var cog = currentCogEntry();
+    if (cog) {
+      parts.push(currentYear + " · COG " + shortenDigest(cog.output_sha256));
+    } else {
+      parts.push(currentYear + " · COG ilegible");
+    }
+    parts.push("cifra calculada aquí");
+    return parts.join(" · ");
+  }
+
+  /** The batch line: the COG manifest's totals, field by field. */
+  function provenanceBatch(totals) {
+    if (!totals || typeof totals !== "object") {
+      return "—";
+    }
+    return (
+      provenanceValue(totals.inputs) +
+      " entradas · " +
+      provenanceValue(totals.converted) +
+      " convertidas · " +
+      provenanceValue(totals.failed) +
+      " fallidas · " +
+      formatBytes(totals.output_bytes)
+    );
+  }
+
+  /**
+   * Append one label/value pair to the details list.
+   *
+   * @param {string} label
+   * @param {string} value
+   * @param {{code?: boolean, prefix?: string}} [opts] ``code`` renders the
+   *        value monospaced (a digest or a command); ``prefix`` is plain text
+   *        that precedes it in the same cell.
+   */
+  function appendProvenanceRow(label, value, opts) {
+    if (!provenanceDetails) {
+      return;
+    }
+    var name = document.createElement("dt");
+    // The panel's muted role, reused: the label is the secondary half of the
+    // pair and takes its colour from an existing class, not a new one.
+    name.className = "panel-boundary-note";
+    name.textContent = label;
+
+    var cell = document.createElement("dd");
+    cell.className = "panel-provenance-value";
+    if (opts && opts.prefix) {
+      cell.appendChild(document.createTextNode(opts.prefix));
+    }
+    if (opts && opts.code) {
+      var code = document.createElement("code");
+      code.className = "panel-provenance-code";
+      code.textContent = value;
+      cell.appendChild(code);
+    } else {
+      cell.appendChild(document.createTextNode(value));
+    }
+    provenanceDetails.appendChild(name);
+    provenanceDetails.appendChild(cell);
+  }
+
+  /** The expanded state: the full identity of both the artefact and the year. */
+  function renderProvenanceDetails() {
+    if (!provenanceDetails) {
+      return;
+    }
+    provenanceDetails.innerHTML = "";
+
+    var artefact = provenance.composition;
+    var cog = provenance.cogs;
+    var entry = currentCogEntry();
+
+    if (artefact) {
+      appendProvenanceRow("Artefacto", provenanceValue(artefact.name));
+      appendProvenanceRow("Esquema", provenanceValue(artefact.schema_version));
+      appendProvenanceRow(
+        "Generado (UTC)",
+        provenanceValue(artefact.generated_utc)
+      );
+      // The two CSVs the panel and the map read, with the digest the backend
+      // computed once at import.
+      (artefact.csvs || []).forEach(function (csv, idx) {
+        appendProvenanceRow(
+          "CSV nivel " + (idx + 1),
+          provenanceValue(csv.sha256),
+          {
+            prefix:
+              provenanceValue(csv.name) +
+              " · " +
+              formatBytes(csv.bytes) +
+              " · sha256 ",
+            code: true,
+          }
+        );
+      });
+      appendProvenanceRow("Método de área", provenanceValue(artefact.area_method));
+      appendProvenanceRow(
+        "Radio authálico",
+        provenanceValue(artefact.authalic_radius_m) + " m"
+      );
+    }
+
+    // The year-dependent half: the artefact a drawn area is measured on.
+    appendProvenanceRow("Año", provenanceValue(currentYear));
+    if (entry) {
+      appendProvenanceRow("COG de salida", provenanceValue(entry.output_name));
+      appendProvenanceRow(
+        "sha256 del COG de salida",
+        provenanceValue(entry.output_sha256),
+        { code: true }
+      );
+      appendProvenanceRow(
+        "Bytes del COG de salida",
+        formatBytes(entry.output_bytes)
+      );
+      appendProvenanceRow("COG de entrada", provenanceValue(entry.input_name));
+      appendProvenanceRow(
+        "sha256 del COG de entrada",
+        provenanceValue(entry.input_sha256),
+        { code: true }
+      );
+      appendProvenanceRow(
+        "Bytes del COG de entrada",
+        formatBytes(entry.input_bytes)
+      );
+    }
+    if (cog) {
+      appendProvenanceRow("Manifiesto COG", provenanceValue(cog.name));
+      appendProvenanceRow(
+        "Manifiesto COG generado (UTC)",
+        provenanceValue(cog.generated_utc)
+      );
+      appendProvenanceRow("Lote COG", provenanceBatch(cog.totals));
+    }
+
+    // The command that rebuilds the dataset, read by the backend from the
+    // repository's own entry point.
+    appendProvenanceRow(
+      "Recalcular",
+      provenanceValue(provenance.recompute && provenance.recompute.command),
+      { code: true }
+    );
+
+    // What could not be read is stated, with the backend's own reason for it.
+    var sourceLabels = {
+      composition_summary: "Resumen de composición",
+      cog_manifest: "Manifiesto COG",
+      entrypoint: "Punto de entrada",
+    };
+    var sources = provenance.sources || {};
+    Object.keys(sourceLabels).forEach(function (key) {
+      var source = sources[key];
+      if (!source || source.read !== false) {
+        return;
+      }
+      appendProvenanceRow(
+        sourceLabels[key] + " no leído",
+        source.error || provenanceValue(source.path)
+      );
+    });
+  }
+
+  /** Render the summary line and the details for the state now on screen. */
+  function renderProvenance() {
+    if (!provenance) {
+      return;
+    }
+    if (provenanceSummary) {
+      provenanceSummary.textContent = provenanceSummaryText();
+    }
+    renderProvenanceDetails();
+  }
+
+  /**
+   * Put the expanded state on the DOM: the details' own ``hidden``, the
+   * control's ``aria-expanded``, and the ▸/▾ glyph the panel's other
+   * disclosures use.
+   *
+   * @param {boolean} expanded
+   */
+  function setProvenanceExpanded(expanded) {
+    provenanceExpanded = !!expanded;
+    if (provenanceDetails) {
+      provenanceDetails.hidden = !provenanceExpanded;
+    }
+    if (!provenanceToggle) {
+      return;
+    }
+    provenanceToggle.setAttribute(
+      "aria-expanded",
+      provenanceExpanded ? "true" : "false"
+    );
+    var arrow = provenanceToggle.querySelector(".panel-provenance-disclosure");
+    if (arrow) {
+      arrow.textContent = provenanceExpanded ? "▾" : "▸";
+    }
+    if (provenanceToggleLabel) {
+      provenanceToggleLabel.textContent = provenanceExpanded
+        ? "Ocultar procedencia"
+        : "Ver procedencia";
+    }
+  }
+
+  /** The control's own handler: the state is the only thing it flips. */
+  function toggleProvenance() {
+    setProvenanceExpanded(!provenanceExpanded);
   }
 
   // -------------------------------------------------------------------------
