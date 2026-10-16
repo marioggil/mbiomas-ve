@@ -294,6 +294,38 @@
         <!-- populated by catalog.js -->
       </section>
     </div>
+    <!-- The catalogue's provenance footer: what produced the panel's figures.
+         It follows the panel's disclosure idiom -- a real button (Tab, Enter
+         or Space) with aria-expanded + aria-controls and a glyph -- and sits
+         AFTER .catalog-body, for two reasons: the metrics block above starts
+         collapsed, so a promise buried in it would be invisible by default;
+         and the list's scroll box and the two-column split stay exactly what
+         they were, because this block is outside both. The studies artefact
+         is ONE corpus, not a per-year artefact, so catalog.js fetches it once
+         and never re-renders it on a year change: the slider leaves this block
+         byte-identical. The collapsed state is the summary line; the digests,
+         the source's name, bytes and rows, the two curated tables and the
+         recompute command live behind the disclosure. -->
+    <div class="catalog-provenance" id="catalog-provenance">
+      <div class="catalog-provenance-disclosure-row">
+        <button
+          id="catalog-provenance-toggle"
+          class="catalog-provenance-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="catalog-provenance-details"
+        >
+          <span class="catalog-provenance-toggle-label" id="catalog-provenance-toggle-label">Ver procedencia</span>
+          <span class="catalog-provenance-disclosure" aria-hidden="true">&#9656;</span>
+        </button>
+        <p class="catalog-provenance-summary" id="catalog-provenance-summary">
+          <!-- populated by catalog.js from /api/provenance: one line -->
+        </p>
+      </div>
+      <dl class="catalog-provenance-details" id="catalog-provenance-details" hidden>
+        <!-- populated by catalog.js from /api/provenance -->
+      </dl>
+    </div>
     <p class="catalog-error" id="catalog-error" role="alert" style="display: none;"></p>
   </section>
 
