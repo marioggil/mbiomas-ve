@@ -1177,6 +1177,17 @@
       return;
     }
     updateChartScope(false);
+    // Restore the year's own breakdown instead of leaving the list empty. The
+    // panel already holds that payload (``yearBreakdown``), so this costs no
+    // request and cannot disagree with the year on screen. The host's
+    // ``setYear(currentYear)`` after this call cannot do it: it returns early
+    // when the year has not changed, which is exactly the case here.
+    if (yearBreakdown) {
+      renderBreakdown(yearBreakdown);
+      return;
+    }
+    // No year payload yet (a clip answered before the first year response):
+    // an empty list under the year's title is then the honest state.
     breakdownTitle.textContent =
       "Clases (nivel 2) en " + (currentYear || "") + " — ordenadas por área";
     breakdownList.innerHTML = "";
