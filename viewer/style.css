@@ -673,6 +673,10 @@ body.is-overlays-collapsed .map-overlays {
   min-width: 0;
   width: auto;
   margin: 0;
+  /* WCAG 2.2 target size: the input's box IS the grabbable area, and the
+   * browser default renders it 16px tall, below the 24px minimum. The track
+   * stays centred, so this enlarges the target without moving the control. */
+  min-height: 24px;
   accent-color: var(--accent);
 }
 
@@ -767,7 +771,10 @@ body.is-overlays-collapsed .map-overlays {
   .time-bar-slider {
     flex: 0 0 auto;
     width: 100%;
-    margin: 4px 0;
+    /* The 24px target plus these margins adds up to the same box the slider
+     * already occupied here (16px + 4px top and bottom), so the stacked band
+     * keeps the height the map panel's floor was measured against. */
+    margin: 0;
   }
   .map-panel {
     height: clamp(530px, 50vh, 720px);
