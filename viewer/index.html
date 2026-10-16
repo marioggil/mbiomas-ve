@@ -177,6 +177,95 @@
   </footer>
   </section>
 
+  <aside
+    class="panel-panel"
+    id="panel-panel"
+    tabindex="-1"
+    aria-label="Panel de composición por año"
+  >
+    <h2 class="panel-title">Composición por año</h2>
+    <p class="panel-help">
+      Porcentaje de la extensión válida por grupo (nivel 1) y clases del año seleccionado (nivel 2). Pulse el gráfico para cambiar de año.
+    </p>
+    <!-- The chart and its legend travel together. The wrapper exists for the
+         two-column panel (>= 1101px, see .panel-chart-block in style.css): the
+         legend is a direct child of it, so it stays directly under the chart
+         when the breakdown beside them is taller. As siblings on the grid, a
+         list spanning two rows redistributed the height and pushed the legend
+         ~984px below the chart. Below 1101px the wrapper is transparent: the
+         panel's flex column keeps the same order and the same 8px gap. -->
+    <div class="panel-chart-block">
+      <div class="panel-chart" id="panel-chart">
+        <!-- populated by panel.js from /api/composition/series -->
+      </div>
+      <ul class="panel-legend" id="panel-legend" aria-label="Leyenda del gráfico apilado">
+        <!-- populated by panel.js -->
+      </ul>
+    </div>
+    <h3 class="panel-breakdown-title" id="panel-breakdown-title">
+      Clases (nivel 2)
+    </h3>
+    <p class="panel-breakdown-empty" id="panel-breakdown-empty" style="display: none;">
+      Cargando&hellip;
+    </p>
+    <ul class="panel-breakdown-list" id="panel-breakdown-list">
+      <!-- populated by panel.js from /api/composition/year/{year} -->
+    </ul>
+    <!-- The breakdown's disclosure control, the same idiom the header's two
+         toggles and the catalogue's two use: a real button carrying
+         aria-expanded + aria-controls, sitting OUTSIDE the list it clamps
+         (body.is-breakdown-collapsed hides the rows past the eighth), so the
+         27-row list folds without rebuilding a row and the control that
+         restores it is never hidden with the content it hides. panel.js owns
+         its label and its hidden state: the label carries the number of
+         classes the fold is holding back, read from the rows on screen, and
+         the control does not exist when the list has eight rows or fewer. It
+         starts hidden, which is the state an empty list has. -->
+    <button
+      id="panel-breakdown-toggle"
+      class="panel-breakdown-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="panel-breakdown-list"
+      hidden
+    >
+      <span class="panel-breakdown-toggle-label" id="panel-breakdown-toggle-label">Ver m&aacute;s</span>
+      <span class="panel-breakdown-disclosure" aria-hidden="true">&#9656;</span>
+    </button>
+    <div class="panel-labelling" aria-live="polite">
+      <strong class="panel-extent-label" id="panel-extent-label">&hellip;</strong>
+      <span class="panel-boundary-note" id="panel-boundary-note">&hellip;</span>
+      <!-- The provenance block: what produced the figure on screen. It
+           follows the catalogue's disclosure row -- a real button (tab,
+           Enter or Space) with aria-expanded + aria-controls and a glyph --
+           because the panel's height budget is tight: the summary line is the
+           collapsed state's content and the full digests, the byte sizes, the
+           area method and the recompute command live behind the disclosure.
+           The button sits outside the block it hides, so a collapsed block
+           is always restorable. panel.js owns every string in both, and it
+           re-renders them when the year changes, because the COG identity is
+           per year. -->
+      <div class="panel-provenance-disclosure-row">
+        <button
+          id="panel-provenance-toggle"
+          class="panel-provenance-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="panel-provenance-details"
+        >
+          <span class="panel-provenance-toggle-label" id="panel-provenance-toggle-label">Ver procedencia</span>
+          <span class="panel-provenance-disclosure" aria-hidden="true">&#9656;</span>
+        </button>
+        <p class="panel-provenance-summary" id="panel-provenance-summary">
+          <!-- populated by panel.js from /api/provenance: one line -->
+        </p>
+      </div>
+      <dl class="panel-provenance-details" id="panel-provenance-details" hidden>
+        <!-- populated by panel.js from /api/provenance -->
+      </dl>
+    </div>
+  </aside>
+
   <section class="catalog-panel" aria-label="Catálogo de estudios">
     <h2 class="catalog-title">Catálogo de estudios</h2>
     <p class="catalog-help">
@@ -296,95 +385,6 @@
     </div>
     <p class="catalog-error" id="catalog-error" role="alert" style="display: none;"></p>
   </section>
-
-  <aside
-    class="panel-panel"
-    id="panel-panel"
-    tabindex="-1"
-    aria-label="Panel de composición por año"
-  >
-    <h2 class="panel-title">Composición por año</h2>
-    <p class="panel-help">
-      Porcentaje de la extensión válida por grupo (nivel 1) y clases del año seleccionado (nivel 2). Pulse el gráfico para cambiar de año.
-    </p>
-    <!-- The chart and its legend travel together. The wrapper exists for the
-         two-column panel (>= 1101px, see .panel-chart-block in style.css): the
-         legend is a direct child of it, so it stays directly under the chart
-         when the breakdown beside them is taller. As siblings on the grid, a
-         list spanning two rows redistributed the height and pushed the legend
-         ~984px below the chart. Below 1101px the wrapper is transparent: the
-         panel's flex column keeps the same order and the same 8px gap. -->
-    <div class="panel-chart-block">
-      <div class="panel-chart" id="panel-chart">
-        <!-- populated by panel.js from /api/composition/series -->
-      </div>
-      <ul class="panel-legend" id="panel-legend" aria-label="Leyenda del gráfico apilado">
-        <!-- populated by panel.js -->
-      </ul>
-    </div>
-    <h3 class="panel-breakdown-title" id="panel-breakdown-title">
-      Clases (nivel 2)
-    </h3>
-    <p class="panel-breakdown-empty" id="panel-breakdown-empty" style="display: none;">
-      Cargando&hellip;
-    </p>
-    <ul class="panel-breakdown-list" id="panel-breakdown-list">
-      <!-- populated by panel.js from /api/composition/year/{year} -->
-    </ul>
-    <!-- The breakdown's disclosure control, the same idiom the header's two
-         toggles and the catalogue's two use: a real button carrying
-         aria-expanded + aria-controls, sitting OUTSIDE the list it clamps
-         (body.is-breakdown-collapsed hides the rows past the eighth), so the
-         27-row list folds without rebuilding a row and the control that
-         restores it is never hidden with the content it hides. panel.js owns
-         its label and its hidden state: the label carries the number of
-         classes the fold is holding back, read from the rows on screen, and
-         the control does not exist when the list has eight rows or fewer. It
-         starts hidden, which is the state an empty list has. -->
-    <button
-      id="panel-breakdown-toggle"
-      class="panel-breakdown-toggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="panel-breakdown-list"
-      hidden
-    >
-      <span class="panel-breakdown-toggle-label" id="panel-breakdown-toggle-label">Ver m&aacute;s</span>
-      <span class="panel-breakdown-disclosure" aria-hidden="true">&#9656;</span>
-    </button>
-    <div class="panel-labelling" aria-live="polite">
-      <strong class="panel-extent-label" id="panel-extent-label">&hellip;</strong>
-      <span class="panel-boundary-note" id="panel-boundary-note">&hellip;</span>
-      <!-- The provenance block: what produced the figure on screen. It
-           follows the catalogue's disclosure row -- a real button (tab,
-           Enter or Space) with aria-expanded + aria-controls and a glyph --
-           because the panel's height budget is tight: the summary line is the
-           collapsed state's content and the full digests, the byte sizes, the
-           area method and the recompute command live behind the disclosure.
-           The button sits outside the block it hides, so a collapsed block
-           is always restorable. panel.js owns every string in both, and it
-           re-renders them when the year changes, because the COG identity is
-           per year. -->
-      <div class="panel-provenance-disclosure-row">
-        <button
-          id="panel-provenance-toggle"
-          class="panel-provenance-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="panel-provenance-details"
-        >
-          <span class="panel-provenance-toggle-label" id="panel-provenance-toggle-label">Ver procedencia</span>
-          <span class="panel-provenance-disclosure" aria-hidden="true">&#9656;</span>
-        </button>
-        <p class="panel-provenance-summary" id="panel-provenance-summary">
-          <!-- populated by panel.js from /api/provenance: one line -->
-        </p>
-      </div>
-      <dl class="panel-provenance-details" id="panel-provenance-details" hidden>
-        <!-- populated by panel.js from /api/provenance -->
-      </dl>
-    </div>
-  </aside>
 
   <script src="/static/vendor/maplibre-gl.js"></script>
   <script src="/static/api.js"></script>
