@@ -61,6 +61,14 @@
   // (see ``setClipBusy``); it carries the same role class as the note
   // above it, so it inherits the panel's 12 px muted treatment.
   var breakdownBusy = null;
+  // The breakdown's disclosure control and the label inside it. The control
+  // lives in index.html, outside the list it clamps.
+  var breakdownToggle = null;
+  var breakdownToggleLabel = null;
+  // The breakdown opens clamped on every render, so a year change, a drawn
+  // area or a cleared clip never inherits an expansion the reader opened for
+  // a different list (see ``setBreakdownCollapsed``).
+  var breakdownCollapsed = true;
   var extentLabel = null;
   var extentBoundary = null;
 
@@ -97,6 +105,17 @@
     if (breakdownList && breakdownList.parentNode) {
       breakdownList.parentNode.insertBefore(breakdownBusy, breakdownList);
     }
+    breakdownToggle = document.getElementById("panel-breakdown-toggle");
+    breakdownToggleLabel = document.getElementById(
+      "panel-breakdown-toggle-label"
+    );
+    if (breakdownToggle) {
+      breakdownToggle.addEventListener("click", toggleBreakdown);
+    }
+    // The panel opens clamped, before there is a row to clamp: the body class
+    // the stylesheet reads has to be on from the first paint, and the control
+    // follows the rows (none yet), not the other way around.
+    setBreakdownCollapsed(true);
     extentLabel = document.getElementById("panel-extent-label");
     extentBoundary = document.getElementById("panel-boundary-note");
 
@@ -169,6 +188,9 @@
         if (breakdownList) {
           breakdownList.innerHTML = "";
         }
+        // The list is empty now, so the fold has nothing to hold back and its
+        // control goes with the rows.
+        setBreakdownCollapsed(true);
       });
   }
 
@@ -754,6 +776,95 @@
   // the default "Clases (nivel 2) en YEAR" heading so the clip result can
   // read "Clases en la zona seleccionada (YEAR)".
 
+  // The number of rows the breakdown shows while collapsed. It is the
+  // layout's number and not the data's, and it is paired with the stylesheet's
+  // ``body.is-breakdown-collapsed #panel-breakdown-list > .panel-bar:nth-child(n + 7)``:
+  // the two have to move together.
+  //
+  // Six and not eight: measured in the browser, eight rows left the panel at
+  // 758px against a 700px ceiling, and the rows are sorted by area, so the six
+  // that carry their own share (93.34 % of 2024 between them) are the answer and
+  // the rest is the tail this control exists for.
+  var BREAKDOWN_VISIBLE_ROWS = 6;
+
+  /** How many class rows the breakdown actually rendered.
+   *
+   *  The year's total line and the clip's window summary are not class rows, so
+   *  they are not counted: the control's label says how many CLASSES the fold is
+   *  holding back, and that count has to come from the rows on screen rather
+   *  than from the payload's declared length. The two can disagree -- an empty
+   *  render or a failed year fetch leaves the list shorter than the payload --
+   *  and a control that promises rows the list does not have is worse than no
+   *  control. */
+  function breakdownRowCount() {
+    if (!breakdownList) {
+      return 0;
+    }
+    return breakdownList.querySelectorAll(".panel-bar").length;
+  }
+
+  /**
+   * Put the breakdown's clamped state on the DOM: the body class the stylesheet
+   * reads, the control's ``aria-expanded``, the ▸/▾ glyph the other disclosures
+   * use, and the count in its label.
+   *
+   * Called on every render -- and wherever the list is emptied without one --
+   * with ``true``: the panel must come back short by default, and an expansion
+   * the reader opened for the previous year's or area's list must not survive
+   * into the next one.
+   *
+   * @param {boolean} collapsed
+   * @returns {void}
+   */
+  function setBreakdownCollapsed(collapsed) {
+    breakdownCollapsed = !!collapsed;
+    document.body.classList.toggle(
+      "is-breakdown-collapsed",
+      breakdownCollapsed
+    );
+    if (!breakdownToggle) {
+      return;
+    }
+    var reveals = Math.max(
+      0,
+      breakdownRowCount() - BREAKDOWN_VISIBLE_ROWS
+    );
+    // Eight rows or fewer and there is nothing behind the fold: the control
+    // goes away instead of offering a "ver más" that expands nothing.
+    breakdownToggle.hidden = reveals === 0;
+    breakdownToggle.setAttribute(
+      "aria-expanded",
+      breakdownCollapsed ? "false" : "true"
+    );
+    var arrow = breakdownToggle.querySelector(".panel-breakdown-disclosure");
+    if (arrow) {
+      arrow.textContent = breakdownCollapsed ? "▸" : "▾";
+    }
+    if (breakdownToggleLabel) {
+      // The count is the number of CLASSES behind the fold, read from the rows
+      // on screen by ``breakdownRowCount``, and it carries its own agreement
+      // ("la 1 clase restante"), the way catalog.js's ``count()`` does for its
+      // figures. With nothing behind the fold the label carries no count at
+      // all: a control offering "las 0 clases restantes" promises nothing.
+      var label;
+      if (reveals === 0) {
+        label = "Ver más";
+      } else if (!breakdownCollapsed) {
+        label = "Ver menos";
+      } else if (reveals === 1) {
+        label = "Ver la 1 clase restante";
+      } else {
+        label = "Ver las " + reveals + " clases restantes";
+      }
+      breakdownToggleLabel.textContent = label;
+    }
+  }
+
+  /** The control's own handler: the state is the only thing it flips. */
+  function toggleBreakdown() {
+    setBreakdownCollapsed(!breakdownCollapsed);
+  }
+
   function normaliseBreakdownDoc(doc, opts) {
     /** Coerce either /api/composition/year or /api/clip-stats into the
      *  shape the bar renderer expects: ``{ year, total_area_ha, classes }``.
@@ -820,6 +931,9 @@
         breakdownEmpty.textContent = "Sin clases para " + view.year + ".";
         breakdownEmpty.style.display = "block";
       }
+      // An empty list still re-clamps: the control and its count are read from
+      // the rows, and there are none.
+      setBreakdownCollapsed(true);
       return;
     }
     if (breakdownEmpty) {
@@ -928,6 +1042,13 @@
       windowLi.appendChild(windowText);
       breakdownList.appendChild(windowLi);
     }
+
+    // Every render re-clamps the breakdown. It runs here, after the rows are
+    // in the document, because both the control's visibility and its count are
+    // read from them; and it is the reset the unit asked for: moving the year
+    // or drawing an area gives a new list, which opens short like the first
+    // one did.
+    setBreakdownCollapsed(true);
   }
 
   // -------------------------------------------------------------------------
@@ -1073,6 +1194,10 @@
     if (breakdownEmpty) {
       breakdownEmpty.style.display = "none";
     }
+    // The cleared list is empty until the per-year render lands, so the
+    // control goes away with the rows instead of promising the previous
+    // list's classes.
+    setBreakdownCollapsed(true);
   }
 
   /**
@@ -1098,6 +1223,8 @@
       breakdownEmpty.textContent = message;
       breakdownEmpty.style.display = "block";
     }
+    // The error replaces the rows, so the fold's control goes with them.
+    setBreakdownCollapsed(true);
   }
 
   // -------------------------------------------------------------------------
