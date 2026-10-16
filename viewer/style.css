@@ -343,7 +343,8 @@ body {
 .map-chrome-toggle,
 .catalog-metrics-toggle,
 .catalog-filters-toggle,
-.panel-breakdown-toggle {
+.panel-breakdown-toggle,
+.panel-provenance-toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -360,14 +361,16 @@ body {
 .map-chrome-toggle:hover,
 .catalog-metrics-toggle:hover,
 .catalog-filters-toggle:hover,
-.panel-breakdown-toggle:hover {
+.panel-breakdown-toggle:hover,
+.panel-provenance-toggle:hover {
   background: var(--bg-panel-alt);
 }
 
 .map-chrome-toggle:focus-visible,
 .catalog-metrics-toggle:focus-visible,
 .catalog-filters-toggle:focus-visible,
-.panel-breakdown-toggle:focus-visible {
+.panel-breakdown-toggle:focus-visible,
+.panel-provenance-toggle:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -375,7 +378,8 @@ body {
 .map-chrome-disclosure,
 .catalog-metrics-disclosure,
 .catalog-filters-disclosure,
-.panel-breakdown-disclosure {
+.panel-breakdown-disclosure,
+.panel-provenance-disclosure {
   width: 12px;
   text-align: center;
   color: var(--fg-muted);
@@ -1174,6 +1178,67 @@ body.is-breakdown-collapsed #panel-breakdown-list > .panel-bar:nth-child(n + 7) 
 
 .panel-boundary-note {
   color: var(--fg-muted);
+}
+
+/* ------- Provenance block (the "every figure shows what produced it" unit) -------
+ *
+ * The block lives inside .panel-labelling, so it inherits the panel's 12px role
+ * and its border and spacing; nothing here declares a size, a weight or a
+ * colour, and the toggle above joins the shared disclosure family instead of
+ * bringing a second one. The collapsed state is the summary line alone -- the
+ * panel's height budget is tight -- and the full identity of the artefact and
+ * of the year on screen lives behind the disclosure. */
+.panel-provenance-disclosure-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+}
+
+/* The collapsed state's one line. It is never hidden: the block's summary is
+ * the state the reader gets without asking, and it carries the year on screen,
+ * so it is re-rendered rather than cleared. */
+.panel-provenance-summary {
+  margin: 0;
+}
+
+/* The details: one label/value pair per row. The label column is as wide as
+ * its longest label and the value column takes the rest; ``minmax(0, 1fr)``
+ * lets that rest shrink, which is what keeps a 64-character digest from
+ * widening the panel. */
+.panel-provenance-details {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 2px 10px;
+}
+
+/* ``display: grid`` above would otherwise beat the UA stylesheet's
+ * ``[hidden] { display: none }``, so the collapsed state panel.js sets is
+ * restated here (as .panel-breakdown-toggle[hidden] does for the button). */
+.panel-provenance-details[hidden] {
+  display: none;
+}
+
+.panel-provenance-details dt,
+.panel-provenance-details dd {
+  margin: 0;
+}
+
+/* A digest, a raster file name and the method's sentence all have to stay
+ * inside the panel: the value cell breaks anywhere rather than overflowing.
+ * The digest is selected the way text is elsewhere in the viewer -- it is
+ * copyable because it is real text, and it is shown whole here. */
+.panel-provenance-value {
+  overflow-wrap: anywhere;
+}
+
+/* Digests and the recompute command are the two values a reader copies, and
+ * they are the two whose characters matter one by one, so they are the two
+ * that are monospaced. Shortened only in the summary line above. */
+.panel-provenance-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
 }
 
 /* The composition panel's two-column shape, from 1101px up: the chart and its
