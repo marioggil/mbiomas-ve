@@ -1,0 +1,61 @@
+{
+ "consulta_utc": "2026-10-16T20:44:03+00:00",
+ "caja": [
+  -61.746314,
+  6.60103,
+  -60.246314,
+  8.00103
+ ],
+ "ventana_ha": 2576409.605510785,
+ "schema_del_clip": "viewer-clip-stats.v1",
+ "artefacto_composicion": {
+  "schema_version": 2,
+  "generated_utc": "2026-09-24T18:40:54+00:00",
+  "area_method": "Row-wise geodesic area on the WGS84 sphere using the authalic radius R = 6371007.181 m. Fo",
+  "authalic_radius_m": 6371007.181
+ },
+ "recomputar": "./run.sh pipeline",
+ "cogs_por_anio": {
+  "1985": {
+   "output_sha256": "cd3ab8462b5c90db1931ec6460af3b14fad1c6055d2caace2e3f10c8ee1d850c",
+   "output_bytes": 112452044
+  },
+  "1999": {
+   "output_sha256": "91a92785481646a187872b81d97164900377890bb9c08916cfaca10da07f3eb9",
+   "output_bytes": 109243140
+  },
+  "2001": {
+   "output_sha256": "8d86d3be4f82b534c6edc2a1f966f82a9a04fa4abc68c2ae8368c16508aa98ef",
+   "output_bytes": 109122698
+  },
+  "2003": {
+   "output_sha256": "b6a6e57632ba7286343b9eff29c41c982163ba122c0af0e49ee187b12dcb2344",
+   "output_bytes": 109302065
+  },
+  "2005": {
+   "output_sha256": "f5cca611d4e3230df21d429768fd2cd858da90c2200940642841e7ea9fd48322",
+   "output_bytes": 109622944
+  },
+  "2007": {
+   "output_sha256": "83c496e3c4728e65628f9a49db7ac7a350bac146f876cc7b703b654a7c56fc4b",
+   "output_bytes": 109604144
+  },
+  "2011": {
+   "output_sha256": "914956f392c496e8b9591844c09020543f9e59279808ceec5d23a44387be0474",
+   "output_bytes": 109888900
+  },
+  "2013": {
+   "output_sha256": "03df97a5180686cc116930e429e20caa8f80fb72ef194904c509ba5aa2a5939a",
+   "output_bytes": 110536275
+  },
+  "2019": {
+   "output_sha256": "20069357e6cb4ce84367e3ea8c4ebec0e17da491cac56d330e7af0ab00da8825",
+   "output_bytes": 111317249
+  },
+  "2024": {
+   "output_sha256": "cdcf2483479bfe01d6e760501b2db7312d56c1b47cf26952a32b677d3a6cdfc2",
+   "output_bytes": 114434796
+  }
+ },
+ "manifiesto_cog_generado": "2026-09-22T17:32:44+00:00"
+}

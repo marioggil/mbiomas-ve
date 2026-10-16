@@ -1,0 +1,223 @@
+{
+ "caja": [
+  -61.746314,
+  6.60103,
+  -60.246314,
+  8.00103
+ ],
+ "charlas": 30,
+ "por_edicion": {
+  "1999": {
+   "charlas": 2,
+   "con_especies": 0,
+   "especies_distintas": 0,
+   "top_especies": [],
+   "pares_ror": 3,
+   "instituciones": 3,
+   "pares_dudosos": 0,
+   "revision_ia": 1,
+   "lugares": []
+  },
+  "2001": {
+   "charlas": 3,
+   "con_especies": 1,
+   "especies_distintas": 14,
+   "top_especies": [
+    "licania densiflora",
+    "croton xanthochloros",
+    "guazuma ulmifolia",
+    "jacaranda obtusifolia",
+    "spondias mombin"
+   ],
+   "pares_ror": 3,
+   "instituciones": 2,
+   "pares_dudosos": 0,
+   "revision_ia": 0,
+   "lugares": []
+  },
+  "2003": {
+   "charlas": 6,
+   "con_especies": 0,
+   "especies_distintas": 0,
+   "top_especies": [],
+   "pares_ror": 10,
+   "instituciones": 3,
+   "pares_dudosos": 4,
+   "revision_ia": 5,
+   "lugares": []
+  },
+  "2005": {
+   "charlas": 9,
+   "con_especies": 6,
+   "especies_distintas": 13,
+   "top_especies": [
+    "bactris hirta",
+    "pithecia pithecia",
+    "alouatta seniculus",
+    "cebus olivaceus",
+    "phaetornis rupurumii"
+   ],
+   "pares_ror": 9,
+   "instituciones": 2,
+   "pares_dudosos": 0,
+   "revision_ia": 9,
+   "lugares": []
+  },
+  "2007": {
+   "charlas": 2,
+   "con_especies": 0,
+   "especies_distintas": 0,
+   "top_especies": [],
+   "pares_ror": 2,
+   "instituciones": 2,
+   "pares_dudosos": 0,
+   "revision_ia": 2,
+   "lugares": []
+  },
+  "2011": {
+   "charlas": 1,
+   "con_especies": 1,
+   "especies_distintas": 3,
+   "top_especies": [
+    "especies típicas de las comunidades primarias",
+    "pioneras sin valor de mercado",
+    "especies primarias de alto valor comercial"
+   ],
+   "pares_ror": 1,
+   "instituciones": 1,
+   "pares_dudosos": 0,
+   "revision_ia": 0,
+   "lugares": []
+  },
+  "2013": {
+   "charlas": 2,
+   "con_especies": 2,
+   "especies_distintas": 7,
+   "top_especies": [
+    "águila harpía (harpya harpyja)",
+    "especies nativas de gran envergadura",
+    "bombacaceae",
+    "chrysobalanaceae",
+    "mora excelsa"
+   ],
+   "pares_ror": 2,
+   "instituciones": 2,
+   "pares_dudosos": 0,
+   "revision_ia": 2,
+   "lugares": []
+  },
+  "2019": {
+   "charlas": 5,
+   "con_especies": 4,
+   "especies_distintas": 5,
+   "top_especies": [
+    "bacterias",
+    "águilas harpías",
+    "parkia nitida",
+    "hymenaea courbaril",
+    "hongos micorrizícos arbusculares (hma)"
+   ],
+   "pares_ror": 9,
+   "instituciones": 4,
+   "pares_dudosos": 1,
+   "revision_ia": 5,
+   "lugares": []
+  }
+ },
+ "especies_todas": {
+  "licania densiflora": 1,
+  "croton xanthochloros": 1,
+  "guazuma ulmifolia": 1,
+  "jacaranda obtusifolia": 1,
+  "spondias mombin": 1,
+  "pentaclethra macroloba": 1,
+  "ficus sp.": 1,
+  "clansia racemosa": 1,
+  "manilkara bidentata": 1,
+  "piranhea longepedunculata": 1,
+  "aspidosperma excelsum": 1,
+  "aspidosperma marcgravianum": 1,
+  "protium sagotianum": 1,
+  "eclinusa guianensis": 1,
+  "bactris hirta": 1,
+  "pithecia pithecia": 1,
+  "alouatta seniculus": 1,
+  "cebus olivaceus": 1,
+  "phaetornis rupurumii": 1,
+  "ramphastos vitellinus": 1,
+  "aratinga pertinax": 1,
+  "psaracolius decumanus": 1,
+  "pionites melanocephala": 1,
+  "penelope jacquacu": 1,
+  "cracidae": 1,
+  "croton megalodendron": 1,
+  "árboles": 1,
+  "especies típicas de las comunidades primarias": 1,
+  "pioneras sin valor de mercado": 1,
+  "especies primarias de alto valor comercial": 1,
+  "águila harpía (harpya harpyja)": 1,
+  "especies nativas de gran envergadura": 1,
+  "bombacaceae": 1,
+  "chrysobalanaceae": 1,
+  "mora excelsa": 1,
+  "catostemma commune": 1,
+  "alexa imperatricis": 1,
+  "bacterias": 1,
+  "águilas harpías": 1,
+  "parkia nitida": 1,
+  "hymenaea courbaril": 1,
+  "hongos micorrizícos arbusculares (hma)": 1
+ },
+ "instituciones": [
+  {
+   "nombre": "Universidad Nacional Experimental de Guayana",
+   "pares": 11,
+   "estado": "ok"
+  },
+  {
+   "nombre": "Instituto de Zoología y Ecología Tropical, Universidad Central de Venezuela",
+   "pares": 8,
+   "estado": "ok"
+  },
+  {
+   "nombre": "Universidad Central de Venezuela",
+   "pares": 6,
+   "estado": "ok"
+  },
+  {
+   "nombre": "Universidad de Los Andes",
+   "pares": 5,
+   "estado": "ok"
+  },
+  {
+   "nombre": "Centro de Estudios Integrales del Ambiente, Universidad Central de Venezuela",
+   "pares": 4,
+   "estado": "dudoso"
+  },
+  {
+   "nombre": "Universidad de Oriente",
+   "pares": 1,
+   "estado": "ok"
+  },
+  {
+   "nombre": "Universidad Simón Bolívar",
+   "pares": 1,
+   "estado": "ok"
+  },
+  {
+   "nombre": "Instituto Venezolano de Investigaciones Científicas",
+   "pares": 1,
+   "estado": "ok"
+  },
+  {
+   "nombre": "Instituto de Ciencias Ambientales y Ecológicas, Universidad de Los Andes",
+   "pares": 1,
+   "estado": "ok"
+  },
+  {
+   "nombre": "Asociación Civil Fundación Esfera",
+   "pares": 1,
+   "estado": "dudoso"
+  }
+ ]
+}

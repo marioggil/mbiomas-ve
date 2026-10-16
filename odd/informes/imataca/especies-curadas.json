@@ -1,0 +1,273 @@
+{
+ "caja": [
+  -61.746314,
+  6.60103,
+  -60.246314,
+  8.00103
+ ],
+ "nota": "Curación acotada al informe: clasifica las 42 entradas que el parseo extrajo en esta caja. Conserva la forma cruda y el taxón normalizado. No es una tabla curada del corpus.",
+ "entradas": {
+  "alexa imperatricis": {
+   "clase": "especie",
+   "taxon": "Alexa imperatricis",
+   "nota": ""
+  },
+  "alouatta seniculus": {
+   "clase": "especie",
+   "taxon": "Alouatta seniculus",
+   "nota": ""
+  },
+  "aratinga pertinax": {
+   "clase": "especie",
+   "taxon": "Aratinga pertinax",
+   "nota": ""
+  },
+  "aspidosperma excelsum": {
+   "clase": "especie",
+   "taxon": "Aspidosperma excelsum",
+   "nota": ""
+  },
+  "aspidosperma marcgravianum": {
+   "clase": "especie",
+   "taxon": "Aspidosperma marcgravianum",
+   "nota": ""
+  },
+  "bacterias": {
+   "clase": "no es un nombre",
+   "taxon": "",
+   "nota": "un reino"
+  },
+  "bactris hirta": {
+   "clase": "especie",
+   "taxon": "Bactris hirta",
+   "nota": ""
+  },
+  "bombacaceae": {
+   "clase": "familia",
+   "taxon": "Bombacaceae",
+   "nota": "familia botánica"
+  },
+  "catostemma commune": {
+   "clase": "especie",
+   "taxon": "Catostemma commune",
+   "nota": ""
+  },
+  "cebus olivaceus": {
+   "clase": "especie",
+   "taxon": "Cebus olivaceus",
+   "nota": ""
+  },
+  "chrysobalanaceae": {
+   "clase": "familia",
+   "taxon": "Chrysobalanaceae",
+   "nota": "familia botánica"
+  },
+  "clansia racemosa": {
+   "clase": "especie",
+   "taxon": "Clusia racemosa",
+   "nota": "probable errata del género en el resumen (clansia -> Clusia): se conserva la forma cruda y se marca"
+  },
+  "cracidae": {
+   "clase": "familia",
+   "taxon": "Cracidae",
+   "nota": "familia de aves"
+  },
+  "croton megalodendron": {
+   "clase": "especie",
+   "taxon": "Croton megalodendron",
+   "nota": ""
+  },
+  "croton xanthochloros": {
+   "clase": "especie",
+   "taxon": "Croton xanthochloros",
+   "nota": ""
+  },
+  "eclinusa guianensis": {
+   "clase": "especie",
+   "taxon": "Eclinusa guianensis",
+   "nota": ""
+  },
+  "especies nativas de gran envergadura": {
+   "clase": "no es un nombre",
+   "taxon": "",
+   "nota": "descripción"
+  },
+  "especies primarias de alto valor comercial": {
+   "clase": "no es un nombre",
+   "taxon": "",
+   "nota": "descripción"
+  },
+  "especies típicas de las comunidades primarias": {
+   "clase": "no es un nombre",
+   "taxon": "",
+   "nota": "descripción"
+  },
+  "ficus sp.": {
+   "clase": "género",
+   "taxon": "Ficus sp.",
+   "nota": "determinación a nivel de género, uso botánico estándar: no es una especie"
+  },
+  "guazuma ulmifolia": {
+   "clase": "especie",
+   "taxon": "Guazuma ulmifolia",
+   "nota": ""
+  },
+  "hongos micorrizícos arbusculares (hma)": {
+   "clase": "no es un nombre",
+   "taxon": "",
+   "nota": "grupo funcional"
+  },
+  "hymenaea courbaril": {
+   "clase": "especie",
+   "taxon": "Hymenaea courbaril",
+   "nota": ""
+  },
+  "jacaranda obtusifolia": {
+   "clase": "especie",
+   "taxon": "Jacaranda obtusifolia",
+   "nota": ""
+  },
+  "licania densiflora": {
+   "clase": "especie",
+   "taxon": "Licania densiflora",
+   "nota": ""
+  },
+  "manilkara bidentata": {
+   "clase": "especie",
+   "taxon": "Manilkara bidentata",
+   "nota": ""
+  },
+  "mora excelsa": {
+   "clase": "especie",
+   "taxon": "Mora excelsa",
+   "nota": ""
+  },
+  "parkia nitida": {
+   "clase": "especie",
+   "taxon": "Parkia nitida",
+   "nota": ""
+  },
+  "penelope jacquacu": {
+   "clase": "especie",
+   "taxon": "Penelope jacquacu",
+   "nota": ""
+  },
+  "pentaclethra macroloba": {
+   "clase": "especie",
+   "taxon": "Pentaclethra macroloba",
+   "nota": ""
+  },
+  "phaetornis rupurumii": {
+   "clase": "especie",
+   "taxon": "Phaetornis rupurumii",
+   "nota": ""
+  },
+  "pioneras sin valor de mercado": {
+   "clase": "no es un nombre",
+   "taxon": "",
+   "nota": "descripción"
+  },
+  "pionites melanocephala": {
+   "clase": "especie",
+   "taxon": "Pionites melanocephala",
+   "nota": ""
+  },
+  "piranhea longepedunculata": {
+   "clase": "especie",
+   "taxon": "Piranhea longepedunculata",
+   "nota": ""
+  },
+  "pithecia pithecia": {
+   "clase": "especie",
+   "taxon": "Pithecia pithecia",
+   "nota": ""
+  },
+  "protium sagotianum": {
+   "clase": "especie",
+   "taxon": "Protium sagotianum",
+   "nota": ""
+  },
+  "psaracolius decumanus": {
+   "clase": "especie",
+   "taxon": "Psarocolius decumanus",
+   "nota": "errata del resumen (psaracolius -> Psarocolius)"
+  },
+  "ramphastos vitellinus": {
+   "clase": "especie",
+   "taxon": "Ramphastos vitellinus",
+   "nota": ""
+  },
+  "spondias mombin": {
+   "clase": "especie",
+   "taxon": "Spondias mombin",
+   "nota": ""
+  },
+  "águila harpía (harpya harpyja)": {
+   "clase": "especie",
+   "taxon": "Harpia harpyja",
+   "nota": "nombre común con su binomial"
+  },
+  "águilas harpías": {
+   "clase": "especie",
+   "taxon": "Harpia harpyja",
+   "nota": "misma especie que la anterior, en otra edición y en plural: una sola especie en el conteo"
+  },
+  "árboles": {
+   "clase": "no es un nombre",
+   "taxon": "",
+   "nota": "forma de vida"
+  }
+ },
+ "resumen": {
+  "especie": 31,
+  "género": 1,
+  "familia": 3,
+  "no es un nombre": 7
+ },
+ "especies_distintas": 30,
+ "por_edicion": {
+  "1999": [],
+  "2001": [
+   "Aspidosperma excelsum",
+   "Aspidosperma marcgravianum",
+   "Clusia racemosa",
+   "Croton xanthochloros",
+   "Eclinusa guianensis",
+   "Guazuma ulmifolia",
+   "Jacaranda obtusifolia",
+   "Licania densiflora",
+   "Manilkara bidentata",
+   "Pentaclethra macroloba",
+   "Piranhea longepedunculata",
+   "Protium sagotianum",
+   "Spondias mombin"
+  ],
+  "2003": [],
+  "2005": [
+   "Alouatta seniculus",
+   "Aratinga pertinax",
+   "Bactris hirta",
+   "Cebus olivaceus",
+   "Croton megalodendron",
+   "Penelope jacquacu",
+   "Phaetornis rupurumii",
+   "Pionites melanocephala",
+   "Pithecia pithecia",
+   "Psarocolius decumanus",
+   "Ramphastos vitellinus"
+  ],
+  "2007": [],
+  "2011": [],
+  "2013": [
+   "Alexa imperatricis",
+   "Catostemma commune",
+   "Harpia harpyja",
+   "Mora excelsa"
+  ],
+  "2019": [
+   "Harpia harpyja",
+   "Hymenaea courbaril",
+   "Parkia nitida"
+  ]
+ }
+}
