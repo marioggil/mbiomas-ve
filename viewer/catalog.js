@@ -89,6 +89,15 @@
  * ``window.MapBiomasAPI``, the single data-access module of the frontend, and
  * every aggregation comes from ``window.StudyMetrics``, which is pure and
  * DOM-free.
+ *
+ * THE CATALOGUE'S FIGURES SHOW WHAT PRODUCED THEM. The panel's footer publishes
+ * the identity of the studies artefact and the identity that artefact RECORDS
+ * for its Parquet source, plus the two hand-curated tables the congress metrics
+ * are built from, all read from ``/api/provenance``. Nothing is typed here and
+ * nothing is derived except the shortening of a digest for the summary line.
+ * It is deliberately NOT wired to the year: the studies artefact is one corpus,
+ * not a per-year artefact, so moving the slider leaves the footer
+ * byte-identical.
  */
 
 (function () {
@@ -176,6 +185,19 @@
    * the list below shows the choice in the same click.
    */
   var filtersCollapsed = true;
+  /**
+   * @type {boolean} whether the provenance footer's details are shown. It
+   * starts COLLAPSED: the summary line is what the reader gets without asking
+   * and the full digests are one Tab and one Enter away. The flag is flipped
+   * only by the toggle itself -- nothing renders the block again, because the
+   * studies artefact is not per year.
+   */
+  var provenanceExpanded = false;
+  /**
+   * @type {object|null} the ``/api/provenance`` document, fetched once. The
+   * studies half of it is one corpus, so it never depends on the year.
+   */
+  var provenance = null;
   /** @type {function(object|null):void} host callback on selection change. */
   var onSelect = function () {};
 
@@ -195,6 +217,10 @@
   var metricsToggleEl = null;
   var filtersToggleEl = null;
   var filtersSummaryEl = null;
+  var provenanceSummaryEl = null;
+  var provenanceToggleEl = null;
+  var provenanceToggleLabelEl = null;
+  var provenanceDetailsEl = null;
   var searchInputEl = null;
   var searchCountEl = null;
   var listEl = null;
@@ -216,6 +242,10 @@
   function init(opts) {
     opts = opts || {};
     resolveDom();
+    // The footer opens collapsed before there is anything to expand: the
+    // summary is the state the reader gets without asking, and the details
+    // are one Tab and one Enter away.
+    syncProvenanceDisclosure();
     if (typeof opts.onSelect === "function") {
       onSelect = opts.onSelect;
     }
@@ -259,6 +289,29 @@
         showFatal(
           "No se pudo cargar el catálogo de estudios: " +
             (err && err.message ? err.message : String(err))
+        );
+      });
+
+    // The provenance footer is its own request, so a failure here cannot keep
+    // the authoritative list from rendering: this is the block that reports
+    // what could not be read, so it must not be the reason the panel stops.
+    // Fetched once, rendered once -- the studies artefact is not per year, and
+    // no year change touches it (unlike the composition panel's block).
+    if (typeof api.fetchProvenance !== "function") {
+      provenanceUnavailable("Procedencia no disponible");
+      return;
+    }
+    api
+      .fetchProvenance()
+      .then(function (doc) {
+        provenance = doc;
+        renderProvenance();
+      })
+      .catch(function (err) {
+        provenanceUnavailable(
+          "Procedencia no disponible (" +
+            (err && err.message ? err.message : String(err)) +
+            ")"
         );
       });
   }
@@ -1752,6 +1805,295 @@
   }
 
   // -------------------------------------------------------------------------
+  // Provenance footer
+  // -------------------------------------------------------------------------
+  // The catalogue panel's footer answers what produced this panel's figures:
+  // the studies artefact, the Parquet identity the artefact RECORDS, and the
+  // two hand-curated tables the congress metrics and the granularity band are
+  // built from. Every string comes from ``/api/provenance``, which read those
+  // files once at import; nothing here is typed and nothing is derived except
+  // the shortening of a digest for the summary line.
+  //
+  // The Parquet itself is NEVER hashed here or there: it is gitignored and may
+  // be absent, so its identity is the digest the artefact recorded for it.
+  //
+  // No ``currentYear`` appears below, on purpose: the corpus is not per year,
+  // so the block cannot move when the slider does.
+
+  // Hex characters kept in the footer's summary digest. 12 hex characters (48
+  // bits) recognise the source without spending the line on it; the full 64
+  // are in the details, where they can be copied.
+  var PROVENANCE_DIGEST_HEAD = 12;
+
+  /** Shorten a digest for the summary line; the details show it whole. */
+  function shortenDigest(hex) {
+    if (typeof hex !== "string" || !hex) {
+      return "—";
+    }
+    return hex.length > PROVENANCE_DIGEST_HEAD
+      ? hex.slice(0, PROVENANCE_DIGEST_HEAD) + "…"
+      : hex;
+  }
+
+  /**
+   * The file name of a source the artefact recorded as a path.
+   *
+   * ``source_parquet`` is recorded as the repository-relative path
+   * ``data/raw/congresos/....parquet``; the summary names the file and the
+   * details carry the recorded string whole. A value the artefact did not
+   * carry stays missing rather than being guessed.
+   *
+   * @returns {string|null}
+   */
+  function recordedSourceName(recorded) {
+    if (typeof recorded !== "string" || !recorded) {
+      return null;
+    }
+    var parts = recorded.split("/");
+    return parts[parts.length - 1] || recorded;
+  }
+
+  /** A value the artefact did not carry is declared missing, never invented. */
+  function provenanceValue(value) {
+    if (value === null || value === undefined || value === "") {
+      return "—";
+    }
+    return String(value);
+  }
+
+  /** Byte counts are read from the artefacts; the grouping is the only licence. */
+  function formatBytes(n) {
+    if (!Number.isFinite(n)) {
+      return "—";
+    }
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " B";
+  }
+
+  /** The date part of a UTC timestamp, for the one-line summary. */
+  function provenanceDay(stamp) {
+    if (typeof stamp !== "string") {
+      return null;
+    }
+    var day = stamp.slice(0, 10);
+    return /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : stamp;
+  }
+
+  /** Say plainly that the footer has nothing to show, and why. */
+  function provenanceUnavailable(message) {
+    if (provenanceSummaryEl) {
+      provenanceSummaryEl.textContent = message;
+    }
+  }
+
+  /**
+   * The summary line: the artefact with its version and build date, the corpus
+   * size, and the shortened digest of the recorded source Parquet with its byte
+   * size. One line is the whole budget, so the full digest, the source's rows
+   * and the curated tables live behind the disclosure.
+   *
+   * @returns {string}
+   */
+  function provenanceSummaryText() {
+    var studies = provenance.studies;
+    if (!studies) {
+      return "Procedencia del catálogo no disponible";
+    }
+    var parts = [];
+    var head = provenanceValue(studies.name);
+    if (
+      studies.schema_version !== null &&
+      studies.schema_version !== undefined
+    ) {
+      head += " v" + studies.schema_version;
+    }
+    parts.push(head);
+    var day = provenanceDay(studies.generated_utc);
+    if (day) {
+      parts.push(day);
+    }
+    parts.push(
+      provenanceValue(studies.study_count) +
+        (studies.study_count === 1 ? " estudio" : " estudios")
+    );
+    // The recorded source: its file name (read from the recorded path, never
+    // typed), the shortened digest the artefact recorded for it, and its size.
+    var source = recordedSourceName(studies.source_parquet);
+    parts.push(
+      (source ? source + " " : "fuente ") +
+        shortenDigest(studies.source_sha256) +
+        " · " +
+        formatBytes(studies.source_bytes)
+    );
+    return parts.join(" · ");
+  }
+
+  /**
+   * Append one label/value pair to the details list.
+   *
+   * The label takes the panel's muted note role the block itself already uses,
+   * the value is plain text, and a digest or a command is monospaced because its
+   * characters matter one by one.
+   *
+   * @param {string} label
+   * @param {string} value
+   * @param {{code?: boolean, prefix?: string}} [opts]
+   */
+  function appendProvenanceRow(label, value, opts) {
+    if (!provenanceDetailsEl) {
+      return;
+    }
+    var name = document.createElement("dt");
+    name.className = "catalog-metrics-scope";
+    name.textContent = label;
+
+    var cell = document.createElement("dd");
+    cell.className = "catalog-provenance-value";
+    if (opts && opts.prefix) {
+      cell.appendChild(document.createTextNode(opts.prefix));
+    }
+    if (opts && opts.code) {
+      var code = document.createElement("code");
+      code.className = "catalog-provenance-code";
+      code.textContent = value;
+      cell.appendChild(code);
+    } else {
+      cell.appendChild(document.createTextNode(value));
+    }
+    provenanceDetailsEl.appendChild(name);
+    provenanceDetailsEl.appendChild(cell);
+  }
+
+  /** The expanded state: the artefact, its recorded source, and the tables. */
+  function renderProvenanceDetails() {
+    if (!provenanceDetailsEl) {
+      return;
+    }
+    provenanceDetailsEl.innerHTML = "";
+
+    var studies = provenance.studies;
+    if (!studies) {
+      appendProvenanceRow(
+        "Catálogo de estudios",
+        "no disponible: el servidor no publicó la procedencia"
+      );
+      return;
+    }
+
+    appendProvenanceRow("Artefacto", provenanceValue(studies.name));
+    appendProvenanceRow("Esquema", provenanceValue(studies.schema_version));
+    appendProvenanceRow(
+      "Generado (UTC)",
+      provenanceValue(studies.generated_utc)
+    );
+    appendProvenanceRow("Estudios", provenanceValue(studies.study_count));
+    appendProvenanceRow("País", provenanceValue(studies.country));
+    appendProvenanceRow(
+      "Instituciones curadas",
+      provenanceValue(studies.curated_institution_count)
+    );
+    appendProvenanceRow(
+      "sha256 del catálogo",
+      provenanceValue(studies.sha256),
+      { code: true }
+    );
+    // The source AS RECORDED IN THE ARTEFACT. The Parquet is never opened or
+    // hashed: it is gitignored and may be absent, and the recorded digest is
+    // the identity the artefact published.
+    appendProvenanceRow(
+      "Parquet fuente",
+      provenanceValue(studies.source_parquet)
+    );
+    appendProvenanceRow(
+      "sha256 del parquet fuente",
+      provenanceValue(studies.source_sha256),
+      { code: true }
+    );
+    appendProvenanceRow(
+      "Bytes del parquet fuente",
+      formatBytes(studies.source_bytes)
+    );
+    appendProvenanceRow(
+      "Filas del parquet fuente",
+      provenanceValue(studies.source_rows)
+    );
+    // The two hand-curated tables, each with its size and the digest the server
+    // computed once at import.
+    (studies.curated || []).forEach(function (table) {
+      appendProvenanceRow(
+        provenanceValue(table.name),
+        provenanceValue(table.sha256),
+        { prefix: formatBytes(table.bytes) + " · sha256 ", code: true }
+      );
+    });
+
+    // The command that rebuilds the dataset, read by the server from the
+    // repository's own entry point.
+    appendProvenanceRow(
+      "Recalcular",
+      provenanceValue(provenance.recompute && provenance.recompute.command),
+      { code: true }
+    );
+
+    // What could not be read is stated, with the server's own reason for it.
+    if (studies.read === false) {
+      appendProvenanceRow(
+        provenanceValue(studies.name) + " no leído",
+        studies.error || provenanceValue(studies.path)
+      );
+    }
+    (studies.curated || []).forEach(function (table) {
+      if (table.read === false) {
+        appendProvenanceRow(
+          provenanceValue(table.name) + " no leído",
+          table.error || provenanceValue(table.path)
+        );
+      }
+    });
+  }
+
+  /** Render the summary line and the details from the document on screen. */
+  function renderProvenance() {
+    if (!provenance) {
+      return;
+    }
+    if (provenanceSummaryEl) {
+      provenanceSummaryEl.textContent = provenanceSummaryText();
+    }
+    renderProvenanceDetails();
+    syncProvenanceDisclosure();
+  }
+
+  /**
+   * Put the expanded state on the DOM: the details' own ``hidden``, the
+   * control's ``aria-expanded`` and the ▸/▾ glyph the viewer's other
+   * disclosures use. Only the toggle calls it with ``true``; nothing re-renders
+   * the block.
+   */
+  function syncProvenanceDisclosure() {
+    if (provenanceDetailsEl) {
+      provenanceDetailsEl.hidden = !provenanceExpanded;
+    }
+    if (!provenanceToggleEl) {
+      return;
+    }
+    provenanceToggleEl.setAttribute(
+      "aria-expanded",
+      provenanceExpanded ? "true" : "false"
+    );
+    var arrow = provenanceToggleEl.querySelector(
+      ".catalog-provenance-disclosure"
+    );
+    if (arrow) {
+      arrow.textContent = provenanceExpanded ? "▾" : "▸";
+    }
+    if (provenanceToggleLabelEl) {
+      provenanceToggleLabelEl.textContent = provenanceExpanded
+        ? "Ocultar procedencia"
+        : "Ver procedencia";
+    }
+  }
+
+  // -------------------------------------------------------------------------
   // Errors
   // -------------------------------------------------------------------------
 
@@ -1822,6 +2164,31 @@
     }
     if (!filtersSummaryEl) {
       filtersSummaryEl = document.getElementById("catalog-filters-summary");
+    }
+    if (!provenanceToggleEl) {
+      provenanceToggleEl = document.getElementById("catalog-provenance-toggle");
+      if (provenanceToggleEl) {
+        // The same plain flip as the two toggles above: the details are already
+        // rendered, so the toggle never rebuilds them (focus stays where the
+        // reader put it) and never rewrites a digest a render published.
+        provenanceToggleEl.addEventListener("click", function () {
+          provenanceExpanded = !provenanceExpanded;
+          syncProvenanceDisclosure();
+        });
+      }
+    }
+    if (!provenanceToggleLabelEl) {
+      provenanceToggleLabelEl = document.getElementById(
+        "catalog-provenance-toggle-label"
+      );
+    }
+    if (!provenanceSummaryEl) {
+      provenanceSummaryEl = document.getElementById("catalog-provenance-summary");
+    }
+    if (!provenanceDetailsEl) {
+      provenanceDetailsEl = document.getElementById(
+        "catalog-provenance-details"
+      );
     }
     if (!metricsToggleEl) {
       metricsToggleEl = document.getElementById("metrics-collapse-toggle");
