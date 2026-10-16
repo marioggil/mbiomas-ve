@@ -310,6 +310,10 @@ does not claim one.
 
 ## Limitations a reader should know
 
+**What this repository still does not do is recorded in [`KNOWN-GAPS.md`](KNOWN-GAPS.md)**: the decisions made against a
+change with the measurement behind them, the rough edges left standing with their cost, and the open work ranked. Read it
+before assuming a behaviour is an oversight.
+
 - **Review coverage is partial, and the gaps are named.** `tools/spatial_units.py` (the geodesic
   area source of truth) and `tools/priority_schema.py` (the weighted-score schema) **are** lens
   reviewed, approved with no blocking findings. `tools/composition_stats.py` is reviewed for its
