@@ -20,11 +20,13 @@ This service is the read-only front door of the platform. It serves:
     year, read from the source COG at native resolution with the same
     counting method and the same row-wise geodesic area as the committed
     composition engine;
-  * ``/api/provenance`` for the panel's provenance block: the identity of
-    the artefact that produced the figure on screen -- the composition
-    summary, the COG entry for the visible year, and the command that
-    rebuilds them -- read once at import, with a source that could not be
-    read reported rather than fatal;
+  * ``/api/provenance`` for the viewer's two provenance blocks: the identity
+    of the artefact that produced the figure on screen -- the composition
+    summary with the COG entry for the visible year on one side, and the
+    studies catalogue with the two curated tables behind its congress
+    metrics on the other -- plus the command that rebuilds them, read once
+    at import, with a source that could not be read reported rather than
+    fatal;
   * ``/api/health`` for one-call diagnosis of which country/collection is
     wired up and which asset paths were resolved;
   * the frontend in ``viewer/`` plus its static assets.
@@ -652,6 +654,20 @@ COMPOSITION_SUMMARY_PATH: Final[Path] = (
 # the block: the figure for 2024 comes from the 2024 entry, not from a batch.
 COG_MANIFEST_PATH: Final[Path] = DERIVED_ROOT / "cog-manifest.json"
 
+# The two hand-curated tables behind the studies catalogue's institution and
+# granularity figures. Like the catalogue they are not collection-scoped: the
+# institution figures depend on the first and the granularity band on the
+# second, so a change in either changes what the metrics say with no data
+# changing. They are named and digested by the block below, never hashed on a
+# request path.
+STUDIES_CURATED_ROOT: Final[Path] = DATA_ROOT / "curated" / "congresos"
+STUDIES_ROR_INSTITUTIONS_PATH: Final[Path] = (
+    STUDIES_CURATED_ROOT / "ror-instituciones.json"
+)
+STUDIES_GRANULARIDAD_PATH: Final[Path] = (
+    STUDIES_CURATED_ROOT / "granularidad-ubicaciones.json"
+)
+
 # The repository's documented entry point. The recompute command on screen is
 # read from it -- from the line of its usage block that begins with the
 # invocation -- rather than typed a second time here, so the string the reader
@@ -757,18 +773,28 @@ def _load_recompute_command() -> str:
     return " ".join(match.group(1).split())
 
 
-def _describe_composition_csv(path: Path) -> dict[str, Any]:
-    """Identify one committed composition CSV: name, byte size and sha256."""
+def _describe_hashed_file(path: Path, label: str) -> dict[str, Any]:
+    """Identify one committed file: its name, byte size and sha256.
+
+    The digest runs once, at import, and never on a request path: hashing a
+    128 KB CSV or a 1 MB artefact per request would be a self-inflicted
+    latency, and the block that quotes the digests is rendered on every page
+    load. ``label`` names the file in the error, so a missing one is reported
+    as what it is rather than as "a file".
+    """
     if not path.is_file():
-        raise ProvenanceError(f"composition CSV not found: {path}")
+        raise ProvenanceError(f"{label} not found: {path}")
     try:
         size = path.stat().st_size
         digest = _sha256_of_file(path)
     except OSError as exc:
-        raise ProvenanceError(
-            f"composition CSV is not readable: {path}: {exc}"
-        ) from exc
+        raise ProvenanceError(f"{label} is not readable: {path}: {exc}") from exc
     return {"name": path.name, "bytes": size, "sha256": digest}
+
+
+def _describe_composition_csv(path: Path) -> dict[str, Any]:
+    """Identify one committed composition CSV: name, byte size and sha256."""
+    return _describe_hashed_file(path, "composition CSV")
 
 
 class _ProvenanceSlot:
@@ -826,6 +852,36 @@ _PROVENANCE_CSVS: Final[tuple[_ProvenanceSlot, ...]] = tuple(
     for path in _PROVENANCE_CSV_PATHS
 )
 
+# The studies catalogue's half of the document. It comes from a different
+# artefact than the composition panel's -- one corpus, not per year -- so its
+# identity is read from three places and no other:
+#
+#   * the artefact itself, already parsed and validated once at import (its
+#     schema version, build date, corpus size, country and the curated
+#     institution map's length);
+#   * the identity the artefact RECORDS for its Parquet source (name, sha256,
+#     bytes, rows). The Parquet is gitignored and may be absent, so it is
+#     never hashed here: the recorded digest is the point of the field, and
+#     hashing a missing input would turn a recorded fact into a missing
+#     provenance line;
+#   * the two curated tables and the artefact itself, digested once here.
+#
+# One slot per file, so a table that cannot be read does not hide the other
+# one's identity.
+_PROVENANCE_STUDIES_ARTEFACT: Final[_ProvenanceSlot] = _load_provenance_slot(
+    lambda: _describe_hashed_file(STUDIES_CATALOG_PATH, "studies catalog")
+)
+_PROVENANCE_STUDIES_CURATED_PATHS: Final[tuple[Path, ...]] = (
+    STUDIES_ROR_INSTITUTIONS_PATH,
+    STUDIES_GRANULARIDAD_PATH,
+)
+_PROVENANCE_STUDIES_CURATED: Final[tuple[_ProvenanceSlot, ...]] = tuple(
+    _load_provenance_slot(
+        lambda p=path: _describe_hashed_file(p, "curated studies table")
+    )
+    for path in _PROVENANCE_STUDIES_CURATED_PATHS
+)
+
 
 def _provenance_source_state(path: Path, slot: _ProvenanceSlot) -> dict[str, Any]:
     """Describe one source: where it is, whether it was read, and why not."""
@@ -844,6 +900,10 @@ def _provenance_payload() -> dict[str, Any]:
     digests included. A source the slots could not read arrives as
     ``read: false`` plus the reason, and the COG half is keyed by year so the
     frontend can pick the visible year's entry without scanning the list.
+
+    The ``studies`` half is built by ``_studies_provenance`` below: it speaks
+    for the other artefact the viewer draws figures from, and it is defined
+    next to that artefact's single parse because it reads it there.
     """
     summary = _PROVENANCE_COMPOSITION.value
     cog_manifest = _PROVENANCE_COGS.value
@@ -903,6 +963,7 @@ def _provenance_payload() -> dict[str, Any]:
         "collection": COLLECTION,
         "composition": composition,
         "cogs": cogs,
+        "studies": _studies_provenance(),
         "recompute": {
             "command": _PROVENANCE_COMMAND.value,
             "entrypoint": ENTRYPOINT_PATH.name,
@@ -1593,6 +1654,57 @@ except StudiesCatalogError as exc:
 _STUDIES_BY_ID: dict[str, dict[str, Any]] = {
     study["study_id"]: study for study in _STUDIES_CATALOG_DATA["studies"]
 }
+
+
+def _studies_provenance() -> dict[str, Any] | None:
+    """Build the ``studies`` half of the ``/api/provenance`` document.
+
+    The identity fields come from the artefact that was parsed exactly once at
+    import -- this function never re-reads it -- plus the digests the
+    provenance section above cached at import. The Parquet source is described
+    ONLY by the identity the artefact records for it (``source_parquet``,
+    ``source_sha256``, ``source_bytes``, ``source_rows``): the file is
+    gitignored, it may be absent in a deployment, and hashing it here would
+    turn a recorded fact into a missing provenance line (the unit record's
+    section 2 and its first risk).
+
+    A table that could not be read keeps its slot's ``read: false`` and the
+    reason, so the block reports it instead of quoting an invented digest.
+    """
+    if not isinstance(_STUDIES_CATALOG_DATA, dict):
+        return None
+    artefact = _PROVENANCE_STUDIES_ARTEFACT.value
+    if not isinstance(artefact, dict):
+        artefact = {}
+    institutions = _STUDIES_CATALOG_DATA.get("ror_instituciones")
+    curated: list[dict[str, Any]] = []
+    for path, slot in zip(
+        _PROVENANCE_STUDIES_CURATED_PATHS, _PROVENANCE_STUDIES_CURATED
+    ):
+        value = slot.value if isinstance(slot.value, dict) else {}
+        row = _provenance_source_state(path, slot)
+        row["bytes"] = value.get("bytes")
+        row["sha256"] = value.get("sha256")
+        curated.append(row)
+    return {
+        "name": STUDIES_CATALOG_PATH.name,
+        "schema_version": _STUDIES_CATALOG_DATA.get("schema_version"),
+        "generated_utc": _STUDIES_CATALOG_DATA.get("generated_utc"),
+        "study_count": _STUDIES_CATALOG_DATA.get("study_count"),
+        "country": _STUDIES_CATALOG_DATA.get("country"),
+        "curated_institution_count": (
+            len(institutions) if isinstance(institutions, dict) else None
+        ),
+        "source_parquet": _STUDIES_CATALOG_DATA.get("source_parquet"),
+        "source_sha256": _STUDIES_CATALOG_DATA.get("source_sha256"),
+        "source_bytes": _STUDIES_CATALOG_DATA.get("source_bytes"),
+        "source_rows": _STUDIES_CATALOG_DATA.get("source_rows"),
+        "sha256": artefact.get("sha256"),
+        "bytes": artefact.get("bytes"),
+        "read": _PROVENANCE_STUDIES_ARTEFACT.read,
+        "error": _PROVENANCE_STUDIES_ARTEFACT.error,
+        "curated": curated,
+    }
 
 
 # ---------------------------------------------------------------------------
