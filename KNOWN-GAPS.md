@@ -17,7 +17,7 @@ each change are in `odd/tasks/`.
 validators and the builders; **nothing covers the page**. Every UI change in this repository was verified by measuring it
 in a browser at the time, and that evidence lives in the unit records — it is not reproducible by a CI run. So "stable"
 here means *measured at a point in time*, not *guarded against regressions*. The clearest consequence: `viewer/*.js` is
-about 3,600 lines with no test harness, and three defects found on this page were found by looking at it (the figure that
+about 7,000 lines with no test harness, and three defects found on this page were found by looking at it (the figure that
 survived a cleared area, the 33px legend panel, the empty breakdown after clearing).
 
 If someone wants to spend effort here, this is where it compounds: a DOM stub already exists in the unit records' method
