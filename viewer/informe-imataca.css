@@ -218,6 +218,18 @@ pre {
   background: var(--bg-panel-alt);
 }
 
+/* La lista ordenada de los planes de futuro: el informe dice "en orden", así
+ * que el marcador numérico es parte del sentido y se conserva; solo se ajusta
+ * el espaciado de la prosa. */
+.lista-planes {
+  margin: 0 0 12px;
+  padding-left: 22px;
+}
+
+.lista-planes li {
+  margin-bottom: 10px;
+}
+
 /* El bloque de las cuatro coordenadas: es una definición, no prosa, así que se
  * lee en monoespaciada y sin justificar. */
 .caja-coordenadas {
