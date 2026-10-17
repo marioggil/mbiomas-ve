@@ -37,7 +37,7 @@ La caja es, sobre todo, bosque. En 1985 el **89,91 %** de su superficie estaba e
 | **3.1 Uso pecuario / Tierras en descanso** | 1,70 % | **2,79 %** | **+1,10 puntos (+28.275 ha)** |
 | **4.3 Uso Minero** | 0,04 % | **0,42 %** | **×10 (+9.932 ha)** |
 | 2.2 Sabana / Herbazal | 3,60 % | 3,78 % | +0,19 puntos (+4.822 ha) |
-| 1.4 Bosque inundable | 4,27 % | 4,25 % | estable |
+| 1.4 Bosque inundable | 4,27 % | 4,25 % | estable (−487 ha) |
 | 5.1 Río, lago u océano | 0,36 % | 0,43 % | +0,07 puntos (+1.742 ha) |
 
 El dato más interesante es **la forma de la curva minera**. La clase que el propio codebook llama *Uso Minero* pasó de un 0,04 % en 1985 a un 0,42 % en 2024, y no creció parejo: se mantiene casi plana hasta 2005 (0,08 %), empieza a subir en 2011 (0,12 %) y 2013 (0,16 %), y **se acelera en la última década: 0,28 % en 2019 y 0,42 % en 2024**. Es un cambio medido en la clasificación oficial, dentro de una caja declarada, en la zona del arco minero de Imataca.

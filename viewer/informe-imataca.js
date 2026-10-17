@@ -104,11 +104,6 @@
     return decimales(valor, cuantos) + " %";
   }
 
-  function porcentajeConSigno(valor, cuantos) {
-    var texto = decimales(valor, cuantos);
-    return (valor > 0 ? "+" : "") + texto + " puntos";
-  }
-
   function hectareas(valor) {
     var numero = Number(valor);
     var redondeado = Math.round(Math.abs(numero)) * (numero < 0 ? -1 : 1);
@@ -466,14 +461,15 @@
         return clase.en_informe;
       })
       .map(function (clase) {
+        // The change is the artifact's own label, not a delta computed here:
+        // the builder derives it ("×10" for the mining class, "estable" for
+        // the floodable forest, the signed points otherwise) so the page and
+        // informe.md cannot drift on this cell.
         return [
           celda(clase.codigo + " " + clase.nombre_es),
           celda(porcentaje(clase.share_1985, 2), "numero"),
           celda(porcentaje(clase.share_2024, 2), "numero"),
-          celda(
-            porcentajeConSigno(clase.delta_puntos, 2) + " (" + hectareas(clase.delta_ha) + ")",
-            "numero"
-          ),
+          celda(clase.cambio_etiqueta + " (" + hectareas(clase.delta_ha) + ")", "numero"),
         ];
       });
     contenedor.appendChild(
@@ -538,7 +534,7 @@
             ": " +
             porcentaje(clase.share_2024, 2) +
             " · " +
-            porcentajeConSigno(clase.delta_puntos, 2) +
+            clase.cambio_etiqueta +
             " (" +
             hectareas(clase.delta_ha) +
             ")"
@@ -567,7 +563,14 @@
         "radio authálico " +
         agrupar(Math.round(datos.caja.radio_autalico_m)) +
         " m. Las series no se leen como una causa de las charlas: el informe lo " +
-        "declara en su sección 5."
+        "declara en su sección 7. El cambio de cada clase, en el orden de la " +
+        "tabla, es el que lee cada panel y la columna “Cambio”: " +
+        clases
+          .map(function (clase) {
+            return clase.codigo + " " + clase.cambio_etiqueta;
+          })
+          .join("; ") +
+        "."
     );
   }
 
@@ -1068,7 +1071,7 @@
         String(ediciones[ediciones.length - 1].anio) +
         "). Las barras no se leen contra la serie de cobertura: son dos " +
         "registros distintos, y el informe rechaza por nombre el gráfico que " +
-        "los mezcla (sección 5)."
+        "los mezcla (sección 7)."
     );
 
     pintarFiguraBarras(
@@ -1177,7 +1180,11 @@
         celda("Recomputación"),
         celda(procedencia.recomputar),
         celda("", "numero"),
-        celda("reconstruye los artefactos desde los insumos versionados", "nota"),
+        celda(
+          "el pipeline (./run.sh pipeline) reconstruye los artefactos de datos; " +
+            "este constructor escribe el artefacto de esta página",
+          "nota"
+        ),
       ],
       [
         celda("Radio authálico"),

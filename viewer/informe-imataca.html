@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Imataca: cuarenta años de cobertura y treinta charlas — MapBiomas Venezuela</title>
+  <title>Imataca: cuarenta años de cobertura y una ventana sobre treinta charlas — MapBiomas Venezuela</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
   <!-- The vendored MapLibre build, the same file the viewer loads. No CDN:
        this page must work on an installation with no network. -->
@@ -18,27 +18,32 @@
 
   <header class="informe-header">
     <p class="informe-serie">MapBiomas Venezuela · Colección 3 · Informe de caso</p>
+    <!-- The title and the subtitle are the report's own words and live here, in
+         the document, not in the artifact. They are the ones `informe.md`
+         carries, verbatim. -->
     <h1 class="informe-titulo">
-      Imataca: cuarenta años de cobertura y treinta charlas
+      Imataca: cuarenta años de cobertura y una ventana sobre treinta charlas
     </h1>
+    <p class="informe-subtitulo">
+      Un estudio de caso sobre cómo se observó una zona del escudo guayanés en
+      las charlas de los congresos de ecología, y qué le pasó al terreno
+      mientras tanto.
+    </p>
     <!-- Filled from /api/informe/imataca: the citation line carries the
          consultation date the artifact records and the viewer's public
-         address. The title and the subtitle above are the report's own words
-         and live here, in the document, not in the artifact. -->
-    <p class="informe-subtitulo">
-      Un estudio de caso sobre cómo fue observada una zona del escudo guayanés,
-      y qué le pasó al terreno mientras tanto.
-    </p>
+         address. -->
     <p class="informe-cita-corta" id="informe-cita-corta"></p>
     <nav class="informe-nav" aria-label="Secciones del informe">
       <ol class="informe-nav-lista">
         <li><a href="#seccion-1">1. Qué se estudió y por qué</a></li>
-        <li><a href="#seccion-2">2. Cómo leer las cifras</a></li>
+        <li><a href="#seccion-2">2. Cómo leer las cifras antes de leerlas</a></li>
         <li><a href="#seccion-3">3. Lo que le pasó al terreno</a></li>
         <li><a href="#seccion-4">4. Lo que registraron los congresos</a></li>
-        <li><a href="#seccion-5">5. Lo que este informe no dice</a></li>
-        <li><a href="#seccion-6">6. De dónde salen estos números</a></li>
-        <li><a href="#seccion-7">7. Licencia y cita</a></li>
+        <li><a href="#seccion-5">5. Dónde se escribió lo que se escribió: las instituciones</a></li>
+        <li><a href="#seccion-6">6. Qué se mencionó: las especies</a></li>
+        <li><a href="#seccion-7">7. Lo que este informe no dice</a></li>
+        <li><a href="#seccion-8">8. De dónde salen estos números</a></li>
+        <li><a href="#seccion-9">9. Licencia y cita</a></li>
       </ol>
     </nav>
     <!-- Populated by informe-imataca.js when the artifact cannot be read. The
@@ -52,28 +57,34 @@
       <h2 class="seccion-titulo" id="titulo-1">1. Qué se estudió y por qué</h2>
       <p>
         Este informe mira un rectángulo de <strong>165 × 156 km</strong> en el
-        noreste de Bolívar, definido por cuatro coordenadas:
+        noreste de Bolívar, en la Reserva Forestal de Imataca, definido por
+        cuatro coordenadas:
       </p>
       <!-- The four coordinates are the study's definition, so they are a figure:
            informe-imataca.js reads them from the artifact's `caja` and writes
            them here and on the map's own corner labels. -->
       <pre class="caja-coordenadas" id="caja-coordenadas"></pre>
       <p>
-        Esa caja tiene 2.576.410 hectáreas (25.764 km²) y contiene
-        <strong>el punto más compartido de todo el catálogo de congresos</strong>:
-        28 de las 30 charlas que caen adentro comparten una sola coordenada, el
-        centroide de la <strong>Reserva Forestal de Imataca</strong>. No es un
-        error: en la taxonomía curada con la que se revisó el catálogo, la
-        reserva es un <em>lugar nombrado</em>, y el geocodificador devuelve el
-        mismo punto para todas. Por eso el estudio es posible: hay treinta
-        charlas hablando de un mismo lugar, repartidas en ocho ediciones del
-        Congreso Venezolano de Ecología entre 1999 y 2019, y hay cuarenta años de
-        mapas anuales de cobertura debajo.
+        Esa caja tiene 2.576.410 hectáreas (25.764 km²). Se eligió porque, en un
+        análisis preliminar, esa zona contiene <strong>el punto más compartido
+        de todo el catálogo de congresos</strong> y tres lugares específicos de
+        Imataca —el <strong>Campamento El Buey</strong>, la
+        <strong>cuenca del río Botanamo</strong> y la <strong>Estación
+        Experimental Caparo</strong>—: 28 de las 30 charlas que caen adentro
+        comparten una sola coordenada, el centroide de la <strong>Reserva
+        Forestal de Imataca</strong>. No es un error: en la taxonomía curada con
+        la que se revisó el catálogo, la reserva es un <em>lugar nombrado</em> y
+        el geocodificador devuelve el mismo punto para todas.
       </p>
       <p>
-        <strong>Lo que este informe hace es poner las dos cosas al lado, sin
-        mezclarlas.</strong> De un lado, lo que le pasó al terreno. Del otro, lo
-        que se registró sobre ese lugar en cada congreso.
+        Este es uno de los puntos mejorables de la plataforma: hoy ubica
+        <strong>un punto por estudio</strong>, y se les debería poder asignar
+        multipuntos y polígonos.
+      </p>
+      <p>
+        <strong>Este informe es un producto derivado: muestra los resúmenes de
+        los congresos de ecología en el contexto de qué sucedía antes y después
+        de esos trabajos.</strong>
       </p>
 
       <figure class="figura figura-mapa" id="figura-mapa">
@@ -94,31 +105,32 @@
     <section class="seccion" id="seccion-2" aria-labelledby="titulo-2">
       <h2 class="seccion-titulo" id="titulo-2">2. Cómo leer las cifras antes de leerlas</h2>
       <p>Tres advertencias valen más que cualquier tabla que venga después.</p>
-      <p>
-        <strong>La extensión del visor no es la frontera del país.</strong> Todos
-        los mapas y áreas de este trabajo cubren la extensión del píxel en los COG
-        de origen: <strong>1.086.229,52 km²</strong>, unos
-        <strong>169.600 km² más</strong> que los <strong>916.445 km²</strong> que
-        Venezuela tiene reconocidos internacionalmente, porque incluye territorio
-        en disputa y <strong>no se aplicó ninguna máscara de fronteras</strong>.
-        La consecuencia práctica es directa: <strong>cualquier cifra de este
-        informe difiere de las cifras oficiales en aproximadamente un 18 %</strong>.
-        No es un defecto del cálculo; es el alcance declarado de los datos.
-      </p>
-      <p>
-        <strong>Las áreas son geodésicas.</strong> Cada hectárea de este informe
-        se calculó como área geodésica sobre la esfera WGS84 con radio authálico
-        <strong>R = 6.371.007,181 m</strong>, fila por fila sobre el ráster. Dos
-        cifras de área solo son comparables si comparten ese método, y estas lo
-        comparten.
-      </p>
-      <p>
-        <strong>La caja está observada entera.</strong> En los diez años medidos,
-        el área sin dato de la ventana es <strong>cero</strong>: no hay píxeles no
-        observados dentro de esta caja, así que la proporción de cada clase es
-        directamente la proporción de la caja. Es un dato del estudio, no un
-        supuesto: se verificó año por año.
-      </p>
+      <ul class="lista-cautelas">
+        <li>
+          <strong>La extensión del visor no es la frontera del país.</strong> Las
+          cifras de este informe cubren la extensión del píxel en los COG de
+          origen —<strong>1.086.229,52 km²</strong>, unos <strong>169.600 km²
+          más</strong> que los <strong>916.445 km²</strong> que Venezuela tiene
+          reconocidos internacionalmente—, porque incluye territorio en disputa
+          y <strong>no se aplicó ninguna máscara de fronteras</strong>. La
+          consecuencia es directa: <strong>cualquier cifra de este informe
+          difiere de las cifras oficiales en aproximadamente un 18 %</strong>.
+        </li>
+        <li>
+          <strong>Las áreas son geodésicas.</strong> Cada hectárea se calculó
+          como área geodésica sobre la esfera WGS84 con radio authálico
+          <strong>R = 6.371.007,181 m</strong>, fila por fila sobre el ráster.
+          Dos cifras de área solo son comparables si comparten ese método, y
+          estas lo comparten.
+        </li>
+        <li>
+          <strong>La caja está observada entera.</strong> En los diez años
+          medidos, el área sin dato de la ventana es <strong>cero</strong>: no
+          hay píxeles no observados dentro de esta caja, así que la proporción
+          de cada clase es directamente la proporción de la caja. Es un dato del
+          estudio, no un supuesto: se verificó año por año.
+        </li>
+      </ul>
     </section>
 
     <section class="seccion" id="seccion-3" aria-labelledby="titulo-3">
@@ -130,24 +142,29 @@
         neta de <strong>47.844 hectáreas</strong> de bosque.
       </p>
       <!-- The section's table, built from the artifact: two named years, the
-           change in points and in hectares, for the six classes this section
-           names. The denominator (the box, 100 % observed) is in the caption. -->
+           change label and the hectares, for the six classes this section
+           names. The change label (the ratio label for the mining class, the
+           "stable" word for the floodable forest, the signed points
+           otherwise) is derived by tools/build_informe_imataca.py and travels
+           in the artifact; the page prints it instead of a delta it computes
+           itself. -->
       <div class="tabla-envoltura" id="tabla-coberturas"></div>
 
       <p>
-        El dato con más fuerza no es el total sino <strong>la forma de la curva
-        minera</strong>. La clase que el propio codebook llama <em>Uso Minero</em>
-        ocupa un 0,04 % en 1985 y un 0,42 % en 2024, y no crece parejo: se
-        mantiene casi plana hasta 2005 (0,08 %), empieza a subir en 2011 (0,12 %)
-        y 2013 (0,16 %), y <strong>se acelera en la última década: 0,28 % en 2019
-        y 0,42 % en 2024</strong>. Es un cambio medido en la clasificación
+        El dato más interesante es <strong>la forma de la curva minera</strong>.
+        La clase que el propio codebook llama <em>Uso Minero</em> pasó de un
+        0,04 % en 1985 a un 0,42 % en 2024, y no creció parejo: se mantiene casi
+        plana hasta 2005 (0,08 %), empieza a subir en 2011 (0,12 %) y 2013
+        (0,16 %), y <strong>se acelera en la última década: 0,28 % en 2019 y
+        0,42 % en 2024</strong>. Es un cambio medido en la clasificación
         oficial, dentro de una caja declarada, en la zona del arco minero de
         Imataca.
       </p>
       <p>
-        El resto de la historia es más lenta: el uso pecuario gana 1,10 puntos en
-        cuarenta años, la sabana y el herbazal cambian poco, el bosque inundable
-        queda igual, y el agua de la caja se mueve apenas 0,07 puntos (1.742 ha).
+        El resto de la historia es lento: el uso pecuario gana 1,10 puntos en
+        cuarenta años, la sabana y el herbazal casi no cambian, el bosque
+        inundable es muy estable en su cobertura, y el agua de la caja se mueve
+        apenas 0,07 puntos (1.742 ha).
       </p>
       <p>
         <strong>Sobre el agua, este informe no afirma nada más allá de eso.</strong>
@@ -160,7 +177,8 @@
 
       <!-- One panel per class, each with its own vertical scale: the curve's
            shape is the point, and a shared 0-100 scale would flatten the six
-           small classes onto the axis. Hand-rolled SVG, no chart library. -->
+           small classes onto the axis. Hand-rolled SVG, no chart library. Each
+           panel's caption prints the same derived change label the table does. -->
       <figure class="figura" id="figura-coberturas">
         <div class="paneles" id="figura-coberturas-paneles"></div>
         <figcaption class="figura-pie" id="figura-coberturas-pie"></figcaption>
@@ -174,55 +192,63 @@
         <strong>ocho ediciones</strong>:
       </p>
       <div class="tabla-envoltura" id="tabla-charlas"></div>
-
-      <!-- The two congress series, in two figures. They are never drawn on one
-           axis: the report's section 5 refuses the "coverage and talks" chart
-           by name, and two congress series on one axis would invite the same
-           reading of the taller bar as the place with more of everything. -->
-      <figure class="figura" id="figura-charlas">
-        <div class="panel-svg" id="figura-charlas-svg"></div>
-        <figcaption class="figura-pie" id="figura-charlas-pie"></figcaption>
-      </figure>
-
       <p>
-        <strong>Antes de usar estos números hay que decir una cosa.</strong> De
-        esas 30 charlas, <strong>24 fueron revisadas por una máquina y 6 por una
-        persona</strong> para este catálogo — y la concentración no está
+        Este es un subset de las charlas revisadas: se está haciendo una
+        evaluación previa de qué capacidad tendrían los modelos de IA actuales
+        para obtener una ubicación acertada, las especies mencionadas y un ROR
+        de la institución del investigador.
+      </p>
+      <p>
+        De esas 30 charlas, <strong>24 fueron revisadas por una máquina y 6 por
+        una persona</strong> para este catálogo — y la concentración no está
         repartida: 2005 es 9 de 9 revisadas por máquina, 2019 es 5 de 5, 2003 es
         5 de 6. <strong>Este estudio asume que una charla revisada por máquina
         está en el mismo nivel que una revisada por una persona</strong>, y lo
         declara acá en vez de dejarlo al descubierto: quien no comparta esa
         premisa puede rehacer cualquier cifra de esta sección excluyendo esas
         charlas, porque el dato está en el catálogo (<code>human_reviewer</code>,
-        por estudio). La asunción es verificable, y por eso es defendible.
+        por estudio). En total en el visor hay <strong>212</strong> charlas
+        revisadas por un humano, pero la meta final es más de 5.000 solo para los
+        congresos de Venezuela: por eso interesa ver el nivel de los modelos para
+        estas tareas y, más que nada, tener un sistema robusto para verificar y
+        corregir errores.
       </p>
 
-      <h3 class="subseccion-titulo" id="titulo-4-1">
-        Dónde se escribió lo que se escribió: las instituciones
-      </h3>
+      <!-- The talks series. It is never drawn on one axis with the coverage
+           series: the report's section 7 refuses the "coverage and talks" chart
+           by name, and a shared axis would invite the same causal reading. -->
+      <figure class="figura" id="figura-charlas">
+        <div class="panel-svg" id="figura-charlas-svg"></div>
+        <figcaption class="figura-pie" id="figura-charlas-pie"></figcaption>
+      </figure>
+    </section>
+
+    <section class="seccion" id="seccion-5" aria-labelledby="titulo-5">
+      <h2 class="seccion-titulo" id="titulo-5">5. Dónde se escribió lo que se escribió: las instituciones</h2>
       <p>
         <strong>39 pares charla-institución, con 10 instituciones distintas.</strong>
         El orden es elocuente:
       </p>
       <div class="tabla-envoltura" id="tabla-instituciones"></div>
       <p>
-        La universidad regional de Guayana es la que más escribió sobre su propia
-        zona, y eso no es un detalle decorativo: es lo que se esperaría de un
-        congreso nacional con presencia regional fuerte.
+        La universidad regional de Guayana es una de las más fuertes en aportes
+        sobre la zona, pero con un matiz importante: el <strong>Instituto de
+        Zoología y Ecología Tropical</strong> y el <strong>Centro de Estudios
+        Integrales del Ambiente</strong> son parte de la UCV, lo que coloca a la
+        <strong>Universidad Central de Venezuela como la que más aportó, con 18
+        pares</strong> (sumando esas tres filas de la tabla). De los 39 pares,
+        <strong>5 vienen de identificadores ROR que el curado marcó como
+        dudosos</strong> —el ROR resuelve a una institución distinta de la que el
+        resumen nombra—, y <strong>4 de esos 5 están dentro de esos 18</strong>;
+        están incluidos por decisión del dueño, cada uno con su nota en la tabla
+        curada.
       </p>
-      <p class="advertencia">
-        <strong>Advertencia sobre instituciones:</strong> 5 de esos 39 pares
-        provienen de identificadores ROR que el curado del proyecto marcó como
-        <strong>dudosos</strong> — el ROR resuelve a una institución distinta de
-        la que el resumen nombra. Están incluidos <strong>por decisión del
-        dueño</strong>, cada uno con su nota en la tabla curada, y están
-        señalados en la tabla de arriba.
-      </p>
+    </section>
 
-      <h3 class="subseccion-titulo" id="titulo-4-2">Qué se mencionó: las especies</h3>
+    <section class="seccion" id="seccion-6" aria-labelledby="titulo-6">
+      <h2 class="seccion-titulo" id="titulo-6">6. Qué se mencionó: las especies</h2>
       <p>
-        Nombrar una especie y contarla es más difícil de lo que parece. El
-        catálogo extrajo de los resúmenes <strong>42 entradas</strong> de esta
+        El catálogo extrajo de los resúmenes <strong>42 entradas</strong> de esta
         caja; <strong>solo 31 son determinaciones a nivel de especie (30 especies
         distintas), 1 es un género (<em>Ficus</em> sp.), 3 son familias y 7 no son
         nombres de organismos</strong>: entre esos siete hay un reino
@@ -230,8 +256,11 @@
         funcional (<em>hongos micorrízicos arbusculares</em>) y cuatro
         descripciones del tipo <em>"especies típicas de las comunidades
         primarias"</em> o <em>"pioneras sin valor de mercado"</em>, que son
-        fragmentos de prosa que el parseo tomó por nombres.
+        fragmentos de prosa que el parseo tomó por nombres. Aunque en la
+        plataforma está toda la información, para este informe se filtraron.
       </p>
+      <p>Con eso, la serie limpia queda así:</p>
+      <div class="tabla-envoltura" id="tabla-especies"></div>
       <p>
         Sin esa curación, el informe habría dicho que 2011 registró tres especies.
         Las tres eran descripciones: <strong>2011 registró cero</strong>. También
@@ -241,37 +270,28 @@
         decumanus"</em>) que se conservan tal como están, marcadas, en vez de
         corregirse en silencio.
       </p>
-      <p>Con eso, la serie limpia queda así:</p>
-      <div class="tabla-envoltura" id="tabla-especies"></div>
 
       <figure class="figura" id="figura-especies">
         <div class="panel-svg" id="figura-especies-svg"></div>
         <figcaption class="figura-pie" id="figura-especies-pie"></figcaption>
       </figure>
 
-      <p>
-        Solo cuatro de las ocho ediciones registraron especies, y las dos fuertes
-        son 2001 y 2005. Eso es un dato sobre <strong>lo que se registró</strong>,
-        no sobre cuánto interesaba el lugar.
-      </p>
-
       <!-- The curation itself, from the artifact: the 42 raw entries classified,
-           with the ones that carry a note listed in full. This is the table that
-           makes the paragraph above checkable entry by entry, erratas included. -->
-      <h3 class="subseccion-titulo" id="titulo-4-3">La curación, entrada por entrada</h3>
+           with the ones that carry a note listed in full. These two tables are
+           what make the paragraph above checkable entry by entry, erratas
+           included; their captions carry their own wording. -->
       <div class="tabla-envoltura" id="tabla-curacion"></div>
       <div class="tabla-envoltura" id="tabla-curacion-marcadas"></div>
     </section>
 
-    <section class="seccion" id="seccion-5" aria-labelledby="titulo-5">
-      <h2 class="seccion-titulo" id="titulo-5">5. Lo que este informe no dice</h2>
+    <section class="seccion" id="seccion-7" aria-labelledby="titulo-7">
+      <h2 class="seccion-titulo" id="titulo-7">7. Lo que este informe no dice</h2>
       <ul class="lista-cautelas">
         <li>
           <strong>No dice que los congresos causaran los cambios de
           cobertura.</strong> La serie de cobertura es continua y no depende de
           las ediciones: los años de congreso son <strong>el marco temporal</strong>
-          en el que se decidió mirar, no el motor del cambio. El congreso fue la
-          ventana de observación; el terreno cambió por lo que cambió.
+          en el que se decidió mirar, no el motor del cambio.
         </li>
         <li>
           <strong>No mezcla las dos series en una figura.</strong> La cobertura y
@@ -285,19 +305,19 @@
         </li>
         <li>
           <strong>No corrige las fuentes en silencio</strong>: las erratas del
-          resumen y las asignaciones dudosas quedan a la vista, con su nota.
+          resumen y los pares dudosos quedan a la vista, con su nota.
         </li>
         <li>
-          <strong>No es un conteo de estudios ubicables.</strong> El mapa de esta
-          zona ubica un punto por estudio con coordenada; 28 charlas comparten ese
-          punto, así que <strong>un punto no es una charla</strong> en el centroide
-          de la reserva.
+          <strong>Un punto no es una charla.</strong> El mapa de esta zona ubica
+          un punto por estudio con coordenada; 28 charlas comparten ese punto,
+          así que <strong>un punto no es un trabajo de campo</strong> en el
+          centroide de la reserva.
         </li>
       </ul>
     </section>
 
-    <section class="seccion" id="seccion-6" aria-labelledby="titulo-6">
-      <h2 class="seccion-titulo" id="titulo-6">6. De dónde salen estos números</h2>
+    <section class="seccion" id="seccion-8" aria-labelledby="titulo-8">
+      <h2 class="seccion-titulo" id="titulo-8">8. De dónde salen estos números</h2>
       <p>Cada cifra de este informe se puede rastrear y recalcular:</p>
       <ul class="lista-metodo">
         <li>
@@ -322,7 +342,7 @@
         <li>
           <strong>La recomputación</strong>: el pipeline del repositorio
           (<code>./run.sh pipeline</code>) reconstruye los artefactos de datos
-          desde los insumos versionados; este informe tiene además su propio
+          desde los insumos versionados. Este informe tiene además su propio
           constructor, <code>python3 tools/build_informe_imataca.py</code>, que
           lee la evidencia del estudio y escribe el artefacto que esta página
           consume.
@@ -332,13 +352,14 @@
         </li>
       </ul>
       <!-- What the numbers above are attached to, read from the artifact: the
-           identities, the dates, the area method and the ten per-year COG
-           digests. The builder held these; the page only prints them. -->
+           identities, the dates, the area method, the recomputation route and
+           the ten per-year COG digests. The builder held these; the page only
+           prints them. -->
       <div class="tabla-envoltura" id="procedencia-detalle"></div>
     </section>
 
-    <section class="seccion" id="seccion-7" aria-labelledby="titulo-7">
-      <h2 class="seccion-titulo" id="titulo-7">7. Licencia y cita</h2>
+    <section class="seccion" id="seccion-9" aria-labelledby="titulo-9">
+      <h2 class="seccion-titulo" id="titulo-9">9. Licencia y cita</h2>
       <p>
         Los datos de cobertura que este informe usa son de
         <strong>MapBiomas Venezuela</strong> y se publican bajo
@@ -355,7 +376,8 @@
       <p>
         El catálogo de congresos y el código del visor
         <strong>no son datos de MapBiomas</strong> y no están cubiertos por esa
-        licencia.
+        licencia; la licencia con la que se van a compartir esos datos
+        <strong>está por definir</strong>.
       </p>
     </section>
   </main>
