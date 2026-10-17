@@ -73,7 +73,16 @@ Con eso, la serie limpia queda así:
 |---|---|---|---|---|---|---|---|---|
 | Especies distintas registradas | 0 | **13** | 0 | **11** | 0 | **0** | 4 | 3 |
 
-## 6. Licencia y cita
+## 6. Planes de futuro con la plataforma
+
+Lo que sigue, en orden:
+
+1. **Permitir el consumo de los datos para su análisis.** El catálogo de congresos y el código del visor no están cubiertos por la licencia de MapBiomas y su licencia está por definir: ese es el primer paso para que cualquiera pueda descargar, citar y analizar lo que hay acá.
+2. **Procesar todos los congresos de ecología de Venezuela con una metodología más automatizada.** Hoy el visor tiene 255 charlas (212 revisadas por una persona y 43 por una máquina) y la meta es más de 5.000 solo para los congresos venezolanos: eso no se alcanza revisando charla por charla, así que el trabajo es que la extracción —ubicación, especies mencionadas y ROR de la institución del investigador— corra de forma más automática y que la revisión humana se concentre en verificar y corregir. En el mismo paso entra la precisión de esa ubicación: hoy es un punto por estudio, y se le debería poder asignar multipuntos y polígonos.
+3. **Ampliar la cobertura a otros congresos de la región**, con la misma metodología y el mismo esquema de datos, para que las series sean comparables entre países.
+4. **Sumar fuentes de datos y formas de obtenerlos desde acá**: además de los resúmenes de congresos, otras fuentes que registren observaciones sobre un lugar, y más caminos para cargarlas y consultarlas desde la plataforma.
+
+## 7. Licencia y cita
 
 Los datos de cobertura que este informe usa son de **MapBiomas Venezuela** y se publican bajo **CC BY 4.0**, con atribución obligatoria y **sin ShareAlike**: se permite el uso comercial y la obra derivada manteniendo la atribución. Este informe los **adapta**.
 
