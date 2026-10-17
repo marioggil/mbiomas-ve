@@ -90,7 +90,7 @@
   // `toFixed` on a value indistinguishable from zero prints "-0,00"; the report
   // says "estable" for that case, so the sign is dropped below half a unit of
   // the last printed decimal. A negative value prints the report's own minus
-  // sign (U+2212), the one its section 3 table is written with.
+  // sign (U+2212), the one its section 2 table is written with.
   function decimales(valor, cuantos) {
     var numero = Number(valor);
     var limite = Math.pow(10, -cuantos) / 2;
@@ -406,7 +406,7 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Table: the report's section 3
+  // Table: the report's section 2
   // ---------------------------------------------------------------------------
 
   function tabla(encabezados, filas, pie) {
@@ -546,7 +546,7 @@
     fijarTexto(
       "figura-coberturas-pie",
       "Evolución de la participación de las seis clases que tabula la sección " +
-        "3 del informe, en los " +
+        "2 del informe, en los " +
         String(anios.length) +
         " años medidos (" +
         String(anios[0]) +
@@ -562,8 +562,7 @@
         "el eje. El área se midió como área geodésica sobre la esfera WGS84 con " +
         "radio authálico " +
         agrupar(Math.round(datos.caja.radio_autalico_m)) +
-        " m. Las series no se leen como una causa de las charlas: el informe lo " +
-        "declara en su sección 7. El cambio de cada clase, en el orden de la " +
+        " m. El cambio de cada clase, en el orden de la " +
         "tabla, es el que lee cada panel y la columna “Cambio”: " +
         clases
           .map(function (clase) {
@@ -1035,7 +1034,7 @@
   function pintarFiguraCongresos(datos) {
     var ediciones = datos.congresos.ediciones;
     // The edition the curation rescued from a false count: the one the parse
-    // gave organisms to and the curation emptied. The prose of section 4 names
+    // gave organisms to and the curation emptied. The prose of section 3 names
     // it (2011), and the figure's caption reaches it from the data instead of
     // assuming it is the last edition.
     var rescatada = ediciones.filter(function (edicion) {
@@ -1070,8 +1069,7 @@
         "–" +
         String(ediciones[ediciones.length - 1].anio) +
         "). Las barras no se leen contra la serie de cobertura: son dos " +
-        "registros distintos, y el informe rechaza por nombre el gráfico que " +
-        "los mezcla (sección 7)."
+        "registros distintos."
     );
 
     pintarFiguraBarras(
@@ -1133,99 +1131,8 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Provenance and citation
+  // Citation
   // ---------------------------------------------------------------------------
-
-  function pintarProcedencia(datos) {
-    var contenedor = vaciar("procedencia-detalle");
-    if (!contenedor) {
-      return;
-    }
-    var procedencia = datos.procedencia;
-    var filas = [
-      [
-        celda("Composición de la caja"),
-        celda(procedencia.composicion.artefacto),
-        celda("esquema " + String(procedencia.composicion.schema_version), "numero"),
-        celda(
-          procedencia.composicion.generado_es +
-            " (" +
-            procedencia.composicion.generado_utc +
-            ")",
-          "nota"
-        ),
-      ],
-      [
-        celda("Catálogo de congresos"),
-        celda(procedencia.catalogo.artefacto),
-        celda("esquema " + String(procedencia.catalogo.schema_version), "numero"),
-        celda(
-          procedencia.catalogo.generado_es + " (" + procedencia.catalogo.generado_utc + ")",
-          "nota"
-        ),
-      ],
-      [
-        celda("Respuestas crudas de la caja"),
-        celda(procedencia.clip_schema),
-        celda(String(datos.coberturas.anios.length) + " años", "numero"),
-        celda(datos.coberturas.metodo_area, "nota"),
-      ],
-      [
-        celda("Consulta"),
-        celda(procedencia.consulta_utc),
-        celda("", "numero"),
-        celda(procedencia.consulta_es, "nota"),
-      ],
-      [
-        celda("Recomputación"),
-        celda(procedencia.recomputar),
-        celda("", "numero"),
-        celda(
-          "el pipeline (./run.sh pipeline) reconstruye los artefactos de datos; " +
-            "este constructor escribe el artefacto de esta página",
-          "nota"
-        ),
-      ],
-      [
-        celda("Radio authálico"),
-        celda(agrupar(Math.round(datos.caja.radio_autalico_m)) + " m"),
-        celda("WGS84", "numero"),
-        celda("el mismo método de área geodésica en las dos series", "nota"),
-      ],
-    ];
-    contenedor.appendChild(
-      tabla(
-        [
-          { titulo: "Qué" },
-          { titulo: "Artefacto" },
-          { titulo: "Versión" },
-          { titulo: "Fecha o método" },
-        ],
-        filas,
-        "Lo que produjo cada cifra de esta página. El informe se sirve desde " +
-          API_INFORME +
-          ", que devuelve el artefacto de este estudio tal como quedó " +
-          "construido; el visor público que se cita es " +
-          URL_VIEWER +
-          "."
-      )
-    );
-
-    var digestTabla = tabla(
-      [{ titulo: "Año" }, { titulo: "sha256 del ráster de origen" }, { titulo: "Bytes", clase: "numero" }],
-      procedencia.cogs.map(function (cog) {
-        return [
-          celda(String(cog.anio)),
-          celda(cog.sha256, "digest", cog.sha256),
-          celda(agrupar(cog.bytes), "numero"),
-        ];
-      }),
-      "Un ráster de origen por año medido, con su digest registrado. Denominador: " +
-        String(procedencia.cogs.length) +
-        " años, uno por cada respuesta cruda de la caja."
-    );
-    contenedor.appendChild(digestTabla);
-  }
 
   function pintarCita(datos) {
     var contenedor = vaciar("cita");
@@ -1274,7 +1181,6 @@
     pintarFiguraCongresos(datos);
     pintarTablaCuracion(datos);
     pintarTablaCuracionMarcadas(datos);
-    pintarProcedencia(datos);
     pintarCita(datos);
     pintarMapa(datos);
   }

@@ -158,3 +158,42 @@ The page never recomputes it: the change column and the figure captions read `ca
   `estable (−487 ha)` because the page's change cell is `label (hectares)` uniformly, while the md's row carries
   `estable` alone. The label agrees; the hectares are the page's extra column. The parent may drop them for the stable
   row if it wants the cell character-for-character identical.
+
+## 7. Owner's cuts: the page is back to six sections
+
+`informe.md` moved to commit `3c40109` (six sections) and the page still carried the previous nine-section prose and
+nav. This pass applies the owner's cuts to `viewer/informe-imataca.html`, `viewer/informe-imataca.js` and the dead rules
+of `viewer/informe-imataca.css`. The builder, the artifact and every `procedencia.*` field are untouched.
+
+### 7.1 What changed
+
+| File | Change |
+|---|---|
+| `viewer/informe-imataca.html` | Removed the whole `2. Cómo leer las cifras antes de leerlas` section; renumbered sections 3–9 to 2–6 (`id=seccion-N` / `aria-labelledby=titulo-N` / `<h2 id=titulo-N>` and the printed number), and the nav to the six md titles. Removed the water paragraph `Sobre el agua…`; the `y lo declara acá…(human_reviewer, por estudio)` clause; the `Sin esa curación…` paragraph; and sections `7. Lo que este informe no dice` and `8. De dónde salen estos números`, including `<div id="procedencia-detalle">`. The map (§1), the coverage table and figures (§2), the talks table (§3), the institutions and species tables (§4/§5) and the print stylesheet stay. |
+| `viewer/informe-imataca.js` | Removed the now-dead `pintarProcedencia` renderer (its `procedencia-detalle` div is gone) and its call. Fixed cross-references: the coverage figure caption says **sección 2**; the no-causality sentence that cited the removed **sección 7** is dropped; the talks caption no longer cites sección 7; comments updated. The change column still reads `clase.cambio_etiqueta`. |
+| `viewer/informe-imataca.css` | Removed the rules that only served the removed blocks: `.lista-cautelas` / `.lista-metodo` and `.tabla-envoltura .digest`. |
+
+### 7.2 Checks run (structural and CLI only, no browser)
+
+1. **Nav ↔ sections** — scripted: 6 nav links, 6 section ids, and each `href="#seccion-N"` resolves to the section whose
+   `aria-labelledby` and `<h2 id>` are `titulo-N`; all ids unique. `OK`.
+2. **Prose block by block** — scripted: the `<p>` sequence of each of the six sections, normalised, equals the md's
+   paragraph sequence (`4/3/3/2/2/3` blocks); six sections, no extra block. `OK`. Code fences, tables and the citation
+   blockquote are not part of this comparison (the `<pre>` and `<blockquote>` are filled from the artifact).
+3. **No leftovers** — `grep` for `Cómo leer las cifras`, `Sobre el agua`, `human_reviewer`, `clansia racemosa`,
+   `Lo que este informe no dice`, `De dónde salen estos números`, `1.086.229,52`, `6.371.007,181`, `4,42 %` and
+   `Harpia harpyja` over the page's three files: **0 matches**.
+4. **`node --check viewer/informe-imataca.js`** — `OK`.
+5. **`python3 -m unittest discover -s tests`** — `Ran 387 tests … OK (skipped=49)`.
+6. **Change column from the artifact** — a Node DOM stub fed the committed artifact: the column prints
+   `−1,86 puntos (−47.844 ha)` / `+1,10 puntos (+28.275 ha)` / `×10 (+9.932 ha)` / `+0,19 puntos (+4.822 ha)` /
+   `estable (−487 ha)` / `+0,07 puntos (+1.742 ha)`, equal to the artifact's `cambio_etiqueta`; `procedencia-detalle`
+   stayed empty; `grep` finds no change value typed into the HTML (`estable`'s only hit is the md prose "muy estable en
+   su cobertura"). **Not** browser verification.
+7. **Working tree** — dirty on purpose (no `git add`/`commit`); only the three page files were touched.
+
+### 7.3 What could not be verified here (parent's job)
+
+- **No browser**: the map, the figures at 1600×1000 and 390×844, and the print-media PDF pass are the parent's pass.
+- The block-by-block comparison covers paragraphs only; the tables and the JS-filled `<pre>` / `<blockquote>` are checked
+  structurally (ids present, renderer reads the artifact), not character by character.
