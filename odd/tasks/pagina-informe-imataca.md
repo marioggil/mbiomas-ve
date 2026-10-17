@@ -197,3 +197,55 @@ of `viewer/informe-imataca.css`. The builder, the artifact and every `procedenci
 - **No browser**: the map, the figures at 1600×1000 and 390×844, and the print-media PDF pass are the parent's pass.
 - The block-by-block comparison covers paragraphs only; the tables and the JS-filled `<pre>` / `<blockquote>` are checked
   structurally (ids present, renderer reads the artifact), not character by character.
+
+## 8. Mining mentions: the report's new row and paragraph
+
+`odd/informes/imataca/informe.md` (section 3) gained a second row in its talks table ("Mencionan minería") and a new
+paragraph ("De qué se hablaba mientras eso pasaba."). This pass carries both into the shipped artifact and the page.
+
+### 8.1 What changed
+
+| File | Change |
+|---|---|
+| `tools/build_informe_imataca.py` | New criterion (`MINING_FIELDS` / `MINING_TERMS` / `MINING_CRITERION`) and `build_mining_mentions()`: it selects the catalogue studies whose geocoded point falls inside the study's box, matches the terms accent-insensitively and at word boundaries over `titulo`, `resumen`, `palabrasclaves` and `especiesmencionadas`, cross-checks the per-edition talk counts against `tabla-congresos.json`, and ships `congresos.mineria`. |
+| `data/derived/venezuela/informes/imataca.json` | Rebuilt: one new object, `congresos.mineria` (`criterio`, `terminos`, `total`, `por_edicion`). Nothing else moved (asserted against `HEAD`). |
+| `viewer/informe-imataca.html` | The new section 3 paragraph, verbatim in Spanish, after the review-assumption paragraph. No mining count is typed: the eight per-edition counts live only in the artifact. |
+| `viewer/informe-imataca.js` | The section 3 talks table now uses the report's own layout — the editions across and the series down (`Charlas`, `Mencionan minería`, `Pares charla-institución`, `Instituciones`, `Pares dudosos`) plus a `Total` column. The mining row reads `congresos.mineria.por_edicion`, bolds the non-zero counts and leaves the zeros plain; the caption prints `congresos.mineria.criterio` and `terminos`. |
+
+`viewer/informe-imataca.css` was not touched: the new row reuses the existing `.numero` / `.destacado` / `.dudoso`
+conventions, and the print stylesheet is unchanged.
+
+**Layout decision (review focus).** The task asks for a "Mencionan minería" *row* with its *eight counts*; the page's
+table listed the editions as rows, so the row could not exist without transposing the table. The table now mirrors
+`informe.md`'s layout, keeping all five series. If the intent was a mining **column** on the old per-edition table, this
+is the one place to reverse.
+
+### 8.2 Checks run (structural and CLI only, no browser)
+
+1. **Builder reproduces the row** — `python3 tools/build_informe_imataca.py` prints `8 of 30 talks mention mining` and
+   writes `congresos.mineria` = total `8`; `1999 2/2, 2001 1/3, 2003 4/6, 2005 0/9, 2007 0/2, 2011 0/1, 2013 1/2,
+   2019 0/5`. Equal to the report's row. Re-running is byte-identical (`sha256 63f379c0…` before and after).
+2. **Criterion cases** — `"suelo mineral"` and `"explotación forestal"` do **not** match; `MINERÍA`, `mineria`,
+   `aurifero`, `diamantífera`, `bauxita`, `arco minero`, `actividad minera`, `explotación aurífera`, `dragado`,
+   `aluvial` do. `OK`.
+3. **Artifact diff is additive** — the rebuilt artifact equals `HEAD` except for `congresos.mineria`.
+4. **`node --check viewer/informe-imataca.js`** — `OK`.
+5. **`python3 -m unittest discover -s tests`** — `Ran 387 tests … OK (skipped=49)`.
+6. **Prose block by block** — scripted on the seven sections (`4/3/4/2/2/5/3` blocks): every md paragraph/bullet,
+   normalised, equals the page's `<p>`/`<li>` sequence, **including the new section 3 paragraph**. All seven `OK`.
+7. **Talks table from the artifact** — a Node DOM stub fed the rebuilt artifact renders the table header
+   `Edición | 1999 … 2019 | Total` and the row `Mencionan minería | 2 | 1 | 4 | 0 | 0 | 0 | 1 | 0 | 8`, equal to
+   `congresos.mineria.por_edicion`; the four non-zero cells carry `.destacado` and the zeros do not. **Not** browser
+   verification.
+8. **No mining count typed into the HTML** — `grep` over `viewer/informe-imataca.html`: `Mencionan minería`, `mineria`,
+   `por_edicion`, `<td` and `<table` all **0 matches**; the only `minería` is the report's own prose "8 mencionan
+   minería". The JS reads `datos.congresos.mineria` / `mineria.por_edicion`.
+9. **Working tree** — dirty on purpose (no `git add`/`commit`); only `tools/build_informe_imataca.py`,
+   `data/derived/venezuela/informes/imataca.json`, `viewer/informe-imataca.html` and `viewer/informe-imataca.js` changed.
+
+### 8.3 What could not be verified here (parent's job)
+
+- **No browser**: the talk table's layout at 1600×1000 and 390×844 (ten columns scroll inside `.tabla-envoltura`), the
+  print/PDF pass, the map and the figures were not checked. The Node stub above is not a browser.
+- The block-by-block comparison covers prose only; the new table is checked functionally (the stub) and by grep, not
+  pixel by pixel.

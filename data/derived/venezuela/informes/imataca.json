@@ -662,6 +662,70 @@
         "revision_ia": 5
       }
     ],
+    "mineria": {
+      "criterio": "Cuenta una charla si el título, el resumen, las palabras clave o las especies mencionadas contienen, sin distinguir acentos ni mayúsculas y con límite de palabra, alguno de los términos listados; «mineral» y la explotación forestal no cuentan.",
+      "terminos": [
+        "minería",
+        "minero",
+        "minera",
+        "mineros",
+        "mineras",
+        "aurífer*",
+        "diamant*",
+        "bauxit*",
+        "garimpo",
+        "mercurio",
+        "arco minero",
+        "actividad minera",
+        "explotación minera",
+        "explotación aurífera",
+        "dragado",
+        "aluvial"
+      ],
+      "total": 8,
+      "por_edicion": [
+        {
+          "anio": 1999,
+          "charlas": 2,
+          "mencionan": 2
+        },
+        {
+          "anio": 2001,
+          "charlas": 3,
+          "mencionan": 1
+        },
+        {
+          "anio": 2003,
+          "charlas": 6,
+          "mencionan": 4
+        },
+        {
+          "anio": 2005,
+          "charlas": 9,
+          "mencionan": 0
+        },
+        {
+          "anio": 2007,
+          "charlas": 2,
+          "mencionan": 0
+        },
+        {
+          "anio": 2011,
+          "charlas": 1,
+          "mencionan": 0
+        },
+        {
+          "anio": 2013,
+          "charlas": 2,
+          "mencionan": 1
+        },
+        {
+          "anio": 2019,
+          "charlas": 5,
+          "mencionan": 0
+        }
+      ]
+    },
     "determinaciones_por_edicion": 31,
     "instituciones": [
       {
