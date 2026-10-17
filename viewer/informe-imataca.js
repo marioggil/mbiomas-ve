@@ -709,34 +709,88 @@
     if (!contenedor) {
       return;
     }
-    var filas = datos.congresos.ediciones.map(function (edicion) {
-      return [
-        celda(String(edicion.anio)),
-        celda(String(edicion.charlas), "numero"),
-        celda(String(edicion.pares_ror), "numero"),
-        celda(String(edicion.instituciones), "numero"),
-        celda(
-          edicion.pares_dudosos > 0 ? String(edicion.pares_dudosos) : "—",
-          edicion.pares_dudosos > 0 ? "numero dudoso" : "numero"
-        ),
-      ];
+    var ediciones = datos.congresos.ediciones;
+    var mineria = datos.congresos.mineria;
+    // The report's section 3 table puts the editions across and the series down
+    // ("Charlas", "Mencionan minería"); this table keeps that layout and adds
+    // the pairs, the institutions and the doubtful ones as further rows. Every
+    // number is read from the artifact -- the mining row from
+    // `congresos.mineria.por_edicion` -- so none of them is typed here.
+    var mencionan = {};
+    mineria.por_edicion.forEach(function (fila) {
+      mencionan[fila.anio] = fila.mencionan;
     });
-    filas.push([
-      celda("Total", "destacado"),
-      celda(String(datos.congresos.charlas), "numero destacado"),
-      celda(String(datos.congresos.pares_institucion), "numero destacado"),
-      celda(String(datos.congresos.instituciones_distintas), "numero destacado"),
-      celda(String(datos.congresos.pares_dudosos), "numero destacado"),
-    ]);
+
+    function porEdicion(campo) {
+      return ediciones.map(function (edicion) {
+        return edicion[campo];
+      });
+    }
+
+    function serie(etiqueta, valores, total, formatear) {
+      var celdas = [celda(etiqueta)];
+      valores.forEach(function (valor, indice) {
+        celdas.push(formatear(valor, indice));
+      });
+      celdas.push(celda(String(total), "numero destacado"));
+      return celdas;
+    }
+
+    function numeroPlano(valor) {
+      return celda(String(valor), "numero");
+    }
+
+    // The report bolds the editions that do mention mining and leaves the zeros
+    // plain: the row's emphasis is the observation.
+    function numeroDestacadoSiPositivo(valor) {
+      return celda(String(valor), valor > 0 ? "numero destacado" : "numero");
+    }
+
+    // The doubtful pairs keep the table's old convention: a count in italics
+    // when there is one, an em dash when there is not.
+    function numeroDudosoOSinDato(valor) {
+      return valor > 0 ? celda(String(valor), "numero dudoso") : celda("—", "numero");
+    }
+
+    var filas = [
+      serie("Charlas", porEdicion("charlas"), datos.congresos.charlas, numeroPlano),
+      serie(
+        "Mencionan minería",
+        ediciones.map(function (edicion) {
+          return mencionan[edicion.anio];
+        }),
+        mineria.total,
+        numeroDestacadoSiPositivo
+      ),
+      serie(
+        "Pares charla-institución",
+        porEdicion("pares_ror"),
+        datos.congresos.pares_institucion,
+        numeroPlano
+      ),
+      serie(
+        "Instituciones",
+        porEdicion("instituciones"),
+        datos.congresos.instituciones_distintas,
+        numeroPlano
+      ),
+      serie(
+        "Pares dudosos",
+        porEdicion("pares_dudosos"),
+        datos.congresos.pares_dudosos,
+        numeroDudosoOSinDato
+      ),
+    ];
+
+    var encabezados = [{ titulo: "Edición" }];
+    ediciones.forEach(function (edicion) {
+      encabezados.push({ titulo: String(edicion.anio), clase: "numero" });
+    });
+    encabezados.push({ titulo: "Total", clase: "numero" });
+
     contenedor.appendChild(
       tabla(
-        [
-          { titulo: "Edición" },
-          { titulo: "Charlas", clase: "numero" },
-          { titulo: "Pares charla-institución", clase: "numero" },
-          { titulo: "Instituciones", clase: "numero" },
-          { titulo: "Pares dudosos", clase: "numero" },
-        ],
+        encabezados,
         filas,
         "El registro por edición dentro de la caja. Denominador: las " +
           String(datos.congresos.charlas) +
@@ -746,7 +800,12 @@
           String(datos.congresos.pares_institucion) +
           ", de los cuales " +
           String(datos.congresos.pares_dudosos) +
-          " llevan un ROR que el curado marcó dudoso."
+          " llevan un ROR que el curado marcó dudoso. La fila “Mencionan " +
+          "minería” se cuenta así: " +
+          mineria.criterio +
+          " Términos: " +
+          mineria.terminos.join(", ") +
+          "."
       )
     );
   }

@@ -43,10 +43,13 @@ En la caja hay **30 charlas** repartidas en **ocho ediciones**:
 | Edición | 1999 | 2001 | 2003 | 2005 | 2007 | 2011 | 2013 | 2019 |
 |---|---|---|---|---|---|---|---|---|
 | Charlas | 2 | 3 | 6 | **9** | 2 | **1** | 2 | 5 |
+| Mencionan minería | **2** | **1** | **4** | 0 | 0 | 0 | **1** | 0 |
 
 Este es un subset de las charlas revisadas: se está haciendo una evaluación previa de qué capacidad tendrían los modelos de IA actuales para obtener una ubicación acertada, las especies mencionadas y un ROR de la institución del investigador.
 
 De esas 30 charlas, **24 fueron revisadas por una máquina y 6 por una persona** para este catálogo — y la concentración no está repartida: 2005 es 9 de 9 revisadas por máquina, 2019 es 5 de 5, 2003 es 5 de 6. **Este estudio asume que una charla revisada por máquina está en el mismo nivel que una revisada por una persona**. En total en el visor hay **212** charlas revisadas por un humano, pero la meta final es más de 5.000 solo para los congresos de Venezuela: por eso interesa ver el nivel de los modelos para estas tareas y, más que nada, tener un sistema robusto para verificar y corregir errores.
+
+**De qué se hablaba mientras eso pasaba.** De las 30 charlas, **8 mencionan minería** —contando el título, el resumen y las palabras clave, y sin contar «mineral»—, y están concentradas al principio: siete de las ocho caen entre 1999 y 2003. Después desaparecen, justo cuando la clase *Uso Minero* de la caja empieza a crecer: no hay ninguna mención en 2005, 2007, 2011 ni 2019, y solo una en 2013. Es una observación sobre esta muestra de treinta charlas, no una relación de causa: dice qué se estaba discutiendo en cada edición, no por qué cambió el terreno.
 
 ## 4. Dónde se escribió lo que se escribió: las instituciones
 

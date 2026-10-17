@@ -41,7 +41,9 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
+import unicodedata
 from pathlib import Path
 from typing import Any, Final
 
@@ -130,6 +132,46 @@ REPORT_SHARE_DECIMALS: Final[int] = 2
 # needed is the noise of a JSON round-trip. 1e-6 ha is 1 mm^2.
 AREA_TOLERANCE_HA: Final[float] = 1e-6
 SHARE_TOLERANCE_PCT: Final[float] = 1e-6
+
+# The criterion behind the report's second talks-table row, "Mencionan
+# minería". ``informe.md`` section 3 counts a talk as a mining mention when one
+# of these terms appears in its title, abstract, keywords or mentioned species,
+# matching case- and accent-insensitively and only at a word boundary. The
+# boundary is what keeps "minera" from matching "mineral" -- the Croton
+# megalodendron talk's "suelo mineral" is not mining -- and no term stands for
+# forest exploitation. A trailing ``*`` is a prefix: "aurífer*" matches
+# "aurífera". The terms travel in the artifact beside the counts so the page's
+# caption can name the criterion the numbers were counted with.
+MINING_FIELDS: Final[tuple[str, ...]] = (
+    "titulo",
+    "resumen",
+    "palabrasclaves",
+    "especiesmencionadas",
+)
+MINING_TERMS: Final[tuple[str, ...]] = (
+    "minería",
+    "minero",
+    "minera",
+    "mineros",
+    "mineras",
+    "aurífer*",
+    "diamant*",
+    "bauxit*",
+    "garimpo",
+    "mercurio",
+    "arco minero",
+    "actividad minera",
+    "explotación minera",
+    "explotación aurífera",
+    "dragado",
+    "aluvial",
+)
+MINING_CRITERION: Final[str] = (
+    "Cuenta una charla si el título, el resumen, las palabras clave o las "
+    "especies mencionadas contienen, sin distinguir acentos ni mayúsculas y "
+    "con límite de palabra, alguno de los términos listados; «mineral» y la "
+    "explotación forestal no cuentan."
+)
 
 
 class InformeError(RuntimeError):
@@ -598,6 +640,116 @@ def check_congress_and_curation(
     return {"rows": rows, "talks": talks, "determinations": determinations}
 
 
+# ---------------------------------------------------------------------------
+# Mining mentions: the report's second talks-table row
+# ---------------------------------------------------------------------------
+
+
+def _sin_acentos(texto: str) -> str:
+    """Lower-case ``texto`` and strip its diacritics, for criterion matching."""
+    descompuesto = unicodedata.normalize("NFD", texto)
+    return "".join(
+        caracter for caracter in descompuesto if not unicodedata.combining(caracter)
+    ).lower()
+
+
+def _mining_pattern() -> re.Pattern[str]:
+    """Compile the mining criterion as one word-bounded, accent-free regex."""
+    partes: list[str] = []
+    for termino in MINING_TERMS:
+        normalizado = _sin_acentos(termino)
+        if normalizado.endswith("*"):
+            partes.append(re.escape(normalizado[:-1]) + r"\w*")
+        else:
+            partes.append(re.escape(normalizado))
+    return re.compile(r"\b(?:" + "|".join(partes) + r")\b")
+
+
+def _talk_mining_text(estudio: dict[str, Any]) -> str:
+    """Join the four fields the criterion reads, normalized for matching."""
+    where = f"catalogue study {estudio.get('study_id')!r}"
+    trozos: list[str] = []
+    for field in MINING_FIELDS:
+        valor = estudio.get(field)
+        if valor is None:
+            continue
+        if isinstance(valor, str):
+            trozos.append(valor)
+        elif isinstance(valor, list):
+            for item in valor:
+                _require(
+                    isinstance(item, str),
+                    f"{where} {field!r} has a non-string item: {item!r}",
+                )
+                trozos.append(item)
+        else:
+            raise InformeError(f"{where} {field!r} is not a string or a list: {valor!r}")
+    return _sin_acentos("\n".join(trozos))
+
+
+def build_mining_mentions(
+    catalog: dict[str, Any],
+    box: list[float],
+    editions: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Count, per edition, how many of the box's talks mention mining.
+
+    ``informe.md``'s "Mencionan minería" row is derived here from the shipped
+    catalogue: the talks are the studies whose geocoded point falls inside the
+    study's box, the same 30 the congress table counts. The per-edition talk
+    count is cross-checked against that table, so a box or a catalogue that
+    moved would fail the build instead of shipping a row that disagrees with
+    the "Charlas" row beside it.
+    """
+    oeste, sur, este, norte = box
+    patron = _mining_pattern()
+    por_anio: dict[int, dict[str, int]] = {
+        _int(row["anio"], "congress edition 'anio'"): {"charlas": 0, "mencionan": 0}
+        for row in editions
+    }
+    for estudio in catalog["studies"]:
+        _require(isinstance(estudio, dict), "catalogue 'studies' has a non-object entry")
+        latitud = estudio.get("latitud")
+        longitud = estudio.get("longitud")
+        if isinstance(latitud, bool) or not isinstance(latitud, (int, float)):
+            continue
+        if isinstance(longitud, bool) or not isinstance(longitud, (int, float)):
+            continue
+        if not (oeste <= longitud <= este and sur <= latitud <= norte):
+            continue
+        anio = _int(estudio.get("anio"), f"study {estudio.get('study_id')!r} 'anio'")
+        _require(
+            anio in por_anio,
+            f"the box holds a talk from {anio}, which is not a congress edition",
+        )
+        por_anio[anio]["charlas"] += 1
+        if patron.search(_talk_mining_text(estudio)):
+            por_anio[anio]["mencionan"] += 1
+
+    for row in editions:
+        anio = _int(row["anio"], "congress edition 'anio'")
+        _require(
+            por_anio[anio]["charlas"]
+            == _int(row["charlas"], f"congress edition {anio} 'charlas'"),
+            f"the catalogue places {por_anio[anio]['charlas']} talks in the box "
+            f"for {anio} but the congress table counts {row['charlas']}",
+        )
+    por_edicion = [
+        {
+            "anio": anio,
+            "charlas": por_anio[anio]["charlas"],
+            "mencionan": por_anio[anio]["mencionan"],
+        }
+        for anio in por_anio
+    ]
+    return {
+        "criterio": MINING_CRITERION,
+        "terminos": list(MINING_TERMS),
+        "total": sum(edicion["mencionan"] for edicion in por_edicion),
+        "por_edicion": por_edicion,
+    }
+
+
 def load_tile_zoom(derived_dir: Path) -> tuple[int, int]:
     """Read the tile pyramid's declared zoom range from its own manifest.
 
@@ -700,6 +852,7 @@ def build(
     )
 
     congress_facts = check_congress_and_curation(congress_table, curation, years)
+    mining = build_mining_mentions(catalog, box, congress_facts["rows"])
     coverage_classes = build_coverage_classes(coverage_table, years)
     derived_dir = (
         REPO_ROOT / "data" / "derived" / str(facts["country"]) / f"collection-{facts['collection']}"
@@ -790,6 +943,7 @@ def build(
         "congresos": {
             "charlas": congress_facts["talks"],
             "ediciones": congress_facts["rows"],
+            "mineria": mining,
             "determinaciones_por_edicion": congress_facts["determinations"],
             "instituciones": institutions,
             "instituciones_distintas": len(institutions),
@@ -1027,6 +1181,10 @@ def main(argv: list[str] | None = None) -> int:
         f"{congress['pares_institucion']} institution pairs in "
         f"{congress['instituciones_distintas']} institutions "
         f"({congress['pares_dudosos']} doubtful)"
+    )
+    print(
+        f"  mining: {congress['mineria']['total']} of {congress['charlas']} talks "
+        f"mention mining across {len(congress['mineria']['por_edicion'])} editions"
     )
     print(
         f"  species: {species['entradas_crudas']} raw entries, "
