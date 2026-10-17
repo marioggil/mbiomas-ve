@@ -92,3 +92,108 @@ The viewer has **no persisted automated test**: the verification of record is th
 390×844 (the page loads; the map draws the box; the figures render; no horizontal scroll), a print-media emulation for the
 PDF, a spot-check of every figure's numbers against the evidence files, and the viewer's own page still working with the
 detector at 0. The Python suite is the control.
+
+## 6. Correction pass: the page now carries the report of 842a489
+
+The published page still carried the **old** prose (7 sections) and the old section nav. This pass replaces it with the
+report's corrected text (`odd/informes/imataca/informe.md`, commit `842a489`) and makes the two numbers that disagreed
+agree, without typing either by hand.
+
+### 6.1 What changed
+
+| File | Change |
+|---|---|
+| `viewer/informe-imataca.html` | The title, the subtitle and the prose of all **nine** sections, verbatim in Spanish from `informe.md` (headings included). The nav is the nine md titles, with `#seccion-N` / `titulo-N` matching. The map figure stays inside section 1; the coverage, talks and species figures and the tables stay where the md has their data. The old subsection headings (`Dónde se escribió…`, `Qué se mencionó…`, `La curación, entrada por entrada`) are gone: the first two are now section titles, the third was page furniture and its two tables (the curation) stay in section 6 under their own captions. |
+| `viewer/informe-imataca.js` | The coverage change column and the coverage figure's captions (the per-class panel caption **and** the figure `figcaption`) now print the artifact's `cambio_etiqueta` instead of a delta computed in the page. The dead `porcentajeConSigno` helper is removed. The two cross-references to "el informe rechaza por nombre el gráfico que los mezcla" / "no se leen como una causa" now say **sección 7** (the old prose had it as section 5). The provenance table's `Recomputación` row no longer describes the builder as the data pipeline: it names `./run.sh pipeline` for the data artifacts and `python3 tools/build_informe_imataca.py` for this page's artifact. |
+| `tools/build_informe_imataca.py` | New derived field `cambio_etiqueta` per coverage class, with its rule documented at the constant block (see 6.2). No other number changes. |
+| `data/derived/venezuela/informes/imataca.json` | Rebuilt: every class gains `cambio_etiqueta`; no other value moved (the diff on the numeric fields is only the trailing comma). |
+
+### 6.2 The derived change label
+
+The report's section 3 table does not print a plain delta for every class: it writes `×10` for `4.3 Uso Minero` and
+`estable` for `1.4 Bosque inundable`, where a mechanical difference would print `+0,39 puntos` and `−0,02 puntos`.
+The builder now derives the label per class and ships it as `cobertura.clases[*].cambio_etiqueta`:
+
+- `estable` — `|delta_puntos| < 0,05`: the change rounds to `0,0` points at one decimal, the report's own resolution for
+  "nothing moved".
+- `×N` — the ratio between the two shares **as the report's table prints them** (two decimals) is `>= 10`; `N` is that
+  ratio truncated toward zero. `0,42 / 0,04 = 10,5 → ×10`, the value `informe.md` carries. (The full-precision ratio is
+  11,16, which would print `×11` and disagree with the report; the rule is documented on the constants.)
+- otherwise — the signed delta in points, two decimals (`, ` decimal mark, `U+2212` minus).
+
+The page never recomputes it: the change column and the figure captions read `cambio_etiqueta` from the artifact.
+
+### 6.3 Checks run (no browser: structural and CLI only)
+
+1. **Anchors and ids against the section titles** — scripted: the 9 md `##` headings, the 9 nav links and the 9
+   `<section id=seccion-N aria-labelledby=titulo-N><h2 id=titulo-N>` tuples match one to one. `OK`.
+2. **Prose block by block** — scripted: every md paragraph / bullet of each of the 9 sections, normalised (tags and
+   markdown markers stripped, whitespace collapsed), equals the page's `<p>` / `<li>` sequence. All 9 sections `OK`
+   (4/4/4/3/2/3/5/6/3 blocks).
+3. **`node --check viewer/informe-imataca.js`** — `OK`.
+4. **Builder reproduces the artifact with the new field** — `python3 tools/build_informe_imataca.py` runs clean and
+   writes the 14 classes with `cambio_etiqueta`; mine gives `−1,86 puntos`, `+1,10 puntos`, `×10`, `+0,19 puntos`,
+   `estable`, `+0,07 puntos`. Re-running is byte-identical (`sha256 e1cfef5d…` before and after).
+5. **`python3 -m unittest discover -s tests`** — `Ran 387 tests … OK (skipped=49)`.
+6. **`python3 -m py_compile tools/build_informe_imataca.py`** — `OK`.
+7. **The service still imports the artifact** — `.venv/bin/python -c 'import serve_viewer'` (with `tools/` on the path)
+   validates the artifact at import: `OK`.
+8. **The change column is not typed into the HTML** — `grep` for `×10`, `x10`, `−1,86 puntos`, `+1,10 puntos`,
+   `+0,19 puntos`, `+0,07 puntos`, `+0,39`, `−0,02` and `cambio_etiqueta` in `viewer/informe-imataca.html`: **0 matches**.
+   The only place the labels exist is the artifact, and the JS reads them.
+9. **Non-browser runtime smoke test of the page script** — a minimal DOM stub in Node loaded
+   `viewer/informe-imataca.js`, fed it the rebuilt artifact and let it render. The coverage table's change column came
+   out `−1,86 puntos (−47.844 ha)` / `+1,10 puntos (+28.275 ha)` / `×10 (+9.932 ha)` / `+0,19 puntos (+4.822 ha)` /
+   `estable (−487 ha)` / `+0,07 puntos (+1.742 ha)`, the figure `figcaption` carries `×10`, and no `+0,39` is present.
+   This is **not** browser verification.
+10. **Working tree** — dirty on purpose (no `git add`/`commit`), and no viewer file outside the allowed edit surfaces
+    was touched.
+
+### 6.4 What could not be verified here (parent's job)
+
+- **No browser**: the map drawing the box, the figures at 1600×1000 and 390×844, the print-media pass for the PDF, and
+  the viewer's own page with the detector at 0 were **not** checked. The Node smoke test above is the closest thing and
+  it is not a browser.
+- **One residual difference from the md's table**: the coverage change column for `1.4 Bosque inundable` prints
+  `estable (−487 ha)` because the page's change cell is `label (hectares)` uniformly, while the md's row carries
+  `estable` alone. The label agrees; the hectares are the page's extra column. The parent may drop them for the stable
+  row if it wants the cell character-for-character identical.
+
+## 7. Owner's cuts: the page is back to six sections
+
+`informe.md` moved to commit `3c40109` (six sections) and the page still carried the previous nine-section prose and
+nav. This pass applies the owner's cuts to `viewer/informe-imataca.html`, `viewer/informe-imataca.js` and the dead rules
+of `viewer/informe-imataca.css`. The builder, the artifact and every `procedencia.*` field are untouched.
+
+### 7.1 What changed
+
+| File | Change |
+|---|---|
+| `viewer/informe-imataca.html` | Removed the whole `2. Cómo leer las cifras antes de leerlas` section; renumbered sections 3–9 to 2–6 (`id=seccion-N` / `aria-labelledby=titulo-N` / `<h2 id=titulo-N>` and the printed number), and the nav to the six md titles. Removed the water paragraph `Sobre el agua…`; the `y lo declara acá…(human_reviewer, por estudio)` clause; the `Sin esa curación…` paragraph; and sections `7. Lo que este informe no dice` and `8. De dónde salen estos números`, including `<div id="procedencia-detalle">`. The map (§1), the coverage table and figures (§2), the talks table (§3), the institutions and species tables (§4/§5) and the print stylesheet stay. |
+| `viewer/informe-imataca.js` | Removed the now-dead `pintarProcedencia` renderer (its `procedencia-detalle` div is gone) and its call. Fixed cross-references: the coverage figure caption says **sección 2**; the no-causality sentence that cited the removed **sección 7** is dropped; the talks caption no longer cites sección 7; comments updated. The change column still reads `clase.cambio_etiqueta`. |
+| `viewer/informe-imataca.css` | Removed the rules that only served the removed blocks: `.lista-cautelas` / `.lista-metodo` and `.tabla-envoltura .digest`. |
+
+### 7.2 Checks run (structural and CLI only, no browser)
+
+1. **Nav ↔ sections** — scripted: 6 nav links, 6 section ids, and each `href="#seccion-N"` resolves to the section whose
+   `aria-labelledby` and `<h2 id>` are `titulo-N`; all ids unique. `OK`.
+2. **Prose block by block** — scripted: the `<p>` sequence of each of the six sections, normalised, equals the md's
+   paragraph sequence (`4/3/3/2/2/3` blocks); six sections, no extra block. `OK`. Code fences, tables and the citation
+   blockquote are not part of this comparison (the `<pre>` and `<blockquote>` are filled from the artifact).
+3. **No leftovers** — `grep` for `Cómo leer las cifras`, `Sobre el agua`, `human_reviewer`, `clansia racemosa`,
+   `Lo que este informe no dice`, `De dónde salen estos números`, `1.086.229,52`, `6.371.007,181`, `4,42 %` and
+   `Harpia harpyja` over the page's three files: **0 matches**.
+4. **`node --check viewer/informe-imataca.js`** — `OK`.
+5. **`python3 -m unittest discover -s tests`** — `Ran 387 tests … OK (skipped=49)`.
+6. **Change column from the artifact** — a Node DOM stub fed the committed artifact: the column prints
+   `−1,86 puntos (−47.844 ha)` / `+1,10 puntos (+28.275 ha)` / `×10 (+9.932 ha)` / `+0,19 puntos (+4.822 ha)` /
+   `estable (−487 ha)` / `+0,07 puntos (+1.742 ha)`, equal to the artifact's `cambio_etiqueta`; `procedencia-detalle`
+   stayed empty; `grep` finds no change value typed into the HTML (`estable`'s only hit is the md prose "muy estable en
+   su cobertura"). **Not** browser verification.
+7. **Working tree** — dirty on purpose (no `git add`/`commit`); only the three page files were touched.
+
+### 7.3 What could not be verified here (parent's job)
+
+- **No browser**: the map, the figures at 1600×1000 and 390×844, and the print-media PDF pass are the parent's pass.
+- The block-by-block comparison covers paragraphs only; the tables and the JS-filled `<pre>` / `<blockquote>` are checked
+  structurally (ids present, renderer reads the artifact), not character by character.

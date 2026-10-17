@@ -218,14 +218,15 @@ pre {
   background: var(--bg-panel-alt);
 }
 
-.lista-cautelas,
-.lista-metodo {
+/* La lista ordenada de los planes de futuro: el informe dice "en orden", así
+ * que el marcador numérico es parte del sentido y se conserva; solo se ajusta
+ * el espaciado de la prosa. */
+.lista-planes {
   margin: 0 0 12px;
   padding-left: 22px;
 }
 
-.lista-cautelas li,
-.lista-metodo li {
+.lista-planes li {
   margin-bottom: 10px;
 }
 
@@ -457,12 +458,6 @@ pre {
 .tabla-envoltura .dudoso {
   color: var(--fg-muted);
   font-style: italic;
-}
-
-.tabla-envoltura .digest {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  word-break: break-all;
 }
 
 .tabla-envoltura .nota {

@@ -101,6 +101,30 @@ MONTHS_ES: Final[dict[int, str]] = {
     12: "diciembre",
 }
 
+# The report's coverage table does not print a plain delta for every class.
+# ``informe.md`` section 3 writes "×10" for the mining class and "estable" for
+# the floodable forest, where a mechanical difference would print "+0,39
+# puntos" and "−0,02 puntos". The page must print the report's own label, and
+# that label must be derived instead of typed into the markup, so this tool
+# computes one label per class and ships it in the artifact as
+# ``cambio_etiqueta``:
+#
+#   * "estable"  -- the change rounds to 0,0 points at one decimal, the
+#                   report's own resolution for "nothing moved": a delta below
+#                   0,05 points in absolute value.
+#   * "×N"       -- the ratio between the two shares as the report's table
+#                   prints them (two decimals) is at least 10. N is that ratio
+#                   truncated toward zero, so 0,42 / 0,04 = 10,5 prints "×10",
+#                   the value ``informe.md`` carries.
+#   * otherwise  -- the signed delta in points, with two decimals.
+STABLE_CHANGE_LABEL: Final[str] = "estable"
+STABLE_CHANGE_POINTS: Final[float] = 0.05
+CHANGE_RATIO_THRESHOLD: Final[float] = 10.0
+# The precision the report's coverage table prints its two shares with. The
+# ratio is taken on the printed values because that is the ratio a reader can
+# recompute from the row's own cells.
+REPORT_SHARE_DECIMALS: Final[int] = 2
+
 # The comparison tolerances. The committed table and the raw clips are the same
 # float64 values (the table is the clip responses aggregated), so the only slack
 # needed is the noise of a JSON round-trip. 1e-6 ha is 1 mm^2.
@@ -865,6 +889,37 @@ def build_box(
     }
 
 
+def change_label(share_1985: float, share_2024: float, delta_puntos: float) -> str:
+    """Derive the change label ``informe.md`` prints for one class.
+
+    See the ``STABLE_CHANGE_LABEL`` block above for the rule. The result is a
+    finished Spanish string, so the page never re-derives it and a rebuilt
+    artifact moves the coverage table and the figure captions together.
+    """
+    if abs(delta_puntos) < STABLE_CHANGE_POINTS:
+        return STABLE_CHANGE_LABEL
+    displayed_1985 = round(share_1985, REPORT_SHARE_DECIMALS)
+    displayed_2024 = round(share_2024, REPORT_SHARE_DECIMALS)
+    if displayed_1985 > 0.0:
+        ratio = displayed_2024 / displayed_1985
+        if ratio >= CHANGE_RATIO_THRESHOLD:
+            return f"\u00d7{int(ratio)}"
+    return _signed_points(delta_puntos)
+
+
+def _signed_points(value: float) -> str:
+    """Render a change in points as the report's table writes it.
+
+    Two decimals, a comma for the decimal mark and U+2212 for the minus sign,
+    the same conventions the page formats its other numbers with. The plus sign
+    on a positive change is the report's own.
+    """
+    text = f"{value:+.2f}".replace(".", ",")
+    if text.startswith("-"):
+        text = "\u2212" + text[1:]
+    return text + " puntos"
+
+
 def build_coverage_classes(table: dict[str, Any], years: list[int]) -> list[dict[str, Any]]:
     """Build the per-class series with the report's six classes first."""
     report_order = {code: index for index, (code, _name) in enumerate(CLASSES_OF_THE_REPORT)}
@@ -891,6 +946,9 @@ def build_coverage_classes(table: dict[str, Any], years: list[int]) -> list[dict
                 "share_2024": share_pct[-1],
                 "delta_puntos": share_pct[-1] - share_pct[0],
                 "delta_ha": area_ha[-1] - area_ha[0],
+                "cambio_etiqueta": change_label(
+                    share_pct[0], share_pct[-1], share_pct[-1] - share_pct[0]
+                ),
             }
         )
     rows.sort(
